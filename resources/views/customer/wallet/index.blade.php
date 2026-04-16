@@ -5,7 +5,15 @@
 @section('content')
 <div class="wallet-page">
 
-    {{-- ── HEADER ── --}}
+    {{-- ALERTS --}}
+    @if(session('success'))
+        <div class="alert alert-success"><span>{{ session('success') }}</span></div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-error"><span>{{ session('error') }}</span></div>
+    @endif
+
+    {{-- HEADER --}}
     <div class="page-header">
         <div>
             <h1 class="page-title">My Wallet</h1>
@@ -13,40 +21,25 @@
         </div>
     </div>
 
-    {{-- ── ALERTS ── --}}
-    @if(session('success'))
-        <div class="alert alert-success">
-            <span>{{ session('success') }}</span>
+    {{-- BALANCE ROW --}}
+    <div class="balance-row">
+        <div class="bal-card">
+            <div class="bal-card-bg"></div>
+            <div class="bal-label">Available Balance</div>
+            <div class="bal-amount">₱{{ number_format($wallet->balance, 2) }}</div>
+            <div class="wallet-icon-bg">💳</div>
         </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-error">
-            <span>{{ session('error') }}</span>
+        <div class="stat-card stat-deposited">
+            <div class="stat-lbl">Total Deposited</div>
+            <div class="stat-amt">₱{{ number_format($wallet->total_deposited, 2) }}</div>
         </div>
-    @endif
-
-    {{-- ── BALANCE CARD ── --}}
-    <div class="balance-card">
-        <div class="balance-card-bg"></div>
-        <div class="balance-content">
-            <div class="balance-label">Available Balance</div>
-            <div class="balance-amount">₱{{ number_format($wallet->balance, 2) }}</div>
-            <div class="balance-stats">
-                <div class="balance-stat">
-                    <span class="stat-label">Total Deposited</span>
-                    <span class="stat-value">₱{{ number_format($wallet->total_deposited, 2) }}</span>
-                </div>
-                <div class="balance-stat-divider"></div>
-                <div class="balance-stat">
-                    <span class="stat-label">Total Spent</span>
-                    <span class="stat-value">₱{{ number_format($wallet->total_spent, 2) }}</span>
-                </div>
-            </div>
+        <div class="stat-card stat-spent">
+            <div class="stat-lbl">Total Spent</div>
+            <div class="stat-amt">₱{{ number_format($wallet->total_spent, 2) }}</div>
         </div>
-        <div class="wallet-icon-bg">💳</div>
     </div>
 
-    {{-- ── PENDING CASH-IN NOTICE ── --}}
+    {{-- PENDING NOTICE --}}
     @if($pendingCashin)
         <div class="pending-notice">
             <div class="pending-icon">⏳</div>
@@ -60,25 +53,22 @@
 
     <div class="wallet-grid">
 
-        {{-- ── CASH IN FORM ── --}}
+        {{-- CASH IN FORM --}}
         @if(!$pendingCashin)
         <div class="card cashin-card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">💰</span> Top Up via GCash
-                </h2>
-                <p class="card-desc">Send money to our GCash number, then upload your proof here.</p>
+            <div class="card-head">
+                <div class="card-title">💰 Top Up via GCash</div>
+                <div class="card-desc">Send money to our GCash number, then upload your proof here.</div>
             </div>
 
             <div class="gcash-info-box">
                 <div class="gcash-number-label">Send to GCash Number</div>
-                <div class="gcash-number">0917 - XXX - XXXX</div>
+                <div class="gcash-number">0917 – XXX – XXXX</div>
                 <div class="gcash-name">BakeSphere Official</div>
             </div>
 
             <form action="{{ route('customer.wallet.cash-in') }}" method="POST" enctype="multipart/form-data" class="cashin-form">
                 @csrf
-
                 <div class="form-group">
                     <label class="form-label">Amount (₱)</label>
                     <div class="input-prefix-wrap">
@@ -95,7 +85,6 @@
                         <button type="button" class="quick-btn" onclick="setAmount(2000)">₱2,000</button>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">GCash Reference Number</label>
                     <input type="text" name="gcash_reference" class="form-input @error('gcash_reference') is-error @enderror"
@@ -103,7 +92,6 @@
                            value="{{ old('gcash_reference') }}" required>
                     @error('gcash_reference') <span class="field-error">{{ $message }}</span> @enderror
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">Payment Screenshot / Proof</label>
                     <div class="file-drop-area" id="fileDropArea">
@@ -118,20 +106,15 @@
                     </div>
                     @error('proof') <span class="field-error">{{ $message }}</span> @enderror
                 </div>
-
-                <button type="submit" class="btn-submit">
-                    Submit Cash-In Request
-                </button>
+                <button type="submit" class="btn-submit">Submit Cash-In Request</button>
             </form>
         </div>
         @endif
 
-        {{-- ── TRANSACTION HISTORY ── --}}
+        {{-- TRANSACTION HISTORY --}}
         <div class="card txn-card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <span class="card-icon">📋</span> Transaction History
-                </h2>
+            <div class="card-head">
+                <div class="card-title">📋 Transaction History</div>
             </div>
 
             @if($transactions->isEmpty())
@@ -141,335 +124,178 @@
                     <span>Your transaction history will appear here.</span>
                 </div>
             @else
-                <div class="txn-list">
-                    @foreach($transactions as $txn)
-                    <div class="txn-row {{ $txn->isCredit() ? 'txn-credit' : 'txn-debit' }}">
-                        <div class="txn-icon">
-                            @if($txn->isCredit()) ⬆️ @else ⬇️ @endif
-                        </div>
-                        <div class="txn-details">
-                            <div class="txn-type">{{ $txn->typeLabel() }}</div>
-                            <div class="txn-desc">{{ $txn->description ?? '—' }}</div>
-                            <div class="txn-date">{{ $txn->created_at->format('M d, Y · h:i A') }}</div>
-                        </div>
-                        <div class="txn-amount {{ $txn->isCredit() ? 'amount-green' : 'amount-red' }}">
-                            {{ $txn->isCredit() ? '+' : '-' }}₱{{ number_format($txn->amount, 2) }}
-                        </div>
+                <table class="txn-table">
+                    <thead>
+                        <tr>
+                            <th style="width:38%">Description</th>
+                            <th style="width:18%">Type</th>
+                            <th style="width:26%">Date</th>
+                            <th style="width:18%;text-align:right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($transactions as $txn)
+                        <tr>
+                            <td>
+                                <div class="txn-type">{{ $txn->typeLabel() }}</div>
+                                <div class="txn-desc">{{ $txn->description ?? '—' }}</div>
+                            </td>
+                            <td>
+                                <span class="badge {{ $txn->isCredit() ? 'badge-credit' : 'badge-debit' }}">
+                                    {{ $txn->isCredit() ? 'Credit' : 'Debit' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="txn-date-main">{{ $txn->created_at->format('M d, Y') }}</div>
+                                <div class="txn-date-sub">{{ $txn->created_at->format('h:i A') }}</div>
+                            </td>
+                            <td class="{{ $txn->isCredit() ? 'amount-green' : 'amount-red' }}">
+                                {{ $txn->isCredit() ? '+' : '-' }}₱{{ number_format($txn->amount, 2) }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+@if(method_exists($transactions, 'hasPages') && $transactions->hasPages())
+                <div class="txn-pagination">
+                    <div class="pagination-info">
+                        Showing {{ $transactions->firstItem() }} to {{ $transactions->lastItem() }} of {{ $transactions->total() }} resultsShowing {{ $transactions->firstItem() ?? 1 }} to {{ $transactions->lastItem() ?? $transactions->count() }} of {{ $transactions->total() ?? $transactions->count() }} results
                     </div>
-                    @endforeach
+                    <ul class="pagination">
+                        <li class="{{ $transactions->onFirstPage() ? 'disabled' : '' }}">
+                            @if($transactions->onFirstPage()) <span>‹</span>
+                            @else <a href="{{ $transactions->previousPageUrl() }}">‹</a> @endif
+                        </li>
+                        @foreach($transactions->getUrlRange(1, $transactions->lastPage()) as $page => $url)
+                        <li class="{{ $page == $transactions->currentPage() ? 'active' : '' }}">
+                            @if($page == $transactions->currentPage()) <span>{{ $page }}</span>
+                            @else <a href="{{ $url }}">{{ $page }}</a> @endif
+                        </li>
+                        @endforeach
+                        <li class="{{ !$transactions->hasMorePages() ? 'disabled' : '' }}">
+                            @if($transactions->hasMorePages()) <a href="{{ $transactions->nextPageUrl() }}">›</a>
+                            @else <span>›</span> @endif
+                        </li>
+                    </ul>
                 </div>
+                @endif
             @endif
         </div>
 
-    </div>{{-- end .wallet-grid --}}
-</div>{{-- end .wallet-page --}}
+    </div>
+</div>
 
 <style>
-/* ── PAGE ── */
-.wallet-page {
-    padding: 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-}
+.wallet-page { padding: 1.5rem 2rem; max-width: 100%; }
 
-.page-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 1.5rem;
-}
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--brown-deep); letter-spacing: -0.02em; }
+.page-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
 
-.page-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text-primary, #1a1a1a);
-    margin: 0 0 0.2rem;
-}
-
-.page-subtitle {
-    font-size: 0.875rem;
-    color: var(--text-muted, #888);
-    margin: 0;
-}
-
-/* ── ALERTS ── */
-.alert {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1.25rem;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 1.25rem;
-}
+.alert { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; margin-bottom: 1.25rem; }
 .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-.alert-error   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
-/* ── BALANCE CARD ── */
-.balance-card {
-    position: relative;
-    background: linear-gradient(135deg, #c8894a 0%, #a0622e 60%, #7a4520 100%);
-    border-radius: 20px;
-    padding: 2rem;
-    color: #fff;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(160,98,46,0.35);
-}
+/* BALANCE ROW */
+.balance-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
 
-.balance-card-bg {
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 200px; height: 200px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 50%;
-}
+.bal-card { position: relative; background: linear-gradient(135deg, #c8894a 0%, #a0622e 60%, #7a4520 100%); border-radius: 16px; padding: 1.25rem 1.5rem; color: #fff; overflow: hidden; box-shadow: 0 6px 24px rgba(160,98,46,0.3); }
+.bal-card-bg { position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; background: rgba(255,255,255,0.07); border-radius: 50%; }
+.bal-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 0.35rem; position: relative; z-index: 1; }
+.bal-amount { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; position: relative; z-index: 1; }
+.wallet-icon-bg { position: absolute; bottom: -10px; right: 16px; font-size: 4.5rem; opacity: 0.1; z-index: 0; user-select: none; }
 
-.balance-content { position: relative; z-index: 1; }
+.stat-card { background: var(--warm-white, #fff); border: 1px solid var(--border, #e8e0d8); border-radius: 16px; padding: 1.25rem 1.5rem; }
+.stat-lbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted, #9a8a7a); margin-bottom: 0.35rem; }
+.stat-amt { font-size: 1.5rem; font-weight: 800; }
+.stat-deposited .stat-amt { color: #059669; }
+.stat-spent .stat-amt { color: #dc2626; }
 
-.balance-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.8;
-    margin-bottom: 0.5rem;
-}
-
-.balance-amount {
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-}
-
-.balance-stats {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-}
-
-.balance-stat { display: flex; flex-direction: column; gap: 0.2rem; }
-.stat-label { font-size: 0.72rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.08em; }
-.stat-value { font-size: 0.95rem; font-weight: 700; }
-.balance-stat-divider { width: 1px; height: 30px; background: rgba(255,255,255,0.25); }
-
-.wallet-icon-bg {
-    position: absolute;
-    bottom: -10px; right: 20px;
-    font-size: 6rem;
-    opacity: 0.12;
-    z-index: 0;
-    user-select: none;
-}
-
-/* ── PENDING NOTICE ── */
-.pending-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    background: #fffbeb;
-    border: 1px solid #fcd34d;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-}
-.pending-icon { font-size: 1.5rem; }
+/* PENDING */
+.pending-notice { display: flex; align-items: flex-start; gap: 1rem; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.pending-icon { font-size: 1.4rem; }
 .pending-text { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.875rem; color: #92400e; }
-.pending-text strong { font-size: 0.95rem; color: #78350f; }
-.pending-sub { font-size: 0.8rem; opacity: 0.8; }
+.pending-text strong { font-size: 0.9rem; color: #78350f; }
+.pending-sub { font-size: 0.78rem; opacity: 0.8; }
 
-/* ── GRID ── */
-.wallet-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-}
+/* GRID */
+.wallet-grid { display: grid; grid-template-columns: 400px 1fr; gap: 1.25rem; }
+@media (max-width: 900px) { .wallet-grid { grid-template-columns: 1fr; } .balance-row { grid-template-columns: 1fr; } }
 
-@media (max-width: 768px) {
-    .wallet-grid { grid-template-columns: 1fr; }
-}
+/* CARDS */
+.card { background: var(--warm-white, #fff); border: 1px solid var(--border, #e8e0d8); border-radius: 16px; overflow: hidden; }
+.card-head { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border, #f0ebe3); }
+.card-title { font-size: 0.95rem; font-weight: 700; color: var(--text-dark, #1a1a1a); display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.2rem; }
+.card-desc { font-size: 0.78rem; color: var(--text-muted, #9a8a7a); margin: 0; }
 
-/* ── CARDS ── */
-.card {
-    background: var(--card-bg, #fff);
-    border-radius: 16px;
-    border: 1px solid var(--border, #e8e0d8);
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+/* GCASH */
+.gcash-info-box { margin: 1rem 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: 12px; padding: 0.85rem 1rem; text-align: center; }
+.gcash-number-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: #0369a1; font-weight: 600; margin-bottom: 0.25rem; }
+.gcash-number { font-size: 1.25rem; font-weight: 800; color: #0c4a6e; letter-spacing: 0.05em; }
+.gcash-name { font-size: 0.72rem; color: #0369a1; margin-top: 0.15rem; }
 
-.card-header { margin-bottom: 1.25rem; }
-
-.card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-primary, #1a1a1a);
-    margin: 0 0 0.35rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.card-icon { font-size: 1rem; }
-
-.card-desc {
-    font-size: 0.82rem;
-    color: var(--text-muted, #888);
-    margin: 0;
-}
-
-/* ── GCASH INFO ── */
-.gcash-info-box {
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    border: 1px solid #bae6fd;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.25rem;
-    text-align: center;
-}
-.gcash-number-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #0369a1; font-weight: 600; margin-bottom: 0.35rem; }
-.gcash-number { font-size: 1.4rem; font-weight: 800; color: #0c4a6e; letter-spacing: 0.05em; }
-.gcash-name { font-size: 0.78rem; color: #0369a1; margin-top: 0.2rem; }
-
-/* ── FORM ── */
-.cashin-form { display: flex; flex-direction: column; gap: 1rem; }
-
-.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-
-.form-label {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text-primary, #374151);
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.65rem 0.9rem;
-    border: 1.5px solid var(--border, #d1c8bc);
-    border-radius: 10px;
-    font-size: 0.9rem;
-    background: var(--input-bg, #faf8f5);
-    color: var(--text-primary, #1a1a1a);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-}
-.form-input:focus { outline: none; border-color: #c8894a; box-shadow: 0 0 0 3px rgba(200,137,74,0.15); }
+/* FORM */
+.cashin-form { display: flex; flex-direction: column; gap: 0.9rem; padding: 0 1.5rem 1.5rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-label { font-size: 0.75rem; font-weight: 600; color: var(--text-dark, #374151); }
+.form-input { width: 100%; padding: 0.6rem 0.85rem; border: 1.5px solid var(--border, #d1c8bc); border-radius: 10px; font-size: 0.875rem; background: var(--input-bg, #faf8f5); color: var(--text-dark, #1a1a1a); transition: border-color 0.2s; box-sizing: border-box; }
+.form-input:focus { outline: none; border-color: #c8894a; box-shadow: 0 0 0 3px rgba(200,137,74,0.12); }
 .form-input.is-error { border-color: #ef4444; }
-
 .input-prefix-wrap { position: relative; }
-.input-prefix {
-    position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
-    font-weight: 700; color: #c8894a; font-size: 0.9rem;
-    pointer-events: none;
-}
-.input-prefix-wrap .form-input { padding-left: 1.8rem; }
-
-.field-error { font-size: 0.78rem; color: #ef4444; }
-
-.quick-amounts {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 0.25rem;
-}
-.quick-btn {
-    padding: 0.3rem 0.7rem;
-    background: transparent;
-    border: 1.5px solid #c8894a;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #c8894a;
-    cursor: pointer;
-    transition: all 0.15s;
-}
+.input-prefix { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-weight: 700; color: #c8894a; font-size: 0.875rem; pointer-events: none; }
+.input-prefix-wrap .form-input { padding-left: 1.7rem; }
+.field-error { font-size: 0.72rem; color: #ef4444; }
+.quick-amounts { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
+.quick-btn { padding: 0.25rem 0.65rem; background: transparent; border: 1.5px solid #c8894a; border-radius: 20px; font-size: 0.72rem; font-weight: 600; color: #c8894a; cursor: pointer; transition: all 0.15s; }
 .quick-btn:hover { background: #c8894a; color: #fff; }
 
-/* ── FILE DROP ── */
-.file-drop-area {
-    position: relative;
-    border: 2px dashed var(--border, #d1c8bc);
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-    background: var(--input-bg, #faf8f5);
-    min-height: 110px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.file-drop-area:hover { border-color: #c8894a; background: rgba(200,137,74,0.05); }
-.file-input {
-    position: absolute; inset: 0;
-    opacity: 0; width: 100%; height: 100%; cursor: pointer;
-}
+.file-drop-area { position: relative; border: 2px dashed var(--border, #d1c8bc); border-radius: 10px; padding: 1.25rem; text-align: center; cursor: pointer; background: var(--input-bg, #faf8f5); min-height: 100px; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s; }
+.file-drop-area:hover { border-color: #c8894a; background: rgba(200,137,74,0.04); }
+.file-input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 .file-drop-content { pointer-events: none; }
-.file-drop-icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
-.file-drop-text { font-size: 0.85rem; font-weight: 600; color: var(--text-primary, #374151); }
-.file-drop-sub { font-size: 0.75rem; color: var(--text-muted, #888); margin-top: 0.2rem; }
-.file-preview { max-height: 120px; border-radius: 8px; object-fit: contain; width: 100%; }
+.file-drop-icon { font-size: 1.5rem; margin-bottom: 0.35rem; }
+.file-drop-text { font-size: 0.78rem; font-weight: 600; color: var(--text-dark, #374151); }
+.file-drop-sub { font-size: 0.68rem; color: var(--text-muted, #9a8a7a); margin-top: 0.15rem; }
+.file-preview { max-height: 100px; border-radius: 8px; object-fit: contain; width: 100%; }
 
-/* ── SUBMIT BTN ── */
-.btn-submit {
-    width: 100%;
-    padding: 0.8rem;
-    background: linear-gradient(135deg, #c8894a, #a0622e);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    letter-spacing: 0.02em;
-}
+.btn-submit { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #c8894a, #a0622e); color: #fff; border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.02em; }
 .btn-submit:hover { opacity: 0.9; }
 .btn-submit:active { transform: scale(0.98); }
 
-/* ── TXN LIST ── */
-.txn-list { display: flex; flex-direction: column; gap: 0; }
+/* TXN TABLE */
+.txn-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.txn-table th { padding: 0.75rem 1.25rem; text-align: left; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted, #9a8a7a); border-bottom: 1px solid var(--border, #f0ebe3); font-weight: 600; background: var(--cream, #faf8f5); }
+.txn-table td { padding: 0.85rem 1.25rem; font-size: 0.82rem; border-bottom: 1px solid var(--border, #f0ebe3); color: var(--text-dark, #1a1a1a); vertical-align: middle; }
+.txn-table tr:last-child td { border-bottom: none; }
+.txn-table tbody tr:hover td { background: #fef9f4; }
+.txn-type { font-weight: 700; font-size: 0.82rem; color: var(--text-dark, #1a1a1a); }
+.txn-desc { font-size: 0.72rem; color: var(--text-muted, #9a8a7a); margin-top: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.txn-date-main { font-size: 0.78rem; font-weight: 600; }
+.txn-date-sub { font-size: 0.68rem; color: #bbb; margin-top: 0.1rem; }
+.amount-green { font-weight: 800; color: #059669; text-align: right; }
+.amount-red { font-weight: 800; color: #dc2626; text-align: right; }
+.badge { display: inline-flex; align-items: center; padding: 0.22rem 0.65rem; border-radius: 20px; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+.badge-credit { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.badge-debit { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
-.txn-row {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    padding: 0.9rem 0;
-    border-bottom: 1px solid var(--border, #f0ebe3);
-}
-.txn-row:last-child { border-bottom: none; }
+.txn-pagination { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; padding: 1rem 1.25rem; border-top: 1px solid var(--border, #f0ebe3); }
+.pagination-info { font-size: 0.72rem; color: var(--text-muted); }
+.pagination { display: flex; align-items: center; gap: 0.3rem; list-style: none; margin: 0; padding: 0; }
+.pagination li span, .pagination li a { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 0.4rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; text-decoration: none; border: 1.5px solid var(--border); color: var(--text-muted); background: transparent; transition: all 0.2s; cursor: pointer; }
+.pagination li a:hover { border-color: var(--caramel); color: var(--caramel); background: #FEF3E8; }
+.pagination li.active span { background: var(--caramel); color: white; border-color: var(--caramel); }
+.pagination li.disabled span { opacity: 0.4; cursor: not-allowed; }
 
-.txn-icon { font-size: 1.1rem; flex-shrink: 0; }
-
-.txn-details { flex: 1; min-width: 0; }
-.txn-type { font-size: 0.85rem; font-weight: 700; color: var(--text-primary, #1a1a1a); }
-.txn-desc { font-size: 0.78rem; color: var(--text-muted, #888); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.1rem; }
-.txn-date { font-size: 0.72rem; color: #aaa; margin-top: 0.15rem; }
-
-.txn-amount { font-size: 0.95rem; font-weight: 800; flex-shrink: 0; }
-.amount-green { color: #059669; }
-.amount-red   { color: #dc2626; }
-
-/* ── EMPTY ── */
-.empty-state {
-    text-align: center;
-    padding: 2.5rem 1rem;
-    color: var(--text-muted, #aaa);
-}
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted, #9a8a7a); }
 .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-.empty-state p { font-size: 0.95rem; font-weight: 600; color: var(--text-primary, #555); margin: 0 0 0.25rem; }
-.empty-state span { font-size: 0.82rem; }
+.empty-state p { font-size: 0.9rem; font-weight: 600; color: var(--text-dark, #555); margin: 0 0 0.2rem; }
+.empty-state span { font-size: 0.78rem; }
 </style>
 
 <script>
 function setAmount(val) {
     document.querySelector('input[name="amount"]').value = val;
 }
-
 function previewFile(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -483,5 +309,5 @@ function previewFile(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-</script>
+</script> b
 @endsection

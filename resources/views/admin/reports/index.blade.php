@@ -35,7 +35,7 @@
 .scard.rose::before{background:linear-gradient(90deg,var(--rose),#D05060);}
 .scard.teal::before{background:linear-gradient(90deg,var(--teal),#3BAA98);}
 .scard.mocha::before{background:linear-gradient(90deg,var(--mocha),#A07040);}
-.scard-val{font-family:'DM Mono',monospacefont-family:'Plus Jakarta Sans',sans-serifight:700;color:var(--t1);line-height:1;}
+.scard-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.6rem;font-weight:700;color:var(--t1);line-height:1;}
 .scard-lbl{font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);font-weight:700;margin-top:.3rem;}
 
 .filter-bar{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:.85rem 1.25rem;margin-bottom:1.5rem;}

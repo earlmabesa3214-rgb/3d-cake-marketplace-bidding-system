@@ -14,7 +14,7 @@ class WalletController extends Controller
     public function index()
     {
         $wallet       = Wallet::forUser(Auth::id());
-        $transactions = $wallet->transactions()->latest()->take(20)->get();
+        $transactions = $wallet->transactions()->latest()->paginate(20);;
         $pendingCashin = CashInRequest::where('user_id', Auth::id())
             ->where('status', 'pending')->first();
 
