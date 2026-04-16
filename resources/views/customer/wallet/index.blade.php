@@ -5,14 +5,6 @@
 @section('content')
 <div class="wallet-page">
 
-    {{-- ALERTS --}}
-    @if(session('success'))
-        <div class="alert alert-success"><span>{{ session('success') }}</span></div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-error"><span>{{ session('error') }}</span></div>
-    @endif
-
     {{-- HEADER --}}
     <div class="page-header">
         <div>
@@ -51,7 +43,7 @@
         </div>
     @endif
 
-    <div class="wallet-grid">
+<div class="wallet-grid {{ $pendingCashin ? 'no-cashin' : '' }}">
 
         {{-- CASH IN FORM --}}
         @if(!$pendingCashin)
@@ -124,7 +116,7 @@
                     <span>Your transaction history will appear here.</span>
                 </div>
             @else
-                <table class="txn-table">
+<div class="card-body-scroll"><table class="txn-table">
                     <thead>
                         <tr>
                             <th style="width:38%">Description</th>
@@ -154,31 +146,8 @@
                             </td>
                         </tr>
                         @endforeach
-                    </tbody>
-                </table>
-@if(method_exists($transactions, 'hasPages') && $transactions->hasPages())
-                <div class="txn-pagination">
-                    <div class="pagination-info">
-                        Showing {{ $transactions->firstItem() }} to {{ $transactions->lastItem() }} of {{ $transactions->total() }} resultsShowing {{ $transactions->firstItem() ?? 1 }} to {{ $transactions->lastItem() ?? $transactions->count() }} of {{ $transactions->total() ?? $transactions->count() }} results
-                    </div>
-                    <ul class="pagination">
-                        <li class="{{ $transactions->onFirstPage() ? 'disabled' : '' }}">
-                            @if($transactions->onFirstPage()) <span>‹</span>
-                            @else <a href="{{ $transactions->previousPageUrl() }}">‹</a> @endif
-                        </li>
-                        @foreach($transactions->getUrlRange(1, $transactions->lastPage()) as $page => $url)
-                        <li class="{{ $page == $transactions->currentPage() ? 'active' : '' }}">
-                            @if($page == $transactions->currentPage()) <span>{{ $page }}</span>
-                            @else <a href="{{ $url }}">{{ $page }}</a> @endif
-                        </li>
-                        @endforeach
-                        <li class="{{ !$transactions->hasMorePages() ? 'disabled' : '' }}">
-                            @if($transactions->hasMorePages()) <a href="{{ $transactions->nextPageUrl() }}">›</a>
-                            @else <span>›</span> @endif
-                        </li>
-                    </ul>
-                </div>
-                @endif
+  </tbody>
+                </table></div>
             @endif
         </div>
 
@@ -186,11 +155,9 @@
 </div>
 
 <style>
-.wallet-page { padding: 1.5rem 2rem; max-width: 100%; }
-
+.wallet-page { padding: 0 2rem 1.5rem; max-width: 100%; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--brown-deep); letter-spacing: -0.02em; }
-.page-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--brown-deep); letter-spacing: -0.02em; margin: 0; }.page-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
 
 .alert { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; margin-bottom: 1.25rem; }
 .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
@@ -217,9 +184,9 @@
 .pending-text { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.875rem; color: #92400e; }
 .pending-text strong { font-size: 0.9rem; color: #78350f; }
 .pending-sub { font-size: 0.78rem; opacity: 0.8; }
-
-/* GRID */
 .wallet-grid { display: grid; grid-template-columns: 400px 1fr; gap: 1.25rem; }
+.wallet-grid.no-cashin { grid-template-columns: 1fr; }
+.wallet-grid.no-cashin { grid-template-columns: 1fr; }
 @media (max-width: 900px) { .wallet-grid { grid-template-columns: 1fr; } .balance-row { grid-template-columns: 1fr; } }
 
 /* CARDS */
@@ -262,7 +229,7 @@
 .btn-submit:hover { opacity: 0.9; }
 .btn-submit:active { transform: scale(0.98); }
 
-/* TXN TABLE */
+.txn-card .card-body-scroll { max-height: 520px; overflow-y: auto; }
 .txn-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .txn-table th { padding: 0.75rem 1.25rem; text-align: left; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted, #9a8a7a); border-bottom: 1px solid var(--border, #f0ebe3); font-weight: 600; background: var(--cream, #faf8f5); }
 .txn-table td { padding: 0.85rem 1.25rem; font-size: 0.82rem; border-bottom: 1px solid var(--border, #f0ebe3); color: var(--text-dark, #1a1a1a); vertical-align: middle; }
@@ -309,5 +276,5 @@ function previewFile(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
-</script> b
+</script>
 @endsection

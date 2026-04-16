@@ -47,7 +47,6 @@ $pendingWithdrawal = $pending;
             'account_number' => $request->account_number,
             'requested_at'   => now(),
         ]);
-
-        return back()->with('success', 'Withdrawal request submitted! Admin will process within 1-2 business days.');
+return redirect()->route('baker.wallet.index');
     }
 }

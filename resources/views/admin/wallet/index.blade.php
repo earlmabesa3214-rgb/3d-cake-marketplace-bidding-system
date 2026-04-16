@@ -12,13 +12,6 @@
         </div>
     </div>
 
-    {{-- ALERTS --}}
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-error">{{ session('error') }}</div>
-    @endif
 
     {{-- STATS --}}
     <div class="stats-row">
@@ -112,30 +105,17 @@
                                 @endif
                             </td>
                             <td class="text-muted">{{ $req->created_at->format('M d, Y H:i') }}</td>
-                            <td>
+                <td>
                                 <div class="action-btns">
-                                    <form action="{{ route('admin.wallet.cashin.approve', $req) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="submit" class="btn-approve"
-                                            onclick="return confirm('Approve ₱{{ number_format($req->amount,2) }} cash-in for {{ $req->user->first_name }}?')">
-                                            ✅ Approve
-                                        </button>
-                                    </form>
-                                    <button type="button" class="btn-reject" onclick="openRejectModal({{ $req->id }})">
+                                    <button type="button" class="btn-approve"
+                                        onclick="openApproveModal('{{ route('admin.wallet.cashin.approve', $req) }}', '{{ number_format($req->amount,2) }}', '{{ $req->user->first_name }}')">
+                                        ✅ Approve
+                                    </button>
+                                    <button type="button" class="btn-reject"
+                                        onclick="openRejectModal('{{ route('admin.wallet.cashin.reject', $req) }}', '{{ number_format($req->amount,2) }}', '{{ $req->user->first_name }}')">
                                         ❌ Reject
                                     </button>
                                 </div>
-                            </td>
-                        </tr>
-                        {{-- Reject modal trigger form (hidden) --}}
-                        <tr id="reject-form-{{ $req->id }}" style="display:none;">
-                            <td colspan="6">
-                                <form action="{{ route('admin.wallet.cashin.reject', $req) }}" method="POST" class="reject-inline-form">
-                                    @csrf
-                                    <input type="text" name="reason" class="reject-input" placeholder="Reason for rejection..." required>
-                                    <button type="submit" class="btn-reject-confirm">Confirm Reject</button>
-                                    <button type="button" class="btn-cancel-reject" onclick="closeRejectModal({{ $req->id }})">Cancel</button>
-                                </form>
                             </td>
                         </tr>
                         @endforeach
@@ -167,7 +147,7 @@
                     </thead>
                     <tbody>
                         @foreach($pendingWithdrawals as $wd)
-                        <tr>
+            <tr>
                             <td>
                                 <div class="user-cell">
                                     <div class="user-name">{{ $wd->user->full_name }}</div>
@@ -185,21 +165,14 @@
                             <td class="text-muted">{{ $wd->requested_at?->format('M d, Y H:i') }}</td>
                             <td>
                                 <div class="action-btns">
-                                    <form action="{{ route('admin.wallet.withdrawal.approve', $wd) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="submit" class="btn-approve"
-                                            onclick="return confirm('Approve ₱{{ number_format($wd->amount,2) }} withdrawal for {{ $wd->user->first_name }}?')">
-                                            ✅ Approve
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('admin.wallet.withdrawal.reject', $wd) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        <input type="hidden" name="admin_note" value="Rejected by admin.">
-                                        <button type="submit" class="btn-reject"
-                                            onclick="return confirm('Reject this withdrawal?')">
-                                            ❌ Reject
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn-approve"
+                                        onclick="openWdApproveModal('{{ route('admin.wallet.withdrawal.approve', $wd) }}', '{{ number_format($wd->amount,2) }}', '{{ $wd->user->first_name }}')">
+                                        ✅ Approve & Upload Receipt
+                                    </button>
+                                    <button type="button" class="btn-reject"
+                                        onclick="openWdRejectModal('{{ route('admin.wallet.withdrawal.reject', $wd) }}', '{{ number_format($wd->amount,2) }}', '{{ $wd->user->first_name }}')">
+                                        ❌ Reject
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -395,7 +368,142 @@
 .empty-state { text-align: center; padding: 3rem 1rem; color: #aaa; }
 .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .empty-state p { font-size: 0.95rem; font-weight: 600; color: #555; margin: 0; }
+
+/* MODALS */
+.modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
+    z-index: 1000; align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+    background: #fff; border-radius: 18px; padding: 2rem 2rem 1.75rem;
+    width: 100%; max-width: 420px; margin: 1rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    animation: modalIn 0.2s ease;
+}
+@keyframes modalIn {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+.modal-icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.75rem; }
+.modal-title { font-size: 1.1rem; font-weight: 800; text-align: center; margin: 0 0 0.4rem; color: #1a1a1a; }
+.modal-desc { font-size: 0.875rem; color: #666; text-align: center; margin: 0 0 1.25rem; line-height: 1.5; }
+.modal-field { margin-bottom: 1.1rem; }
+.modal-input {
+    width: 100%; padding: 0.65rem 0.9rem; box-sizing: border-box;
+    border: 1.5px solid #d1d5db; border-radius: 10px;
+    font-size: 0.875rem; color: #1a1a1a; background: #faf8f5;
+    transition: border-color 0.2s;
+}
+.modal-input:focus { outline: none; border-color: #c8894a; box-shadow: 0 0 0 3px rgba(200,137,74,0.12); }
+.modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+.modal-btn-cancel {
+    padding: 0.55rem 1.1rem; background: #f3f4f6; color: #374151;
+    border: none; border-radius: 10px; font-size: 0.85rem;
+    font-weight: 600; cursor: pointer; transition: background 0.15s;
+}
+.modal-btn-cancel:hover { background: #e5e7eb; }
+.modal-btn-confirm {
+    padding: 0.55rem 1.25rem; border: none; border-radius: 10px;
+    font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s;
+}
+.modal-btn-green { background: #059669; color: #fff; }
+.modal-btn-green:hover { background: #047857; }
+.modal-btn-red { background: #ef4444; color: #fff; }
+.modal-btn-red:hover { background: #dc2626; }
+.receipt-drop {
+    position: relative; border: 2px dashed #d1d5db; border-radius: 10px;
+    padding: 1.25rem; text-align: center; background: #faf8f5;
+    min-height: 90px; display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s; cursor: pointer;
+}
+.receipt-drop:hover { border-color: #c8894a; background: rgba(200,137,74,0.04); }
 </style>
+
+{{-- APPROVE MODAL --}}
+<div id="approveModal" class="modal-overlay" onclick="closeApproveModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-icon modal-icon-success">✅</div>
+        <h3 class="modal-title">Approve Cash-In</h3>
+        <p class="modal-desc" id="approveModalDesc">Are you sure you want to approve this cash-in?</p>
+        <div class="modal-actions">
+            <button class="modal-btn-cancel" onclick="closeApproveModal()">Cancel</button>
+            <form id="approveModalForm" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="modal-btn-confirm modal-btn-green">Approve</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- REJECT MODAL --}}
+<div id="rejectModal" class="modal-overlay" onclick="closeRejectModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-icon modal-icon-danger">❌</div>
+        <h3 class="modal-title">Reject Cash-In</h3>
+        <p class="modal-desc" id="rejectModalDesc">Please provide a reason for rejection.</p>
+        <form id="rejectModalForm" method="POST">
+            @csrf
+            <div class="modal-field">
+                <input type="text" name="reason" id="rejectReason" class="modal-input" placeholder="e.g. Invalid reference number, blurry proof..." required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closeRejectModal()">Cancel</button>
+                <button type="submit" class="modal-btn-confirm modal-btn-red">Confirm Reject</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{-- WITHDRAWAL APPROVE MODAL --}}
+<div id="wdApproveModal" class="modal-overlay" onclick="closeWdApproveModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-icon">✅</div>
+        <h3 class="modal-title">Approve Withdrawal</h3>
+        <p class="modal-desc" id="wdApproveModalDesc">Are you sure you want to approve this withdrawal?</p>
+        <form id="wdApproveModalForm" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-field">
+                <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#888;display:block;margin-bottom:0.4rem;">
+                    Upload GCash/Maya Receipt *
+                </label>
+                <div class="receipt-drop" id="receiptDrop">
+                    <input type="file" name="receipt" id="receiptFile" accept="image/jpg,image/jpeg,image/png,application/pdf"
+                           required onchange="previewReceipt(this)" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;">
+                    <div id="receiptDropContent">
+                        <div style="font-size:1.5rem;margin-bottom:0.3rem;">📎</div>
+                        <div style="font-size:0.78rem;font-weight:600;color:#374151;">Click to upload receipt</div>
+                        <div style="font-size:0.68rem;color:#aaa;margin-top:0.15rem;">JPG, PNG, PDF — max 5MB</div>
+                    </div>
+                    <div id="receiptPreviewName" style="display:none;font-size:0.82rem;font-weight:600;color:#059669;text-align:center;padding:0.5rem;"></div>
+                </div>
+            </div>
+            <div class="modal-field">
+                <input type="text" name="admin_note" class="modal-input" placeholder="Optional note to baker (e.g. Sent via GCash)">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn-cancel" onclick="closeWdApproveModal()">Cancel</button>
+                <button type="submit" class="modal-btn-confirm modal-btn-green">✅ Confirm & Approve</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{-- WITHDRAWAL REJECT MODAL --}}
+<div id="wdRejectModal" class="modal-overlay" onclick="closeWdRejectModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-icon modal-icon-danger">❌</div>
+        <h3 class="modal-title">Reject Withdrawal</h3>
+        <p class="modal-desc" id="wdRejectModalDesc">This withdrawal will be rejected.</p>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn-cancel" onclick="closeWdRejectModal()">Cancel</button>
+            <form id="wdRejectModalForm" method="POST" style="display:inline;">
+                @csrf
+                <input type="hidden" name="admin_note" value="Rejected by admin.">
+                <button type="submit" class="modal-btn-confirm modal-btn-red">Confirm Reject</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
 function switchTab(name, btn) {
@@ -405,11 +513,63 @@ function switchTab(name, btn) {
     btn.classList.add('active');
 }
 
-function openRejectModal(id) {
-    document.getElementById('reject-form-' + id).style.display = 'table-row';
+// Cash-in Approve
+function openApproveModal(url, amount, name) {
+    document.getElementById('approveModalDesc').textContent = 'Credit ₱' + amount + ' to ' + name + '\'s wallet?';
+    document.getElementById('approveModalForm').action = url;
+    document.getElementById('approveModal').classList.add('active');
 }
-function closeRejectModal(id) {
-    document.getElementById('reject-form-' + id).style.display = 'none';
+function closeApproveModal() {
+    document.getElementById('approveModal').classList.remove('active');
 }
+
+// Cash-in Reject
+function openRejectModal(url, amount, name) {
+    document.getElementById('rejectModalDesc').textContent = 'Rejecting ₱' + amount + ' cash-in for ' + name + '.';
+    document.getElementById('rejectModalForm').action = url;
+    document.getElementById('rejectReason').value = '';
+    document.getElementById('rejectModal').classList.add('active');
+}
+function closeRejectModal() {
+    document.getElementById('rejectModal').classList.remove('active');
+}
+
+function openWdApproveModal(url, amount, name) {
+    document.getElementById('wdApproveModalDesc').textContent = 'Approve ₱' + amount + ' withdrawal for ' + name + '?';
+    document.getElementById('wdApproveModalForm').action = url;
+    document.getElementById('receiptFile').value = '';
+    document.getElementById('receiptDropContent').style.display = 'block';
+    document.getElementById('receiptPreviewName').style.display = 'none';
+    document.getElementById('wdApproveModal').classList.add('active');
+}
+function closeWdApproveModal() {
+    document.getElementById('wdApproveModal').classList.remove('active');
+}
+function previewReceipt(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById('receiptDropContent').style.display = 'none';
+        const preview = document.getElementById('receiptPreviewName');
+        preview.textContent = '✅ ' + input.files[0].name;
+        preview.style.display = 'block';
+    }
+}
+
+// Withdrawal Reject
+function openWdRejectModal(url, amount, name) {
+    document.getElementById('wdRejectModalDesc').textContent = 'Reject ₱' + amount + ' withdrawal for ' + name + '?';
+    document.getElementById('wdRejectModalForm').action = url;
+    document.getElementById('wdRejectModal').classList.add('active');
+}
+function closeWdRejectModal() {
+    document.getElementById('wdRejectModal').classList.remove('active');
+}
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        closeApproveModal(); closeRejectModal();
+        closeWdApproveModal(); closeWdRejectModal();
+    }
+});
 </script>
 @endsection

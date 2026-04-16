@@ -56,24 +56,31 @@ class WalletAdminController extends Controller
         return back()->with('success', 'Cash-in request rejected.');
     }
 
-    public function approveWithdrawal(Request $request, WalletWithdrawal $withdrawal)
-    {
-        abort_if($withdrawal->status !== 'pending', 422);
+public function approveWithdrawal(Request $request, WalletWithdrawal $withdrawal)
+{
+    abort_if($withdrawal->status !== 'pending', 422);
 
-        DB::transaction(function () use ($withdrawal, $request) {
-            $wallet = Wallet::forUser($withdrawal->user_id);
-            $wallet->debit($withdrawal->amount, "Withdrawal to {$withdrawal->payment_method} {$withdrawal->account_number}");
+    $request->validate([
+        'receipt' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+    ]);
 
-            $withdrawal->update([
-                'status'       => 'approved',
-                'processed_at' => now(),
-                'processed_by' => auth()->id(),
-                'admin_note'   => $request->admin_note,
-            ]);
-        });
+    $receiptPath = $request->file('receipt')->store('withdrawal-receipts', 'public');
 
-        return back()->with('success', "Withdrawal of ₱{$withdrawal->amount} approved.");
-    }
+    DB::transaction(function () use ($withdrawal, $request, $receiptPath) {
+        $wallet = Wallet::forUser($withdrawal->user_id);
+        $wallet->debit($withdrawal->amount, "Withdrawal to {$withdrawal->payment_method} {$withdrawal->account_number}");
+
+        $withdrawal->update([
+            'status'       => 'approved',
+            'processed_at' => now(),
+            'processed_by' => auth()->id(),
+            'admin_note'   => $request->admin_note,
+            'receipt_path' => $receiptPath,
+        ]);
+    });
+
+    return back()->with('success', "Withdrawal of ₱{$withdrawal->amount} approved.");
+}
 
     public function rejectWithdrawal(Request $request, WalletWithdrawal $withdrawal)
     {
