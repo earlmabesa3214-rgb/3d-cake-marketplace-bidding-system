@@ -8,19 +8,26 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Drop and recreate cleanly
+        Schema::dropIfExists('reports');
+
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reporter_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('reported_id')->nullable();
             $table->foreignId('baker_order_id')->constrained('baker_orders')->onDelete('cascade');
-            $table->string('reason');           // stores the category key
-            $table->text('details')->nullable();
-            $table->string('screenshot')->nullable();
+            $table->string('reporter_role')->nullable();   // 'baker' or 'customer'
+            $table->string('category')->nullable();        // replaces 'reason'
+            $table->text('description')->nullable();       // replaces 'details'
+            $table->string('screenshot_path')->nullable(); // replaces 'screenshot'
             $table->enum('status', ['pending', 'reviewed', 'resolved', 'dismissed'])->default('pending');
-            $table->text('admin_notes')->nullable();
+            $table->text('admin_note')->nullable();        // replaces 'admin_notes'
+            $table->timestamp('reviewed_at')->nullable();
             $table->timestamps();
 
-            // One report per user per order
             $table->unique(['reporter_id', 'baker_order_id']);
+
+            $table->foreign('reported_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -570,22 +570,41 @@ $chipLabels = [
                 </div>
                 <div class="form-group">
                     <label for="delivery_date" id="date-label">Please set a Date *</label>
-<input type="date" id="delivery_date" name="delivery_date"
-                           class="form-control @error('delivery_date') is-invalid @enderror"
-                           value="{{ old('delivery_date') }}"
-                           min="{{ now()->format('Y-m-d') }}"
-                           onchange="checkRush(this.value)" required>
-                    <p class="hint" id="date-hint">Need it tomorrow? Rush orders are matched instantly.</p>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+    <div class="form-group" style="margin-bottom:0;">
+        <label for="delivery_date">Date *</label>
+        <input type="date" id="delivery_date" name="delivery_date"
+               class="form-control @error('delivery_date') is-invalid @enderror"
+               value="{{ old('delivery_date') }}"
+               min="{{ now()->format('Y-m-d') }}"
+               onchange="checkRush(this.value)" required>
+        @error('delivery_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="form-group" style="margin-bottom:0;">
+        <label for="needed_time">Time Needed *</label>
+        <input type="time" id="needed_time" name="needed_time"
+               class="form-control @error('needed_time') is-invalid @enderror"
+               value="{{ old('needed_time', '12:00') }}"
+               onchange="updateRushTime()"
+               required>
+        @error('needed_time')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+</div>
+<p class="hint" id="date-hint">Need it tomorrow? Rush orders are matched instantly.</p>
 
-                    <!-- Rush Banner -->
-                    <div id="rush-banner" style="display:none; background:linear-gradient(135deg,#1A0A00,#3B1F0F);
+           <div id="rush-banner" style="display:none; background:linear-gradient(135deg,#1A0A00,#3B1F0F);
                          border:1.5px solid #C8893A; border-radius:12px; padding:0.85rem 1rem;
                          margin-top:0.75rem; align-items:center; gap:0.75rem;">
                         <span style="font-size:1.3rem; flex-shrink:0;">⚡</span>
-                        <div>
-                            <div style="font-weight:700;font-size:0.85rem;color:#E8A94A;">Rush Order — Auto-Matched!</div>
+                        <div style="flex:1;">
+                            <div style="font-weight:700;font-size:0.85rem;color:#E8A94A;">Rush Order — Bakers Compete for You!</div>
                             <div style="font-size:0.73rem;color:rgba(255,255,255,0.55);margin-top:0.1rem;line-height:1.5;">
-                                The nearest available baker will be assigned instantly. A rush fee set by the baker will be added to your total.
+                                Nearby rush bakers will submit their prices (including rush fee).
+                            </div>
+                            <div style="margin-top:0.6rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                               <span style="font-size:0.68rem;background:rgba(200,137,58,0.2);border:1px solid rgba(200,137,58,0.4);color:#E8C07A;padding:0.15rem 0.55rem;border-radius:20px;font-weight:600;">📅 Needed: <span id="rush-needed-time">—</span></span>
+<span style="font-size:0.68rem;background:rgba(200,137,58,0.2);border:1px solid rgba(200,137,58,0.4);color:#E8C07A;padding:0.15rem 0.55rem;border-radius:20px;font-weight:600;">🕐 By: <span id="rush-needed-clock">—</span></span>
+                          
                             </div>
                         </div>
                     </div>
@@ -743,7 +762,7 @@ $chipLabels = [
             <div class="smodal-subtitle">The nearest available baker will be auto-matched and assigned instantly.</div>
         </div>
 
-        <div class="smodal-body">
+      <div class="smodal-body">
 
             {{-- Normal note --}}
             <div class="smodal-note" id="smodal-note-normal">
@@ -752,26 +771,63 @@ $chipLabels = [
 
             {{-- Rush note --}}
             <div class="smodal-note" id="smodal-note-rush" style="display:none; background:#FEF3E8; border-color:rgba(200,137,74,0.35);">
-                ⚡ A baker near you will be <strong>matched instantly</strong>. A rush fee will be added to your total. You'll choose <strong>delivery or pickup</strong> after matching.
+                ⚡ Nearby rush bakers will be notified. Each submits their own price + rush fee. You have <strong>60 seconds</strong> to pick the best offer.
             </div>
 
             <div class="smodal-summary">
                 <div class="smodal-sum-row">
                     <span class="smodal-sum-key">Cake</span>
-                    <span class="smodal-sum-val">{{ ($config['flavor'] ?? '—') }} · {{ ($config['shape'] ?? '—') }}</span>
+                    <span class="smodal-sum-val">{{ ($config['flavor'] ?? '—') }} · {{ ($config['shapeLabel'] ?? $config['shape'] ?? '—') }}</span>
                 </div>
                 <div class="smodal-sum-row">
                     <span class="smodal-sum-key">Frosting</span>
                     <span class="smodal-sum-val">{{ $config['frosting'] ?? '—' }}</span>
+                </div>
+                @if(!empty($config['addons']))
+                <div class="smodal-sum-row">
+                    <span class="smodal-sum-key">Add-ons</span>
+                    <span class="smodal-sum-val" style="font-size:0.75rem;">{{ implode(', ', (array)$config['addons']) }}</span>
+                </div>
+                @endif
+                <div class="smodal-sum-row" id="smodal-date-row">
+                    <span class="smodal-sum-key">Date Needed</span>
+                    <span class="smodal-sum-val" id="smodal-date-val" style="color:#C8893A;">—</span>
+                </div>
+                <div class="smodal-sum-row" id="smodal-time-row" style="display:none;">
+                    <span class="smodal-sum-key">Time Needed</span>
+                    <span class="smodal-sum-val" id="smodal-time-val" style="color:#C8893A;">—</span>
+                </div>
+                <div class="smodal-sum-row">
+                    <span class="smodal-sum-key">Budget</span>
+                    <span class="smodal-sum-val" id="smodal-budget-val">
+                        ₱<span id="smodal-budget-min">{{ number_format($config['total'] ?? 0, 0) }}</span>
+                        – ₱<span id="smodal-budget-max">{{ number_format(round(($config['total'] ?? 0) * 1.3), 0) }}</span>
+                    </span>
                 </div>
                 {{-- Rush badge row --}}
                 <div class="smodal-sum-row" id="smodal-rush-row" style="display:none;">
                     <span class="smodal-sum-key">Type</span>
                     <span class="smodal-sum-val" style="color:#C8893A; font-weight:700;">⚡ Rush Order</span>
                 </div>
-                <div class="smodal-sum-row">
+                {{-- Normal total --}}
+                <div class="smodal-sum-row" id="smodal-normal-total-row">
                     <span class="smodal-sum-key">Est. Total</span>
                     <span class="smodal-sum-val price">₱{{ number_format($config['total'] ?? 0, 0) }}</span>
+                </div>
+                {{-- Rush price breakdown --}}
+                <div id="smodal-rush-breakdown" style="display:none;">
+                    <div class="smodal-sum-row">
+                        <span class="smodal-sum-key">Cake Price</span>
+                        <span class="smodal-sum-val">₱{{ number_format($config['total'] ?? 0, 0) }}</span>
+                    </div>
+                    <div class="smodal-sum-row">
+                        <span class="smodal-sum-key" style="color:#C8893A;">⚡ Rush Fee</span>
+                        <span class="smodal-sum-val" style="color:#C8893A;">+ set by each baker</span>
+                    </div>
+                    <div class="smodal-sum-row" style="border-top:1.5px solid #EAE0D0; margin-top:2px; padding-top:4px;">
+                        <span class="smodal-sum-key" style="font-size:0.72rem;">Est. Total</span>
+                        <span class="smodal-sum-val price">₱{{ number_format($config['total'] ?? 0, 0) }}+</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -918,6 +974,41 @@ function checkRush(dateVal) {
     const banner = document.getElementById('rush-banner');
     document.getElementById('is_rush_input').value = isRush ? '1' : '0';
     banner.style.display = isRush ? 'flex' : 'none';
+
+    if (isRush) {
+        const neededEl = document.getElementById('rush-needed-time');
+        if (neededEl) {
+            const opts = { weekday: 'short', month: 'short', day: 'numeric' };
+            neededEl.textContent = selected.toLocaleDateString('en-PH', opts);
+        }
+        updateRushTime();
+    }
+}
+
+function updateRushTime() {
+    const dateVal = document.getElementById('delivery_date').value;
+    const timeVal = document.getElementById('needed_time').value;
+    const clockEl = document.getElementById('rush-needed-clock');
+    if (!clockEl || !dateVal) return;
+
+    const selected = new Date(dateVal);
+    selected.setHours(0,0,0,0);
+    const now = new Date(); now.setHours(0,0,0,0);
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0,0,0,0);
+
+    let prefix = '';
+    if (selected.toDateString() === now.toDateString()) prefix = 'Today';
+    else if (selected.toDateString() === tomorrow.toDateString()) prefix = 'Tomorrow';
+    else prefix = selected.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+
+    if (timeVal) {
+        const [h, m] = timeVal.split(':');
+        const t = new Date(); t.setHours(h, m, 0);
+        const timeStr = t.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
+        clockEl.textContent = prefix + ' by ' + timeStr;
+    } else {
+        clockEl.textContent = prefix;
+    }
 }
 
 function openSubmitModal() {
@@ -931,13 +1022,44 @@ function openSubmitModal() {
     document.getElementById('smodal-note-normal').style.display = isRush ? 'none' : 'block';
     document.getElementById('smodal-note-rush').style.display   = isRush ? 'block' : 'none';
 
-    // Rush row
-    document.getElementById('smodal-rush-row').style.display = isRush ? 'flex' : 'none';
+    // Rush row + breakdown
+    document.getElementById('smodal-rush-row').style.display          = isRush ? 'flex' : 'none';
+    document.getElementById('smodal-rush-breakdown').style.display     = isRush ? 'block' : 'none';
+    document.getElementById('smodal-normal-total-row').style.display   = isRush ? 'none' : 'flex';
 
     // Button label
     document.getElementById('smodal-confirm-text').textContent = isRush ? '⚡ Yes, Submit Rush!' : 'Yes, Submit!';
 
-    document.getElementById('submitModal').classList.add('is-open');
+    // ── Populate date ──
+    const dateVal = document.getElementById('delivery_date').value;
+    const dateEl  = document.getElementById('smodal-date-val');
+    if (dateVal && dateEl) {
+        const d = new Date(dateVal);
+        dateEl.textContent = d.toLocaleDateString('en-PH', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+    }
+
+    // ── Populate time ──
+    const timeVal = document.getElementById('needed_time')?.value;
+    const timeRow = document.getElementById('smodal-time-row');
+    const timeEl  = document.getElementById('smodal-time-val');
+    if (timeVal && timeRow && timeEl) {
+        const [h, m] = timeVal.split(':');
+        const t = new Date(); t.setHours(h, m, 0);
+        timeEl.textContent = t.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit' });
+        timeRow.style.display = 'flex';
+    } else if (timeRow) {
+        timeRow.style.display = 'none';
+    }
+
+    // ── Populate budget ──
+    const minEl = document.getElementById('budget_min');
+    const maxEl = document.getElementById('budget_max');
+    const sMin  = document.getElementById('smodal-budget-min');
+    const sMax  = document.getElementById('smodal-budget-max');
+    if (minEl && sMin) sMin.textContent = parseInt(minEl.value || 0).toLocaleString('en-PH');
+    if (maxEl && sMax) sMax.textContent = parseInt(maxEl.value || 0).toLocaleString('en-PH');
+
+document.getElementById('submitModal').classList.add('is-open');
     document.body.style.overflow = 'hidden';
 }
 function closeSubmitModal() {

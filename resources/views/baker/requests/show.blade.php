@@ -292,7 +292,9 @@
             @if(!empty($config['size']))<span class="hero-tag">{{ $config['size'] }}</span>@endif
             @if(!empty($config['frosting']))<span class="hero-tag">{{ $config['frosting'] }}</span>@endif
             @if(!empty($config['layers']))<span class="hero-tag">{{ $config['layers'] }} layers</span>@endif
-            @if($daysLeft <= 3)
+         @if($request->status === 'RUSH_MATCHING')
+                <span class="urgency-badge high">⚡ Rush — Accept Now</span>
+            @elseif($daysLeft <= 3)
                 <span class="urgency-badge high">🔥 Urgent — {{ $daysLeft }}d left</span>
             @else
                 <span class="urgency-badge normal">📅 {{ $daysLeft }} days left</span>
@@ -348,10 +350,17 @@
                     <div class="spec-value">{{ $config['frosting'] }}</div>
                 </div>
                 @endif
-                <div class="spec-item">
-                    <div class="spec-label">Delivery Date</div>
-                    <div class="spec-value accent">{{ $request->delivery_date->format('F d, Y') }}</div>
-                </div>
+              <div class="spec-item">
+    <div class="spec-label">Delivery Date</div>
+    <div class="spec-value accent">
+        {{ $request->delivery_date->format('F d, Y') }}
+        @if($request->needed_time)
+            <div style="font-size:0.72rem; color:var(--caramel); margin-top:0.15rem;">
+                🕐 {{ \Carbon\Carbon::parse($request->needed_time)->format('g:i A') }}
+            </div>
+        @endif
+    </div>
+</div>
                 @if(!empty($config['addons']))
                 <div class="spec-item full">
                     <div class="spec-label">Add-ons</div>
@@ -455,7 +464,7 @@
     <div class="sidebar-sticky">
 
         <div class="section-card">
-            <div class="budget-display">
+        <div class="budget-display">
                 <div class="budget-display-label">{{ $myBid ? 'Your Bid' : "Customer's Budget" }}</div>
                 <div class="my-bid-amount">
                     @if($myBid)
@@ -464,6 +473,7 @@
                         ₱{{ number_format($request->budget_min, 0) }}–{{ number_format($request->budget_max, 0) }}
                     @endif
                 </div>
+             
                 @if($myBid)
                 <div style="margin-top:0.75rem;">
                     <span class="bid-status-pill {{ strtolower($myBid->status) }}">{{ $myBid->status }}</span>
@@ -471,9 +481,123 @@
                 @endif
             </div>
 
-            @if($myBid)
+    @if($request->status === 'RUSH_MATCHING' && !$myBid)
+            {{-- ── RUSH BID BLOCK ── --}}
+            @php
+                $config2     = is_array($request->cake_configuration) ? $request->cake_configuration : (json_decode($request->cake_configuration, true) ?? []);
+                $basePrice   = (float)($config2['total'] ?? $request->budget_min ?? 0);
+                $bakerRecord = \App\Models\Baker::where('user_id', auth()->id())->first();
+                $rushFee     = (float)($bakerRecord?->rush_fee ?? 0);
+                $autoPrice   = $basePrice + $rushFee;
+                if ($autoPrice > $request->budget_max) { $autoPrice = (float)$request->budget_max; }
+            @endphp
+            <div style="background:linear-gradient(135deg,#1A0A00,#3B1F0F);padding:1.25rem;color:white;">
+                <div style="font-size:1.1rem;font-weight:800;margin-bottom:0.25rem;">⚡ Rush Order</div>
+    <div style="font-size:0.75rem;opacity:0.6;margin-bottom:1rem;">Submit your price — the customer picks within 60 seconds.</div>
+                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:0.85rem;margin-bottom:1rem;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                        <span style="font-size:0.7rem;opacity:0.6;text-transform:uppercase;letter-spacing:0.07em;">Base price</span>
+                        <span style="font-weight:700;font-size:0.85rem;">₱{{ number_format($basePrice, 2) }}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                        <span style="font-size:0.7rem;opacity:0.6;text-transform:uppercase;letter-spacing:0.07em;">Your rush fee</span>
+                        <span style="font-weight:700;font-size:0.85rem;color:#E8A94A;">+ ₱{{ number_format($rushFee, 2) }}</span>
+                    </div>
+                    <div style="border-top:1px solid rgba(255,255,255,0.15);padding-top:0.4rem;display:flex;justify-content:space-between;">
+                        <span style="font-size:0.75rem;font-weight:700;opacity:0.9;">You earn</span>
+                        <span style="font-size:1.2rem;font-weight:800;color:#E8A94A;">₱{{ number_format($autoPrice, 2) }}</span>
+                    </div>
+                </div>
+                @if(!$bakerRecord?->accepts_rush_orders || !$bakerRecord?->is_available)
+                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:0.75rem;font-size:0.75rem;opacity:0.75;text-align:center;">
+                    ⚠ Enable Rush Mode and set yourself as Available in your profile to accept rush orders.
+                </div>
+                @else
+                <form method="POST" action="{{ route('baker.rush-orders.accept', $request->id) }}" id="rush-accept-form">
+                    @csrf
+                    <button type="button" onclick="openRushConfirm()"
+                        style="width:100%;padding:0.85rem;background:linear-gradient(135deg,#C8893A,#E8A94A);color:white;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(200,137,58,0.4);">
+             ⚡ Submit Rush Bid
+                    </button>
+                </form>
+                <div id="rush-confirm-backdrop" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(20,10,4,0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;">
+                    <div style="background:#FFFDF9;border-radius:24px;max-width:380px;width:100%;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.3);">
+                        <div style="background:linear-gradient(135deg,#1A0A00,#5C3010);padding:2rem;text-align:center;color:white;">
+                            <div style="font-size:2rem;margin-bottom:0.5rem;">⚡</div>
+         <div style="font-family:inherit;font-size:1.2rem;font-weight:800;margin-bottom:0.25rem;">Submit Rush Bid?</div>
+                            <div style="font-size:0.75rem;opacity:0.6;">Your price appears to the customer immediately</div>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <div style="background:#F5EFE6;border-radius:12px;padding:1rem;margin-bottom:1rem;">
+                                <div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;">
+                                    <span style="color:#9A7A5A;">Customer</span>
+                                    <span style="font-weight:700;color:#2C1A0E;">{{ $request->user->first_name }}</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-top:1px solid #EAE0D0;margin-top:0.3rem;padding-top:0.6rem;">
+                                    <span style="color:#9A7A5A;">Delivery date</span>
+                                    <span style="font-weight:700;color:#C8893A;">{{ $request->delivery_date->format('M d, Y') }}</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-top:1px solid #EAE0D0;margin-top:0.3rem;padding-top:0.6rem;">
+                                    <span style="color:#9A7A5A;">You earn</span>
+                                    <span style="font-size:1.1rem;font-weight:800;color:#2C1A0E;">₱{{ number_format($autoPrice, 2) }}</span>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:0.75rem;">
+                                <button onclick="closeRushConfirm()" style="flex:1;padding:0.75rem;border-radius:12px;border:1.5px solid #EAE0D0;background:white;color:#6B4A2A;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">Cancel</button>
+                                <button onclick="submitRushAccept(this)" style="flex:2;padding:0.75rem;border-radius:12px;border:none;background:linear-gradient(135deg,#C8893A,#E8A94A);color:white;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;">⚡ Submit My Bid</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                function openRushConfirm(){document.getElementById('rush-confirm-backdrop').style.display='flex';document.body.style.overflow='hidden';}
+                function closeRushConfirm(){document.getElementById('rush-confirm-backdrop').style.display='none';document.body.style.overflow='';}
+           function submitRushAccept(btn){btn.textContent='Submitting…';btn.disabled=true;document.getElementById('rush-accept-form').submit();}
+                document.getElementById('rush-confirm-backdrop').addEventListener('click',function(e){if(e.target===this)closeRushConfirm();});
+                </script>
+                @if($request->rush_expires_at)
+                <div style="margin-top:0.85rem;text-align:center;font-size:0.7rem;opacity:0.5;">⏱ Expires in: <span id="rush-exp-timer">--</span></div>
+                <script>
+                (function(){
+                    const exp=new Date('{{ $request->rush_expires_at->toISOString() }}');
+                    const el=document.getElementById('rush-exp-timer');
+                    function tick(){const d=Math.max(0,Math.floor((exp-new Date())/1000));el.textContent=Math.floor(d/60)+':'+String(d%60).padStart(2,'0');if(d>0)setTimeout(tick,1000);else el.textContent='Expired';}
+                    tick();
+                })();
+                </script>
+                @endif
+               @endif
+            </div>
+@endif   {{-- closes @if($request->status === 'RUSH_MATCHING' && !$myBid) --}}
+
+@if($myBid)
             {{-- Already bid --}}
             <div style="padding:1.25rem;">
+                @if($request->status === 'RUSH_MATCHING')
+                @php
+                    $bakerRecordRush = \App\Models\Baker::where('user_id', auth()->id())->first();
+                    $rushFeeDisplay  = (float)($bakerRecordRush?->rush_fee ?? 0);
+                    $baseDisplay     = $myBid->amount - $rushFeeDisplay;
+                @endphp
+                <div style="background:linear-gradient(135deg,#1A0A00,#2E1508);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid rgba(200,137,58,0.3);">
+                    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);font-weight:700;margin-bottom:0.6rem;">⚡ Your Rush Bid Breakdown</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <span style="color:rgba(255,255,255,0.55);">Base price</span>
+                        <span style="font-weight:600;color:rgba(255,255,255,0.85);">₱{{ number_format($baseDisplay, 2) }}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <span style="color:rgba(255,255,255,0.55);">Your rush fee</span>
+                        <span style="font-weight:600;color:#E8A94A;">+ ₱{{ number_format($rushFeeDisplay, 2) }}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.9rem;padding:0.4rem 0 0;">
+                        <span style="color:rgba(255,255,255,0.8);font-weight:700;">You earn</span>
+                        <span style="font-weight:800;color:#E8A94A;">₱{{ number_format($myBid->amount, 2) }}</span>
+                    </div>
+                </div>
+                <div style="background:#FEF9E8;border:1px solid #F0D090;border-radius:8px;padding:0.6rem 0.85rem;font-size:0.72rem;color:#8A5010;line-height:1.5;margin-bottom:1rem;">
+                    ⏱ Customer has <strong>60 seconds</strong> to accept your bid. If no one is chosen in time, the system auto-assigns the nearest baker with the best price.
+                </div>
+                @endif
                 @if($myBid->message)
                 <div style="background:var(--cream);border-radius:10px;padding:0.85rem 1rem;font-size:0.82rem;color:var(--text-mid);margin-bottom:1rem;border-left:3px solid var(--caramel);line-height:1.55;">
                     "{{ $myBid->message }}"
@@ -502,7 +626,7 @@
                     @csrf
                     <input type="hidden" name="cake_request_id" value="{{ $request->id }}">
 
-                    <div class="form-group">
+                   <div class="form-group">
                         <label class="form-label">Your Bid (₱) *</label>
                         <input type="number" name="amount" class="form-input"
                                min="1" step="1"
@@ -510,6 +634,17 @@
                                value="{{ old('amount') }}" required>
                         <div class="form-hint">Range: ₱{{ number_format($request->budget_min,0) }}–₱{{ number_format($request->budget_max,0) }}</div>
                     </div>
+
+                    @if($request->is_rush)
+                    <div class="form-group">
+                        <label class="form-label">⚡ Rush Fee (₱)</label>
+                        <input type="number" name="rush_fee" class="form-input"
+                               min="0" step="1"
+                               placeholder="e.g. 150"
+                               value="{{ old('rush_fee', 0) }}">
+                        <div class="form-hint">Extra charge you add for rush/urgent handling. Enter 0 if none.</div>
+                    </div>
+                    @endif
 
                     <div class="form-group">
                         <label class="form-label">Days to Complete *</label>

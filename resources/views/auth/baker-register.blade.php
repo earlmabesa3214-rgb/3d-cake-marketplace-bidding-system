@@ -438,15 +438,17 @@
                         <textarea name="bio" class="form-input" placeholder="Tell customers about your baking style, experience, and what makes your cakes special…">{{ old('bio') }}</textarea>
                         @error('bio') <div class="field-error">{{ $message }}</div> @enderror
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Portfolio Photos <span class="hint">(up to 3 photos of your best work)</span></label>
-                        <div class="file-upload-area" id="portfolio-area">
-                            <input type="file" name="portfolio[]" accept=".jpg,.jpeg,.png" multiple onchange="handlePortfolio(this)">
-                            <div class="file-upload-icon">📸</div>
-                            <div class="file-upload-title">Upload Portfolio Photos</div>
-                            <div class="file-upload-hint">Select up to 3 cake photos · JPG or PNG · Max 5MB each</div>
-                            <div class="file-name-display" id="portfolio-names"></div>
+                 <div class="form-group">
+                        <label class="form-label">Cake Designs <span class="hint">(up to 3 photos of your best work) You can upload more later.</span></label>
+                        <div class="file-upload-area" id="portfolio-area" style="height:auto;min-height:150px;cursor:pointer;">
+                            <input type="file" name="portfolio[]" accept=".jpg,.jpeg,.png" multiple onchange="handlePortfolio(this)" style="z-index:4;">
+                            <div id="portfolio-empty-state">
+                                <div class="file-upload-icon">📸</div>
+                                <div class="file-upload-title">Upload Cake Designs</div>
+                                <div class="file-upload-hint">Select up to 3 cake photos · JPG or PNG · Max 5MB each</div>
+                            </div>
+                          <div id="portfolio-preview-grid" style="display:none;width:100%;padding:8px;pointer-events:none;"></div>
+                            <div class="file-name-display" id="portfolio-names" style="position:relative;transform:none;width:100%;margin-top:4px;bottom:auto;left:auto;"></div>
                         </div>
                         @error('portfolio') <div class="field-error">{{ $message }}</div> @enderror
                     </div>
@@ -750,7 +752,7 @@
                         <div class="modal-item-value" id="mv-bio" style="font-size:.78rem;font-weight:400;">Not provided</div>
                     </div>
                     <div class="modal-item">
-                        <div class="modal-item-label">Portfolio Photos</div>
+                        <div class="modal-item-label">Cake Designs</div>
                         <div class="modal-item-value" id="mv-portfolio">None selected</div>
                     </div>
                 </div>
@@ -841,18 +843,115 @@
             setTimeout(() => { this.classList.toggle('checked', input.checked); indicator.textContent = input.checked ? '✓' : ''; }, 0);
         });
     });
-
-    /* FILE UPLOAD */
-    function handleFile(input, areaId, nameId) {
+function handleFile(input, areaId, nameId) {
         const area = document.getElementById(areaId), nameEl = document.getElementById(nameId);
-        if (input.files && input.files[0]) { area.classList.add('has-file'); nameEl.style.display='block'; nameEl.textContent='✓ '+input.files[0].name; }
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            area.classList.add('has-file');
+            nameEl.style.display='block';
+            nameEl.textContent='✓ '+file.name;
+            const prevId = areaId+'-img-prev';
+            let prevEl = document.getElementById(prevId);
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (!prevEl) {
+                        prevEl = document.createElement('img');
+                        prevEl.id = prevId;
+                        prevEl.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px;opacity:0.92;z-index:1;pointer-events:none;';
+                        area.appendChild(prevEl);
+                    }
+                    prevEl.src = e.target.result;
+                    nameEl.style.zIndex = '3';
+                    nameEl.style.background = 'rgba(0,0,0,0.45)';
+                    nameEl.style.color = '#fff';
+                    nameEl.style.borderRadius = '20px';
+                    nameEl.style.padding = '2px 10px';
+                    nameEl.style.bottom = '8px';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if (prevEl) prevEl.remove();
+            }
+        }
     }
-    function handlePortfolio(input) {
-        const area = document.getElementById('portfolio-area'), nameEl = document.getElementById('portfolio-names');
-        if (input.files && input.files.length > 0) { area.classList.add('has-file'); nameEl.style.display='block'; nameEl.textContent='✓ '+Array.from(input.files).map(f=>f.name).join(', '); }
+/* Portfolio — accumulates up to 3 files across multiple picks */
+(function () {
+    const dt = new DataTransfer();
+
+    function renderGrid() {
+        const area       = document.getElementById('portfolio-area');
+        const nameEl     = document.getElementById('portfolio-names');
+        const grid       = document.getElementById('portfolio-preview-grid');
+        const emptyState = document.getElementById('portfolio-empty-state');
+        const files      = Array.from(dt.files);
+
+        area.classList.toggle('has-file', files.length > 0);
+        grid.innerHTML = '';
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        grid.style.gap = '6px';
+        emptyState.style.display = files.length > 0 ? 'none' : '';
+        nameEl.style.display = files.length > 0 ? 'block' : 'none';
+        nameEl.textContent = files.length > 0 ? '✓ ' + files.length + ' of 3 photo(s) selected' : '';
+
+        for (let i = 0; i < 3; i++) {
+            const wrap = document.createElement('div');
+            wrap.style.cssText = 'position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;flex-shrink:0;';
+
+            if (files[i]) {
+                wrap.style.background = '#eee';
+                /* Remove button */
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.textContent = '✕';
+                removeBtn.style.cssText = 'position:absolute;top:4px;right:4px;z-index:5;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,0.55);color:#fff;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;';
+                const idx = i;
+                removeBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const newDt = new DataTransfer();
+                    Array.from(dt.files).forEach(function (f, fi) { if (fi !== idx) newDt.items.add(f); });
+                    /* Clear and refill dt */
+                    while (dt.items.length) dt.items.remove(0);
+                    Array.from(newDt.files).forEach(function (f) { dt.items.add(f); });
+                    /* Sync input */
+                    document.querySelector('[name="portfolio[]"]').files = dt.files;
+                    renderGrid();
+                });
+                const reader = new FileReader();
+                const capturedWrap = wrap;
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+                    capturedWrap.appendChild(img);
+                    capturedWrap.appendChild(removeBtn);
+                };
+                reader.readAsDataURL(files[i]);
+            } else {
+                wrap.style.cssText += 'background:rgba(0,0,0,0.05);border:2px dashed rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;';
+                wrap.innerHTML = '<span style="font-size:1.4rem;opacity:0.3;pointer-events:none;">📷</span>';
+                /* Clicking empty slot opens file picker */
+                wrap.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    document.querySelector('[name="portfolio[]"]').click();
+                });
+            }
+
+            grid.appendChild(wrap);
+        }
     }
 
-    /* NAME: NO NUMBERS */
+    window.handlePortfolio = function (input) {
+        if (!input.files || input.files.length === 0) return;
+        Array.from(input.files).forEach(function (f) {
+            if (dt.files.length < 3) dt.items.add(f);
+        });
+        /* Sync input element so the form submits the accumulated files */
+        input.files = dt.files;
+        renderGrid();
+    };
+})();
     function enforceNoNumbers(inputId, errId) {
         const inp = document.getElementById(inputId), err = document.getElementById(errId);
         inp.addEventListener('input', function() {
@@ -893,9 +992,7 @@
         else{matchMsg.textContent='✕ Passwords do not match';matchMsg.style.color='var(--err)';pwc.classList.remove('is-valid');pwc.classList.add('is-invalid');}
     }
     pwc.addEventListener('input', checkMatch);
-
-    /* PASSWORD TOGGLE */
-    function togglePw(id,btn){const f=document.getElementById(id);if(f.type==='password'){f.type='text';btn.textContent='🙈';}else{f.type='password';btn.textContent='👁';}}
+function togglePw(id,btn){const f=document.getElementById(id);if(f.type==='password'){f.type='text';btn.textContent='Hide';}else{f.type='password';btn.textContent='Show';}}
 
     /* MAP */
     const map=L.map('baker-map').setView([14.5995,120.9842],13);

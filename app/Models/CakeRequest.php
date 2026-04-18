@@ -9,7 +9,7 @@ class CakeRequest extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+protected $fillable = [
         'user_id',
         'address_id',
         'cake_configuration',
@@ -18,28 +18,30 @@ class CakeRequest extends Model
         'budget_min',
         'budget_max',
         'delivery_date',
+        'needed_time',
         'delivery_lat',
         'delivery_lng',
         'delivery_address',
-         'special_instructions',
+        'special_instructions',
         'status',
         'is_rush',
         'rush_fee',
+        'rush_auto_price',
+        'rush_expires_at',
         'fulfillment_type',
         'cake_preview_image',
     ];
-
-    protected $casts = [
+protected $casts = [
         'cake_configuration' => 'array',
         'delivery_date'      => 'date',
+        'needed_time'        => 'string',
         'budget_min'         => 'decimal:2',
         'budget_max'         => 'decimal:2',
         'delivery_lat'       => 'float',
         'delivery_lng'       => 'float',
-        'is_rush'          => 'boolean',
-    'cake_configuration' => 'array',
+        'is_rush'            => 'boolean',
+        'rush_expires_at'    => 'datetime',
     ];
-
     public function isPickup(): bool
     {
         return $this->fulfillment_type === 'pickup';
@@ -85,6 +87,7 @@ class CakeRequest extends Model
     public function getStatusLabelAttribute(): string
     {
         return match($this->status) {
+            'RUSH_MATCHING'          => '⚡ Rush — Matching Baker',
             'OPEN'                   => '🟡 Waiting for Bakers',
             'BIDDING'                => '🔵 Bidding Ongoing',
             'ACCEPTED'               => '🟢 Accepted',

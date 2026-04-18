@@ -22,12 +22,13 @@ class BidController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'cake_request_id' => 'required|exists:cake_requests,id',
-            'amount'          => 'required|numeric|min:1',
-            'estimated_days'  => 'required|integer|min:1|max:30',
-            'message'         => 'nullable|string|max:1000',
-        ]);
+     $validated = $request->validate([
+    'cake_request_id' => 'required|exists:cake_requests,id',
+    'amount'          => 'required|numeric|min:1',
+    'estimated_days'  => 'required|integer|min:1|max:30',
+    'message'         => 'nullable|string|max:1000',
+    'rush_fee'        => 'nullable|numeric|min:0',
+]);
 
         $cakeRequest = CakeRequest::findOrFail($validated['cake_request_id']);
 
@@ -45,14 +46,15 @@ class BidController extends Controller
             return back()->with('error', 'You have already placed a bid on this request.');
         }
 
-        Bid::create([
-            'baker_id'        => Auth::id(),
-            'cake_request_id' => $cakeRequest->id,
-            'amount'          => $validated['amount'],
-            'estimated_days'  => $validated['estimated_days'],
-            'message'         => $validated['message'] ?? null,
-            'status'          => 'PENDING',
-        ]);
+Bid::create([
+    'baker_id'        => Auth::id(),
+    'cake_request_id' => $cakeRequest->id,
+    'amount'          => $validated['amount'],
+    'estimated_days'  => $validated['estimated_days'],
+    'message'         => $validated['message'] ?? null,
+    'rush_fee'        => $validated['rush_fee'] ?? 0,
+    'status'          => 'PENDING',
+]);
 
         // Mark as BIDDING so customer knows bids are coming in
         // but keep it visible to ALL other bakers

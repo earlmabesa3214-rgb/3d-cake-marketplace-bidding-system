@@ -1,5 +1,5 @@
 @extends('layouts.baker')
-@section('title', 'Order #' . str_pad($order->id, 4, '0', STR_PAD_LEFT))
+@section('title', 'Order #' . str_pad($order->cakeRequest->id, 4, '0', STR_PAD_LEFT))
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -21,7 +21,7 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-* { font-family: 'Plus Jakarta Sans', sans-serif; }
+* { font-family: 'Plus Jakarta Sans', sans-serif; } 
 
 .order-wrap {
     padding: 0;
@@ -569,7 +569,7 @@
     <div class="order-hero s-{{ $order->status }}">
         <div class="hero-top">
             <div>
-                <div class="hero-id">Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</div>
+          <div class="hero-id">Order #{{ str_pad($order->cakeRequest->id, 4, '0', STR_PAD_LEFT) }}</div>
                 <div class="hero-title">{{ $heroTitle }}</div>
                 <div class="hero-sub">{{ $heroSub }}</div>
             </div>
@@ -774,10 +774,17 @@
                         <span class="i-key">Budget</span>
                         <span class="i-val">₱{{ number_format($order->cakeRequest->budget_min, 0) }} — ₱{{ number_format($order->cakeRequest->budget_max, 0) }}</span>
                     </div>
-                    <div class="info-row">
-                        <span class="i-key">{{ $isPickup ? 'Date' : 'Delivery Date' }}</span>
-                        <span class="i-val" style="font-weight:700; color:var(--caramel);">{{ $order->cakeRequest->delivery_date->format('M d, Y') }}</span>
-                    </div>
+             <div class="info-row">
+    <span class="i-key">{{ $isPickup ? 'Date' : 'Delivery Date' }}</span>
+    <span class="i-val" style="font-weight:700; color:var(--caramel);">
+        {{ $order->cakeRequest->delivery_date->format('M d, Y') }}
+        @if($order->cakeRequest->needed_time)
+            <span style="font-size:0.75rem; color:var(--caramel); font-weight:600; display:block; margin-top:1px;">
+                🕐 {{ \Carbon\Carbon::parse($order->cakeRequest->needed_time)->format('g:i A') }}
+            </span>
+        @endif
+    </span>
+</div>
                     @if(!empty($config['total']))
                     <div class="info-row">
                         <span class="i-key">Est. Price</span>
@@ -822,7 +829,7 @@
         <div class="order-sidebar-col">
             <div class="id-card">
                 <div class="id-label">Order</div>
-                <div class="id-num">#{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</div>
+              <div class="id-num">#{{ str_pad($order->cakeRequest->id, 4, '0', STR_PAD_LEFT) }}</div>
                 <div style="font-size:0.7rem; opacity:0.35; margin-top:0.4rem;">{{ $order->created_at->format('M d, Y') }}</div>
                 <hr class="id-divider">
                 <div class="id-sub">Status</div>

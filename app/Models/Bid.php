@@ -12,11 +12,12 @@ class Bid extends Model
     protected $fillable = [
         'baker_id',
         'cake_request_id',
-        'amount',
+      'amount',
+        'rush_fee',
         'estimated_days',
         'message',
         'status',   // PENDING | ACCEPTED | REJECTED | WITHDRAWN
-    ];
+    ];   
 
     protected $casts = [
         'amount' => 'decimal:2',

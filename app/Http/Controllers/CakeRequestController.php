@@ -77,36 +77,12 @@ $imagePath = null;
     }
 
     // ── RUSH ORDER LOGIC ──────────────────────────────────────────────────
-    $isRush  = $request->boolean('is_rush');
-    $rushFee = 0;
+    // Rush orders use smart matching: find top 5 nearest available bakers
+    // with rush mode ON, within 10 km. First to accept gets auto-assigned.
+    $isRush       = $request->boolean('is_rush');
+    $rushFee      = 0;
+    $rushAutoPrice = null;
     $autoAssignedBakerId = null;
-
-    if ($isRush) {
-        $customerLat = (float) $request->delivery_lat;
-        $customerLng = (float) $request->delivery_lng;
-
-        $rushBaker = \App\Models\Baker::where('accepts_rush_orders', true)
-            ->where('is_available', true)
-            ->where('status', 'approved')
-            ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->get()
-            ->sortBy(function ($baker) use ($customerLat, $customerLng) {
-                $R    = 6371;
-                $dLat = deg2rad($baker->latitude - $customerLat);
-                $dLng = deg2rad($baker->longitude - $customerLng);
-                $a    = sin($dLat/2) * sin($dLat/2) +
-                        cos(deg2rad($customerLat)) * cos(deg2rad($baker->latitude)) *
-                        sin($dLng/2) * sin($dLng/2);
-                return $R * 2 * atan2(sqrt($a), sqrt(1 - $a));
-            })
-            ->first();
-
-        if ($rushBaker) {
-            $rushFee             = $rushBaker->rush_fee ?? 0;
-            $autoAssignedBakerId = $rushBaker->user_id;
-        }
-    }
 
 // Replace the cake_preview_image block with this:
 $previewPath = null;
@@ -120,7 +96,9 @@ if ($request->filled('cake_preview_temp_key')) {
     }
 }
 
-  $cakeRequest = CakeRequest::create([
+$rushExpiresAt = $isRush ? now()->addSeconds(60) : null;
+
+    $cakeRequest = CakeRequest::create([
         'user_id'              => Auth::id(),
         'cake_configuration'   => $request->cake_configuration,
         'custom_message'       => $request->custom_message,
@@ -134,46 +112,63 @@ if ($request->filled('cake_preview_temp_key')) {
         'delivery_lng'         => $isPickup ? null : $request->delivery_lng,
         'delivery_address'     => $isPickup ? 'Pickup at Baker\'s Location' : $request->delivery_address,
         'special_instructions' => $request->special_instructions,
+'needed_time'          => $request->needed_time,
         'is_rush'              => $isRush,
         'rush_fee'             => $rushFee,
-'status'               => ($isRush && $autoAssignedBakerId) ? 'WAITING_FOR_PAYMENT' : 'OPEN',
+        'status'               => $isRush ? 'RUSH_MATCHING' : 'OPEN',
+        'rush_auto_price'      => $rushAutoPrice,
+        'rush_expires_at'      => $rushExpiresAt,
     ]);
+    if ($isRush) {
+        // ── Find nearest eligible rush bakers (within 10 km) ──
+        $custLat = $request->delivery_lat;
+        $custLng = $request->delivery_lng;
 
-    // ── If rush and baker found, auto-create bid + order ──────────────────
-    if ($isRush && $autoAssignedBakerId) {
-        $config    = json_decode($request->cake_configuration, true);
-        $bidAmount = ($config['total'] ?? 0) + $rushFee;
+        $nearbyBakers = collect();
 
-    $bid = \App\Models\Bid::create([
-            'cake_request_id' => $cakeRequest->id,
-            'baker_id'        => $autoAssignedBakerId,
-            'amount'          => $bidAmount,
-            'status'          => 'ACCEPTED',
-            'note'            => 'Auto-matched rush order',
-            'estimated_days'  => 1,
-        ]);
-\App\Models\BakerOrder::create([
-            'baker_id'        => $autoAssignedBakerId,
-            'cake_request_id' => $cakeRequest->id,
-            'bid_id'          => $bid->id,
-            'agreed_price'    => $bidAmount,
-            'status'          => 'WAITING_FOR_PAYMENT',
-            'payout_status'   => 'PENDING',
-        ]);
-        $bakerUser = \App\Models\User::find($autoAssignedBakerId);
-        if ($bakerUser) {
-            $bakerUser->notify(new \App\Notifications\BidAcceptedNotification($bid, $cakeRequest));
+        if ($custLat && $custLng) {
+            $nearbyBakers = \App\Models\Baker::where('accepts_rush_orders', true)
+                ->where('is_available', true)
+                ->where('status', 'approved')
+                ->whereNotNull('latitude')
+                ->whereNotNull('longitude')
+                ->get()
+                ->map(function ($baker) use ($custLat, $custLng) {
+                    $R    = 6371;
+                    $dLat = deg2rad($baker->latitude - $custLat);
+                    $dLng = deg2rad($baker->longitude - $custLng);
+                    $a    = sin($dLat / 2) ** 2
+                          + cos(deg2rad($custLat)) * cos(deg2rad($baker->latitude))
+                          * sin($dLng / 2) ** 2;
+                    $baker->distance_km = $R * 2 * atan2(sqrt($a), sqrt(1 - $a));
+                    return $baker;
+                })
+                ->filter(fn($b) => $b->distance_km <= 10)
+                ->sortBy('distance_km')
+                ->take(5);
         }
 
-   return redirect()->route('customer.cake-requests.show', $cakeRequest->id)
-    ->with('success', '⚡ Rush order matched! A baker near you has been assigned and will start immediately.')
-    ->with('show_rush_modal', true);
-    }
+        // ── Notify each matched baker ──
+        foreach ($nearbyBakers as $baker) {
+            $bakerUser = \App\Models\User::find($baker->user_id);
+            if ($bakerUser) {
+                $bakerUser->notify(
+                    new \App\Notifications\RushOrderAvailableNotification($cakeRequest, round($baker->distance_km, 1))
+                );
+            }
+        }
 
-    // ── No rush baker available — fall back to normal open bidding ─────────
-    if ($isRush && !$autoAssignedBakerId) {
+        $matchCount = $nearbyBakers->count();
+
+        if ($matchCount === 0) {
+            // No rush bakers nearby — fall back to open bidding
+            $cakeRequest->update(['status' => 'OPEN']);
+            return redirect()->route('customer.cake-requests.show', $cakeRequest->id)
+                ->with('info', '⚡ No rush bakers available nearby right now. Your request has been posted to all bakers instead.');
+        }
+
         return redirect()->route('customer.cake-requests.show', $cakeRequest->id)
-            ->with('info', '⚡ No rush bakers available right now. Your request has been posted openly — bakers will respond soon.');
+       ->with('success', "⚡ Rush request sent to {$matchCount} nearby baker(s)! Review their prices and accept the best one within 60 seconds.");
     }
 
     return redirect()->route('customer.cake-requests.show', $cakeRequest->id)
@@ -193,7 +188,7 @@ if ($request->filled('cake_preview_temp_key')) {
             abort(403);
         }
 
-if (!in_array($cakeRequest->status, ['OPEN', 'BIDDING', 'ACCEPTED'])) {
+if (!in_array($cakeRequest->status, ['OPEN', 'BIDDING', 'ACCEPTED', 'RUSH_MATCHING'])) {
     return back()->withErrors(['error' => 'Only open, bidding, or accepted requests can be cancelled.']);
 }
       $cakeRequest->update(['status' => 'CANCELLED']);
@@ -231,11 +226,13 @@ return redirect()->route('customer.cake-requests.index')
             \App\Models\Bid::where('cake_request_id', $cakeRequest->id)
                 ->where('id', '!=', $bid->id)
                 ->update(['status' => 'REJECTED']);
+$agreedPrice = $bid->amount + ($bid->rush_fee ?? 0);
+
 \App\Models\BakerOrder::create([
     'baker_id'        => $bid->baker_id,
     'cake_request_id' => $cakeRequest->id,
     'bid_id'          => $bid->id,
-    'agreed_price'    => $bid->amount,
+    'agreed_price'    => $agreedPrice,
     'status'          => 'WAITING_FOR_PAYMENT',
     'payout_status'   => 'PENDING',
 ]);

@@ -306,22 +306,15 @@ Route::get('/rush-baker-preview', function (\Illuminate\Http\Request $request) {
     ]);
 })->name('rush-baker-preview');
 
-Route::post('/cake-requests/{cakeRequest}/update-fulfillment', function (\Illuminate\Http\Request $request, \App\Models\CakeRequest $cakeRequest) {
-    abort_if($cakeRequest->user_id !== auth()->id(), 403);
-    $cakeRequest->update([
-        'fulfillment_type' => $request->fulfillment_type === 'pickup' ? 'pickup' : 'delivery'
-    ]);
-    return response()->json(['ok' => true]);
-})->name('cake-requests.update-fulfillment');
-Route::post('/cake-requests/{cakeRequest}/update-fulfillment', function (\Illuminate\Http\Request $request, \App\Models\CakeRequest $cakeRequest) {
-    abort_if($cakeRequest->user_id !== auth()->id(), 403);
-    $cakeRequest->update([
-        'fulfillment_type' => $request->fulfillment_type === 'pickup' ? 'pickup' : 'delivery'
-    ]);
-    return response()->json(['ok' => true]);
-})->name('cake-requests.update-fulfillment');
-});
+    Route::post('/cake-requests/{cakeRequest}/update-fulfillment', function (\Illuminate\Http\Request $request, \App\Models\CakeRequest $cakeRequest) {
+        abort_if($cakeRequest->user_id !== auth()->id(), 403);
+        $cakeRequest->update([
+            'fulfillment_type' => $request->fulfillment_type === 'pickup' ? 'pickup' : 'delivery'
+        ]);
+        return response()->json(['ok' => true]);
+    })->name('cake-requests.update-fulfillment');
 
+}); // ← closes the customer group
 // ─── BAKER ROUTES ─────────────────────────────────────────────────────────────
 Route::middleware(['auth', 'role:baker'])->prefix('baker')->name('baker.')->group(function () {
 
@@ -333,6 +326,11 @@ Route::middleware(['auth', 'role:baker'])->prefix('baker')->name('baker.')->grou
     Route::get('/bids',          [BidController::class, 'index'])->name('bids.index');
     Route::post('/bids',         [BidController::class, 'store'])->name('bids.store')->middleware('baker.profile.complete');
     Route::delete('/bids/{bid}', [BidController::class, 'destroy'])->name('bids.destroy');
+
+    // ── Rush order: baker accepts instantly (no bid, direct assignment) ──
+    Route::post('/rush-orders/{cakeRequest}/accept',
+        [\App\Http\Controllers\Baker\RushOrderController::class, 'accept'])
+        ->name('rush-orders.accept');
 
     Route::get('/orders',                  [BakerOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}',          [BakerOrderController::class, 'show'])->name('orders.show');
@@ -373,6 +371,16 @@ Route::middleware('auth')->prefix('chat')->group(function () {
 
 // ─── SHARED REPORT ROUTES ─────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
+ Route::get('/debug-order/{bakerOrder}', function(\App\Models\BakerOrder $bakerOrder) {
+        return response()->json([
+            'auth_id'            => auth()->id(),
+            'baker_id_raw'       => $bakerOrder->baker_id,
+            'baker_user_id'      => optional($bakerOrder->baker)->user_id,
+            'customer_user_id'   => optional($bakerOrder->cakeRequest)->user_id,
+            'baker_relation'     => $bakerOrder->baker?->toArray(),
+        ]);
+    })->middleware('auth');
+
     Route::get('/report/order/{bakerOrder}',  [\App\Http\Controllers\ReportController::class, 'create'])->name('report.create');
     Route::post('/report/order/{bakerOrder}', [\App\Http\Controllers\ReportController::class, 'store'])->name('report.store');
     Route::get('/reports/my',                 [\App\Http\Controllers\ReportController::class, 'myReports'])->name('report.my');

@@ -210,7 +210,7 @@ $cancelledOrders = $orders->where('status', 'CANCELLED');
     <div class="order-card">
         <div class="order-card-top">
             <div>
-                <span class="order-id">#{{ str_pad($order->id,4,'0',STR_PAD_LEFT) }}</span>
+                <span class="order-id">#{{ str_pad($order->cakeRequest->id,4,'0',STR_PAD_LEFT) }}</span>
                 <span class="order-customer" style="margin-left:0.75rem;">Customer: {{ $order->cakeRequest->user->first_name }}</span>
             </div>
             <div style="display:flex; gap:0.6rem; align-items:center;">
@@ -276,7 +276,7 @@ $cancelledOrders = $orders->where('status', 'CANCELLED');
     <div class="order-card">
         <div class="order-card-top">
             <div>
-                <span class="order-id">#{{ str_pad($order->id,4,'0',STR_PAD_LEFT) }}</span>
+                <span class="order-id">#{{ str_pad($order->cakeRequest->id,4,'0',STR_PAD_LEFT) }}</span>
                 <span class="order-customer" style="margin-left:0.75rem;">Customer: {{ $order->cakeRequest->user->first_name }}</span>
             </div>
             <span class="status-badge done">✓ Completed</span>
@@ -326,7 +326,7 @@ $cancelledOrders = $orders->where('status', 'CANCELLED');
     <div class="order-card is-cancelled">
         <div class="order-card-top">
             <div>
-                <span class="order-id" style="color:#8B2A1E;">#{{ str_pad($order->id,4,'0',STR_PAD_LEFT) }}</span>
+                <span class="order-id" style="color:#8B2A1E;">#{{ str_pad($order->cakeRequest->id,4,'0',STR_PAD_LEFT) }}</span>
                 <span class="order-customer" style="margin-left:0.75rem;">Customer: {{ $order->cakeRequest->user->first_name }}</span>
             </div>
             <div style="display:flex; gap:0.6rem; align-items:center;">

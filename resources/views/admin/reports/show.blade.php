@@ -157,16 +157,24 @@
                     <div class="pb-name">{{ $report->reporter->first_name }} {{ $report->reporter->last_name }}</div>
                     <div class="pb-email">{{ $report->reporter->email }}</div>
                 </div>
-                <div class="party-box">
-                    <div class="pb-label">🎯 Reported ({{ $report->reporter_role === 'baker' ? 'Customer' : 'Baker' }})</div>
-                    <div class="pb-avatar">
-                        @if($report->reported->profile_photo)
-                            <img src="{{ asset('storage/'.$report->reported->profile_photo) }}" alt="">
-                        @else {{ strtoupper(substr($report->reported->first_name,0,1)) }} @endif
-                    </div>
-                    <div class="pb-name">{{ $report->reported->first_name }} {{ $report->reported->last_name }}</div>
-                    <div class="pb-email">{{ $report->reported->email }}</div>
-                </div>
+       <div class="party-box">
+    <div class="pb-label">🎯 Reported ({{ $report->reporter_role === 'baker' ? 'Customer' : 'Baker' }})</div>
+    @if($report->reported)
+        <div class="pb-avatar">
+            @if($report->reported->profile_photo)
+                <img src="{{ asset('storage/'.$report->reported->profile_photo) }}" alt="">
+            @else
+                {{ strtoupper(substr($report->reported->first_name, 0, 1)) }}
+            @endif
+        </div>
+        <div class="pb-name">{{ $report->reported->first_name }} {{ $report->reported->last_name }}</div>
+        <div class="pb-email">{{ $report->reported->email }}</div>
+    @else
+        <div class="pb-avatar">?</div>
+        <div class="pb-name">Unknown User</div>
+        <div class="pb-email">—</div>
+    @endif
+</div>
             </div>
         </div>
 

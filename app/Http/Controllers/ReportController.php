@@ -18,11 +18,19 @@ class ReportController extends Controller
     {
         $user = Auth::user();
 
-        // Determine reporter role
-        $isBaker    = $bakerOrder->baker_id === $user->id;
-        $isCustomer = $bakerOrder->cakeRequest->user_id === $user->id;
+        $bakerUserId    = $bakerOrder->baker_id; // ✅ FIXED: baker_id IS the user_id
+        $customerUserId = optional($bakerOrder->cakeRequest)->user_id;
+
+        $isBaker    = $bakerUserId    && (int)$bakerUserId    === (int)$user->id;
+        $isCustomer = $customerUserId && (int)$customerUserId === (int)$user->id;
 
         if (!$isBaker && !$isCustomer) {
+            \Log::warning('Report 403', [
+                'auth_user'       => $user->id,
+                'baker_user_id'   => $bakerUserId,
+                'customer_user_id'=> $customerUserId,
+                'order_id'        => $bakerOrder->id,
+            ]);
             abort(403, 'You are not part of this order.');
         }
 
@@ -38,7 +46,8 @@ class ReportController extends Controller
             'bakerOrder',
             'reporterRole',
             'reportedUser',
-            'existing'
+            'existing',
+            'isBaker'
         ));
     }
 
@@ -50,8 +59,11 @@ class ReportController extends Controller
     {
         $user = Auth::user();
 
-        $isBaker    = $bakerOrder->baker_id === $user->id;
-        $isCustomer = $bakerOrder->cakeRequest->user_id === $user->id;
+        $bakerUserId    = $bakerOrder->baker_id; // ✅ FIXED: baker_id IS the user_id
+        $customerUserId = optional($bakerOrder->cakeRequest)->user_id;
+
+        $isBaker    = $bakerUserId    && (int)$bakerUserId    === (int)$user->id;
+        $isCustomer = $customerUserId && (int)$customerUserId === (int)$user->id;
 
         if (!$isBaker && !$isCustomer) {
             abort(403);
@@ -66,10 +78,14 @@ class ReportController extends Controller
             return back()->with('error', 'You have already submitted a report for this order.');
         }
 
+        $allowedCategories = $isBaker
+            ? array_keys(Report::BAKER_CATEGORIES)
+            : array_keys(Report::CUSTOMER_CATEGORIES);
+
         $request->validate([
-            'category'    => ['required', 'in:' . implode(',', array_keys(Report::CATEGORIES))],
+            'category'    => ['required', 'in:' . implode(',', $allowedCategories)],
             'description' => ['required', 'string', 'min:2', 'max:2000'],
-            'screenshot'  => ['nullable', 'image', 'max:4096'],
+            'screenshot'  => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:4096'],
         ]);
 
         $screenshotPath = null;
@@ -78,17 +94,19 @@ class ReportController extends Controller
         }
 
         $reporterRole = $isBaker ? 'baker' : 'customer';
-        $reportedId   = $isBaker ? $bakerOrder->cakeRequest->user_id : $bakerOrder->baker_id;
+        $reportedId   = $isBaker
+            ? $bakerOrder->cakeRequest->user_id // baker reporting → reported is the customer
+            : $bakerOrder->baker_id;            // ✅ FIXED: customer reporting → reported is baker (user_id)
 
         Report::create([
-            'reporter_id'    => $user->id,
-            'reported_id'    => $reportedId,
-            'baker_order_id' => $bakerOrder->id,
-            'reporter_role'  => $reporterRole,
-            'category'       => $request->category,
-            'description'    => $request->description,
-            'screenshot_path'=> $screenshotPath,
-            'status'         => 'pending',
+            'reporter_id'     => $user->id,
+            'reported_id'     => $reportedId,
+            'baker_order_id'  => $bakerOrder->id,
+            'reporter_role'   => $reporterRole,
+            'category'        => $request->category,
+            'description'     => $request->description,
+            'screenshot_path' => $screenshotPath,
+            'status'          => 'pending',
         ]);
 
         $redirectRoute = $isBaker

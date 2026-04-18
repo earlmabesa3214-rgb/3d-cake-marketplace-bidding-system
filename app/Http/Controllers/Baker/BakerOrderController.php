@@ -53,13 +53,15 @@ class BakerOrderController extends Controller
         abort_if($order->status === 'CANCELLED', 422, 'This order has been cancelled.');
 
         $isPickup = $order->cakeRequest->isPickup();
-
-      $next = [
-    'PREPARING'             => 'READY',
-    'READY'                 => 'WAITING_FINAL_PAYMENT',
-    'WAITING_FINAL_PAYMENT' => 'DELIVERED',
-];
-
+ $next = $isPickup ? [
+            'PREPARING'             => 'READY',
+            'READY'                 => 'WAITING_FINAL_PAYMENT',
+            'WAITING_FINAL_PAYMENT' => 'COMPLETED',
+        ] : [
+            'PREPARING'             => 'READY',
+            'READY'                 => 'WAITING_FINAL_PAYMENT',
+            'WAITING_FINAL_PAYMENT' => 'DELIVERED',
+        ];
         if (!isset($next[$order->status])) {
             return back()->with('error', 'Cannot advance order from current status.');
         }

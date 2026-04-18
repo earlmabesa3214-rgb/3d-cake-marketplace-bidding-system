@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Under Review — BakeSphere</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -59,7 +59,7 @@
             color: var(--amber); margin-bottom: .5rem;
         }
         h1 {
-            font-family: 'Playfair Display', serif;
+          font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.75rem; color: var(--text-dark);
             margin-bottom: .75rem; line-height: 1.25;
         }
@@ -152,7 +152,7 @@
             background: transparent;
             border: 1.5px solid var(--border);
             border-radius: 10px;
-            font-family: 'DM Sans', sans-serif;
+           font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: .88rem; font-weight: 600;
             color: var(--text-muted);
             cursor: pointer;

@@ -14,50 +14,33 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Report::with(['reporter', 'reported', 'bakerOrder']);
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('role')) {
-            $query->where('reporter_role', $request->role);
-        }
-
-        $reports = $query->latest()->paginate(20);
+$reports = Report::with(['reporter', 'reported', 'bakerOrder'])
+            ->when($request->filled('status'), fn($q) => $q->where('status', $request->status))
+            ->when($request->filled('role'),   fn($q) => $q->where('reporter_role', $request->role))
+            ->latest()
+            ->paginate(20);
 
         return view('admin.reports.index', compact('reports'));
     }
+public function show(Report $report)
+{
+    $report->load(['reporter', 'reported', 'bakerOrder']);
+    return view('admin.reports.show', compact('report'));
+}
 
-    /**
-     * Show a single report.
-     * Route: GET /admin/reports/{report}
-     */
-    public function show(Report $report)
-    {
-        $report->load(['reporter', 'reported', 'bakerOrder.cakeRequest']);
+public function update(Request $request, Report $report)
+{
+    $request->validate([
+        'status'     => ['required', 'in:pending,reviewed,resolved,dismissed'],
+        'admin_note' => ['nullable', 'string', 'max:1000'],
+    ]);
 
-        return view('admin.reports.show', compact('report'));
-    }
+    $report->update([
+        'status'      => $request->status,
+        'admin_note'  => $request->admin_note,
+        'reviewed_at' => now(),
+    ]);
 
-    /**
-     * Update report status and admin note.
-     * Route: PATCH /admin/reports/{report}
-     */
-    public function update(Request $request, Report $report)
-    {
-        $validated = $request->validate([
-            'status'     => ['required', 'in:pending,reviewed,resolved,dismissed'],
-            'admin_note' => ['nullable', 'string', 'max:2000'],
-        ]);
-
-        // Set reviewed_at timestamp when moving out of pending
-        if ($report->status === 'pending' && $validated['status'] !== 'pending') {
-            $validated['reviewed_at'] = now();
-        }
-
-        $report->update($validated);
-
-        return back()->with('success', 'Report updated successfully.');
-    }
+    return back()->with('success', 'Report updated.');
+}
 }
