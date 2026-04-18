@@ -3,6 +3,7 @@
 
 @push('styles')
 <style>
+* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
 :root {
     --gold:#C07828; --gold-light:#DC9E48; --gold-soft:#FEF3E2; --gold-glow:rgba(192,120,40,.14);
     --teal:#1F7A6C; --teal-soft:#E4F2EF;

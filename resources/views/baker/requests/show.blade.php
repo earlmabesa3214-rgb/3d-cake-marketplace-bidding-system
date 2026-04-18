@@ -465,7 +465,7 @@
 
         <div class="section-card">
         <div class="budget-display">
-                <div class="budget-display-label">{{ $myBid ? 'Your Bid' : "Customer's Budget" }}</div>
+                <div class="budget-display-label">{{ $myBid ? 'Your Bid' : "Estimated Price" }}</div>
                 <div class="my-bid-amount">
                     @if($myBid)
                         ₱{{ number_format($myBid->amount, 0) }}

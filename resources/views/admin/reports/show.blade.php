@@ -3,6 +3,7 @@
 
 @push('styles')
 <style>
+* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
 :root {
     --brown-deep:#3B1F0F; --caramel:#C8893A;
     --warm-white:#FFFDF9; --cream:#F5EFE6;
@@ -21,7 +22,7 @@
 }
 .rh-left { display:flex; align-items:center; gap:1rem; }
 .rh-icon { width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
-.rh-id   { font-family:'Playfair Display',serif; font-size:1.5rem; margin-bottom:0.15rem; }
+.rh-id   { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; margin-bottom:0.15rem; }
 .rh-sub  { font-size:0.78rem; opacity:0.65; }
 .rh-status { padding:0.4rem 1rem; border-radius:20px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); font-size:0.8rem; font-weight:700; }
 
@@ -29,7 +30,7 @@
 .card { background:var(--warm-white); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:1.5rem; }
 .card:last-child { margin-bottom:0; }
 .card-header { padding:1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0.6rem; }
-.card-header h3 { font-family:'Playfair Display',serif; font-size:0.95rem; color:var(--brown-deep); margin:0; }
+.card-header h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; color:var(--brown-deep); margin:0; }
 
 /* PARTY ROW */
 .party-row { display:flex; gap:1rem; padding:1.25rem 1.5rem; }
@@ -65,7 +66,7 @@
 /* ADMIN ACTION FORM */
 .admin-form-card { background:var(--warm-white); border:1px solid var(--border); border-radius:20px; overflow:hidden; }
 .admin-form-header { padding:1rem 1.5rem; border-bottom:1px solid var(--border); background:linear-gradient(135deg,#3B1F0F,#7A4A28); }
-.admin-form-header h3 { font-family:'Playfair Display',serif; font-size:0.95rem; color:white; margin:0; }
+.admin-form-header h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; color:white; margin:0; }
 .admin-form-body { padding:1.5rem; }
 .form-label { display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin-bottom:0.5rem; }
 .form-select {

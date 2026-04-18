@@ -7,9 +7,8 @@
         <title>{{ config('app.name', 'BakeSphere Admin') }}</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+@vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <style>
             :root {
@@ -51,7 +50,10 @@ html, body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
 }
-
+* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+.topbar-date,
+.nav-badge,
+.order-ref { font-family: 'DM Mono', monospace !important; }
             /* ── SIDEBAR ─────────────────────────────────────── */
             .admin-sidebar {
                 position: fixed; top: 0; left: 0;

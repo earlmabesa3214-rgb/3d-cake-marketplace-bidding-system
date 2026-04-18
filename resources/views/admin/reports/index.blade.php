@@ -3,6 +3,9 @@
 
 @push('styles')
 <style>
+* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+.order-ref,
+.filter-count { font-family: 'DM Mono', monospace !important; }
 :root {
     --gold:#C07828; --gold-light:#DC9E48; --gold-soft:#FEF3E2;
     --teal:#1F7A6C; --teal-soft:#E4F2EF;
