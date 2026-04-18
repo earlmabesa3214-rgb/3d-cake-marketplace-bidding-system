@@ -35,6 +35,7 @@ use App\Http\Controllers\Customer\CustomerPaymentController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\BakerCompleteProfileController;
+use App\Http\Controllers\CakeGalleryController;
 
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 Route::get('/', fn() => redirect()->route('login'));
@@ -241,6 +242,9 @@ Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer
     Route::post('/cake-builder/save-draft',       [CakeBuilderController::class, 'saveDraft'])->name('cake-builder.saveDraft');
     Route::get('/cake-builder/load-draft',        [CakeBuilderController::class, 'loadDraft'])->name('cake-builder.loadDraft');
     Route::post('/cake-builder/save-and-proceed', [CakeBuilderController::class, 'saveAndProceed'])->name('cake-builder.saveAndProceed');
+Route::get('/cake-gallery',        [CakeGalleryController::class, 'index'])->name('cake-gallery.index');
+    Route::get('/cake-builder/drafts', [CakeBuilderController::class, 'drafts'])->name('cake-builder.drafts');
+    Route::delete('/cake-builder/draft', [CakeBuilderController::class, 'discardDraft'])->name('cake-builder.discardDraft');
 
     Route::resource('cake-requests', CakeRequestController::class)->except(['edit', 'update']);
     Route::post('/cake-requests/{cakeRequest}/accept-bid/{bid}',

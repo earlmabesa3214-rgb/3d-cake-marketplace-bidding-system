@@ -24,10 +24,13 @@ class CakeBuilderController extends Controller
         ],
     ];
 
-    public function index()
-    {
-        return view('customer.cake-builder.index', ['pricing' => $this->pricing]);
-    }
+    public function index(Request $request)
+{
+    return view('customer.cake-builder.index', [
+        'pricing'  => $this->pricing,
+        'prefill'  => $request->only(['flavor', 'frosting', 'size', 'budget_min', 'budget_max', 'occasion', 'baker']),
+    ]);
+}
 
     public function calculatePrice(Request $request)
     {
@@ -97,4 +100,20 @@ public function saveAndProceed(Request $request)
         'temp_key'  => $tempKey,
     ]);
 }
+public function drafts()
+{
+    $user  = Auth::user();
+    $key   = "cake_draft_{$user->id}";
+    $draft = Cache::get($key);
+
+    return view('customer.save-draft.index', ['draft' => $draft]);
+}
+
+public function discardDraft()
+{
+    Cache::forget("cake_draft_" . Auth::id());
+    return redirect()->route('customer.cake-builder.drafts')
+        ->with('success', 'Draft discarded.');
+}
+
 }

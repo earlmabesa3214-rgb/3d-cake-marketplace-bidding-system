@@ -188,7 +188,15 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 <!-- AFTER -->
 <div class="sidebar-brand">
     <div class="brand-logo">
-        <div class="brand-icon">👨‍🍳</div>
+<div class="brand-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+        <line x1="6" y1="1" x2="6" y2="4"/>
+        <line x1="10" y1="1" x2="10" y2="4"/>
+        <line x1="14" y1="1" x2="14" y2="4"/>
+    </svg>
+</div>
         <div class="brand-text">
             <div class="brand-name">BakeSphere</div>
             <div class="brand-sub">Baker Portal</div>
@@ -211,10 +219,10 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
             @endif
         </a>
         <a href="{{ route('baker.bids.index') }}" class="nav-link {{ request()->routeIs('baker.bids*') ? 'active' : '' }}">
-            <span class="icon">💼</span> My Bids
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> My Bids
         </a>
         <a href="{{ route('baker.orders.index') }}" class="nav-link {{ request()->routeIs('baker.orders*') ? 'active' : '' }}">
-            <span class="icon">📦</span> Active Orders
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Active Orders
         </a>
 
    <div class="nav-section-label">Finance</div>
@@ -227,7 +235,7 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
             </span>
         </a>
         <a href="{{ route('baker.earnings.index') }}" class="nav-link {{ request()->routeIs('baker.earnings*') ? 'active' : '' }}">
-            <span class="icon">💰</span> Earnings
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Earnings
         </a>
 
         <div class="nav-section-label">Account</div>
@@ -235,7 +243,7 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
             <span class="icon">👤</span> Profile & Portfolio
         </a>
         <a href="{{ route('baker.notifications.index') }}" class="nav-link {{ request()->routeIs('baker.notifications*') ? 'active' : '' }}">
-            <span class="icon">🔔</span> Notifications
+            <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Notifications
             @php $unread = auth()->user()->unreadNotifications->count(); @endphp
             @if($unread > 0)
             <span style="margin-left:auto; background:var(--caramel); color:white; font-size:0.65rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:10px;">{{ $unread }}</span>
@@ -284,7 +292,7 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
                 <strong>{{ auth()->user()->first_name }}</strong>!
             </div>
             <a href="{{ route('baker.notifications.index') }}" class="notif-bell" id="notif-bell">
-                🔔
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                 <span class="notif-badge {{ auth()->user()->unreadNotifications->count() > 0 ? 'visible' : '' }}" id="notif-count">
                     {{ auth()->user()->unreadNotifications->count() > 0 ? auth()->user()->unreadNotifications->count() : '' }}
                 </span>

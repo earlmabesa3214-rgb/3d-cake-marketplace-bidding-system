@@ -110,7 +110,17 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
   <!-- AFTER -->
 <div class="sidebar-brand">
     <div class="brand-logo">
-        <div class="brand-icon">🎂</div>
+<div class="brand-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 11H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2z"/>
+        <path d="M12 11V7"/>
+        <path d="M8 11V8"/>
+        <path d="M16 11V8"/>
+        <path d="M9 7a3 3 0 0 1 6 0"/>
+        <path d="M6 8a2 2 0 0 0 0 3"/>
+        <path d="M18 8a2 2 0 0 1 0 3"/>
+    </svg>
+</div>
         <div class="brand-text">
             <div class="brand-name">BakeSphere</div>
             <div class="brand-sub">Customer Portal</div>
@@ -124,18 +134,24 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
             <span class="icon">⊞</span> Dashboard
         </a>
 
-        <div class="nav-section-label">Orders</div>
-        <a href="{{ route('customer.cake-builder.index') }}" class="nav-link {{ request()->routeIs('customer.cake-builder*') ? 'active' : '' }}">
-            <span class="icon">🎂</span> 3D Cake Customization
+      <div class="nav-section-label">Orders</div>
+<a href="{{ route('customer.cake-builder.index') }}" class="nav-link {{ request()->routeIs('customer.cake-builder.index') ? 'active' : '' }}">
+         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>3D Cake Customization
         </a>
-        <a href="{{ route('customer.cake-requests.index') }}" class="nav-link {{ request()->routeIs('customer.cake-requests*') ? 'active' : '' }}">
-            <span class="icon">📋</span> My Orders
+<a href="{{ route('customer.cake-gallery.index') }}" class="nav-link {{ request()->routeIs('customer.cake-gallery*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Cake Gallery
         </a>
+        <a href="{{ route('customer.cake-builder.drafts') }}" class="nav-link {{ request()->routeIs('customer.cake-builder.drafts*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save Draft
+        </a>
+<a href="{{ route('customer.cake-requests.index') }}" class="nav-link {{ request()->routeIs('customer.cake-requests*') ? 'active' : '' }}">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>My Orders
+</a>
 
         <div class="nav-section-label">Finance</div>
         @php $customerWalletBalance = \App\Models\Wallet::forUser(auth()->id())->balance; @endphp
         <a href="{{ route('customer.wallet.index') }}" class="nav-link {{ request()->routeIs('customer.wallet*') ? 'active' : '' }}">
-            <span class="icon">₱</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             <span style="flex:1;">My Wallet</span>
             <span style="background:rgba(200,137,74,0.25); color:var(--caramel-light); font-size:0.65rem; font-weight:700; padding:0.1rem 0.5rem; border-radius:8px; white-space:nowrap;">
                 ₱{{ number_format($customerWalletBalance, 0) }}
@@ -144,10 +160,10 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 
         <div class="nav-section-label">Account</div>
         <a href="{{ route('customer.profile.index') }}" class="nav-link {{ request()->routeIs('customer.profile.index') ? 'active' : '' }}">
-            <span class="icon">👤</span> Profile
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
         </a>
         <a href="{{ route('customer.notifications.index') }}" class="nav-link {{ request()->routeIs('customer.notifications*') ? 'active' : '' }}">
-            <span class="icon">🔔</span> Notifications
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications
             @php $unread = auth()->user()->unread_notifications_count; @endphp
             @if($unread > 0)
             <span style="margin-left:auto; background:var(--caramel); color:white; font-size:0.65rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:10px;">{{ $unread }}</span>
