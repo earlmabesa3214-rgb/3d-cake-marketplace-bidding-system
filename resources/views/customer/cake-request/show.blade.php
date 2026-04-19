@@ -1573,7 +1573,7 @@ if ($acceptedBid) {
                     </div>
                     <div class="psc-divider">
                         <div class="psc-divider-line"></div>
-                        <div class="psc-total">Total ₱{{ number_format($acceptedBid->amount, 2) }}</div>
+                        <div class="psc-total">Total ₱{{ number_format($bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount, 2) }}</div>
                         <div class="psc-divider-line"></div>
                     </div>
             <div class="psc-half half-locked">
@@ -1643,7 +1643,7 @@ if ($acceptedBid) {
                     </div>
                     <div class="psc-divider">
                         <div class="psc-divider-line"></div>
-                        <div class="psc-total">Total ₱{{ number_format($acceptedBid->amount, 2) }}</div>
+                        <div class="psc-total">Total ₱{{ number_format($bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount, 2) }}</div>
                         <div class="psc-divider-line"></div>
                     </div>
                     <div class="psc-half {{ $finalIsRejected ? 'half-rejected' : ($finalIsPending ? 'half-pending' : 'half-pending') }}">
@@ -1732,7 +1732,7 @@ if ($acceptedBid) {
                     </div>
                     <div class="psc-divider">
                         <div class="psc-divider-line"></div>
-                        <div class="psc-total">Total ₱{{ number_format($acceptedBid->amount, 2) }}</div>
+                        <div class="psc-total">Total ₱{{ number_format($bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount, 2) }}</div>
                         <div class="psc-divider-line"></div>
                     </div>
                     <div class="psc-half half-locked">
@@ -1777,7 +1777,7 @@ if ($acceptedBid) {
                     </div>
                     <div class="psc-divider">
                         <div class="psc-divider-line"></div>
-                        <div class="psc-total">Total ₱{{ number_format($acceptedBid->amount, 2) }}</div>
+                        <div class="psc-total">Total ₱{{ number_format($bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount, 2) }}</div>
                         <div class="psc-divider-line"></div>
                     </div>
                     <div class="psc-half {{ $finalPayment && $finalPayment->isPaid() ? 'half-paid' : 'half-locked' }}">

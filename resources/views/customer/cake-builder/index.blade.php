@@ -900,6 +900,37 @@ font-size: .8rem; font-weight: 600;
 
     .btn-proceed span { display: none; } /* hide "Request Cake" text on tiny screens */
 }
+/* ── ROTATION PANEL ── */
+.rot-panel { display:none; margin-top:10px; background:var(--warm-white); border:1.5px solid rgba(200,137,74,.35); border-radius:12px; padding:11px 13px; }
+.rot-panel.visible { display:block; }
+.rot-panel-title { font-size:.68rem; font-weight:700; color:#7A4A1E; margin-bottom:8px; display:flex; align-items:center; gap:5px; font-family:var(--font-display); }
+.rot-panel-title svg { flex-shrink:0; }
+.rot-preview-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.rot-emoji-preview { font-size:2rem; line-height:1; transition:transform .18s; display:block; }
+.rot-slider-col { flex:1; }
+.rot-slider-ends { display:flex; justify-content:space-between; font-size:.63rem; color:var(--text-muted); font-family:var(--font-display); margin-bottom:3px; }
+.rot-deg-display { text-align:center; font-size:.82rem; font-weight:700; color:var(--caramel); font-family:var(--font-display); margin-top:3px; }
+input[type=range].rot-range { -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; background:var(--border); outline:none; cursor:pointer; }
+input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; width:24px; height:24px; border-radius:50%; background:var(--caramel); border:3px solid #fff; box-shadow:0 2px 6px rgba(60,20,5,.28); cursor:pointer; }
+.rot-preset-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-bottom:8px; }
+.rot-preset-btn { padding:7px 4px; border:1.5px solid rgba(200,137,74,.35); border-radius:9px; background:rgba(200,137,74,.10); color:#7A4A1E; font-size:.70rem; font-weight:700; cursor:pointer; text-align:center; font-family:var(--font-display); transition:all .15s; }
+.rot-preset-btn:hover { background:rgba(200,137,74,.25); }
+.rot-actions { display:flex; gap:6px; }
+.rot-apply-btn { flex:1; padding:9px; background:var(--caramel); border:none; border-radius:10px; color:#fff; font-size:.76rem; font-weight:700; cursor:pointer; font-family:var(--font-display); transition:all .18s; }
+.rot-apply-btn:hover { background:var(--caramel-light); }
+.rot-reset-btn { padding:9px 11px; background:transparent; border:1.5px solid rgba(200,137,74,.40); border-radius:10px; color:var(--text-muted); font-size:.72rem; font-weight:600; cursor:pointer; font-family:var(--font-display); }
+.rot-reset-btn:hover { border-color:var(--caramel); color:var(--caramel); }
+/* Gold tint for choco rotation panel */
+.rot-panel.rot-gold { border-color:rgba(196,154,60,.40); }
+.rot-panel.rot-gold .rot-panel-title { color:#6B4C08; }
+.rot-panel.rot-gold input[type=range].rot-range::-webkit-slider-thumb { background:var(--gold); }
+.rot-panel.rot-gold .rot-deg-display { color:var(--gold); }
+.rot-panel.rot-gold .rot-preset-btn { border-color:rgba(196,154,60,.35); background:rgba(196,154,60,.12); color:#6B4C08; }
+.rot-panel.rot-gold .rot-preset-btn:hover { background:rgba(196,154,60,.28); }
+.rot-panel.rot-gold .rot-apply-btn { background:var(--gold); }
+.rot-panel.rot-gold .rot-apply-btn:hover { background:#D4AA4C; }
+.rot-panel.rot-gold .rot-reset-btn { border-color:rgba(196,154,60,.40); }
+.rot-panel.rot-gold .rot-reset-btn:hover { border-color:var(--gold); color:var(--gold); }
     </style>
 </head>
 <body>
@@ -1175,31 +1206,112 @@ font-size: .8rem; font-weight: 600;
                         <div class="drip-flavor-opt"        data-drip-flavor="White Chocolate" data-drip-color="#F5ECD0"><span class="drip-color-dot" style="background:#F5ECD0;border:1px solid #D5C8B8;"></span>White Choco</div>
                     </div>
                 </div>
-
-                <div class="addon-section-lbl" style="margin-top:10px;">🍓 Fruits</div>
-                <div class="addon-grid" id="opts-fruits" style="margin-bottom:6px;">
-                    <div class="addon-opt" data-group="fruits" data-val="Strawberry" data-price="120"><div class="a-icon">🍓</div><div class="a-info"><span class="a-name">Strawberry</span><span class="a-price">+₱120</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="fruits" data-val="Blueberry"  data-price="180"><div class="a-icon">🫐</div><div class="a-info"><span class="a-name">Blueberry</span><span class="a-price">+₱180</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="fruits" data-val="Raspberry"  data-price="220"><div class="a-icon">🍇</div><div class="a-info"><span class="a-name">Raspberry</span><span class="a-price">+₱220</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="fruits" data-val="Cherry"     data-price="150"><div class="a-icon">🍒</div><div class="a-info"><span class="a-name">Cherry</span><span class="a-price">+₱150</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                </div>
-                <div class="fruits-drag-notice" id="fruitsDragNotice" style="display:none;flex-direction:row;">
-                    <span class="fruits-drag-icon">🖱</span>
-                    <div>
-                        <span class="fruits-drag-label">Drag fruits onto your cake!</span>
-                        <span class="fruits-drag-sub">Use the tray at the bottom of the preview. Click a placed fruit to pick it up and move it.</span>
+<div class="addon-section-lbl" style="margin-top:10px;">🍓 Fruits</div>
+                <div style="background:var(--accent-lt);border:1px solid rgba(200,137,74,.25);border-radius:12px;padding:10px 12px;">
+                    <p style="font-size:.72rem;font-weight:700;color:#7A4A1E;margin:0 0 10px;font-family:var(--font-display);">Tap a fruit to add it — then tap the cake preview to place it</p>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="opts-fruits">
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="120" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🍓</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Strawberry</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱120</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Blueberry" data-price="180" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🫐</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Blueberry</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱180</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Raspberry" data-price="220" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🍇</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Raspberry</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱220</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="150" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🍒</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Cherry</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱150</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
                     </div>
+                    <div id="fruitsDragNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
+                        <span style="font-size:1.1rem;">👆</span>
+                        <span><strong>Now tap the cake preview</strong> to place your fruit. Tap a placed fruit to move it.</span>
+                    </div>
+            
                 </div>
 
 <div class="addon-section-lbl" style="margin-top:10px;">🍫 Chocolate Decorations</div>
-                <p style="font-size:.65rem;color:var(--text-muted);margin:0 0 6px;font-family:var(--font-display);">Items marked <strong>/pc</strong> are priced per piece — total updates as you drag and place each one.</p>
-                <div class="addon-grid" id="opts-choco" style="margin-bottom:6px;">
-                    <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard"  data-price="120"><div class="a-icon">🍫</div><div class="a-info"><span class="a-name">Bar Shard</span>  <span class="a-price">+₱120</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball"   data-price="80"  id="ferreroToggleBtn"><div class="a-icon">🟤</div><div class="a-info"><span class="a-name">Ferrero Ball</span><span class="a-price">+₱80/pc · drag to place</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="choco" data-val="Chocolate Curls"      data-price="100"><div class="a-icon">🌀</div><div class="a-info"><span class="a-name">Choco Curls</span><span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="90" id="kitkatToggleBtn"><div class="a-icon">🍬</div><div class="a-info"><span class="a-name">KitKat Sticks</span><span class="a-price">+₱90/pc · drag to place</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="60" id="oreoToggleBtn"><div class="a-icon">⚫</div><div class="a-info"><span class="a-name">Oreo Cookie</span><span class="a-price">+₱60/pc · drag to place</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque"     data-price="200"><div class="a-icon">🟫</div><div class="a-info"><span class="a-name">Choco Plaque</span><span class="a-price">+₱200</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                <div style="background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;padding:10px 12px;">
+                    <p style="font-size:.72rem;font-weight:700;color:#6B4C08;margin:0 0 10px;font-family:var(--font-display);">Tap a decoration to add it — then tap the cake preview to place it</p>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="opts-choco">
+                        <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball" data-price="80" id="ferreroToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🟤</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Ferrero</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱80/pc</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="90" id="kitkatToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🍬</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">KitKat</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱90/pc</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="60" id="oreoToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">⚫</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Oreo</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱60/pc</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard" data-price="120" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🍫</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Bar Shard</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱120</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt" data-group="choco" data-val="Chocolate Curls" data-price="100" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🌀</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Curls</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱100</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="200" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <span style="font-size:1.8rem;line-height:1;">🟫</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Plaque</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱200</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                    </div>
+                    <div id="chocoPlaceNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(196,154,60,.18);border-radius:8px;font-size:.70rem;color:#6B4C08;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
+                        <span style="font-size:1.1rem;">👆</span>
+                        <span><strong>Now tap the cake preview</strong> to place it. Tap a placed piece to move it.</span>
+                    </div>
+                    {{-- CHOCO ROTATION PANEL --}}
+                    <div class="rot-panel rot-gold" id="chocoRotPanel">
+                        <div class="rot-panel-title">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C49A3C" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 3v4h4"/></svg>
+                            Rotate: <span id="chocoRotLabel">Ferrero</span>
+                        </div>
+                        <div class="rot-preview-row">
+                            <span class="rot-emoji-preview" id="chocoRotEmoji">🟤</span>
+                            <div class="rot-slider-col">
+                                <div class="rot-slider-ends"><span>0°</span><span>360°</span></div>
+                                <input type="range" class="rot-range" id="chocoRotRange" min="0" max="360" step="5" value="0">
+                                <div class="rot-deg-display" id="chocoRotDeg">0°</div>
+                            </div>
+                        </div>
+                        <div class="rot-preset-grid">
+                            <button class="rot-preset-btn" data-choco-rot="0">↑ Up</button>
+                            <button class="rot-preset-btn" data-choco-rot="90">→ Right</button>
+                            <button class="rot-preset-btn" data-choco-rot="180">↓ Down</button>
+                            <button class="rot-preset-btn" data-choco-rot="270">← Left</button>
+                        </div>
+                        <div class="rot-actions">
+                            <button class="rot-apply-btn" id="chocoRotApply">✓ Apply to cake</button>
+                            <button class="rot-reset-btn" id="chocoRotReset">Reset</button>
+                       </div>
+                </div>
                 </div>
 
                 <div class="ferrero-drag-notice" id="ferreroDragNotice" style="display:none;flex-direction:row;">
@@ -3110,6 +3222,98 @@ window.updateModel=(state)=>updateScene(state);
 window.resetCamera=()=>{camera.position.set(0,1.8,8.5);controls.target.set(0,-0.30,0);controls.reset();};
 window.addEventListener('resize',()=>{const w=container.clientWidth,h=container.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});
 window._viewerReady=true;
+// ── FRUIT ROTATE INLINE PANEL ──
+(function(){
+    let activeFruitPanelIdx = -1;
+    const FRUIT_EMOJI = { Strawberry:'🍓', Blueberry:'🫐', Raspberry:'🍇', Cherry:'🍒' };
+    // Rotation axis per fruit — Strawberry/Raspberry use X for placement so we rotate Y instead
+    const FRUIT_ROT_AXIS = { Strawberry:'y', Raspberry:'y', Blueberry:'z', Cherry:'z' };
+
+    const panel    = document.getElementById('fruitRotPanel');
+    const range    = document.getElementById('fruitRotPanelRange');
+    const degLabel = document.getElementById('fruitRotPanelDeg');
+    const preview  = document.getElementById('fruitRotPanelPreview');
+    const emojiEl  = document.getElementById('fruitRotPanelEmoji');
+    const nameEl   = document.getElementById('fruitRotPanelName');
+
+    // Move panel into the viewer, anchored below the brightness control
+    const viewer = document.getElementById('viewerEl');
+    if(viewer) viewer.appendChild(panel);
+    panel.style.cssText = 'display:none;position:absolute;top:58px;right:14px;z-index:50;width:260px;border-radius:14px;overflow:hidden;border:1.5px solid rgba(200,137,74,.30);box-shadow:0 4px 20px rgba(59,31,14,0.35);';
+
+    function getAxis(fruit){ return FRUIT_ROT_AXIS[fruit] || 'z'; }
+
+    function getDeg(m){
+        const axis = getAxis(m.fruit);
+        return Math.round((m.group.rotation[axis] * 180 / Math.PI + 360) % 360);
+    }
+
+    function showPanel(idx){
+        activeFruitPanelIdx = idx;
+        const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+        const m = models[idx];
+        if(!m) return;
+        const em = FRUIT_EMOJI[m.fruit] || '🍓';
+        const deg = getDeg(m);
+        emojiEl.textContent = em;
+        preview.textContent = em;
+        nameEl.textContent = m.fruit;
+        range.value = deg;
+        degLabel.textContent = deg + '°';
+        preview.style.transform = `rotate(${deg}deg)`;
+        panel.style.display = 'block';
+        panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+
+    function hidePanel(){
+        panel.style.display = 'none';
+        activeFruitPanelIdx = -1;
+    }
+
+    range.addEventListener('input', function(){
+        const d = parseInt(this.value);
+        degLabel.textContent = d + '°';
+        preview.style.transform = `rotate(${d}deg)`;
+        const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+        const m = models[activeFruitPanelIdx];
+        if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = d * Math.PI / 180; }
+    });
+
+    document.querySelectorAll('.fruit-rot-panel-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const d = parseInt(btn.dataset.deg);
+            range.value = d; degLabel.textContent = d + '°';
+            preview.style.transform = `rotate(${d}deg)`;
+            const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+            const m = models[activeFruitPanelIdx];
+            if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = d * Math.PI / 180; }
+        });
+    });
+
+    document.getElementById('fruitRotPanelApply').addEventListener('click', () => {
+        const deg = parseInt(range.value);
+        const em = emojiEl.textContent;
+        showToast(`${em} Rotated ${deg}°`, 1600);
+        hidePanel();
+    });
+
+    document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
+        range.value = 0; degLabel.textContent = '0°';
+        preview.style.transform = 'rotate(0deg)';
+        const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+        const m = models[activeFruitPanelIdx];
+        if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = 0; }
+    });
+
+    document.getElementById('fruitRotPanelClose').addEventListener('click', hidePanel);
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') hidePanel(); });
+
+    window._showFruitRotatePanel = showPanel;
+    window._hideFruitRotatePanel = hidePanel;
+    // Keep legacy name working just in case
+    window._showFruitRotatePopup = showPanel;
+    window._hideFruitRotatePopup = hidePanel;
+})();
 </script>
 
 <script>
@@ -3353,6 +3557,8 @@ document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]')
 function updateChocoTray(){
     const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard');
     const hasAny=hasF||hasK||hasO||hasB;
+    const chocoNotice=document.getElementById('chocoPlaceNotice');
+    if(chocoNotice) chocoNotice.style.display=hasAny?'flex':'none';
     document.getElementById('chocoTray').classList.toggle('visible',hasAny);
     document.getElementById('trayFerrero').style.display=hasF?'':'none';
     document.getElementById('trayKitkat').style.display=hasK?'':'none';
@@ -3445,12 +3651,26 @@ function hookCanvasPointerDown(){
         if(typeof window.getOreoIndexAtScreen==='function'){const oidx=window.getOreoIndexAtScreen(e.clientX,e.clientY);if(oidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnOreo=true;attachedOreoIdx=oidx;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(oidx);setCursorGrab(true);dragGhost.textContent='⚫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         if(typeof window.getKitkatIndexAtScreen==='function'){const kidx=window.getKitkatIndexAtScreen(e.clientX,e.clientY);if(kidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnKitkat=true;attachedKitkatIdx=kidx;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(kidx);setCursorGrab(true);dragGhost.textContent='🍬';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         if(typeof window.getFerreroIndexAtScreen==='function'){const fidx=window.getFerreroIndexAtScreen(e.clientX,e.clientY);if(fidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnFerrero=true;attachedFerreroIdx=fidx;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(fidx);setCursorGrab(true);dragGhost.textContent='🟤';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
-if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIndexAtScreen(e.clientX,e.clientY);if(idx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnFruit=true;attachedFruitIdx=idx;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(idx);const en=placedFruitRecord[idx],emoji=en?en.emoji:'🍓';setCursorGrab(true);dragGhost.textContent=emoji;dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
+if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIndexAtScreen(e.clientX,e.clientY);if(idx>=0){e.stopPropagation();e.preventDefault();
+    _pointerDownOnFruit=true;attachedFruitIdx=idx;
+    if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(idx);
+    const en=placedFruitRecord[idx];dragGhost.textContent=en?en.emoji:'🍓';
+    dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';
+    setCursorGrab(true);
+    // track if this turns into a drag or stays a click
+    window._fruitPointerMoved=false;
+    window._fruitClickIdx=idx;window._fruitClickX=e.clientX;window._fruitClickY=e.clientY;
+    return;
+}}
         if(typeof window.getCandleIndexAtScreen==='function'){const cidx=window.getCandleIndexAtScreen(e.clientX,e.clientY);if(cidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnCandle=true;attachedCandleIdx=cidx;if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(cidx);setCursorGrab(true);dragGhost.textContent='🕯️';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         _pointerDownOnFruit=false;_pointerDownOnFerrero=false;_pointerDownOnKitkat=false;_pointerDownOnOreo=false;
     },{capture:true});
     canvas.addEventListener('pointermove',e=>{
-    if(attachedFruitIdx>=0){updateAttachedFruit(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
+    if(attachedFruitIdx>=0){
+        const dx=e.clientX-(window._fruitClickX||e.clientX),dy=e.clientY-(window._fruitClickY||e.clientY);
+        if(Math.abs(dx)>4||Math.abs(dy)>4) window._fruitPointerMoved=true;
+        updateAttachedFruit(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';
+    }
     if(attachedFerreroIdx>=0){updateAttachedFerrero(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
     if(attachedKitkatIdx>=0){updateAttachedKitkat(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
     if(attachedOreoIdx>=0){updateAttachedOreo(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
@@ -3458,7 +3678,18 @@ if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIn
     if(attachedCandleIdx>=0){updateAttachedCandle(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
 });
     canvas.addEventListener('pointerup',e=>{
-        if(_pointerDownOnFruit){_pointerDownOnFruit=false;if(attachedFruitIdx>=0)dropAttachedFruit(e.clientX,e.clientY);}
+        if(_pointerDownOnFruit){_pointerDownOnFruit=false;
+            if(attachedFruitIdx>=0){
+                if(!window._fruitPointerMoved){
+                    // it was a tap/click — show inline rotate panel, cancel drag
+                    if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);
+                    const idx=attachedFruitIdx;attachedFruitIdx=-1;setCursorGrab(false);dragGhost.style.display='none';dropRing.style.display='none';
+                    if(typeof window._showFruitRotatePanel==='function')window._showFruitRotatePanel(idx);
+                } else {
+                    dropAttachedFruit(e.clientX,e.clientY);
+                }
+            }
+        }
         if(_pointerDownOnFerrero){_pointerDownOnFerrero=false;if(attachedFerreroIdx>=0)dropAttachedFerrero(e.clientX,e.clientY);}
         if(_pointerDownOnKitkat){_pointerDownOnKitkat=false;if(attachedKitkatIdx>=0)dropAttachedKitkat(e.clientX,e.clientY);}
         if(_pointerDownOnOreo){_pointerDownOnOreo=false;if(attachedOreoIdx>=0)dropAttachedOreo(e.clientX,e.clientY);}
@@ -3477,11 +3708,11 @@ if(attachedBarShardIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.t
     if(attachedCandleIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedCandle(e.clientX,e.clientY);}
 });
 viewerEl.addEventListener('click',e=>{
-    if(attachedFruitIdx>=0){dropAttachedFruit(e.clientX,e.clientY);return;}
+    // Fruits are handled in pointerup — skip here to avoid double-firing
     if(attachedFerreroIdx>=0){dropAttachedFerrero(e.clientX,e.clientY);return;}
     if(attachedKitkatIdx>=0){dropAttachedKitkat(e.clientX,e.clientY);return;}
     if(attachedOreoIdx>=0){dropAttachedOreo(e.clientX,e.clientY);return;}
-if(attachedBarShardIdx>=0){dropAttachedBarShard(e.clientX,e.clientY);return;}
+    if(attachedBarShardIdx>=0){dropAttachedBarShard(e.clientX,e.clientY);return;}
     if(attachedCandleIdx>=0){dropAttachedCandle(e.clientX,e.clientY);}
 },true);
 
@@ -3554,7 +3785,7 @@ viewerEl.addEventListener('drop',async e=>{
     if(activeOreoDrag&&isDraggingOreoFromTray){isDraggingOreoFromTray=false;activeOreoDrag=null;dragGhost.style.display='none';if(typeof window.placeOreoOnCake==='function'){const idx=await window.placeOreoOnCake(e.clientX,e.clientY,state.oreoOrientation);if(idx>=0){placedOreoRecord[idx]={emoji:'⚫'};state.placedOreo.push({x:e.clientX,y:e.clientY,orientation:state.oreoOrientation});showToast(`⚫ Oreo placed ${state.oreoOrientation==='standing'?'standing up':'lying flat'}! Click to move.`,2200);updateAll();}}return;}
     if(activeKitkatDrag&&isDraggingKitkatFromTray){isDraggingKitkatFromTray=false;activeKitkatDrag=null;dragGhost.style.display='none';if(typeof window.placeKitkatOnCake==='function'){const idx=await window.placeKitkatOnCake(e.clientX,e.clientY,state.kitkatOrientation);if(idx>=0){placedKitkatRecord[idx]={emoji:'🍬'};state.placedKitkat.push({x:e.clientX,y:e.clientY,orientation:state.kitkatOrientation});showToast(`🍬 KitKat placed ${state.kitkatOrientation==='standing'?'standing up':'lying flat'}! Click to move.`,2200);updateAll();}}return;}
     if(activeFerreroDrag&&isDraggingFerreroFromTray){isDraggingFerreroFromTray=false;activeFerreroDrag=null;dragGhost.style.display='none';if(typeof window.placeFerreroOnCake==='function'){const idx=await window.placeFerreroOnCake(e.clientX,e.clientY);if(idx>=0){placedFerreroRecord[idx]={emoji:'🟤'};state.placedFerrero.push({x:e.clientX,y:e.clientY});showToast('🟤 Ferrero placed! Click it to move.',2200);updateAll();}}return;}
-    if(activeTrayDrag&&isDraggingFromTray){const{fruit,emoji}=activeTrayDrag;isDraggingFromTray=false;activeTrayDrag=null;dragGhost.style.display='none';if(typeof window.placeFruitOnCake==='function'){const idx=await window.placeFruitOnCake(fruit,e.clientX,e.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Click it to move.`,2200);}}}
+    if(activeTrayDrag&&isDraggingFromTray){const{fruit,emoji}=activeTrayDrag;isDraggingFromTray=false;activeTrayDrag=null;dragGhost.style.display='none';window._fruitPointerMoved=false;if(typeof window.placeFruitOnCake==='function'){const idx=await window.placeFruitOnCake(fruit,e.clientX,e.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Drag to move, tap to rotate.`,2200);}}}
     if(activeCandleDrag&&isDraggingCandleFromTray){const num=activeCandleDrag.num;isDraggingCandleFromTray=false;activeCandleDrag=null;dragGhost.style.display='none';document.getElementById('candleDropRing').style.display='none';viewerEl.classList.remove('candle-drag-over');if(typeof window.placeCandleOnCake==='function'){const idx=await window.placeCandleOnCake(num,e.clientX,e.clientY);if(idx>=0){placedCandleRecord[idx]={num};state.placedCandles.push({x:e.clientX,y:e.clientY,num});showToast(`🕯️ Candle #${num} placed! Click to move.`,2200);updateAll();}}}
 });
 
@@ -3582,7 +3813,7 @@ document.addEventListener('touchend',async e=>{
     const t=e.changedTouches[0];const rect=viewerEl.getBoundingClientRect(),over=t.clientX>=rect.left&&t.clientX<=rect.right&&t.clientY>=rect.top&&t.clientY<=rect.bottom;
     dragGhost.style.display='none';dropRing.style.display='none';ferreroDropRing.style.display='none';kitkatDropRing.style.display='none';oreoDropRing.style.display='none';
     if(touchAttachedIdx>=0){if(over&&typeof window.moveDraggingFruit==='function')window.moveDraggingFruit(t.clientX,t.clientY);if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);const en=placedFruitRecord[touchAttachedIdx];if(en)showToast(`${en.emoji} repositioned`,1400);touchAttachedIdx=-1;touchTrayFruit=null;return;}
-    if(touchTrayFruit&&over&&typeof window.placeFruitOnCake==='function'){const{fruit,emoji}=touchTrayFruit;const idx=await window.placeFruitOnCake(fruit,t.clientX,t.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Tap to move.`,2000);}}touchTrayFruit=null;
+    if(touchTrayFruit&&over&&typeof window.placeFruitOnCake==='function'){const{fruit,emoji}=touchTrayFruit;window._fruitPointerMoved=false;const idx=await window.placeFruitOnCake(fruit,t.clientX,t.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Drag to move, tap to rotate.`,2000);}}touchTrayFruit=null;
     if(touchFerreroAttachedIdx>=0){if(over&&typeof window.moveDraggingFerrero==='function')window.moveDraggingFerrero(t.clientX,t.clientY);if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(-1);showToast('🟤 Ferrero repositioned',1400);touchFerreroAttachedIdx=-1;touchFerreroFruit=null;return;}
     if(touchFerreroFruit&&over&&typeof window.placeFerreroOnCake==='function'){const idx=await window.placeFerreroOnCake(t.clientX,t.clientY);if(idx>=0){placedFerreroRecord[idx]={emoji:'🟤'};state.placedFerrero.push({x:t.clientX,y:t.clientY});showToast('🟤 Ferrero placed! Tap to move.',2000);updateAll();}}touchFerreroFruit=null;
     if(touchKitkatAttachedIdx>=0){if(over&&typeof window.moveDraggingKitkat==='function')window.moveDraggingKitkat(t.clientX,t.clientY);if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(-1);showToast('🍬 KitKat repositioned',1400);touchKitkatAttachedIdx=-1;touchKitkatFruit=null;return;}
@@ -3863,6 +4094,39 @@ initMobileSummary();
             <button id="closeMobileSummary" style="background:transparent;border:none;cursor:pointer;color:var(--text-muted);font-size:1.2rem;line-height:1;">✕</button>
         </div>
         <div id="mobileSummaryContent" style="padding:14px 18px;"></div>
+    </div>
+</div>
+<!-- FRUIT ROTATE INLINE PANEL (injected into sidebar by JS) -->
+<div id="fruitRotPanel">
+    <div style="background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown-mid) 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+            <span id="fruitRotPanelEmoji" style="font-size:1.4rem;line-height:1;">🍓</span>
+            <div>
+                <div style="font-size:.68rem;font-weight:700;color:var(--caramel-light);font-family:var(--font-display);">Rotate <span id="fruitRotPanelName">Strawberry</span></div>
+                <div style="font-size:.60rem;color:rgba(232,176,122,0.55);font-family:var(--font-display);">Drag to move · Tap to rotate</div>
+            </div>
+        </div>
+        <button id="fruitRotPanelClose" style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);border-radius:7px;color:rgba(232,176,122,0.7);font-size:.75rem;cursor:pointer;padding:4px 8px;font-family:var(--font-display);">Done</button>
+    </div>
+    <div style="background:var(--warm-white);padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span id="fruitRotPanelPreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;">🍓</span>
+            <div style="flex:1;">
+                <div style="display:flex;justify-content:space-between;font-size:.60rem;color:var(--text-muted);margin-bottom:4px;font-family:var(--font-display);"><span>0°</span><span>180°</span><span>360°</span></div>
+                <input type="range" id="fruitRotPanelRange" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
+                <div id="fruitRotPanelDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);margin-top:3px;">0°</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
+            <button class="fruit-rot-panel-preset" data-deg="0"   style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;">0°</button>
+            <button class="fruit-rot-panel-preset" data-deg="90"  style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;">90°</button>
+            <button class="fruit-rot-panel-preset" data-deg="180" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;">180°</button>
+            <button class="fruit-rot-panel-preset" data-deg="270" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;">270°</button>
+        </div>
+        <div style="display:flex;gap:6px;">
+            <button id="fruitRotPanelApply" style="flex:1;padding:9px;background:var(--caramel);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .18s;">✓ Apply Rotation</button>
+            <button id="fruitRotPanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
+        </div>
     </div>
 </div>
 </body>
