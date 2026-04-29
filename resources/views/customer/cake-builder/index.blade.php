@@ -513,7 +513,7 @@ nav {
         .ferrero-drop-ring { position:absolute; border:2px dashed rgba(196,154,60,0.80); border-radius:50%; pointer-events:none; z-index:27; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
         .kitkat-drop-ring { position:absolute; border:2px dashed rgba(220,60,40,0.80); border-radius:8px; pointer-events:none; z-index:28; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
         .oreo-drop-ring { position:absolute; border:2px dashed rgba(200,190,175,0.80); border-radius:50%; pointer-events:none; z-index:29; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
-        #dragGhost { position:fixed; pointer-events:none; z-index:9999; font-size:2rem; transform:translate(-50%,-50%); display:none; filter:drop-shadow(0 4px 8px rgba(60,30,5,.55)); }
+        #dragGhost { display:none !important; }
         .viewer.fruit-drag-over { outline:3px dashed rgba(180,120,40,0.45); outline-offset:-4px; }
         .viewer.ferrero-drag-over { outline:3px dashed rgba(196,154,60,0.60); outline-offset:-4px; }
         .viewer.kitkat-drag-over { outline:3px dashed rgba(220,60,40,0.55); outline-offset:-4px; }
@@ -931,6 +931,36 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
 .rot-panel.rot-gold .rot-apply-btn:hover { background:#D4AA4C; }
 .rot-panel.rot-gold .rot-reset-btn { border-color:rgba(196,154,60,.40); }
 .rot-panel.rot-gold .rot-reset-btn:hover { border-color:var(--gold); color:var(--gold); }
+/* ── PAGE LOAD ANIMATION ── */
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-28px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(28px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes navReveal {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+nav {
+    animation: navReveal 0.45s cubic-bezier(0.4,0,0.2,1) both;
+}
+.panel:first-child {
+    animation: slideInLeft 0.55s 0.12s cubic-bezier(0.4,0,0.2,1) both;
+}
+.panel:last-child {
+    animation: slideInRight 0.55s 0.18s cubic-bezier(0.4,0,0.2,1) both;
+}
+.viewer {
+    animation: fadeInUp 0.60s 0.08s cubic-bezier(0.4,0,0.2,1) both;
+}
     </style>
 </head>
 <body>
@@ -970,7 +1000,7 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
         <div class="panel-header">
             <div class="panel-title">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-                Customise
+                Customize your own Cake
             </div>
             <div class="panel-subtitle">Configure every detail of your cake</div>
         </div>
@@ -1210,28 +1240,28 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
                 <div style="background:var(--accent-lt);border:1px solid rgba(200,137,74,.25);border-radius:12px;padding:10px 12px;">
                     <p style="font-size:.72rem;font-weight:700;color:#7A4A1E;margin:0 0 10px;font-family:var(--font-display);">Tap a fruit to add it — then tap the cake preview to place it</p>
                     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="opts-fruits">
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="120" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🍓</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Strawberry</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱120</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Blueberry" data-price="180" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                  <div class="addon-opt fruit-tile" data-group="fruits" data-val="Blueberry" data-price="25" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🫐</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Blueberry</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱180</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱25/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Raspberry" data-price="220" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                    <div class="addon-opt fruit-tile" data-group="fruits" data-val="Raspberry" data-price="55" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🍇</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Raspberry</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱220</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="150" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                      <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🍒</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Cherry</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱150</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                     </div>
@@ -1246,40 +1276,40 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
                 <div style="background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;padding:10px 12px;">
                     <p style="font-size:.72rem;font-weight:700;color:#6B4C08;margin:0 0 10px;font-family:var(--font-display);">Tap a decoration to add it — then tap the cake preview to place it</p>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="opts-choco">
-                        <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball" data-price="80" id="ferreroToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                   <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball" data-price="55" id="ferreroToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🟤</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Ferrero</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱80/pc</span>
+                 <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="90" id="kitkatToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                        <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="30" id="kitkatToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🍬</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">KitKat</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱90/pc</span>
+                 <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="60" id="oreoToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+            <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="20" id="oreoToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">⚫</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Oreo</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱60/pc</span>
+                         <span class="a-price" style="font-size:.60rem;text-align:center;">+₱20/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard" data-price="120" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                      <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🍫</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Bar Shard</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱120</span>
+                       <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Chocolate Curls" data-price="100" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                        <div class="addon-opt" data-group="choco" data-val="Chocolate Curls" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🌀</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Curls</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱100</span>
+                      <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="200" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                        <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="80" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <span style="font-size:1.8rem;line-height:1;">🟫</span>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Plaque</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱200</span>
+                       <span class="a-price" style="font-size:.60rem;text-align:center;">+₱80</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                     </div>
@@ -1378,17 +1408,17 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
 
                 <div class="addon-section-lbl" style="margin-top:10px;">✨ Sprinkles</div>
                 <div class="addon-grid" id="opts-sprinkles" style="margin-bottom:10px;">
-                    <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="50"><div class="a-icon">✨</div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱50</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="50"><div class="a-icon">🔮</div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱50</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="30"><div class="a-icon">✨</div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="30"><div class="a-icon">🔮</div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
                 <div class="addon-section-lbl">🕯️ Candles &amp; Toppers</div>
                 <div class="addon-grid" id="opts-candles" style="margin-bottom:10px;">
-                    <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="35"> <div class="a-icon">🔢</div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱35/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Happy Birthday Topper" data-price="80"> <div class="a-icon">🎉</div><div class="a-info"><span class="a-name">HBD Topper</span>  <span class="a-price">+₱80</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Name Plaque"            data-price="150"><div class="a-icon">📛</div><div class="a-info"><span class="a-name">Name Plaque</span> <span class="a-price">+₱150</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Crown Topper"           data-price="120"><div class="a-icon">👑</div><div class="a-info"><span class="a-name">Crown Topper</span><span class="a-price">+₱120</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Heart Topper"           data-price="100"><div class="a-icon">❤️</div><div class="a-info"><span class="a-name">Heart Topper</span><span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="20"> <div class="a-icon">🔢</div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱20/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Happy Birthday Topper" data-price="60"> <div class="a-icon">🎉</div><div class="a-info"><span class="a-name">HBD Topper</span>  <span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Name Plaque"            data-price="100"><div class="a-icon">📛</div><div class="a-info"><span class="a-name">Name Plaque</span> <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Crown Topper"           data-price="80"><div class="a-icon">👑</div><div class="a-info"><span class="a-name">Crown Topper</span><span class="a-price">+₱80</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Heart Topper"           data-price="70"><div class="a-icon">❤️</div><div class="a-info"><span class="a-name">Heart Topper</span><span class="a-price">+₱70</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
            <div class="candle-picker-panel" id="candlePickerPanel">
@@ -1417,12 +1447,12 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
 
                 <div class="addon-section-lbl">🌸 Decorative Elements</div>     
                 <div class="addon-grid" id="opts-deco">
-                    <div class="addon-opt" data-group="deco" data-val="Buttercream Swirls" data-price="150"><div class="a-icon">🌀</div><div class="a-info"><span class="a-name">BC Swirls</span>    <span class="a-price">+₱150</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Rosettes"           data-price="180"><div class="a-icon">🌹</div><div class="a-info"><span class="a-name">Rosettes</span>     <span class="a-price">+₱180</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Macarons"           data-price="65"> <div class="a-icon">🟡</div><div class="a-info"><span class="a-name">Macarons</span>     <span class="a-price">+₱65/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Meringue Drops"     data-price="120"><div class="a-icon">⚪</div><div class="a-info"><span class="a-name">Meringue</span>     <span class="a-price">+₱120</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Ribbon Wrap"        data-price="80"> <div class="a-icon">🎀</div><div class="a-info"><span class="a-name">Ribbon Wrap</span>  <span class="a-price">+₱80</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Edible Pearls"      data-price="100"><div class="a-icon">🫧</div><div class="a-info"><span class="a-name">Edible Pearls</span><span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Buttercream Swirls" data-price="75"><div class="a-icon">🌀</div><div class="a-info"><span class="a-name">BC Swirls</span>    <span class="a-price">+₱75</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Rosettes"           data-price="100"><div class="a-icon">🌹</div><div class="a-info"><span class="a-name">Rosettes</span>     <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Macarons"           data-price="48"> <div class="a-icon">🟡</div><div class="a-info"><span class="a-name">Macarons</span>     <span class="a-price">+₱48/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Meringue Drops"     data-price="70"><div class="a-icon">⚪</div><div class="a-info"><span class="a-name">Meringue</span>     <span class="a-price">+₱70</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Ribbon Wrap"        data-price="50"> <div class="a-icon">🎀</div><div class="a-info"><span class="a-name">Ribbon Wrap</span>  <span class="a-price">+₱50</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Edible Pearls"      data-price="60"><div class="a-icon">🫧</div><div class="a-info"><span class="a-name">Edible Pearls</span><span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
             </div>
 
@@ -1488,7 +1518,7 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; wid
             <button class="fruit-clear-btn" id="btnClearCandles">Clear all</button>
         </div>
 
-        <div id="dragGhost"></div>
+       <div id="dragGhost" style="display:none;"></div>
         <div class="drop-ring" id="dropRing" style="width:36px;height:36px;"></div>
         <div class="ferrero-drop-ring" id="ferreroDropRing" style="width:40px;height:40px;"></div>
         <div class="kitkat-drop-ring" id="kitkatDropRing" style="width:48px;height:24px;"></div>
@@ -1581,8 +1611,7 @@ const loadingEl = document.getElementById('modelLoading');
 const loadingTx = document.getElementById('loadingText');
 const statusEl  = document.getElementById('modelStatus');
 
-const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false, preserveDrawingBuffer:true });
-
+const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.outputEncoding      = THREE.sRGBEncoding;
@@ -1590,14 +1619,13 @@ renderer.toneMapping         = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
 renderer.shadowMap.enabled   = true;
 renderer.shadowMap.type      = THREE.PCFSoftShadowMap;
-renderer.setClearColor(0xC8A870, 1);
+renderer.setClearColor(0x000000, 0); // transparent — let CSS background show
 container.appendChild(renderer.domElement);
-
 const scene  = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(36, container.clientWidth / container.clientHeight, 0.01, 100);
 camera.position.set(0, 1.8, 8.5);
-
-const pmrem = new THREE.PMREMGenerator(renderer);
+const controls = new OrbitControls(camera, renderer.domElement);
+const pmrem  = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 (function buildEnv(){
     const W=256, H=128, data=new Uint8Array(W*H*4);
@@ -1854,7 +1882,7 @@ FIXTURE_POSITIONS.forEach(([fx, fy, fz]) => {
     });
 
 })();
-const controls = new OrbitControls(camera, renderer.domElement);
+
 controls.enableDamping    = true;
 controls.dampingFactor    = 0.08;
 controls.enablePan        = false;
@@ -2657,7 +2685,6 @@ if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${
 // ── Shared GLB loader for placed decorations ──
 const decoGLBCache={};
 function loadDecoGLB(url){return new Promise((resolve,reject)=>{if(decoGLBCache[url]){const c=decoGLBCache[url].clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});resolve(c);return;}new GLTFLoader().load(url,gltf=>{decoGLBCache[url]=gltf.scene;const c=gltf.scene.clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});resolve(c);},undefined,err=>{console.error('[Deco]',url,err);reject(err);});});}
-
 function getCakeMeshes(){
     const m=[];
     sceneRoot.traverse(c=>{
@@ -2676,17 +2703,8 @@ function raycastCakeTop(cx,cy){
     const meshes=getCakeMeshes();
     const camHits=camRay.intersectObjects(meshes,false);
     if(camHits.length===0) return null;
-    const xzPoint=camHits[0].point;
-    const topRay=new THREE.Raycaster(
-        new THREE.Vector3(xzPoint.x, 20, xzPoint.z),
-        new THREE.Vector3(0,-1,0)
-    );
-    const topHits=topRay.intersectObjects(meshes,false);
-    if(topHits.length>0){
-        topHits.sort((a,b)=>b.point.y-a.point.y);
-        return topHits[0].point.clone();
-    }
-    return xzPoint.clone();
+    // Use the camera hit point directly — most reliable for perspective views
+    return camHits[0].point.clone();
 }
 function _positionDecoGroup(fg,sp,fh){fg.position.set(sp.x,sp.y,sp.z);}
 
@@ -2698,7 +2716,7 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){const map={'Strawberr
                 const fruitSizes={'Strawberry':0.22,'Blueberry':0.12,'Raspberry':0.16,'Cherry':0.20};
                 const T=fruitSizes[fruitName]||0.18;
                 fg.scale.setScalar(maxD>0.0001?T/maxD:1.0);
-                if(fruitName==='Strawberry'||fruitName==='Raspberry'){fg.rotation.x=Math.PI/2;fg.rotation.y=Math.random()*Math.PI*2;}fg.updateMatrixWorld(true);const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;}fruitModels.forEach(m=>m.group.visible=false);const hp=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);let sp;if(hp){sp=hp;}else{sceneRoot.updateMatrixWorld(true);const cb=new THREE.Box3().setFromObject(sceneRoot),cc=cb.getCenter(new THREE.Vector3());sp=new THREE.Vector3(cc.x,cb.max.y,cc.z);}fg.updateMatrixWorld(true);const _fBox=new THREE.Box3().setFromObject(fg);const _fHeight=_fBox.max.y-_fBox.min.y;const _fOffset=-_fBox.min.y-(_fHeight*0.25);
+              if(fruitName==='Strawberry'||fruitName==='Raspberry'){fg.rotation.x=0;fg.rotation.y=0;}fg.updateMatrixWorld(true);const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;}fruitModels.forEach(m=>m.group.visible=false);const hp=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);let sp;if(hp){sp=hp;}else{sceneRoot.updateMatrixWorld(true);const cb=new THREE.Box3().setFromObject(sceneRoot),cc=cb.getCenter(new THREE.Vector3());sp=new THREE.Vector3(cc.x,cb.max.y,cc.z);}fg.updateMatrixWorld(true);const _fBox=new THREE.Box3().setFromObject(fg);const _fHeight=_fBox.max.y-_fBox.min.y;const _fOffset=-_fBox.min.y-(_fHeight*0.25);
 fg.position.set(sp.x,sp.y+_fOffset,sp.z);if(ei!==undefined&&ei>=0&&fruitModels[ei])return ei;scene.add(fg);const idx=fruitModels.length;fruitModels.push({group:fg,fruit:fruitName,halfH:fh,bottomOffset:_fOffset});
 return idx;}catch(err){console.error('[Fruit]',fruitName,err);return -1;}};
 window.clearFruitModels=function(){fruitModels.forEach(m=>scene.remove(m.group));fruitModels.length=0;_draggingFruitIdx=-1;};
@@ -2725,7 +2743,7 @@ window.placeFerreroOnCake = async function(cx, cy, ei) {
             const rb = new THREE.Box3().setFromObject(fg);
             const sz = rb.getSize(new THREE.Vector3());
             const maxD = Math.max(sz.x, sz.y, sz.z);
-            fg.scale.setScalar(maxD > 0.0001 ? 0.24 / maxD : 1.0);
+         fg.scale.setScalar(maxD > 0.0001 ? 0.204 / maxD : 1.0);
             fg.updateMatrixWorld(true);
             const sb = new THREE.Box3().setFromObject(fg);
             fh = (sb.max.y - sb.min.y) * 0.5;
@@ -2883,7 +2901,7 @@ window.placeOreoOnCake = async function(cx, cy, orientation, ei) {
             const rb = new THREE.Box3().setFromObject(fg);
             const sz = rb.getSize(new THREE.Vector3());
             const maxD = Math.max(sz.x, sz.y, sz.z);
-            fg.scale.setScalar(maxD > 0.0001 ? 0.35 / maxD : 1.0);
+        fg.scale.setScalar(maxD > 0.0001 ? 0.2275 / maxD : 1.0);
             applyOreoOrientation(fg, orientation, true);
             fg.updateMatrixWorld(true);
             const sb = new THREE.Box3().setFromObject(fg);
@@ -3220,14 +3238,13 @@ window._reprojectAllToppings=function(){
 
 window.updateModel=(state)=>updateScene(state);
 window.resetCamera=()=>{camera.position.set(0,1.8,8.5);controls.target.set(0,-0.30,0);controls.reset();};
-window.addEventListener('resize',()=>{const w=container.clientWidth,h=container.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);});
 window._viewerReady=true;
 // ── FRUIT ROTATE INLINE PANEL ──
 (function(){
     let activeFruitPanelIdx = -1;
     const FRUIT_EMOJI = { Strawberry:'🍓', Blueberry:'🫐', Raspberry:'🍇', Cherry:'🍒' };
     // Rotation axis per fruit — Strawberry/Raspberry use X for placement so we rotate Y instead
-    const FRUIT_ROT_AXIS = { Strawberry:'y', Raspberry:'y', Blueberry:'z', Cherry:'z' };
+  const FRUIT_ROT_AXIS = { Strawberry:'z', Raspberry:'z', Blueberry:'z', Cherry:'z' };
 
     const panel    = document.getElementById('fruitRotPanel');
     const range    = document.getElementById('fruitRotPanelRange');
@@ -3258,9 +3275,12 @@ window._viewerReady=true;
         emojiEl.textContent = em;
         preview.textContent = em;
         nameEl.textContent = m.fruit;
+       const degY2 = Math.round((m.group.rotation.y * 180 / Math.PI + 360) % 360);
         range.value = deg;
         degLabel.textContent = deg + '°';
         preview.style.transform = `rotate(${deg}deg)`;
+        fruitRangeY.value = degY2;
+        fruitDegLabelY.textContent = degY2 + '°';
         panel.style.display = 'block';
         panel.scrollIntoView({behavior:'smooth', block:'nearest'});
     }
@@ -3270,6 +3290,9 @@ window._viewerReady=true;
         activeFruitPanelIdx = -1;
     }
 
+   const fruitRangeY    = document.getElementById('fruitRotPanelRangeY');
+    const fruitDegLabelY = document.getElementById('fruitRotPanelDegY');
+
     range.addEventListener('input', function(){
         const d = parseInt(this.value);
         degLabel.textContent = d + '°';
@@ -3277,6 +3300,14 @@ window._viewerReady=true;
         const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
         const m = models[activeFruitPanelIdx];
         if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = d * Math.PI / 180; }
+    });
+
+    fruitRangeY.addEventListener('input', function(){
+        const d = parseInt(this.value);
+        fruitDegLabelY.textContent = d + '°';
+        const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+        const m = models[activeFruitPanelIdx];
+        if(m){ m.group.rotation.y = d * Math.PI / 180; }
     });
 
     document.querySelectorAll('.fruit-rot-panel-preset').forEach(btn => {
@@ -3297,12 +3328,13 @@ window._viewerReady=true;
         hidePanel();
     });
 
-    document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
+document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
         range.value = 0; degLabel.textContent = '0°';
+        fruitRangeY.value = 0; fruitDegLabelY.textContent = '0°';
         preview.style.transform = 'rotate(0deg)';
         const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
         const m = models[activeFruitPanelIdx];
-        if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = 0; }
+        if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = 0; m.group.rotation.y = 0; }
     });
 
     document.getElementById('fruitRotPanelClose').addEventListener('click', hidePanel);
@@ -3314,10 +3346,134 @@ window._viewerReady=true;
     window._showFruitRotatePopup = showPanel;
     window._hideFruitRotatePopup = hidePanel;
 })();
+// ── CHOCO ROTATE INLINE PANEL ──
+(function(){
+    let activeChocoPanelIdx = -1;
+    let activeChocoType = null; // 'ferrero','kitkat','oreo','barshard'
+
+    const CHOCO_EMOJI = { ferrero:'🟤', kitkat:'🍬', oreo:'⚫', barshard:'🍫' };
+    const CHOCO_NAME  = { ferrero:'Ferrero', kitkat:'KitKat', oreo:'Oreo', barshard:'Bar Shard' };
+
+    const panel    = document.getElementById('chocoRotInlinePanel');
+    const range    = document.getElementById('chocoRotInlineRange');
+    const degLabel = document.getElementById('chocoRotInlineDeg');
+    const preview  = document.getElementById('chocoRotInlinePreview');
+    const emojiEl  = document.getElementById('chocoRotInlineEmoji');
+    const nameEl   = document.getElementById('chocoRotInlineName');
+
+    const viewer = document.getElementById('viewerEl');
+    if(viewer) viewer.appendChild(panel);
+    panel.style.cssText = 'display:none;position:absolute;top:58px;left:14px;z-index:50;width:260px;border-radius:14px;overflow:hidden;border:1.5px solid rgba(196,154,60,.30);box-shadow:0 4px 20px rgba(59,31,14,0.35);';
+
+    function getModels(type){
+        if(type==='ferrero') return typeof window.getFerreroModels==='function'?window.getFerreroModels():[];
+        if(type==='kitkat')  return typeof window.getKitkatModels ==='function'?window.getKitkatModels() :[];
+        if(type==='oreo')    return typeof window.getOreoModels   ==='function'?window.getOreoModels()   :[];
+        if(type==='barshard')return typeof window.getBarShardModels==='function'?window.getBarShardModels():[];
+        return [];
+    }
+
+function getDeg(m){
+        return Math.round((m.group.rotation.z * 180 / Math.PI + 360) % 360);
+    }
+    function getDegY(m){
+        return Math.round((m.group.rotation.y * 180 / Math.PI + 360) % 360);
+    }
+
+    const rangeY    = document.getElementById('chocoRotInlineRangeY');
+    const degLabelY = document.getElementById('chocoRotInlineDegY');
+
+    function showChocoPanel(type, idx){
+        activeChocoType = type;
+        activeChocoPanelIdx = idx;
+        const models = getModels(type);
+        const m = models[idx];
+        if(!m) return;
+        const em = CHOCO_EMOJI[type] || '🍫';
+        const deg = getDeg(m);
+        const degY = getDegY(m);
+        emojiEl.textContent = em;
+        preview.textContent = em;
+        nameEl.textContent = CHOCO_NAME[type] || type;
+        range.value = deg;
+        degLabel.textContent = deg + '°';
+        preview.style.transform = `rotate(${deg}deg)`;
+        rangeY.value = degY;
+        degLabelY.textContent = degY + '°';
+        panel.style.display = 'block';
+    }
+
+    function hideChocoPanel(){
+        panel.style.display = 'none';
+        activeChocoPanelIdx = -1;
+        activeChocoType = null;
+    }
+
+range.addEventListener('input', function(){
+        const d = parseInt(this.value);
+        degLabel.textContent = d + '°';
+        preview.style.transform = `rotate(${d}deg)`;
+        const models = getModels(activeChocoType);
+        const m = models[activeChocoPanelIdx];
+        if(m){ m.group.rotation.z = d * Math.PI / 180; }
+    });
+
+    rangeY.addEventListener('input', function(){
+        const d = parseInt(this.value);
+        degLabelY.textContent = d + '°';
+        const models = getModels(activeChocoType);
+        const m = models[activeChocoPanelIdx];
+        if(m){ m.group.rotation.y = d * Math.PI / 180; }
+    });
+
+    document.querySelectorAll('.choco-rot-inline-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const d = parseInt(btn.dataset.deg);
+            range.value = d; degLabel.textContent = d + '°';
+            preview.style.transform = `rotate(${d}deg)`;
+            const models = getModels(activeChocoType);
+            const m = models[activeChocoPanelIdx];
+            if(m){ m.group.rotation.z = d * Math.PI / 180; }
+        });
+    });
+    document.getElementById('chocoRotInlineApply').addEventListener('click', () => {
+        const deg = parseInt(range.value);
+        const em = emojiEl.textContent;
+        showToast(`${em} Rotated ${deg}°`, 1600);
+        hideChocoPanel();
+    });
+document.getElementById('chocoRotInlineReset').addEventListener('click', () => {
+        range.value = 0; degLabel.textContent = '0°';
+        rangeY.value = 0; degLabelY.textContent = '0°';
+        preview.style.transform = 'rotate(0deg)';
+        const models = getModels(activeChocoType);
+        const m = models[activeChocoPanelIdx];
+        if(m){ m.group.rotation.z = 0; m.group.rotation.y = 0; }
+    });
+    document.getElementById('chocoRotInlineClose').addEventListener('click', hideChocoPanel);
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') hideChocoPanel(); });
+
+    window._showChocoRotatePanel = showChocoPanel;
+    window._hideChocoRotatePanel = hideChocoPanel;
+})();
+
+window.addEventListener('resize', () => {
+    const w = container.clientWidth, h = container.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+});
+
+// Fix compressed cake: re-sync size after full layout paint
+requestAnimationFrame(() => requestAnimationFrame(() => {
+    const w = container.clientWidth, h = container.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+}));
 </script>
 
 <script>
-// ── STATE ──
 const FROSTING_PRICES={'Smooth Buttercream':0,'Textured Buttercream':80,'Fondant Smooth':200,'Chocolate Ganache':150,'Semi-naked Style':100,'Sugar Icing':80};
 const FONDANT_VAL    ='Fondant Smooth';
 const SUGAR_ICING_VAL='Sugar Icing';
@@ -3477,10 +3633,8 @@ document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').f
 // ── DRIP ──
 document.getElementById('dripToggleBtn').addEventListener('click',()=>{state.hasDrip=!state.hasDrip;document.getElementById('dripToggleBtn').classList.toggle('active',state.hasDrip);document.getElementById('dripFlavorPanel').classList.toggle('visible',state.hasDrip);if(state.hasDrip)state.addons.set('Drip',180);else state.addons.delete('Drip');updateAll();});
 document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.dripFlavor=el.dataset.dripFlavor;updateAll();});});
-
-// ── FRUITS ──
 document.getElementById('opts-fruits').querySelectorAll('.addon-opt').forEach(el=>{
-    el.addEventListener('click',()=>{const v=el.dataset.val,p=parseInt(el.dataset.price)||0;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');}else{state.addons.set(v,p);el.classList.add('active');}updateFruitTray();updateAll();});
+    el.addEventListener('click',()=>{const v=el.dataset.val;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');if(typeof window.clearFruitModels==='function')window.clearFruitModels();placedFruitRecord.length=0;state.placedFruits=[];}else{state.addons.set(v,0);}el.classList.toggle('active',state.addons.has(v));updateFruitTray();updateAll();});
 });
 
 // ── TRAY STACKING ──
@@ -3548,12 +3702,12 @@ document.getElementById('btnKitkatLying').addEventListener('click',()=>{state.ki
 
 // ── BAR SHARD TOGGLE ──
 document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]').addEventListener('click',()=>{
-    const v='Chocolate Bar Shard',p=120;
-    if(state.addons.has(v)){state.addons.delete(v);document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]').classList.remove('active');if(typeof window.clearBarShardModels==='function')window.clearBarShardModels();state.placedBarShard=[];}
-    else{state.addons.set(v,p);document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]').classList.add('active');}
+    const v='Chocolate Bar Shard';
+    const btn=document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]');
+    if(state.addons.has(v)){state.addons.delete(v);btn.classList.remove('active');if(typeof window.clearBarShardModels==='function')window.clearBarShardModels();state.placedBarShard=[];}
+    else{state.addons.set(v,0);btn.classList.add('active');}
     updateBarShardTray();updateAll();
 });
-
 function updateChocoTray(){
     const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard');
     const hasAny=hasF||hasK||hasO||hasB;
@@ -3583,12 +3737,11 @@ function updateCandleTray(){
     document.getElementById('candleTray').classList.toggle('visible',hasCandles);
     updateViewerHint();repositionTrays();
 }
-
 // ── OREO TOGGLE ──
 document.getElementById('oreoToggleBtn').addEventListener('click',()=>{
-    const v='Oreo Cookie',p=60;
+    const v='Oreo Cookie';
     if(state.addons.has(v)){state.addons.delete(v);document.getElementById('oreoToggleBtn').classList.remove('active');if(typeof window.clearOreoModels==='function')window.clearOreoModels();state.placedOreo=[];}
-    else{state.addons.set(v,p);document.getElementById('oreoToggleBtn').classList.add('active');}
+    else{state.addons.set(v,0);document.getElementById('oreoToggleBtn').classList.add('active');}
     updateOreoTray();updateAll();
 });
 
@@ -3626,7 +3779,7 @@ let attachedCandleIdx=-1,_pointerDownOnCandle=false;
 
 function setCursorGrab(on){viewerEl.style.cursor=on?'grabbing':'';}
 
-function updateAttachedFruit(cx,cy){if(attachedFruitIdx<0)return;if(typeof window.moveDraggingFruit==='function')window.moveDraggingFruit(cx,cy);const rect=viewerEl.getBoundingClientRect();dropRing.style.display='block';dropRing.style.left=(cx-rect.left)+'px';dropRing.style.top=(cy-rect.top)+'px';}
+function updateAttachedFruit(cx,cy){if(attachedFruitIdx<0)return;if(typeof window.moveDraggingFruit==='function')window.moveDraggingFruit(cx,cy);const rect=viewerEl.getBoundingClientRect();dropRing.style.display='block';dropRing.style.left=(cx-rect.left)+'px';dropRing.style.top=(cy-rect.top)+'px';dragGhost.style.left=cx+'px';dragGhost.style.top=cy+'px';dragGhost.style.transform='translate(-50%,-50%)';}
 function dropAttachedFruit(cx,cy){if(attachedFruitIdx<0)return;if(typeof window.moveDraggingFruit==='function')window.moveDraggingFruit(cx,cy);if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);const e=placedFruitRecord[attachedFruitIdx];if(e)showToast(`${e.emoji} ${e.fruit} moved!`,1600);attachedFruitIdx=-1;setCursorGrab(false);dropRing.style.display='none';dragGhost.style.display='none';}
 function updateAttachedFerrero(cx,cy){if(attachedFerreroIdx<0)return;if(typeof window.moveDraggingFerrero==='function')window.moveDraggingFerrero(cx,cy);const rect=viewerEl.getBoundingClientRect();ferreroDropRing.style.display='block';ferreroDropRing.style.left=(cx-rect.left)+'px';ferreroDropRing.style.top=(cy-rect.top)+'px';}
 function dropAttachedFerrero(cx,cy){if(attachedFerreroIdx<0)return;if(typeof window.moveDraggingFerrero==='function')window.moveDraggingFerrero(cx,cy);if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(-1);showToast('🟤 Ferrero ball moved!',1600);attachedFerreroIdx=-1;setCursorGrab(false);ferreroDropRing.style.display='none';dragGhost.style.display='none';}
@@ -3647,35 +3800,35 @@ function hookCanvasPointerDown(){
         if(attachedKitkatIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnKitkat=true;return;}
         if(attachedOreoIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnOreo=true;return;}
         if(attachedBarShardIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnBarShard=true;return;}
-        if(typeof window.getBarShardIndexAtScreen==='function'){const bidx=window.getBarShardIndexAtScreen(e.clientX,e.clientY);if(bidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnBarShard=true;attachedBarShardIdx=bidx;if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(bidx);setCursorGrab(true);dragGhost.textContent='🍫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
-        if(typeof window.getOreoIndexAtScreen==='function'){const oidx=window.getOreoIndexAtScreen(e.clientX,e.clientY);if(oidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnOreo=true;attachedOreoIdx=oidx;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(oidx);setCursorGrab(true);dragGhost.textContent='⚫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
-        if(typeof window.getKitkatIndexAtScreen==='function'){const kidx=window.getKitkatIndexAtScreen(e.clientX,e.clientY);if(kidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnKitkat=true;attachedKitkatIdx=kidx;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(kidx);setCursorGrab(true);dragGhost.textContent='🍬';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
-        if(typeof window.getFerreroIndexAtScreen==='function'){const fidx=window.getFerreroIndexAtScreen(e.clientX,e.clientY);if(fidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnFerrero=true;attachedFerreroIdx=fidx;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(fidx);setCursorGrab(true);dragGhost.textContent='🟤';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
+        if(typeof window.getBarShardIndexAtScreen==='function'){const bidx=window.getBarShardIndexAtScreen(e.clientX,e.clientY);if(bidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnBarShard=true;attachedBarShardIdx=bidx;if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(bidx);setCursorGrab(true);dragGhost.textContent='🍫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
+        if(typeof window.getOreoIndexAtScreen==='function'){const oidx=window.getOreoIndexAtScreen(e.clientX,e.clientY);if(oidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnOreo=true;attachedOreoIdx=oidx;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(oidx);setCursorGrab(true);dragGhost.textContent='⚫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
+        if(typeof window.getKitkatIndexAtScreen==='function'){const kidx=window.getKitkatIndexAtScreen(e.clientX,e.clientY);if(kidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnKitkat=true;attachedKitkatIdx=kidx;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(kidx);setCursorGrab(true);dragGhost.textContent='🍬';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
+        if(typeof window.getFerreroIndexAtScreen==='function'){const fidx=window.getFerreroIndexAtScreen(e.clientX,e.clientY);if(fidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnFerrero=true;attachedFerreroIdx=fidx;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(fidx);setCursorGrab(true);dragGhost.textContent='🟤';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
 if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIndexAtScreen(e.clientX,e.clientY);if(idx>=0){e.stopPropagation();e.preventDefault();
     _pointerDownOnFruit=true;attachedFruitIdx=idx;
     if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(idx);
     const en=placedFruitRecord[idx];dragGhost.textContent=en?en.emoji:'🍓';
-    dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';
+    dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';
     setCursorGrab(true);
     // track if this turns into a drag or stays a click
     window._fruitPointerMoved=false;
     window._fruitClickIdx=idx;window._fruitClickX=e.clientX;window._fruitClickY=e.clientY;
     return;
 }}
-        if(typeof window.getCandleIndexAtScreen==='function'){const cidx=window.getCandleIndexAtScreen(e.clientX,e.clientY);if(cidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnCandle=true;attachedCandleIdx=cidx;if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(cidx);setCursorGrab(true);dragGhost.textContent='🕯️';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
+        if(typeof window.getCandleIndexAtScreen==='function'){const cidx=window.getCandleIndexAtScreen(e.clientX,e.clientY);if(cidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnCandle=true;attachedCandleIdx=cidx;if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(cidx);setCursorGrab(true);dragGhost.textContent='🕯️';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         _pointerDownOnFruit=false;_pointerDownOnFerrero=false;_pointerDownOnKitkat=false;_pointerDownOnOreo=false;
     },{capture:true});
     canvas.addEventListener('pointermove',e=>{
     if(attachedFruitIdx>=0){
         const dx=e.clientX-(window._fruitClickX||e.clientX),dy=e.clientY-(window._fruitClickY||e.clientY);
         if(Math.abs(dx)>4||Math.abs(dy)>4) window._fruitPointerMoved=true;
-        updateAttachedFruit(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';
+        updateAttachedFruit(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';
     }
-    if(attachedFerreroIdx>=0){updateAttachedFerrero(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
-    if(attachedKitkatIdx>=0){updateAttachedKitkat(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
-    if(attachedOreoIdx>=0){updateAttachedOreo(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
-    if(attachedBarShardIdx>=0){updateAttachedBarShard(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
-    if(attachedCandleIdx>=0){updateAttachedCandle(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';}
+    if(attachedFerreroIdx>=0){updateAttachedFerrero(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
+    if(attachedKitkatIdx>=0){updateAttachedKitkat(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
+    if(attachedOreoIdx>=0){updateAttachedOreo(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
+    if(attachedBarShardIdx>=0){updateAttachedBarShard(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
+    if(attachedCandleIdx>=0){updateAttachedCandle(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
 });
     canvas.addEventListener('pointerup',e=>{
         if(_pointerDownOnFruit){_pointerDownOnFruit=false;
@@ -3690,22 +3843,21 @@ if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIn
                 }
             }
         }
-        if(_pointerDownOnFerrero){_pointerDownOnFerrero=false;if(attachedFerreroIdx>=0)dropAttachedFerrero(e.clientX,e.clientY);}
-        if(_pointerDownOnKitkat){_pointerDownOnKitkat=false;if(attachedKitkatIdx>=0)dropAttachedKitkat(e.clientX,e.clientY);}
-        if(_pointerDownOnOreo){_pointerDownOnOreo=false;if(attachedOreoIdx>=0)dropAttachedOreo(e.clientX,e.clientY);}
-if(_pointerDownOnBarShard){_pointerDownOnBarShard=false;if(attachedBarShardIdx>=0)dropAttachedBarShard(e.clientX,e.clientY);}
-        if(_pointerDownOnCandle){_pointerDownOnCandle=false;if(attachedCandleIdx>=0)dropAttachedCandle(e.clientX,e.clientY);}
+ if(_pointerDownOnFerrero){_pointerDownOnFerrero=false;if(attachedFerreroIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('ferrero',attachedFerreroIdx);if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(-1);attachedFerreroIdx=-1;setCursorGrab(false);ferreroDropRing.style.display='none';}}
+if(_pointerDownOnKitkat){_pointerDownOnKitkat=false;if(attachedKitkatIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('kitkat',attachedKitkatIdx);if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(-1);attachedKitkatIdx=-1;setCursorGrab(false);kitkatDropRing.style.display='none';}}
+if(_pointerDownOnOreo){_pointerDownOnOreo=false;if(attachedOreoIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('oreo',attachedOreoIdx);if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(-1);attachedOreoIdx=-1;setCursorGrab(false);oreoDropRing.style.display='none';}}
+if(_pointerDownOnBarShard){_pointerDownOnBarShard=false;if(attachedBarShardIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('barshard',attachedBarShardIdx);if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(-1);attachedBarShardIdx=-1;setCursorGrab(false);barShardDropRing.style.display='none';}}
     });
 }
 hookCanvasPointerDown();
 
 document.addEventListener('mousemove',e=>{
-    if(attachedFruitIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedFruit(e.clientX,e.clientY);}
-    if(attachedFerreroIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedFerrero(e.clientX,e.clientY);}
-    if(attachedKitkatIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedKitkat(e.clientX,e.clientY);}
-    if(attachedOreoIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedOreo(e.clientX,e.clientY);}
-if(attachedBarShardIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedBarShard(e.clientX,e.clientY);}
-    if(attachedCandleIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';updateAttachedCandle(e.clientX,e.clientY);}
+    if(attachedFruitIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedFruit(e.clientX,e.clientY);}
+    if(attachedFerreroIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedFerrero(e.clientX,e.clientY);}
+    if(attachedKitkatIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedKitkat(e.clientX,e.clientY);}
+    if(attachedOreoIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedOreo(e.clientX,e.clientY);}
+if(attachedBarShardIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedBarShard(e.clientX,e.clientY);}
+    if(attachedCandleIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedCandle(e.clientX,e.clientY);}
 });
 viewerEl.addEventListener('click',e=>{
     // Fruits are handled in pointerup — skip here to avoid double-firing
@@ -3723,7 +3875,7 @@ let activeKitkatDrag=null,isDraggingKitkatFromTray=false;
 let activeBarShardDrag=null,isDraggingBarShardFromTray=false;
 let activeOreoDrag=null,isDraggingOreoFromTray=false;
 
-document.querySelectorAll('.fruit-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedFruitIdx>=0){attachedFruitIdx=-1;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);setCursorGrab(false);dropRing.style.display='none';dragGhost.style.display='none';}activeTrayDrag={fruit:el.dataset.fruit,emoji:el.dataset.emoji,type:'fruit'};isDraggingFromTray=true;dragGhost.textContent=el.dataset.emoji;dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';dropRing.style.display='none';viewerEl.classList.remove('fruit-drag-over');isDraggingFromTray=false;activeTrayDrag=null;});});
+document.querySelectorAll('.fruit-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedFruitIdx>=0){attachedFruitIdx=-1;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);setCursorGrab(false);dropRing.style.display='none';dragGhost.style.display='none';}activeTrayDrag={fruit:el.dataset.fruit,emoji:el.dataset.emoji,type:'fruit'};isDraggingFromTray=true;dragGhost.textContent=el.dataset.emoji;dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';dragGhost.style.fontSize='2rem';dragGhost.style.position='fixed';dragGhost.style.pointerEvents='none';dragGhost.style.zIndex='99999';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.willChange='left,top';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';dropRing.style.display='none';viewerEl.classList.remove('fruit-drag-over');isDraggingFromTray=false;activeTrayDrag=null;});});
 document.querySelectorAll('.ferrero-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedFerreroIdx>=0){attachedFerreroIdx=-1;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(-1);setCursorGrab(false);ferreroDropRing.style.display='none';dragGhost.style.display='none';}activeFerreroDrag={type:'ferrero',emoji:'🟤'};isDraggingFerreroFromTray=true;dragGhost.textContent='🟤';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';ferreroDropRing.style.display='none';viewerEl.classList.remove('ferrero-drag-over');isDraggingFerreroFromTray=false;activeFerreroDrag=null;});});
 document.querySelectorAll('.kitkat-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedKitkatIdx>=0){attachedKitkatIdx=-1;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(-1);setCursorGrab(false);kitkatDropRing.style.display='none';dragGhost.style.display='none';}activeKitkatDrag={type:'kitkat',emoji:'🍬'};isDraggingKitkatFromTray=true;dragGhost.textContent='🍬';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';kitkatDropRing.style.display='none';viewerEl.classList.remove('kitkat-drag-over');isDraggingKitkatFromTray=false;activeKitkatDrag=null;});});
 document.querySelectorAll('.bar-shard-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedBarShardIdx>=0){attachedBarShardIdx=-1;if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(-1);setCursorGrab(false);barShardDropRing.style.display='none';dragGhost.style.display='none';}activeBarShardDrag={type:'barShard',emoji:'🍫'};isDraggingBarShardFromTray=true;dragGhost.textContent='🍫';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';barShardDropRing.style.display='none';viewerEl.classList.remove('bar-shard-drag-over');isDraggingBarShardFromTray=false;activeBarShardDrag=null;});});
@@ -3768,12 +3920,12 @@ document.getElementById('trayCandle').addEventListener('dragend',()=>{dragGhost.
 document.addEventListener('dragover',e=>{
     const rect=viewerEl.getBoundingClientRect();
     const over=e.clientX>=rect.left&&e.clientX<=rect.right&&e.clientY>=rect.top&&e.clientY<=rect.bottom;
-    if(isDraggingFromTray&&activeTrayDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';viewerEl.classList.toggle('fruit-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';dropRing.style.display='block';dropRing.style.left=(e.clientX-rect.left)+'px';dropRing.style.top=(e.clientY-rect.top)+'px';}else dropRing.style.display='none';}
-    if(isDraggingFerreroFromTray&&activeFerreroDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';viewerEl.classList.toggle('ferrero-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';ferreroDropRing.style.display='block';ferreroDropRing.style.left=(e.clientX-rect.left)+'px';ferreroDropRing.style.top=(e.clientY-rect.top)+'px';}else ferreroDropRing.style.display='none';}
-    if(isDraggingKitkatFromTray&&activeKitkatDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';viewerEl.classList.toggle('kitkat-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';kitkatDropRing.style.display='block';kitkatDropRing.style.left=(e.clientX-rect.left)+'px';kitkatDropRing.style.top=(e.clientY-rect.top)+'px';}else kitkatDropRing.style.display='none';}
-    if(isDraggingOreoFromTray&&activeOreoDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';viewerEl.classList.toggle('oreo-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';oreoDropRing.style.display='block';oreoDropRing.style.left=(e.clientX-rect.left)+'px';oreoDropRing.style.top=(e.clientY-rect.top)+'px';}else oreoDropRing.style.display='none';}
-if(isDraggingBarShardFromTray&&activeBarShardDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';viewerEl.classList.toggle('bar-shard-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';barShardDropRing.style.display='block';barShardDropRing.style.left=(e.clientX-rect.left)+'px';barShardDropRing.style.top=(e.clientY-rect.top)+'px';}else barShardDropRing.style.display='none';}
-    if(isDraggingCandleFromTray&&activeCandleDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';viewerEl.classList.toggle('candle-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';const cdr=document.getElementById('candleDropRing');cdr.style.display='block';cdr.style.left=(e.clientX-rect.left)+'px';cdr.style.top=(e.clientY-rect.top)+'px';}else document.getElementById('candleDropRing').style.display='none';}
+    if(isDraggingFromTray&&activeTrayDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('fruit-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';dropRing.style.display='block';dropRing.style.left=(e.clientX-rect.left)+'px';dropRing.style.top=(e.clientY-rect.top)+'px';}else dropRing.style.display='none';}
+    if(isDraggingFerreroFromTray&&activeFerreroDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('ferrero-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';ferreroDropRing.style.display='block';ferreroDropRing.style.left=(e.clientX-rect.left)+'px';ferreroDropRing.style.top=(e.clientY-rect.top)+'px';}else ferreroDropRing.style.display='none';}
+    if(isDraggingKitkatFromTray&&activeKitkatDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('kitkat-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';kitkatDropRing.style.display='block';kitkatDropRing.style.left=(e.clientX-rect.left)+'px';kitkatDropRing.style.top=(e.clientY-rect.top)+'px';}else kitkatDropRing.style.display='none';}
+    if(isDraggingOreoFromTray&&activeOreoDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('oreo-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';oreoDropRing.style.display='block';oreoDropRing.style.left=(e.clientX-rect.left)+'px';oreoDropRing.style.top=(e.clientY-rect.top)+'px';}else oreoDropRing.style.display='none';}
+if(isDraggingBarShardFromTray&&activeBarShardDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('bar-shard-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';barShardDropRing.style.display='block';barShardDropRing.style.left=(e.clientX-rect.left)+'px';barShardDropRing.style.top=(e.clientY-rect.top)+'px';}else barShardDropRing.style.display='none';}
+    if(isDraggingCandleFromTray&&activeCandleDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('candle-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';const cdr=document.getElementById('candleDropRing');cdr.style.display='block';cdr.style.left=(e.clientX-rect.left)+'px';cdr.style.top=(e.clientY-rect.top)+'px';}else document.getElementById('candleDropRing').style.display='none';}
 });
 viewerEl.addEventListener('dragover',e=>e.preventDefault());
 
@@ -3785,7 +3937,7 @@ viewerEl.addEventListener('drop',async e=>{
     if(activeOreoDrag&&isDraggingOreoFromTray){isDraggingOreoFromTray=false;activeOreoDrag=null;dragGhost.style.display='none';if(typeof window.placeOreoOnCake==='function'){const idx=await window.placeOreoOnCake(e.clientX,e.clientY,state.oreoOrientation);if(idx>=0){placedOreoRecord[idx]={emoji:'⚫'};state.placedOreo.push({x:e.clientX,y:e.clientY,orientation:state.oreoOrientation});showToast(`⚫ Oreo placed ${state.oreoOrientation==='standing'?'standing up':'lying flat'}! Click to move.`,2200);updateAll();}}return;}
     if(activeKitkatDrag&&isDraggingKitkatFromTray){isDraggingKitkatFromTray=false;activeKitkatDrag=null;dragGhost.style.display='none';if(typeof window.placeKitkatOnCake==='function'){const idx=await window.placeKitkatOnCake(e.clientX,e.clientY,state.kitkatOrientation);if(idx>=0){placedKitkatRecord[idx]={emoji:'🍬'};state.placedKitkat.push({x:e.clientX,y:e.clientY,orientation:state.kitkatOrientation});showToast(`🍬 KitKat placed ${state.kitkatOrientation==='standing'?'standing up':'lying flat'}! Click to move.`,2200);updateAll();}}return;}
     if(activeFerreroDrag&&isDraggingFerreroFromTray){isDraggingFerreroFromTray=false;activeFerreroDrag=null;dragGhost.style.display='none';if(typeof window.placeFerreroOnCake==='function'){const idx=await window.placeFerreroOnCake(e.clientX,e.clientY);if(idx>=0){placedFerreroRecord[idx]={emoji:'🟤'};state.placedFerrero.push({x:e.clientX,y:e.clientY});showToast('🟤 Ferrero placed! Click it to move.',2200);updateAll();}}return;}
-    if(activeTrayDrag&&isDraggingFromTray){const{fruit,emoji}=activeTrayDrag;isDraggingFromTray=false;activeTrayDrag=null;dragGhost.style.display='none';window._fruitPointerMoved=false;if(typeof window.placeFruitOnCake==='function'){const idx=await window.placeFruitOnCake(fruit,e.clientX,e.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Drag to move, tap to rotate.`,2200);}}}
+ if(activeTrayDrag&&isDraggingFromTray){const{fruit,emoji}=activeTrayDrag;isDraggingFromTray=false;activeTrayDrag=null;dragGhost.style.display='none';window._fruitPointerMoved=false;if(typeof window.placeFruitOnCake==='function'){const idx=await window.placeFruitOnCake(fruit,e.clientX,e.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Drag to move, tap to rotate.`,2200);updateAll();}}}
     if(activeCandleDrag&&isDraggingCandleFromTray){const num=activeCandleDrag.num;isDraggingCandleFromTray=false;activeCandleDrag=null;dragGhost.style.display='none';document.getElementById('candleDropRing').style.display='none';viewerEl.classList.remove('candle-drag-over');if(typeof window.placeCandleOnCake==='function'){const idx=await window.placeCandleOnCake(num,e.clientX,e.clientY);if(idx>=0){placedCandleRecord[idx]={num};state.placedCandles.push({x:e.clientX,y:e.clientY,num});showToast(`🕯️ Candle #${num} placed! Click to move.`,2200);updateAll();}}}
 });
 
@@ -3801,7 +3953,7 @@ document.querySelectorAll('.oreo-draggable').forEach(el=>{el.addEventListener('t
 document.getElementById('trayCandle').addEventListener('touchstart',e=>{touchCandleFruit={num:selectedCandleNum};dragGhost.textContent='🕯️';dragGhost.style.display='block';},{passive:true});
 document.addEventListener('touchmove',e=>{
  if(!touchTrayFruit&&touchAttachedIdx<0&&!touchFerreroFruit&&touchFerreroAttachedIdx<0&&!touchKitkatFruit&&touchKitkatAttachedIdx<0&&!touchOreoFruit&&touchOreoAttachedIdx<0&&!touchCandleFruit&&touchCandleAttachedIdx<0)return;
-    const t=e.touches[0];dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';
+    const t=e.touches[0];dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';
     const rect=viewerEl.getBoundingClientRect(),over=t.clientX>=rect.left&&t.clientX<=rect.right&&t.clientY>=rect.top&&t.clientY<=rect.bottom;
     if(touchTrayFruit||touchAttachedIdx>=0){if(over){dropRing.style.display='block';dropRing.style.left=(t.clientX-rect.left)+'px';dropRing.style.top=(t.clientY-rect.top)+'px';if(touchAttachedIdx>=0&&typeof window.moveDraggingFruit==='function')window.moveDraggingFruit(t.clientX,t.clientY);}else dropRing.style.display='none';}
     if(touchFerreroFruit||touchFerreroAttachedIdx>=0){if(over){ferreroDropRing.style.display='block';ferreroDropRing.style.left=(t.clientX-rect.left)+'px';ferreroDropRing.style.top=(t.clientY-rect.top)+'px';if(touchFerreroAttachedIdx>=0&&typeof window.moveDraggingFerrero==='function')window.moveDraggingFerrero(t.clientX,t.clientY);}else ferreroDropRing.style.display='none';}
@@ -3813,7 +3965,7 @@ document.addEventListener('touchend',async e=>{
     const t=e.changedTouches[0];const rect=viewerEl.getBoundingClientRect(),over=t.clientX>=rect.left&&t.clientX<=rect.right&&t.clientY>=rect.top&&t.clientY<=rect.bottom;
     dragGhost.style.display='none';dropRing.style.display='none';ferreroDropRing.style.display='none';kitkatDropRing.style.display='none';oreoDropRing.style.display='none';
     if(touchAttachedIdx>=0){if(over&&typeof window.moveDraggingFruit==='function')window.moveDraggingFruit(t.clientX,t.clientY);if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);const en=placedFruitRecord[touchAttachedIdx];if(en)showToast(`${en.emoji} repositioned`,1400);touchAttachedIdx=-1;touchTrayFruit=null;return;}
-    if(touchTrayFruit&&over&&typeof window.placeFruitOnCake==='function'){const{fruit,emoji}=touchTrayFruit;window._fruitPointerMoved=false;const idx=await window.placeFruitOnCake(fruit,t.clientX,t.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Drag to move, tap to rotate.`,2000);}}touchTrayFruit=null;
+ if(touchTrayFruit&&over&&typeof window.placeFruitOnCake==='function'){const{fruit,emoji}=touchTrayFruit;window._fruitPointerMoved=false;const idx=await window.placeFruitOnCake(fruit,t.clientX,t.clientY);if(idx>=0){placedFruitRecord[idx]={fruit,emoji};showToast(`${emoji} ${fruit} placed! Drag to move, tap to rotate.`,2000);updateAll();}}touchTrayFruit=null;
     if(touchFerreroAttachedIdx>=0){if(over&&typeof window.moveDraggingFerrero==='function')window.moveDraggingFerrero(t.clientX,t.clientY);if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(-1);showToast('🟤 Ferrero repositioned',1400);touchFerreroAttachedIdx=-1;touchFerreroFruit=null;return;}
     if(touchFerreroFruit&&over&&typeof window.placeFerreroOnCake==='function'){const idx=await window.placeFerreroOnCake(t.clientX,t.clientY);if(idx>=0){placedFerreroRecord[idx]={emoji:'🟤'};state.placedFerrero.push({x:t.clientX,y:t.clientY});showToast('🟤 Ferrero placed! Tap to move.',2000);updateAll();}}touchFerreroFruit=null;
     if(touchKitkatAttachedIdx>=0){if(over&&typeof window.moveDraggingKitkat==='function')window.moveDraggingKitkat(t.clientX,t.clientY);if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(-1);showToast('🍬 KitKat repositioned',1400);touchKitkatAttachedIdx=-1;touchKitkatFruit=null;return;}
@@ -3825,11 +3977,11 @@ if(touchOreoFruit&&over&&typeof window.placeOreoOnCake==='function'){const idx=a
 },{passive:true});
 viewerEl.addEventListener('touchstart',e=>{
     const t=e.touches[0];
-    if(!touchTrayFruit&&touchAttachedIdx<0&&typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchAttachedIdx=idx;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(idx);const en=placedFruitRecord[idx];dragGhost.textContent=en?en.emoji:'🍓';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.display='block';showToast('Drag to move fruit',1400);return;}}
-    if(!touchFerreroFruit&&touchFerreroAttachedIdx<0&&typeof window.getFerreroIndexAtScreen==='function'){const idx=window.getFerreroIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchFerreroAttachedIdx=idx;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(idx);dragGhost.textContent='🟤';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.display='block';showToast('Drag to move Ferrero',1400);return;}}
-    if(!touchKitkatFruit&&touchKitkatAttachedIdx<0&&typeof window.getKitkatIndexAtScreen==='function'){const idx=window.getKitkatIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchKitkatAttachedIdx=idx;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(idx);dragGhost.textContent='🍬';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.display='block';showToast('Drag to move KitKat',1400);return;}}
-if(!touchOreoFruit&&touchOreoAttachedIdx<0&&typeof window.getOreoIndexAtScreen==='function'){const idx=window.getOreoIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchOreoAttachedIdx=idx;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(idx);dragGhost.textContent='⚫';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.display='block';showToast('Drag to move Oreo',1400);return;}}
-    if(!touchCandleFruit&&touchCandleAttachedIdx<0&&typeof window.getCandleIndexAtScreen==='function'){const idx=window.getCandleIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchCandleAttachedIdx=idx;if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(idx);dragGhost.textContent='🕯️';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.display='block';showToast('Drag to move candle',1400);return;}}
+    if(!touchTrayFruit&&touchAttachedIdx<0&&typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchAttachedIdx=idx;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(idx);const en=placedFruitRecord[idx];dragGhost.textContent=en?en.emoji:'🍓';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Drag to move fruit',1400);return;}}
+    if(!touchFerreroFruit&&touchFerreroAttachedIdx<0&&typeof window.getFerreroIndexAtScreen==='function'){const idx=window.getFerreroIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchFerreroAttachedIdx=idx;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(idx);dragGhost.textContent='🟤';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Drag to move Ferrero',1400);return;}}
+    if(!touchKitkatFruit&&touchKitkatAttachedIdx<0&&typeof window.getKitkatIndexAtScreen==='function'){const idx=window.getKitkatIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchKitkatAttachedIdx=idx;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(idx);dragGhost.textContent='🍬';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Drag to move KitKat',1400);return;}}
+if(!touchOreoFruit&&touchOreoAttachedIdx<0&&typeof window.getOreoIndexAtScreen==='function'){const idx=window.getOreoIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchOreoAttachedIdx=idx;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(idx);dragGhost.textContent='⚫';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Drag to move Oreo',1400);return;}}
+    if(!touchCandleFruit&&touchCandleAttachedIdx<0&&typeof window.getCandleIndexAtScreen==='function'){const idx=window.getCandleIndexAtScreen(t.clientX,t.clientY);if(idx>=0){e.preventDefault();e.stopPropagation();touchCandleAttachedIdx=idx;if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(idx);dragGhost.textContent='🕯️';dragGhost.style.left=t.clientX+'px';dragGhost.style.top=t.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Drag to move candle',1400);return;}}
 },{passive:false});
 
 // ── CLEAR BUTTONS ──
@@ -3856,10 +4008,16 @@ document.getElementById('btnClearAllChoco').addEventListener('click',()=>{
 
 ['opts-choco','opts-sprinkles','opts-candles','opts-deco'].forEach(id=>{
     document.getElementById(id).querySelectorAll('.addon-opt').forEach(el=>{
+        // These all have their own dedicated toggle listeners — skip them here
         if(['ferreroToggleBtn','kitkatToggleBtn','oreoToggleBtn'].includes(el.id))return;
-if(el.dataset.val==='Chocolate Bar Shard')return;
+        if(el.dataset.val==='Chocolate Bar Shard')return;
         if(el.dataset.val==='Number Candles')return;
-        el.addEventListener('click',()=>{const v=el.dataset.val,p=parseInt(el.dataset.price)||0;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');}else{state.addons.set(v,p);el.classList.add('active');}updateAll();});
+        el.addEventListener('click',()=>{
+            const v=el.dataset.val,p=parseInt(el.dataset.price)||0;
+            if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');}
+            else{state.addons.set(v,p);el.classList.add('active');}
+            updateAll();
+        });
     });
 });
 function getEffectiveShape(){
@@ -3873,17 +4031,25 @@ function getShapeLabel(){const eff=getEffectiveShape();if(eff==='Round')return `
 // ── MAIN UPDATE ──
 function updateAll(){
     const base=getBasePrice(),frostExtra=getFrostingExtraPrice();
-    let addonTotal=0;state.addons.forEach((p,k)=>addonTotal+=p);
+// These are priced per placed piece — exclude from flat addon sum
+    const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Strawberry','Blueberry','Raspberry','Cherry']);
+    let addonTotal=0;state.addons.forEach((p,k)=>{if(!PER_PIECE_KEYS.has(k))addonTotal+=p;});
+ const FRUIT_PRICES={'Strawberry':45,'Blueberry':25,'Raspberry':55,'Cherry':35};
+    const fruitCounts={};
+    if(typeof window.getFruitModels==='function'){window.getFruitModels().forEach(m=>{fruitCounts[m.fruit]=(fruitCounts[m.fruit]||0)+1;});}
+    FRUIT_KEYS.forEach(k=>{addonTotal+=(fruitCounts[k]||0)*(FRUIT_PRICES[k]||0);});
     const ferreroCount=(typeof window.getFerreroModels==='function')?window.getFerreroModels().length:state.placedFerrero.length;
     const kitkatCount=(typeof window.getKitkatModels==='function')?window.getKitkatModels().length:state.placedKitkat.length;
     const oreoCount=(typeof window.getOreoModels==='function')?window.getOreoModels().length:state.placedOreo.length;
 const barShardCount2=(typeof window.getBarShardModels==='function')?window.getBarShardModels().length:0;
     const candleCount=(typeof window.getCandleModels==='function')?window.getCandleModels().length:state.placedCandles.length;
-    if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*80;
-    if(state.addons.has('Kitkat Sticks'))addonTotal+=kitkatCount*90;
-    if(state.addons.has('Oreo Cookie'))addonTotal+=oreoCount*60;
-if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*120;
-    if(state.addons.has('Number Candles'))addonTotal+=candleCount*35;
+if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*55;
+    if(state.addons.has('Kitkat Sticks'))addonTotal+=kitkatCount*30;
+    if(state.addons.has('Oreo Cookie'))addonTotal+=oreoCount*20;
+    if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*40;
+    if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
+    // Fruits: always count placed pieces regardless of addons map value
+    // (already computed above via fruitCounts loop)
     const total=base+frostExtra+addonTotal;
     document.getElementById('priceBase').textContent='₱'+base.toLocaleString();
     document.getElementById('priceAddons').textContent='₱'+addonTotal.toLocaleString();
@@ -3921,7 +4087,12 @@ if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*120;
     if(hasO)chips.push(`<span class="cfg-chip chip-accent">⚫ Oreo${oreoCount>0?' ×'+oreoCount:''} · ${state.oreoOrientation==='standing'?'Standing':'Flat'}</span>`);
  if(hasB)chips.push(`<span class="cfg-chip chip-accent">🍫 Bar Shard${barShardCount>0?' ×'+barShardCount:''}</span>`);
     if(state.addons.has('Number Candles'))chips.push(`<span class="cfg-chip chip-gold">🕯️ Candles${candleCount>0?' ×'+candleCount:''}</span>`);
-    state.addons.forEach((p,k)=>{if(['Drip','Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard'].includes(k))return;chips.push(`<span class="cfg-chip chip-accent">${k}</span>`);});
+  const fruitChipKeys=new Set(FRUIT_KEYS);
+    state.addons.forEach((p,k)=>{
+        if(['Drip','Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles'].includes(k))return;
+        if(fruitChipKeys.has(k))return; // fruits shown via selFruitsRow, not chips
+        chips.push(`<span class="cfg-chip chip-accent">${k}</span>`);
+    });
     document.getElementById('addonsSummary').innerHTML=chips.length?chips.join(''):'<span class="cfg-val muted" style="font-size:.73rem;">None selected</span>';
     if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:isSugarIcing?state.icingColor:null});}
 }
@@ -4096,8 +4267,47 @@ initMobileSummary();
         <div id="mobileSummaryContent" style="padding:14px 18px;"></div>
     </div>
 </div>
-<!-- FRUIT ROTATE INLINE PANEL (injected into sidebar by JS) -->
-<div id="fruitRotPanel">
+<div id="chocoRotInlinePanel" style="display:none;">
+    <div style="background:linear-gradient(135deg,#2A1006 0%,#4A2010 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+            <span id="chocoRotInlineEmoji" style="font-size:1.4rem;line-height:1;">🟤</span>
+            <div>
+                <div style="font-size:.68rem;font-weight:700;color:var(--caramel-light);font-family:var(--font-display);">Rotate <span id="chocoRotInlineName">Ferrero</span></div>
+                <div style="font-size:.60rem;color:rgba(232,176,122,0.55);font-family:var(--font-display);">Tap to rotate · Click again to place</div>
+            </div>
+        </div>
+        <button id="chocoRotInlineClose" style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);border-radius:7px;color:rgba(232,176,122,0.7);font-size:.75rem;cursor:pointer;padding:4px 8px;font-family:var(--font-display);">Done</button>
+    </div>
+    <div style="background:var(--warm-white);padding:12px 14px;">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <span id="chocoRotInlinePreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;">🟤</span>
+            <div style="flex:1;">
+                <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↕ Tilt (up/down)</div>
+                <input type="range" id="chocoRotInlineRange" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
+                <div id="chocoRotInlineDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--gold);font-family:var(--font-display);margin-top:2px;">0°</div>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:2.2rem;line-height:1;flex-shrink:0;opacity:0;">🟤</span>
+            <div style="flex:1;">
+                <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↔ Spin (sideways)</div>
+                <input type="range" id="chocoRotInlineRangeY" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
+                <div id="chocoRotInlineDegY" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--gold);font-family:var(--font-display);margin-top:2px;">0°</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
+            <button class="choco-rot-inline-preset" data-deg="0"   style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">0°</button>
+            <button class="choco-rot-inline-preset" data-deg="90"  style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">90°</button>
+            <button class="choco-rot-inline-preset" data-deg="180" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">180°</button>
+            <button class="choco-rot-inline-preset" data-deg="270" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">270°</button>
+        </div>
+        <div style="display:flex;gap:6px;">
+            <button id="chocoRotInlineApply" style="flex:1;padding:9px;background:var(--gold);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">✓ Apply Rotation</button>
+            <button id="chocoRotInlineReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
+        </div>
+    </div>
+</div>
+<div id="fruitRotPanel" style="display:none;">
     <div style="background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown-mid) 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:8px;">
             <span id="fruitRotPanelEmoji" style="font-size:1.4rem;line-height:1;">🍓</span>
@@ -4109,12 +4319,20 @@ initMobileSummary();
         <button id="fruitRotPanelClose" style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);border-radius:7px;color:rgba(232,176,122,0.7);font-size:.75rem;cursor:pointer;padding:4px 8px;font-family:var(--font-display);">Done</button>
     </div>
     <div style="background:var(--warm-white);padding:12px 14px;">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
             <span id="fruitRotPanelPreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;">🍓</span>
             <div style="flex:1;">
-                <div style="display:flex;justify-content:space-between;font-size:.60rem;color:var(--text-muted);margin-bottom:4px;font-family:var(--font-display);"><span>0°</span><span>180°</span><span>360°</span></div>
+                <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↕ Tilt (up/down)</div>
                 <input type="range" id="fruitRotPanelRange" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
-                <div id="fruitRotPanelDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);margin-top:3px;">0°</div>
+                <div id="fruitRotPanelDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);margin-top:2px;">0°</div>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span style="font-size:2.2rem;line-height:1;flex-shrink:0;opacity:0;">🍓</span>
+            <div style="flex:1;">
+                <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↔ Spin (sideways)</div>
+                <input type="range" id="fruitRotPanelRangeY" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
+                <div id="fruitRotPanelDegY" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);margin-top:2px;">0°</div>
             </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">

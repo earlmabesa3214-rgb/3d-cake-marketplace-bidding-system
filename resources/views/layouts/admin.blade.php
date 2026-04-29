@@ -92,12 +92,13 @@ html, body {
                 letter-spacing: 0.01em; color: #FDF8F3;
                 line-height: 1.2;
             }
-            .brand-sub {
-                font-size: 0.68rem; font-weight: 500;
-                letter-spacing: 0.14em; text-transform: uppercase;
-                color: rgba(196,164,112,0.55);
-                margin-top: 3px;
-            }
+       .brand-sub {
+    font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(196,164,112,0.55);
+    margin-top: 3px;
+    white-space: nowrap;
+}
 
             /* ── NAV ─────────────────────────────────────────── */
             .sidebar-nav {
@@ -374,11 +375,11 @@ html, body {
         <div class="sidebar-brand">
             <div class="brand-logo">
                 <div class="brand-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21H4a1 1 0 0 1-1-1v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1a1 1 0 0 1-1 1z"/><path d="M12 3c0 0-2 1-2 3h4c0-2-2-3-2-3z"/><path d="M8 15V9a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
                 </div>
                 <div class="brand-text">
                     <div class="brand-name">BakeSphere</div>
-                    <div class="brand-sub">Bakery Management</div>
+                    <div class="brand-sub">BakeSphere Management</div>
                 </div>
             </div>
         </div>
