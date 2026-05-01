@@ -1002,26 +1002,26 @@ nav {
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
                 Customize your own Cake
             </div>
-            <div class="panel-subtitle">Configure every detail of your cake</div>
+           
         </div>
         <div class="panel-body">
 
-            {{-- SHAPE --}}
+       {{-- SHAPE --}}
             <div>
         <div class="section-label">Cake Shape <span class="section-req">required</span></div>
                 <div class="shape-grid" id="opts-shape">
-                    <div class="shape-opt active" data-val="Round"><span class="sh-emoji">🎂</span><span class="sh-name">Round</span></div>
-                    <div class="shape-opt" data-val="Square"><span class="sh-emoji">🟫</span><span class="sh-name">Square</span></div>
-                    <div class="shape-opt" data-val="Heart"><span class="sh-emoji">❤️</span><span class="sh-name">Heart</span></div>
-                    <div class="shape-opt" data-val="Number"><span class="sh-emoji">🔢</span><span class="sh-name">Number</span></div>
+                    <div class="shape-opt active" data-val="Round"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="14" r="7"/><path d="M5 14c0-2 1.5-5 7-5s7 3 7 5"/><path d="M9 9c0-2 1-4 3-4s3 2 3 4"/><path d="M10 6c0-1 .5-2 2-2s2 1 2 2"/></svg><span class="sh-name">Round</span></div>
+                    <div class="shape-opt" data-val="Square"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 13h18"/><path d="M7 8c0-3 1.5-5 5-5s5 2 5 5"/></svg><span class="sh-name">Square</span></div>
+                    <div class="shape-opt" data-val="Heart"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21C12 21 3 15 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12z"/><path d="M3 13h18"/></svg><span class="sh-name">Heart</span></div>
+                    <div class="shape-opt" data-val="Number"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><text x="4" y="18" font-size="14" font-weight="700" fill="currentColor" stroke="none" font-family="sans-serif">18</text></svg><span class="sh-name">Number</span></div>
                 </div>
 
-                <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Only applies to <strong>Round</strong>.</p>
+              <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round only</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Only applies to <strong>Round</strong> as of now.</p>
                 <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
-                    <div class="shape-opt active" data-tier="Single"><span class="sh-emoji">🎂</span><span class="sh-name">Single</span></div>
-                    <div class="shape-opt" data-tier="Two-tier"><span class="sh-emoji">🎂</span><span class="sh-name">Two-tier</span></div>
-                    <div class="shape-opt" data-tier="Three-tier"><span class="sh-emoji">🎂</span><span class="sh-name">Three-tier</span></div>
+                    <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
+                    <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
+                    <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
                 </div>
                 <div class="size-slider-wrap visible" id="sizeSliderWrap">
                     <div class="size-slider-header">
@@ -1090,13 +1090,12 @@ nav {
                     </div>
                 </div>
             </div>
-
-            {{-- FLAVOR --}}
+{{-- FLAVOUR --}}
             <div>
-                <div class="section-label">Flavour <span class="section-req">required</span></div>
-                <div class="opts" id="opts-flavor">
-                    <div class="opt active" data-val="Vanilla"    data-price="0"> <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F2C96A;border:1px solid #E0B040;"></span>Vanilla</span></div>
-                    <div class="opt"        data-val="Chocolate"  data-price="80"> <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#5C2D0E;"></span>Chocolate</span></div>
+                <div class="section-label">Cake Flavour <span class="section-req">required</span></div>
+                <div class="opts" id="opts-flavor" style="margin-bottom:2px;">
+                    <div class="opt active" data-val="Vanilla"    data-price="0">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F2C96A;border:1px solid #E0B040;"></span>Vanilla</span></div>
+                    <div class="opt"        data-val="Chocolate"  data-price="80">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#5C2D0E;"></span>Chocolate</span></div>
                     <div class="opt"        data-val="Red Velvet" data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#8B1111;"></span>Red Velvet</span></div>
                     <div class="opt"        data-val="Strawberry" data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#D94070;"></span>Strawberry</span></div>
                     <div class="opt"        data-val="Ube"        data-price="130"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#6B3FA0;"></span>Ube</span></div>
@@ -1104,52 +1103,50 @@ nav {
                 </div>
             </div>
 
-            {{-- FROSTING --}}
+            {{-- CAKE STYLE --}}
             <div>
-    <div class="section-label">Frosting Style <span class="section-req">required</span></div>
-                <p style="font-size:.70rem;color:var(--brown-mid);margin:0 0 10px;font-family:var(--font-display);background:var(--accent-lt);border:1px solid rgba(200,137,74,.22);border-radius:8px;padding:7px 11px;">
-                    💡 <strong>You only need to choose a base coat.</strong> Texture and special finishes are completely optional.
-                </p>
-                <div class="frosting-guide">
-                    <div class="frosting-guide-title"><span class="frosting-guide-title-icon">🎂</span>How frosting works</div>
-                    <div class="frosting-guide-steps">
-                        <div class="frosting-step">
-                            <div class="frosting-step-num">1</div>
-                            <div class="frosting-step-body">
-                                <span class="frosting-step-label">Pick a base coat</span>
-                                <span class="frosting-step-desc"><strong>Smooth Buttercream</strong> or <strong>Sugar Icing</strong> — alternatives to each other.</span>
-                            </div>
-                        </div>
-                        <div class="frosting-step">
-                            <div class="frosting-step-num">2</div>
-                            <div class="frosting-step-body">
-                                <span class="frosting-step-label">Add Textured on top (optional)</span>
-                                <span class="frosting-step-desc"><strong>Textured Buttercream</strong> adds a ridged finish, pairs with either base coat.</span>
-                            </div>
-                        </div>
-                        <div class="frosting-step">
-                            <div class="frosting-step-num">3</div>
-                            <div class="frosting-step-body">
-                                <span class="frosting-step-label">Add special finishes (optional)</span>
-                                <span class="frosting-step-desc"><strong>Ganache</strong> and <strong>Semi-naked</strong> can be added alongside any base coat.</span>
-                            </div>
-                        </div>
+                <div class="section-label">Cake Style <span class="section-req">required</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose <strong>one</strong> base style for your cake. Only one can be active at a time.</p>
+                <div class="addon-grid" id="opts-cake-style">
+                    <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="style">
+                      <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/></svg></div>
+                        <div class="a-info"><span class="a-name">Smooth BC</span><span class="a-price">Default · Included</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
-           <div class="frosting-guide-note" style="background:rgba(220,50,30,.10);border-color:rgba(220,50,30,.30);">
-                        <span class="frosting-guide-note-icon">⚠️</span>
-                        <span><strong>Fondant is solo only</strong> — selecting it <strong>disables all other frosting options</strong>. Tap Fondant again to deselect it.</span>
+                    <div class="addon-opt frosting-opt" data-val="Semi-naked Style" data-price="200" data-group="style">
+                      <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/></svg></div>
+                        <div class="a-info"><span class="a-name">Semi-naked</span><span class="a-price">+₱200</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                    </div>
+                    <div class="addon-opt frosting-opt" data-val="Fondant Smooth" data-price="350" data-group="style">
+                      <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/><path d="M3 14h18"/></svg></div>
+                        <div class="a-info"><span class="a-name">Fondant</span><span class="a-price">+₱350</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                 </div>
+                <div class="fondant-notice" id="fondantNotice">
+                    <span class="fondant-notice-icon">⬜</span>
+                    <div>
+                        <span class="fondant-notice-title">Fondant selected — solo only</span>
+                        <span class="fondant-notice-sub">Fondant replaces all frosting/icing options. Tap Fondant again to deselect.</span>
+                    </div>
+                </div>
+            </div>
 
-                <div class="frosting-section-label">🎨 Base Coat <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(pick one)</span></div>
+            {{-- FROSTING / ICING --}}
+            <div>
+                <div class="section-label">Frosting / Icing <span class="section-req">required</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Pick one base icing. <strong>Textured</strong> can be added on top of either. <strong>Smooth BC</strong> and <strong>Sugar Icing</strong> cannot be combined.</p>
+
+                <div class="frosting-section-label">🎨 Base Icing <span class="section-req">required</span></div>
                 <div class="addon-grid" id="opts-frosting-base">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="base">
-                        <div class="a-icon">🎨</div>
-                        <div class="a-info"><span class="a-name">Smooth BC</span><span class="a-price">Included</span></div>
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2c0 0 4 4 4 10s-4 10-4 10"/><path d="M2 12h20"/></svg></div>
+                        <div class="a-info"><span class="a-name">Shell Border</span><span class="a-price">Default · Included</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                     <div class="addon-opt frosting-opt" data-val="Sugar Icing" data-price="150" data-group="base">
-                        <div class="a-icon">🍦</div>
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8h10l-2 13H9L7 8z"/><path d="M5 8c0-4 3-6 7-6s7 2 7 6"/></svg></div>
                         <div class="a-info"><span class="a-name">Sugar Icing</span><span class="a-price">+₱150 · choose color</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
@@ -1157,7 +1154,8 @@ nav {
 
                 <div class="icing-panel" id="icingPanel">
                     <div class="icing-header">Choose icing color</div>
-<div class="icing-color-grid" id="icingColorGrid" style="grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;">                        <div class="icing-color-opt light-color active" data-icing-color="#FFFFFF" data-icing-name="White"    style="background:#FFFFFF;border-color:#D5C8B8;"></div>
+                    <div class="icing-color-grid" id="icingColorGrid" style="grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;">
+                        <div class="icing-color-opt light-color active" data-icing-color="#FFFFFF" data-icing-name="White"    style="background:#FFFFFF;border-color:#D5C8B8;"></div>
                         <div class="icing-color-opt light-color"        data-icing-color="#FFCCE0" data-icing-name="Pink"     style="background:#FFCCE0;"></div>
                         <div class="icing-color-opt light-color"        data-icing-color="#C8E6FF" data-icing-name="Sky Blue" style="background:#C8E6FF;"></div>
                         <div class="icing-color-opt light-color"        data-icing-color="#D4C8FF" data-icing-name="Lavender" style="background:#D4C8FF;"></div>
@@ -1167,41 +1165,15 @@ nav {
                     <div class="icing-color-label" id="icingColorLabel">White</div>
                 </div>
 
-                <div class="frosting-section-label" style="margin-top:10px;">🖌️ Texture Add-on <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(pairs with any base coat)</span></div>
-                <div class="addon-grid" id="opts-frosting-bc">
-                    <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
-                        <div class="a-icon">🖌️</div>
-                        <div class="a-info"><span class="a-name">Textured</span><span class="a-price">+₱150</span></div>
-                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                    </div>
-                </div>
-
-                <div class="frosting-section-label" style="margin-top:10px;">✨ Cake type <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(combinable with any base coat)</span></div>
+               <div class="frosting-section-label" style="margin-top:10px;">🖌️ Texture <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;white-space:nowrap;">(optional · Not available for Semi-naked)</span></div>
                 <div class="addon-grid" id="opts-frosting-special">
-                    <div class="addon-opt frosting-opt" data-val="Fondant Smooth" data-price="350" data-group="special">
-                        <div class="a-icon">⬜</div>
-                        <div class="a-info"><span class="a-name">Fondant</span><span class="a-price">+₱350 · solo only</span></div>
-                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                    </div>
-                    <div class="addon-opt frosting-opt" data-val="Chocolate Ganache" data-price="250" data-group="special">
-                        <div class="a-icon">🍫</div>
-                        <div class="a-info"><span class="a-name">Ganache</span><span class="a-price">+₱250</span></div>
-                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                    </div>
-                    <div class="addon-opt frosting-opt" data-val="Semi-naked Style" data-price="200" data-group="special">
-                        <div class="a-icon">🎂</div>
-                        <div class="a-info"><span class="a-name">Semi-naked</span><span class="a-price">+₱200</span></div>
+                    <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-4 3 3 5-6 6 7H3z"/><path d="M3 7h18"/><path d="M3 12h18"/></svg></div>
+                        <div class="a-info"><span class="a-name">Textured</span><span class="a-price">+₱150 · add-on</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                 </div>
 
-                <div class="fondant-notice" id="fondantNotice">
-                    <span class="fondant-notice-icon">⬜</span>
-                    <div>
-                        <span class="fondant-notice-title">Fondant selected — solo only</span>
-                        <span class="fondant-notice-sub">Fondant replaces all other frosting styles. Tap Fondant again to deselect.</span>
-                    </div>
-                </div>
                 <div class="frosting-combo-hint" id="frostingComboHint">
                     <span class="frosting-combo-hint-icon">✨</span>
                     <div>
@@ -1215,10 +1187,10 @@ nav {
             <div>
                 <div class="section-label">Add-ons <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
 
-                <div class="addon-section-lbl">💧 Drip</div>
+                <div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 10a7 7 0 1 1-14 0L12 2z"/></svg> Drip</div>
                 <div class="addon-grid" style="margin-bottom:6px;">
                     <div class="addon-opt" data-group="drips" data-val="Drip" data-price="180" id="dripToggleBtn">
-                        <div class="a-icon">💧</div>
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 10a7 7 0 1 1-14 0L12 2z"/></svg></div>
                         <div class="a-info"><span class="a-name">Add Drip</span><span class="a-price">+₱180 · pick flavor</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
@@ -1236,30 +1208,30 @@ nav {
                         <div class="drip-flavor-opt"        data-drip-flavor="White Chocolate" data-drip-color="#F5ECD0"><span class="drip-color-dot" style="background:#F5ECD0;border:1px solid #D5C8B8;"></span>White Choco</div>
                     </div>
                 </div>
-<div class="addon-section-lbl" style="margin-top:10px;">🍓 Fruits</div>
+<div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/></svg> Fruits</div>
                 <div style="background:var(--accent-lt);border:1px solid rgba(200,137,74,.25);border-radius:12px;padding:10px 12px;">
                     <p style="font-size:.72rem;font-weight:700;color:#7A4A1E;margin:0 0 10px;font-family:var(--font-display);">Tap a fruit to add it — then tap the cake preview to place it</p>
                     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="opts-fruits">
                 <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🍓</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/><circle cx="10" cy="10" r=".5" fill="currentColor"/><circle cx="14" cy="8" r=".5" fill="currentColor"/><circle cx="11" cy="14" r=".5" fill="currentColor"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Strawberry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                   <div class="addon-opt fruit-tile" data-group="fruits" data-val="Blueberry" data-price="25" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🫐</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="11" r="4"/><circle cx="14" cy="17" r="3.5"/><path d="M9 4c0 0 1-2 3-2s3 2 3 2"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Blueberry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱25/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                     <div class="addon-opt fruit-tile" data-group="fruits" data-val="Raspberry" data-price="55" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🍇</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="14" r="3"/><circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M12 4V2"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Raspberry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                       <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🍒</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="17" r="4"/><circle cx="17" cy="15" r="4"/><path d="M8 13C8 8 12 4 16 3"/><path d="M17 11C17 7 15 4 12 3"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Cherry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
@@ -1272,42 +1244,42 @@ nav {
             
                 </div>
 
-<div class="addon-section-lbl" style="margin-top:10px;">🍫 Chocolate Decorations</div>
+<div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="8" y1="6" x2="8" y2="20"/><line x1="16" y1="6" x2="16" y2="20"/><line x1="2" y1="13" x2="22" y2="13"/></svg> Chocolate Decorations</div>
                 <div style="background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;padding:10px 12px;">
                     <p style="font-size:.72rem;font-weight:700;color:#6B4C08;margin:0 0 10px;font-family:var(--font-display);">Tap a decoration to add it — then tap the cake preview to place it</p>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="opts-choco">
                    <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball" data-price="55" id="ferreroToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🟤</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/><path d="M7 7l2 2M15 15l2 2M17 7l-2 2M9 15l-2 2"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Ferrero</span>
                  <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                         <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="30" id="kitkatToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🍬</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="8" rx="2"/><line x1="9" y1="8" x2="9" y2="16"/><line x1="15" y1="8" x2="15" y2="16"/><path d="M3 12h18"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">KitKat</span>
                  <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
             <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="20" id="oreoToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">⚫</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/><path d="M8 9h8M8 12h8M8 15h8"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Oreo</span>
                          <span class="a-price" style="font-size:.60rem;text-align:center;">+₱20/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                       <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🍫</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l18 3-4 10L3 7z"/><line x1="8" y1="8" x2="6" y2="14"/><line x1="13" y1="9" x2="11" y2="15"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Bar Shard</span>
                        <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                         <div class="addon-opt" data-group="choco" data-val="Chocolate Curls" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🌀</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 12c0-3 2-5 4-4s3 4 1 6-6 3-8 1-2-6 1-8 8-2 9 2-1 8-5 9-9-2-9-6 3-8 7-8"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Curls</span>
                       <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                         <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="80" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <span style="font-size:1.8rem;line-height:1;">🟫</span>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="9" y1="6" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="18"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Plaque</span>
                        <span class="a-price" style="font-size:.60rem;text-align:center;">+₱80</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
@@ -1406,19 +1378,38 @@ nav {
                     </div>
                 </div>
 
-                <div class="addon-section-lbl" style="margin-top:10px;">✨ Sprinkles</div>
-                <div class="addon-grid" id="opts-sprinkles" style="margin-bottom:10px;">
-                    <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="30"><div class="a-icon">✨</div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="30"><div class="a-icon">🔮</div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg> Sprinkles</div>
+            <div class="addon-grid" id="opts-sprinkles" style="margin-bottom:10px;">
+                    <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg></div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
-                <div class="addon-section-lbl">🕯️ Candles &amp; Toppers</div>
+                <!-- Cylinder placement panel -->
+                <div id="cylinderPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">✨ Cylinder placement</div>
+                    <div style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                        <button class="sprinkle-place-btn active" data-type="cylinder" data-placement="top"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;transition:all .15s;">Top only</button>
+                        <button class="sprinkle-place-btn"        data-type="cylinder" data-placement="sides" style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
+                        <button class="sprinkle-place-btn"        data-type="cylinder" data-placement="both"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
+                    </div>
+                </div>
+
+                <!-- Pearl placement panel -->
+                <div id="pearlPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">🔮 Pearl placement</div>
+                    <div style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                        <button class="sprinkle-place-btn active" data-type="pearl" data-placement="top"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;transition:all .15s;">Top only</button>
+                        <button class="sprinkle-place-btn"        data-type="pearl" data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
+                        <button class="sprinkle-place-btn"        data-type="pearl" data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
+                    </div>
+                </div>
+                <div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="8" width="6" height="14" rx="1"/><path d="M12 8V4"/><path d="M10 4c0-1.5 1-3 2-3s2 1.5 2 3"/></svg> Candles &amp; Toppers</div>
                 <div class="addon-grid" id="opts-candles" style="margin-bottom:10px;">
-                    <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="20"> <div class="a-icon">🔢</div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱20/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Happy Birthday Topper" data-price="60"> <div class="a-icon">🎉</div><div class="a-info"><span class="a-name">HBD Topper</span>  <span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Name Plaque"            data-price="100"><div class="a-icon">📛</div><div class="a-info"><span class="a-name">Name Plaque</span> <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Crown Topper"           data-price="80"><div class="a-icon">👑</div><div class="a-info"><span class="a-name">Crown Topper</span><span class="a-price">+₱80</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Heart Topper"           data-price="70"><div class="a-icon">❤️</div><div class="a-info"><span class="a-name">Heart Topper</span><span class="a-price">+₱70</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="20"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="4" height="13" rx="1"/><path d="M10 8V5"/><path d="M9 5c0-1.5.5-3 1-3s1 1.5 1 3"/><rect x="14" y="8" width="4" height="13" rx="1"/><path d="M16 8V5"/><path d="M15 5c0-1.5.5-3 1-3s1 1.5 1 3"/></svg></div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱20/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Happy Birthday Topper" data-price="60"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2 5h5l-4 3 1.5 5L12 12l-4.5 3L9 10 5 7h5z"/></svg></div><div class="a-info"><span class="a-name">HBD Topper</span>  <span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Name Plaque"            data-price="100"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="9" x2="12" y2="9"/></svg></div><div class="a-info"><span class="a-name">Name Plaque</span> <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Crown Topper"           data-price="80"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18l3-9 4 5 3-9 3 9 4-5 3 9H2z"/><line x1="2" y1="18" x2="22" y2="18"/></svg></div><div class="a-info"><span class="a-name">Crown Topper</span><span class="a-price">+₱80</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="candles" data-val="Heart Topper"           data-price="70"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 3 14 3 8a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 13-9 13z"/></svg></div><div class="a-info"><span class="a-name">Heart Topper</span><span class="a-price">+₱70</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
            <div class="candle-picker-panel" id="candlePickerPanel">
@@ -1445,14 +1436,52 @@ nav {
                     </div>
                 </div>
 
-                <div class="addon-section-lbl">🌸 Decorative Elements</div>     
+<div class="cupcake-qty-panel" id="cupcakeQtyPanel" style="display:none;margin-top:8px;background:var(--accent-lt);border:1.5px solid rgba(200,137,74,.30);border-radius:10px;padding:10px 12px;">
+                    <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🧁 How many cupcakes?<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--warm-white);border:1.5px solid rgba(200,137,74,.25);border-radius:10px;padding:8px 14px;margin-bottom:8px;">
+                        <button id="cupcakeQtyMinus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(200,137,74,.45);background:transparent;color:var(--accent-dk);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font-display);">−</button>
+                        <div style="text-align:center;">
+                            <div id="cupcakeQtyDisplay" style="font-size:2rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);line-height:1;">1</div>
+                            <div style="font-size:.60rem;color:var(--text-muted);font-family:var(--font-display);margin-top:2px;">cupcake(s) · <strong style="color:var(--caramel);">₱<span id="cupcakeLiveTotal">85</span></strong></div>
+                        </div>
+                        <button id="cupcakeQtyPlus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(200,137,74,.45);background:var(--caramel);color:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font-display);">+</button>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px;" id="cupcakeQtyPresets">
+                        <button class="cupcake-preset-btn" data-qty="1"  style="padding:6px 2px;border:1.5px solid var(--caramel);border-radius:8px;background:var(--caramel);color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;">1</button>
+                        <button class="cupcake-preset-btn" data-qty="3"  style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">3</button>
+                        <button class="cupcake-preset-btn" data-qty="6"  style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">6</button>
+                        <button class="cupcake-preset-btn" data-qty="12" style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">12</button>
+                        <button class="cupcake-preset-btn" data-qty="24" style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">24</button>
+                    </div>
+           <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;margin-top:4px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🎨 Cupcake Flavour<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;" id="opts-cupcake-flavor">
+                        <div class="cupcake-flavor-opt active" data-cupcake-flavor="Vanilla"    data-cupcake-color="#C8882A" style="padding:6px 12px;border:1.5px solid var(--caramel);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--caramel);color:#fff;display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#F2C96A;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Vanilla</div>
+                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Chocolate"  data-cupcake-color="#3A1206" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#5C2D0E;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Chocolate</div>
+                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Red Velvet" data-cupcake-color="#8B1111" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#8B1111;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Red Velvet</div>
+                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Strawberry" data-cupcake-color="#D94070" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#D94070;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Strawberry</div>
+                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Ube"        data-cupcake-color="#6B3FA0" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#6B3FA0;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Ube</div>
+                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Mocha"      data-cupcake-color="#4A2810" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#4A2810;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Mocha</div>
+                    </div>
+                    <div style="font-size:.63rem;color:var(--brown-mid);font-family:var(--font-display);line-height:1.5;padding:6px 8px;background:rgba(200,137,74,.10);border:1px solid rgba(200,137,74,.20);border-radius:7px;">
+                        🧁 Each cupcake is placed on its own plate beside the main cake in the preview. <strong>₱85/pc</strong>.
+                    </div>
+                </div>
+<div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 1 0 6M12 16a3 3 0 0 1 0 6M2 12a3 3 0 0 1 6 0M16 12a3 3 0 0 1 6 0"/></svg> Decorative Elements</div>
                 <div class="addon-grid" id="opts-deco">
-                    <div class="addon-opt" data-group="deco" data-val="Buttercream Swirls" data-price="75"><div class="a-icon">🌀</div><div class="a-info"><span class="a-name">BC Swirls</span>    <span class="a-price">+₱75</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Rosettes"           data-price="100"><div class="a-icon">🌹</div><div class="a-info"><span class="a-name">Rosettes</span>     <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Macarons"           data-price="48"> <div class="a-icon">🟡</div><div class="a-info"><span class="a-name">Macarons</span>     <span class="a-price">+₱48/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Meringue Drops"     data-price="70"><div class="a-icon">⚪</div><div class="a-info"><span class="a-name">Meringue</span>     <span class="a-price">+₱70</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Ribbon Wrap"        data-price="50"> <div class="a-icon">🎀</div><div class="a-info"><span class="a-name">Ribbon Wrap</span>  <span class="a-price">+₱50</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Edible Pearls"      data-price="60"><div class="a-icon">🫧</div><div class="a-info"><span class="a-name">Edible Pearls</span><span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Buttercream Swirls" data-price="75"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c0-3 2-5 4-4s3 4 1 6-6 3-8 1-2-6 1-8 8-2 9 2-1 8-5 9-9-2-9-6 3-8 7-8"/></svg></div><div class="a-info"><span class="a-name">BC Swirls</span>    <span class="a-price">+₱75</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Rosettes"           data-price="100"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2c0 4-3 7-3 10s3 6 3 10"/><path d="M2 12c4 0 7 3 10 3s6-3 10-3"/><path d="M5 5c3 3 3 6 7 7s6-1 9-4"/><path d="M5 19c3-3 3-6 7-7s6 1 9 4"/></svg></div><div class="a-info"><span class="a-name">Rosettes</span>     <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Ribbon Wrap"        data-price="50"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12l-6-5a3 3 0 0 1 4-4l2 3 2-3a3 3 0 0 1 4 4l-6 5z"/><path d="M12 12v9"/><path d="M8 17h8"/></svg></div><div class="a-info"><span class="a-name">Ribbon Wrap</span>  <span class="a-price">+₱50</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                    <div class="addon-opt" data-group="deco" data-val="Edible Pearls"      data-price="60"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><circle cx="12" cy="12" r="2"/></svg></div><div class="a-info"><span class="a-name">Edible Pearls</span><span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                </div>
+
+                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="9" rx="8" ry="4"/><ellipse cx="12" cy="15" rx="8" ry="4"/><line x1="4" y1="9" x2="4" y2="15"/><line x1="20" y1="9" x2="20" y2="15"/></svg> Macarons</div>
+                <div class="addon-grid" style="margin-bottom:6px;">
+                    <div class="addon-opt" data-group="deco" data-val="Macarons" data-price="48"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="9" rx="7" ry="4"/><ellipse cx="12" cy="15" rx="7" ry="4"/><line x1="5" y1="9" x2="5" y2="15"/><line x1="19" y1="9" x2="19" y2="15"/></svg></div><div class="a-info"><span class="a-name">Macarons</span><span class="a-price">+₱48/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                </div>
+
+                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6"/><path d="M8 10c1-3 2-5 4-6 2 1 3 3 4 6"/></svg> Cupcakes</div>
+                <div class="addon-grid" style="margin-bottom:6px;">
+                    <div class="addon-opt" data-group="deco" data-val="Cupcake" data-price="85" id="cupcakeToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;position:relative;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6H4z"/><path d="M12 4v-2M9 5l-1-2M15 5l1-2"/></svg><span class="a-name" style="font-size:.68rem;text-align:center;">Cupcake</span><span class="a-price" style="font-size:.60rem;text-align:center;">+₱85/pc</span><div class="addon-check" style="position:absolute;top:6px;right:6px;width:14px;height:14px;border-radius:4px;border:1.5px solid var(--border-dk);background:transparent;display:flex;align-items:center;justify-content:center;transition:all var(--transition);"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2" style="width:8px;height:8px;opacity:0;"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
             </div>
 
@@ -1476,12 +1505,7 @@ nav {
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
             </button>
         </div>
-        <div id="brightnessControl" style="position:absolute;top:14px;right:54px;z-index:10;background:rgba(55,30,10,0.70);backdrop-filter:blur(18px);border:1px solid rgba(210,165,90,0.28);border-radius:10px;padding:8px 14px;box-shadow:0 2px 8px rgba(60,30,5,0.35);display:flex;align-items:center;gap:10px;">
-            <span style="font-size:.65rem;color:rgba(180,130,65,0.85);font-family:var(--font-body);white-space:nowrap;">💡 Brightness</span>
-        <input type="range" id="spotBrightnessSlider" min="0" max="100" value="35" step="1"
-                style="-webkit-appearance:none;appearance:none;width:90px;height:3px;background:rgba(210,165,90,0.35);border-radius:2px;outline:none;cursor:pointer;">
-       <span id="spotBrightnessVal" style="font-size:.65rem;color:rgba(210,165,90,0.85);font-family:var(--font-display);min-width:28px;">35%</span>
-        </div>
+      <div id="brightnessControl" style="display:none;"></div>
         <div class="viewer-hint" id="viewerHint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom</div>
         <div class="model-status hidden" id="modelStatus">Ready</div>
 
@@ -1551,7 +1575,8 @@ nav {
                 <div class="cfg-row" id="selFerreroRow" style="display:none;"><span class="cfg-key">Ferrero</span><span class="cfg-val" id="selFerrero">—</span></div>
                 <div class="cfg-row" id="selKitkatRow" style="display:none;"><span class="cfg-key">KitKat</span><span class="cfg-val" id="selKitkat">—</span></div>
                 <div class="cfg-row" id="selOreoRow" style="display:none;"><span class="cfg-key">Oreo</span><span class="cfg-val" id="selOreo">—</span></div>
-                <div class="cfg-row" id="selBarShardRow" style="display:none;"><span class="cfg-key">Bar Shard</span><span class="cfg-val" id="selBarShard">—</span></div>
+              <div class="cfg-row" id="selBarShardRow" style="display:none;"><span class="cfg-key">Bar Shard</span><span class="cfg-val" id="selBarShard">—</span></div>
+                <div class="cfg-row" id="selCupcakeRow" style="display:none;"><span class="cfg-key">Cupcakes</span><span class="cfg-val" id="selCupcake">—</span></div>
             </div>
             <div class="config-card">
                 <div class="config-card-header">
@@ -1619,7 +1644,8 @@ renderer.toneMapping         = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
 renderer.shadowMap.enabled   = true;
 renderer.shadowMap.type      = THREE.PCFSoftShadowMap;
-renderer.setClearColor(0x000000, 0); // transparent — let CSS background show
+renderer.setClearColor(0x000000, 0); // transparent — CSS background shows through
+// Dynamic clear color will be set per flavor via _applyFlavorTheme
 container.appendChild(renderer.domElement);
 const scene  = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(36, container.clientWidth / container.clientHeight, 0.01, 100);
@@ -1657,14 +1683,14 @@ const STAGE_LIGHTS = [
     { pos: [ 3.5, 5.5, 2.0] },   // right
 ];
 
-let _spotBrightness = 0.35; // 0.0 – 1.0, user-adjustable
+let _spotBrightness = 0.18; // 0.0 – 1.0, user-adjustable — dimmed
 
 const spotLights = STAGE_LIGHTS.map((cfg, i) => {
-const spot = new THREE.SpotLight(0xD8E8FF, 1.8 * _spotBrightness);
+const spot = new THREE.SpotLight(0xD8E8FF, 1.2 * _spotBrightness);
 spot.position.set(...cfg.pos);
-spot.angle      = 0.18;
-spot.penumbra   = 0.55;
-spot.decay      = 2.8;
+spot.angle      = 0.16;
+spot.penumbra   = 0.75;
+spot.decay      = 3.2;
     spot.castShadow = (i === 1); // only center casts shadow
     if(i === 1){
         spot.shadow.mapSize.set(2048, 2048);
@@ -1687,18 +1713,43 @@ window._setSpotBrightness = function(val) {
     spotLights.forEach(s => { s.intensity = 1.8 * _spotBrightness; });
 };
 
-// ── SOFT AMBIENT FILL ──
-const bounceFill = new THREE.PointLight(0xE8C870, 0.8);
+const bounceFill = new THREE.PointLight(0xE8C870, 0.45);
 bounceFill.position.set(0, -0.8, 0);
 scene.add(bounceFill);
-const fillLight = new THREE.DirectionalLight(0xF0C878, 0.10);
+const fillLight = new THREE.DirectionalLight(0xF0C878, 0.06);
 fillLight.position.set(-5, 5, 3); scene.add(fillLight);
-const tableBouce = new THREE.DirectionalLight(0xD4904A, 0.15);
+const tableBouce = new THREE.DirectionalLight(0xD4904A, 0.08);
 tableBouce.position.set(0, -2, 2); scene.add(tableBouce);
-const backWall = new THREE.DirectionalLight(0xE8C870, 0.08);
+const backWall = new THREE.DirectionalLight(0xE8C870, 0.04);
 backWall.position.set(1, 3, -8); scene.add(backWall);
-scene.add(new THREE.AmbientLight(0xC89840, 0.20));
+scene.add(new THREE.AmbientLight(0xC89840, 0.12));
 
+// ── Soft circular glow behind/under the cake ──
+(function buildAtmosphere(){
+    // Radial floor glow — warm pool of light under cake stand
+    const glowGeo = new THREE.CircleGeometry(2.8, 64);
+    const glowMat = new THREE.MeshBasicMaterial({
+        color: 0xFFCC66, transparent: true, opacity: 0.13,
+        depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    });
+    const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+    glowMesh.rotation.x = -Math.PI / 2;
+    glowMesh.position.set(0, -1.17, 0);
+    scene.add(glowMesh);
+
+    // Inner tighter glow
+    const innerGeo = new THREE.CircleGeometry(1.2, 48);
+    const innerMat = new THREE.MeshBasicMaterial({
+        color: 0xFFEE99, transparent: true, opacity: 0.18,
+        depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    });
+    const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+    innerMesh.rotation.x = -Math.PI / 2;
+    innerMesh.position.set(0, -1.16, 0);
+    scene.add(innerMesh);
+
+
+})();
 const tableMat = new THREE.MeshStandardMaterial({ color: 0x7A6040, roughness: 0.55, metalness: 0.0, envMapIntensity: 0.50 });
 const tableTop = new THREE.Mesh(new THREE.PlaneGeometry(22, 22), tableMat);
 tableTop.rotation.x=-Math.PI/2; tableTop.position.y=-1.20;
@@ -1836,7 +1887,7 @@ FIXTURE_POSITIONS.forEach(([fx, fy, fz]) => {
         const coneGeo = new THREE.BufferGeometry();
         const cp = [], cc = [], ci = [];
         const cSegs = 32, cRings = 20;
-        const cRadius = coneLength * Math.tan(0.28); // match spot angle
+      const cRadius = coneLength * Math.tan(0.14); // tighter cone, no floor splash
 
         cp.push(0, 0, 0);
         cc.push(1.0, 0.95, 0.85, 0.65);
@@ -2021,15 +2072,17 @@ const SHAPE_SLUG = {
     'Two-tier Round':'two-tier',
     'Three-tier Round':'three-tier',
 };
-
 function getFrostingFileSuffix(arr){
-    if(arr.includes('Fondant Smooth')) return 'fondant';
+    if(arr.includes('Fondant Smooth'))  return 'fondant';
+    if(arr.includes('Semi-naked Style')) return 'seminaked';
     const s=arr.includes('Smooth Buttercream'), t=arr.includes('Textured Buttercream');
     if(s&&t) return 'smoothandtextured';
     if(t)    return 'textured';
     return 'smooth';
 }
-function shouldLoadFrostingGLB(arr){ return arr.some(f=>f!=='Sugar Icing'); }
+function shouldLoadFrostingGLB(arr){
+    return arr.some(f=>f!=='Sugar Icing'&&f!=='Drip');
+}
 function isFondantOnly(arr){ return arr.includes('Fondant Smooth'); }
 
 const FLAVORS={
@@ -2045,14 +2098,13 @@ const DRIP_FLAVOR_COLORS={
     'Strawberry':'#DE2454','Ube':'#5E24AC','Mocha':'#582C0E',
     'Caramel':'#D08010','White Chocolate':'#F8EED8',
 };
-// Fondant colors per flavor — thick matte sugar paste tones
 const FONDANT_FLAVOR_COLORS={
-    'Vanilla':   '#F5F0DC',
-    'Chocolate': '#4A2210',
-    'Red Velvet':'#8B1A1A',
-    'Strawberry':'#E8607A',
-    'Ube':       '#7A3FAA',
-    'Mocha':     '#6B3A1E',
+    'Vanilla':   '#C8892A',
+    'Chocolate': '#3A1206',
+    'Red Velvet':'#8B1111',
+    'Strawberry':'#D94070',
+    'Ube':       '#6B3FA0',
+    'Mocha':     '#4A2810',
 };
 // Sugar icing colors — richer mid-tone versions
 const SUGAR_ICING_COLORS={
@@ -2070,7 +2122,7 @@ const FROSTING_STYLES={
     'Textured Buttercream':{roughness:.70,metalness:.00,envBoost:-.04},
     'Fondant Smooth':      {roughness:.18,metalness:.02,envBoost:.28},
     'Chocolate Ganache':   {roughness:.05,metalness:.10,envBoost:.42},
-    'Semi-naked Style':    {roughness:.80,metalness:.00,envBoost:-.12,opacity:.68},
+  'Semi-naked Style':    {roughness:.85,metalness:.00,envBoost:-.08,opacity:1.0},
     'Sugar Icing':         {roughness:.14,metalness:.02,envBoost:.34},
 };
 
@@ -2086,16 +2138,72 @@ function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapInten
     });
 }
 function recolorGLB(flavorName,frostingsArr,dripFlavor,icingColorHex){
+    flavorName = flavorName || 'Vanilla'; // safety fallback
     const pal=FLAVORS[flavorName]||FLAVORS['Vanilla'];
-    const hasTextured=frostingsArr.includes('Textured Buttercream');
-    const hasSmooth  =frostingsArr.includes('Smooth Buttercream');
-    const styleName  =hasTextured?'Textured Buttercream':hasSmooth?'Smooth Buttercream':(frostingsArr.filter(f=>f!=='Sugar Icing')[0]||'Smooth Buttercream');
+    const hasTextured  =frostingsArr.includes('Textured Buttercream');
+    const hasSmooth    =frostingsArr.includes('Smooth Buttercream');
+    const hasSemiNakedR=frostingsArr.includes('Semi-naked Style');
+    const styleName    =hasSemiNakedR?'Semi-naked Style':hasTextured?'Textured Buttercream':hasSmooth?'Smooth Buttercream':(frostingsArr.filter(f=>f!=='Sugar Icing')[0]||'Smooth Buttercream');
     const style      =FROSTING_STYLES[styleName]||FROSTING_STYLES['Smooth Buttercream'];
     const frostEnv   =Math.max(.20,(pal.top.envMapIntensity??0.6)+style.envBoost);
-    if(currentBase)  applyGLBMaterial(currentBase,  pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
-    if(currentFrost){
-       if(frostingsArr.includes('Fondant Smooth')){
+if(currentBase && !hasSemiNakedR && !frostingsArr.includes('Fondant Smooth'))  applyGLBMaterial(currentBase,  pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
+if(currentBase && hasSemiNakedR && !frostingsArr.includes('Fondant Smooth')){
+    const SEMI_NAKED_SPONGE={
+        'Vanilla':   '#D4956A',
+        'Chocolate': '#5C2A12',
+        'Red Velvet':'#9B1B1B',
+        'Strawberry':'#D4406A',
+        'Ube':       '#5C2A8A',
+        'Mocha':     '#3A1E0A',
+    };
+    const spongeTintHex = SEMI_NAKED_SPONGE[flavorName] || '#D4956A';
+    currentBase.traverse(child=>{
+        if(!child.isMesh) return;
+        if(child.material){
+            child.material = child.material.clone();
+            child.material.color.set(new THREE.Color(spongeTintHex));
+            child.material.needsUpdate = true;
+        }
+        child.castShadow    = true;
+        child.receiveShadow = true;
+    });
+}
+// ── Recolor the semi-naked frosting GLB — tint the texture by setting color ──
+if(currentFrost && hasSemiNakedR){
+    const SEMI_NAKED_FROST={
+        'Vanilla':   '#EED8A8',
+        'Chocolate': '#7A3A18',
+        'Red Velvet':'#CC3030',
+        'Strawberry':'#E84070',
+        'Ube':       '#7030B0',
+        'Mocha':     '#6A3820',
+    };
+    const frostTint = new THREE.Color(SEMI_NAKED_FROST[flavorName] || '#EED8A8');
+    currentFrost.traverse(child=>{
+        if(!child.isMesh) return;
+        if(child.material){
+            // Keep the existing texture map — just tint the color
+            // Three.js multiplies: finalColor = color × texture
+            child.material = child.material.clone();
+            child.material.color.set(frostTint);
+        } else {
+            // Sphere meshes with no material — assign tinted material
+            child.material = new THREE.MeshStandardMaterial({
+                color: frostTint,
+                roughness: 0.85,
+                metalness: 0.0,
+            });
+        }
+        child.castShadow    = true;
+        child.receiveShadow = true;
+    });
+}
+if(currentFrost && hasSemiNakedR && currentFrost.userData.keepOriginalTexture) { /* keep baked texture as-is */ }
+else if(currentFrost && !hasSemiNakedR){
+  if(frostingsArr.includes('Fondant Smooth')){
     const fondantHex = FONDANT_FLAVOR_COLORS[flavorName] || '#F5F0DC';
+  // ── Kill ALL spotlight shadows when fondant is active ──
+    spotLights.forEach(s => { s.castShadow = false; });
     currentFrost.traverse(child => {
         if(!child.isMesh) return;
 
@@ -2281,26 +2389,31 @@ function recolorGLB(flavorName,frostingsArr,dripFlavor,icingColorHex){
         const normalMap    = makeFondantNormalMap(profile.pattern);
         const roughnessMap = makeFondantRoughnessMap(profile.roughnessVariance);
 
-        child.material = new THREE.MeshStandardMaterial({
+child.material = new THREE.MeshStandardMaterial({
             color:             new THREE.Color(fondantHex),
-            roughness:         profile.roughness,
+            roughness:         1.0,
             metalness:         0.00,
-            envMapIntensity:   profile.envMapIntensity,
+            envMapIntensity:   0.0,
             normalMap:         normalMap,
-            normalScale:       new THREE.Vector2(profile.normalStrength, profile.normalStrength),
+            normalScale:       new THREE.Vector2(profile.normalStrength * 2.5, profile.normalStrength * 2.5),
             roughnessMap:      roughnessMap,
-            emissive:          new THREE.Color(fondantHex),
-            emissiveIntensity: profile.emissiveIntensity,
+            emissive:          new THREE.Color(0x000000),
+            emissiveIntensity: 0.0,
         });
+        child.material.envMap = null;
+        child.material.needsUpdate = true;
         child.castShadow    = true;
         child.receiveShadow = true;
-    });
+        return; // ← STOP HERE, skip all code below
+
+});
 } else {
             applyGLBMaterial(currentFrost, pal.frosting.hex, style.roughness, style.metalness, style.opacity??1.0, frostEnv);
         }
     }
-    if(currentIcing){
+ if(currentIcing){
         const icingRich = SUGAR_ICING_COLORS[icingColorHex] || icingColorHex || '#F8F6F2';
+        // Always apply the selected icing color to ALL meshes — never tint with sponge/frosting colors
         applyGLBMaterial(currentIcing, icingRich, 0.12, 0.02, 1.0, 0.88);
     }
     if(currentDrip)  applyGLBMaterial(currentDrip,  dripFlavor?(DRIP_FLAVOR_COLORS[dripFlavor]||pal.drip.hex):pal.drip.hex, pal.drip.roughness??0.10, pal.drip.metalness??0.05, 1.0, .80);
@@ -2369,14 +2482,14 @@ function glbHasMesh(group){let f=false;group.traverse(c=>{if(c.isMesh)f=true;});
 // Maps inch size to world-space diameter. 6" = 2.0 (baseline)
 function inchesToWorldScale(inches){ return (inches / 6.0) * 2.0; }
 
-function positionGroup(group, inches){
+function positionGroup(group, inches, heightMult){
     group.position.set(0,0,0); group.rotation.set(0,0,0); group.scale.set(1,1,1); group.updateMatrixWorld(true);
     const box=new THREE.Box3().setFromObject(group), size=box.getSize(new THREE.Vector3());
     const maxDim=Math.max(size.x,size.y,size.z); if(maxDim<0.0001) return;
     const hSize=Math.max(size.x,size.z);
     const targetDiameter = inchesToWorldScale(inches || 6);
     const scale=hSize>0.0001?targetDiameter/hSize:1.0;
-    group.scale.setScalar(scale); group.updateMatrixWorld(true);
+    group.scale.set(scale, scale * (heightMult || 1.0), scale); group.updateMatrixWorld(true);
     const box2=new THREE.Box3().setFromObject(group), center=box2.getCenter(new THREE.Vector3());
     group.position.set(-center.x,-box2.min.y,-center.z); group.updateMatrixWorld(true);
     const box3=new THREE.Box3().setFromObject(group), midY=(box3.min.y+box3.max.y)*.5;
@@ -2406,7 +2519,7 @@ function alignDualDigits(gT,gU,wrapper){
     gT.position.z=-(bT.min.z+(bT.max.z-bT.min.z)/2);
     gU.position.z=-(bU.min.z+(bU.max.z-bU.min.z)/2);
     wrapper.add(gT); wrapper.add(gU); wrapper.updateMatrixWorld(true);
-    positionGroup(wrapper);
+positionGroup(wrapper, 4.5, 0.75);
 }
 
 function clearScene(keepDecorations=false){
@@ -2479,14 +2592,23 @@ async function updateScene(state){
     if(isNumber){
         const numStr=state.numberDigits===2?`${state.numberTens??1}_${state.numberUnits??0}`:`${state.numberChoice??0}`;
         newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}`;
-    } else {
+} else {
         const slug=SHAPE_SLUG[shape]||'round';
-        const sizeKey=(shape==='Round')?`_${state.roundSize||6}in`:'';
-        newKey=`${slug}${sizeKey}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}`;
+      const sizeKey=(shape==='Round')?`_${state.roundSize||6}in`:'';
+const shellBorderKey = (frostingsArr.includes('Semi-naked Style') && frostingsArr.includes('Smooth Buttercream')) ? '_withshell' : '_noshell';
+const _cakeStyleKey = frostingsArr.includes('Semi-naked Style') ? 'sn' : frostingsArr.includes('Fondant Smooth') ? 'fn' : 'bc';
+const _texturedKey = frostingsArr.includes('Textured Buttercream') ? '_tx' : '_ntx';
+newKey=`${slug}${sizeKey}_${flavor}_${_cakeStyleKey}_${needFrostGLB?frostSuffix:'nobc'}${shellBorderKey}${_texturedKey}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}`;
     }
-
 if(loadedKey===newKey&&sceneRoot.children.length>0){
-    // Only recolor — meshes are already correctly positioned, do NOT reposition
+    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor);
+    return;
+}
+// Force recolor even if key differs only by flavor for semi-naked
+const prevKeyNoFlavor = loadedKey.replace(/_(Vanilla|Chocolate|Red Velvet|Strawberry|Ube|Mocha)_/, '_FLAVOR_');
+const newKeyNoFlavor  = newKey.replace(/_(Vanilla|Chocolate|Red Velvet|Strawberry|Ube|Mocha)_/, '_FLAVOR_');
+if(prevKeyNoFlavor===newKeyNoFlavor&&sceneRoot.children.length>0){
+    loadedKey=newKey;
     recolorGLB(flavor,frostingsArr,dripFlavor,icingColor);
     return;
 }
@@ -2494,7 +2616,8 @@ if(loadedKey===newKey&&sceneRoot.children.length>0){
     isLoading=true; sceneRoot.visible=false;
     loadingEl.style.cssText='display:flex;opacity:1;'; loadingTx.textContent='Building 3D preview…'; statusEl.classList.add('hidden');
 
-    let usedGLB=false;
+let usedGLB=false;
+    try {
 
     if(isNumber){
         clearScene(true);
@@ -2506,8 +2629,8 @@ if(loadedKey===newKey&&sceneRoot.children.length>0){
                 const gU=rU.status==='fulfilled'&&glbHasMesh(rU.value)?rU.value:null;
                 if(gT||gU){
                     const baseWrapper=new THREE.Group();
-                    if(gT&&gU) alignDualDigits(gT,gU,baseWrapper);
-                    else { baseWrapper.add(gT||gU); positionGroup(baseWrapper, 6); }
+        if(gT&&gU) alignDualDigits(gT,gU,baseWrapper);
+        else { baseWrapper.add(gT||gU); positionGroup(baseWrapper, 4.5, 0.75); }
                     sceneRoot.add(baseWrapper); currentBase=baseWrapper;
                     if(isSugarIcing){
                         const [irT,irU]=await Promise.allSettled([loadGLB(`/models/icing_${T}.glb`),loadGLB(`/models/icing_${U}.glb`)]);
@@ -2541,8 +2664,8 @@ if(loadedKey===newKey&&sceneRoot.children.length>0){
             } else {
                 const N=state.numberChoice??0;
                 const baseGLB=await loadGLB(`/models/number_${N}.glb`).catch(()=>null);
-                if(baseGLB&&glbHasMesh(baseGLB)){
-                    positionGroup(baseGLB, 6);
+     if(baseGLB&&glbHasMesh(baseGLB)){
+            positionGroup(baseGLB, 4.5, 0.75);
                     sceneRoot.add(baseGLB); currentBase=baseGLB;
                     if(isSugarIcing){
                         const icingGLB=await loadGLB(`/models/icing_${N}.glb`).catch(()=>null);
@@ -2564,123 +2687,479 @@ if(loadedKey===newKey&&sceneRoot.children.length>0){
         } catch(e){ console.warn('Number GLB error',e); }
         if(!usedGLB){ showNoPreview('Number'); }
     } else {
-        const slug      = SHAPE_SLUG[shape]||'round';
+const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : (SHAPE_SLUG[shape]||'round');
+const originalShape = shape;
 const needFrost = shouldLoadFrostingGLB(frostingsArr);
-
-        const hasFondant= frostingsArr.includes('Fondant Smooth');
-
-        const baseURL  = `/models/base_${slug}.glb`;
-        // Fondant skin: fondant_<slug>.glb — available for all cake shapes
-        const frostURL = needFrost
-    ? (hasFondant ? `/models/fondant_${slug}.glb` : `/models/frosting_${slug}_${frostSuffix}.glb`)
+const hasFondant    = frostingsArr.includes('Fondant Smooth');
+const hasSemiNaked  = frostingsArr.includes('Semi-naked Style');
+const hasSemiNakedR = hasSemiNaked;
+const semiNakedSlug = (shape === 'Two-tier Round') ? 'two-tier' : (shape === 'Three-tier Round') ? 'three-tier' : (shape === 'Heart') ? 'heart' : (shape === 'Square') ? 'square' : 'round';
+const baseURL  = hasSemiNaked
+    ? `/models/base_seminaked_${semiNakedSlug}.glb`
+    : `/models/base_${slug}.glb`;
+console.log('[Debug] Loading base:', baseURL);
+const hasShellBorder = frostingsArr.includes('Smooth Buttercream');
+const hasTextured = frostingsArr.includes('Textured Buttercream');
+const frostURL = hasFondant
+    ? `/models/fondant_${slug}.glb`
+  : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart'))
+            ? (hasShellBorder ? `/models/frosting_${slug}_seminaked_smooth.glb` : null)
+        : (isSugarIcing && !hasSemiNaked && !hasTextured)
+            ? null
+            : (needFrost ? `/models/frosting_${slug}_${frostSuffix}.glb` : null);
+console.log('[SemiNaked Debug] hasShellBorder:', hasShellBorder, '| frostURL:', frostURL);
+console.log('[Fondant Debug] hasFondant:', hasFondant, '| frostURL:', frostURL, '| slug:', slug);
+const activeCakeStyle = frostingsArr.find(f => ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'].includes(f)) || 'Smooth Buttercream';
+const icingURL = isSugarIcing
+    ? (activeCakeStyle === 'Semi-naked Style' && !hasShellBorder
+        ? `/models/icing_${slug}_seminaked.glb`
+        : `/models/icing_${slug}.glb`)
     : null;
-        const icingURL = isSugarIcing ? `/models/icing_${slug}.glb` : null;
-        const dripURL  = hasDrip      ? `/models/drip_${slug}.glb`  : null;
+const dripURL = hasDrip
+    ? (hasFondant
+        ? `/models/fondant_drip_${slug}.glb`
+: hasSemiNaked
+            ? (slug === 'heart' ? `/models/drip_heart_round.glb` : `/models/drip_seminaked_${slug}.glb`)
+            : `/models/drip_${slug}.glb`)
+    : null;
+const urlList  = [baseURL];
+const idxFrost = (frostURL) ? (urlList.push(frostURL)-1) : -1;
+const idxIcing = icingURL                 ? (urlList.push(icingURL)-1) : -1;
+const idxDrip  = dripURL                  ? (urlList.push(dripURL) -1) : -1;
 
-        const urlList  = [baseURL];
-        const idxFrost = needFrost    ? (urlList.push(frostURL)-1) : -1;
-        const idxIcing = isSugarIcing ? (urlList.push(icingURL)-1) : -1;
-        const idxDrip  = hasDrip      ? (urlList.push(dripURL) -1) : -1;
-
-        const results  = await Promise.allSettled(urlList.map(u=>loadGLB(u)));
-     const baseGLB  = results[0]?.status==='fulfilled' ? results[0].value : null;
+const results  = await Promise.allSettled(urlList.map(u=>loadGLB(u)));
+const baseGLB  = results[0]?.status==='fulfilled' ? results[0].value : null;
 const frostGLB = idxFrost>=0 && results[idxFrost]?.status==='fulfilled' ? results[idxFrost].value : null;
-// If fondant GLB failed to load, log clearly so you know which file is missing
-if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${slug}.glb — create this file!`);
-        const icingGLB = idxIcing>=0 && results[idxIcing]?.status==='fulfilled' ? results[idxIcing].value : null;
-        const dripGLB  = idxDrip >=0 && results[idxDrip] ?.status==='fulfilled' ? results[idxDrip].value  : null;
+if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${slug}.glb`);
+const icingGLB = idxIcing>=0 && results[idxIcing]?.status==='fulfilled' ? results[idxIcing].value : null;
+const dripGLB  = idxDrip >=0 && results[idxDrip] ?.status==='fulfilled' ? results[idxDrip].value  : null;
 
-        clearScene(true);
+clearScene(true);
 
-        const toPos = [];
-        if(baseGLB  && glbHasMesh(baseGLB))  { currentBase  = baseGLB;  sceneRoot.add(currentBase);  toPos.push(currentBase);  }
-        if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
-        if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
-        if(dripGLB  && glbHasMesh(dripGLB))  { currentDrip  = dripGLB;  sceneRoot.add(currentDrip);  toPos.push(currentDrip);  }
+const toPos = [];
+if(baseGLB  && glbHasMesh(baseGLB) && (!hasFondant || hasSemiNaked)) { currentBase  = baseGLB;  sceneRoot.add(currentBase);  toPos.push(currentBase);  }
+if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
+if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
+if(dripGLB  && glbHasMesh(dripGLB))  { currentDrip  = dripGLB;  sceneRoot.add(currentDrip);  toPos.push(currentDrip);  }
+// Only frost gets texture preservation skipped — base always recolors
+if(hasSemiNaked && currentFrost) currentFrost.userData.keepOriginalTexture = true;
 
-        if(toPos.length > 0){
+if(toPos.length > 0 || hasFondant){
             sceneRoot.updateMatrixWorld(true);
-            const _inches = (shape==='Round') ? (state.roundSize||6) : 6;
+const _inches = (shape==='Round') ? (state.roundSize||6) : (shape==='Heart') ? 7.5 : (shape==='Number') ? 5 : 6;
 
-            if(hasFondant && currentBase && currentFrost && glbHasMesh(currentBase) && glbHasMesh(currentFrost)){
-                // ── FONDANT: scale base + fondant skin as one matched unit ──
-                [currentBase, currentFrost].forEach(g => {
-                    g.position.set(0,0,0); g.rotation.set(0,0,0); g.scale.set(1,1,1);
-                    g.updateMatrixWorld(true);
-                });
-                const rawBaseBox  = new THREE.Box3().setFromObject(currentBase);
-                const rawBaseDiam = Math.max(
-                    rawBaseBox.max.x - rawBaseBox.min.x,
-                    rawBaseBox.max.z - rawBaseBox.min.z
-                );
-                const targetDiam = inchesToWorldScale(_inches);
-                const baseScale  = rawBaseDiam > 0.0001 ? targetDiam / rawBaseDiam : 1.0;
-                currentBase.scale.setScalar(baseScale);
-                currentBase.updateMatrixWorld(true);
-                // Fondant skin gets the SAME scale so it aligns perfectly
-                currentFrost.scale.setScalar(baseScale);
+if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
+                // ── FONDANT: use positionGroup for consistent sizing ──
+                currentFrost.position.set(0,0,0); currentFrost.rotation.set(0,0,0); currentFrost.scale.set(1,1,1);
                 currentFrost.updateMatrixWorld(true);
-                // Center both on XZ origin
-                const bBox   = new THREE.Box3().setFromObject(currentBase);
-                const bCX    = (bBox.min.x + bBox.max.x) * 0.5;
-                const bCZ    = (bBox.min.z + bBox.max.z) * 0.5;
-                currentBase.position.set(-bCX, -bBox.min.y, -bCZ);
-                currentBase.updateMatrixWorld(true);
-                const fBox   = new THREE.Box3().setFromObject(currentFrost);
-                const fCX    = (fBox.min.x + fBox.max.x) * 0.5;
-                const fCZ    = (fBox.min.z + fBox.max.z) * 0.5;
-                const bBox2  = new THREE.Box3().setFromObject(currentBase);
-                currentFrost.position.set(-fCX, bBox2.min.y - fBox.min.y, -fCZ);
-                currentFrost.updateMatrixWorld(true);
-                // Vertically center the combined assembly
-                const combined = new THREE.Box3();
-                combined.expandByObject(currentBase);
-                combined.expandByObject(currentFrost);
-                const midY = (combined.min.y + combined.max.y) * 0.5;
-                currentBase.position.y  -= midY;
-                currentFrost.position.y -= midY;
-                currentBase.updateMatrixWorld(true);
-                currentFrost.updateMatrixWorld(true);
-             // Add stand aligned to base
-                const yBefore = currentBase.position.y;
-                addStandToScene(currentBase);
-                const yDelta = currentBase.position.y - yBefore;
-                if(yDelta !== 0){
-                    currentFrost.position.y += yDelta;
-                    currentFrost.updateMatrixWorld(true);
-                }
 
-                // ── Drip on fondant — load and align same as base ──
-                if(dripGLB && glbHasMesh(dripGLB)){
-                    currentDrip = dripGLB;
-                    currentDrip.scale.setScalar(currentBase.scale.x);
-                    currentDrip.position.copy(currentBase.position);
-                    currentDrip.updateMatrixWorld(true);
-                    sceneRoot.add(currentDrip);
+                // Scale using the same logic as normal cakes
+                positionGroup(currentFrost, _inches);
+                currentFrost.updateMatrixWorld(true);
+
+                // Add stand
+                const yBefore = currentFrost.position.y;
+                addStandToScene(currentFrost);
+                currentFrost.updateMatrixWorld(true);
+   } else {
+if(hasSemiNakedR && currentFrost && !currentBase) {
+        // Shell border only — frosting_round_seminaked_smooth.glb IS the whole cake
+        positionGroup(currentFrost, _inches);
+        currentFrost.updateMatrixWorld(true);
+        addStandToScene(currentFrost);
+        currentFrost.updateMatrixWorld(true);
+        recolorGLB(flavor, frostingsArr, dripFlavor, icingColor);
+        usedGLB = true; showStatus('Loaded ✓');
+    } else if(hasSemiNakedR && currentBase){
+                    // Collect all overlay GLBs (frost, icing, drip)
+                    const overlays = [];
+                    if(currentFrost) overlays.push(currentFrost);
+                    if(currentIcing) overlays.push(currentIcing);
+                    if(currentDrip)  overlays.push(currentDrip);
+
+                    // Reset all transforms
+                    [currentBase, ...overlays].forEach(g => {
+                        g.position.set(0,0,0); g.rotation.set(0,0,0); g.scale.set(1,1,1);
+                        g.updateMatrixWorld(true);
+                    });
+
+                    // Scale everything from base dimensions
+                    const rawBox = new THREE.Box3().setFromObject(currentBase);
+                    const rawDiam = Math.max(rawBox.max.x-rawBox.min.x, rawBox.max.z-rawBox.min.z);
+                    const targetDiam = inchesToWorldScale(_inches);
+                    const sc = rawDiam > 0.0001 ? targetDiam/rawDiam : 1.0;
+                    [currentBase, ...overlays].forEach(g => { g.scale.setScalar(sc); g.updateMatrixWorld(true); });
+
+                    // Floor and center base on XZ
+                    const bBox = new THREE.Box3().setFromObject(currentBase);
+                    const cx2 = (bBox.min.x+bBox.max.x)*0.5;
+                    const cz2 = (bBox.min.z+bBox.max.z)*0.5;
+                    currentBase.position.set(-cx2, -bBox.min.y, -cz2);
+                    currentBase.updateMatrixWorld(true);
+                    const bBox2 = new THREE.Box3().setFromObject(currentBase);
+overlays.forEach(g => {
+                        // Drip GLB uses the base cake as reference, not the shell border frost
+                        // Icing GLB also uses the base cake reference
+                        // Always prefer currentBase; fall back to currentFrost only when
+                        // currentFrost IS the whole cake (no currentBase at all)
+                        const isShellBorderOnly = !currentBase && currentFrost;
+                        const cakeRef = currentBase
+                            ? currentBase
+                            : isShellBorderOnly
+                                ? currentFrost
+                                : null;
+                        if(!cakeRef) return;
+                        g.scale.copy(cakeRef.scale);
+                        g.position.copy(cakeRef.position);
+                        g.rotation.copy(cakeRef.rotation);
+                        g.updateMatrixWorld(true);
+                    });
+                    // Vertically center the full combined bounding box
+                    const combined = new THREE.Box3();
+                    combined.expandByObject(currentBase);
+                    overlays.forEach(g => combined.expandByObject(g));
+                    const midY = (combined.min.y+combined.max.y)*0.5;
+                    [currentBase, ...overlays].forEach(g => { g.position.y -= midY; g.updateMatrixWorld(true); });
+
+                    // Add stand and shift all overlays by same delta
+                    const yBefore = currentBase.position.y;
+                    addStandToScene(currentBase);
+                    const yDelta = currentBase.position.y - yBefore;
+                    if(yDelta !== 0){
+                        overlays.forEach(g => { g.position.y += yDelta; g.updateMatrixWorld(true); });
+                    }
+
+                    [currentBase, ...overlays].forEach(g => { g.visible = true; });
+                }else {
+           if(!hasFondant){
+                    if(toPos.length >= 2) positionMultiGroup(_inches, ...toPos);
+                    else if(toPos.length === 1) positionGroup(toPos[0], _inches);
+                    if(toPos.length > 0){
+                        const yBefore = toPos[0].position.y;
+                        addStandToScene(toPos[0]);
+                        const yDelta = toPos[0].position.y - yBefore;
+                        if(yDelta !== 0) toPos.slice(1).forEach(g=>{ g.position.y+=yDelta; g.updateMatrixWorld(true); });
+                    }
                 }
-            } else {
-                if(toPos.length >= 2) positionMultiGroup(_inches, ...toPos);
-                else positionGroup(toPos[0], _inches);
-                const yBefore = toPos[0].position.y;
-                addStandToScene(toPos[0]);
-                const yDelta = toPos[0].position.y - yBefore;
-                if(yDelta !== 0) toPos.slice(1).forEach(g=>{ g.position.y+=yDelta; g.updateMatrixWorld(true); });
+                }
             }
-
+          recolorGLB(flavor, frostingsArr, dripFlavor, icingColor);
+            usedGLB = true; showStatus('Loaded ✓');
+        } else if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
             recolorGLB(flavor, frostingsArr, dripFlavor, icingColor);
             usedGLB = true; showStatus('Loaded ✓');
         }
-        if(!usedGLB){ showNoPreview(shape); }
+  if(!usedGLB){ showNoPreview(shape); }   
     }
 
-    loadedKey=newKey; sceneRoot.visible=true;
+loadedKey=newKey; sceneRoot.visible=true;
+isLoading=false;
     loadingEl.style.opacity='0'; setTimeout(()=>{loadingEl.style.display='none';},400);
     isLoading=false;
-    requestAnimationFrame(()=>{
-        if(typeof window._reprojectAllToppings==='function') window._reprojectAllToppings();
-    });
     if(pendingState){const n=pendingState;pendingState=null;updateScene(n);}
+ requestAnimationFrame(()=>{
+        if(typeof window._reprojectAllToppings==='function') window._reprojectAllToppings();
+        if(typeof window._reapplySprinkles==='function') window._reapplySprinkles();
+    });
+if(pendingState){const n=pendingState;pendingState=null;updateScene(n);}
+    } catch(e) { console.error('[updateScene crash]', e); isLoading=false; loadingEl.style.opacity='0'; setTimeout(()=>{loadingEl.style.display='none';},400); sceneRoot.visible=true; }
 }
+
+// ── SPRINKLES SYSTEM ──
+const sprinklesMeshes = { cylinder: null, pearl: null };
+const sprinklePlacement = { cylinder: 'top', pearl: 'top' };
+// ── shared helper: raycast straight down onto cake surface ──
+// Returns the hit point or null if nothing hit (so we can SKIP placement)
+function _snapToSurface(x, z) {
+    const ray = new THREE.Raycaster(
+        new THREE.Vector3(x, 20, z),
+        new THREE.Vector3(0, -1, 0)
+    );
+    const meshes = getCakeMeshes();
+    const hits = ray.intersectObjects(meshes, false);
+    if (hits.length === 0) return null; // nothing hit — don't place here
+    hits.sort((a, b) => b.point.y - a.point.y);
+    return hits[0].point.y;
+}
+
+function _snapToSide(cx, cz, angle, y) {
+    // Start FAR outside and shoot INWARD — works for all closed meshes
+    // (shooting from center outward misses backfaces on Smooth BC / Fondant)
+    const FAR    = 10.0;
+    const origin = new THREE.Vector3(
+        cx + Math.cos(angle) * FAR,
+        y,
+        cz + Math.sin(angle) * FAR
+    );
+    const dir = new THREE.Vector3(-Math.cos(angle), 0, -Math.sin(angle));
+    const ray = new THREE.Raycaster(origin, dir);
+    ray.far   = FAR * 2;
+    const meshes = getCakeMeshes();
+    const hits   = ray.intersectObjects(meshes, false);
+    if (hits.length === 0) return null;
+    hits.sort((a, b) => a.distance - b.distance);
+    return hits[0].point;
+}
+
+// ── Build a list of candidate top-surface points via dense grid raycasting ──
+// This guarantees sprinkles only land on actual cake surface (works for heart, number, any shape)
+function _buildSurfacePoints(density) {
+    sceneRoot.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(sceneRoot);
+    const cx  = (box.min.x + box.max.x) * 0.5;
+    const cz  = (box.min.z + box.max.z) * 0.5;
+    const rx  = (box.max.x - box.min.x) * 0.52;
+    const rz  = (box.max.z - box.min.z) * 0.52;
+
+    const points = []; // { x, y, z, isTop }
+    const step   = density; // smaller = denser grid
+
+    for (let xi = -rx; xi <= rx; xi += step) {
+        for (let zi = -rz; zi <= rz; zi += step) {
+            const wx = cx + xi + (Math.random() - 0.5) * step * 0.8;
+            const wz = cz + zi + (Math.random() - 0.5) * step * 0.8;
+            const wy = _snapToSurface(wx, wz);
+            if (wy !== null) {
+                points.push({ x: wx, y: wy, z: wz });
+            }
+        }
+    }
+    return points;
+}
+function buildCylinderSprinkles() {
+    if (sprinklesMeshes.cylinder) {
+        scene.remove(sprinklesMeshes.cylinder);
+        sprinklesMeshes.cylinder = null;
+    }
+
+    const COLORS = [
+        0xFF4466, 0xFF8C00, 0xFFD700, 0x44DD44,
+        0x44AAFF, 0xAA44FF, 0xFF44CC, 0xFFFFFF,
+        0xFF6699, 0x00CCFF, 0xFF3300, 0x99FF44,
+    ];
+
+    const group = new THREE.Group();
+    const ROD_R = 0.010;
+    const ROD_L = 0.052;
+
+ if (sprinklePlacement.cylinder === 'top' || sprinklePlacement.cylinder === 'both') {
+        const topPoints = _buildSurfacePoints(0.095);
+        for (let i = topPoints.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [topPoints[i], topPoints[j]] = [topPoints[j], topPoints[i]];
+        }
+        const topCount = Math.min(220, topPoints.length);
+        for (let i = 0; i < topCount; i++) {
+            const { x, y, z } = topPoints[i];
+            const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+            const mat = new THREE.MeshStandardMaterial({
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                roughness: 0.28, metalness: 0.08, envMapIntensity: 1.0,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.rotation.z = Math.PI / 2;
+            mesh.rotation.y = Math.random() * Math.PI * 2;
+            mesh.rotation.x = (Math.random() - 0.5) * 0.12;
+   mesh.position.set(x, y + ROD_R * 0.5, z);
+            mesh.castShadow = true;
+            group.add(mesh);
+        }
+    }
+if (sprinklePlacement.cylinder === 'sides' || sprinklePlacement.cylinder === 'both') {
+        sceneRoot.updateMatrixWorld(true);
+        const cakeMeshesForBox = getCakeMeshes();
+        const cakeBox = new THREE.Box3();
+        cakeMeshesForBox.forEach(m => cakeBox.expandByObject(m));
+        if (cakeBox.isEmpty()) cakeBox.setFromObject(sceneRoot);
+        const cakeCX  = (cakeBox.min.x + cakeBox.max.x) * 0.5;
+        const cakeCZ  = (cakeBox.min.z + cakeBox.max.z) * 0.5;
+        const cakeH   = cakeBox.max.y - cakeBox.min.y;
+// Stratified: divide wall into angle × height cells, place one per cell
+        const ANGLE_SEGS = 32;  // slices around circumference
+        const HEIGHT_SEGS = 7;  // rows from bottom to top
+        for (let ai = 0; ai < ANGLE_SEGS; ai++) {
+            for (let hi = 0; hi < HEIGHT_SEGS; hi++) {
+                // Jitter within each cell for natural look
+                const angleBase  = (ai / ANGLE_SEGS) * Math.PI * 2;
+                const angleJitter = (Math.random() - 0.5) * (Math.PI * 2 / ANGLE_SEGS) * 0.85;
+                const angle      = angleBase + angleJitter;
+                const heightBase = 0.04 + (hi / HEIGHT_SEGS) * 0.88;
+                const heightFrac = heightBase + Math.random() * (0.88 / HEIGHT_SEGS) * 0.85;
+                const y = cakeBox.min.y + heightFrac * cakeH;
+                const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
+                if (!hit) continue;
+                const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+                const mat = new THREE.MeshStandardMaterial({
+                    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                    roughness: 0.28, metalness: 0.08, envMapIntensity: 1.0,
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+                const tangentAngle = angle + Math.PI / 2 + (Math.random() - 0.5) * 0.4;
+                mesh.rotation.x = (Math.random() - 0.5) * 0.30;
+                mesh.rotation.y = tangentAngle;
+                mesh.rotation.z = Math.PI / 2 + (Math.random() - 0.5) * 0.20;
+                const cylOut = ROD_R * 0.5;
+                mesh.position.set(
+                    hit.x + Math.cos(angle) * cylOut,
+                    hit.y + (Math.random() - 0.5) * 0.012,
+                    hit.z + Math.sin(angle) * cylOut
+                );
+                mesh.castShadow = true;
+                group.add(mesh);
+            }
+        }
+    }
+
+    scene.add(group);
+    sprinklesMeshes.cylinder = group;
+}
+
+function buildPearlSprinkles() {
+    if (sprinklesMeshes.pearl) {
+        scene.remove(sprinklesMeshes.pearl);
+        sprinklesMeshes.pearl = null;
+    }
+
+    const PEARL_COLORS = [
+        { color: 0xFFB8D0, emissive: 0xFF90B8 },
+        { color: 0xB8E4FF, emissive: 0x80CCFF },
+        { color: 0xFFFBD6, emissive: 0xFFF09A },
+        { color: 0xFFD6F0, emissive: 0xFFAADD },
+        { color: 0xD8F4FF, emissive: 0xAAE8FF },
+        { color: 0xF4F0FF, emissive: 0xDDD0FF },
+    ];
+
+    const group     = new THREE.Group();
+    const PEARL_MIN = 0.015;
+    const PEARL_MAX = 0.024;
+if (sprinklePlacement.pearl === 'top' || sprinklePlacement.pearl === 'both') {
+        const topPoints = _buildSurfacePoints(0.085);
+        for (let i = topPoints.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [topPoints[i], topPoints[j]] = [topPoints[j], topPoints[i]];
+        }
+        const topCount = Math.min(180, topPoints.length);
+        for (let i = 0; i < topCount; i++) {
+            const { x, y, z } = topPoints[i];
+            const pal  = PEARL_COLORS[Math.floor(Math.random() * PEARL_COLORS.length)];
+            const size = PEARL_MIN + Math.random() * (PEARL_MAX - PEARL_MIN);
+            const geo  = new THREE.SphereGeometry(size, 9, 9);
+            const mat  = new THREE.MeshStandardMaterial({
+                color:             new THREE.Color(pal.color),
+                emissive:          new THREE.Color(pal.emissive),
+                emissiveIntensity: 0.08,
+                roughness:         0.05,
+                metalness:         0.12,
+                envMapIntensity:   1.6,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+mesh.position.set(x, y + size * 0.5, z);
+            mesh.castShadow = true;
+            group.add(mesh);
+        }
+    }
+
+if (sprinklePlacement.pearl === 'sides' || sprinklePlacement.pearl === 'both') {
+        sceneRoot.updateMatrixWorld(true);
+        const cakeMeshesForBox2 = getCakeMeshes();
+        const cakeBox = new THREE.Box3();
+        cakeMeshesForBox2.forEach(m => cakeBox.expandByObject(m));
+        if (cakeBox.isEmpty()) cakeBox.setFromObject(sceneRoot);
+        const cakeCX  = (cakeBox.min.x + cakeBox.max.x) * 0.5;
+        const cakeCZ  = (cakeBox.min.z + cakeBox.max.z) * 0.5;
+        const cakeH   = cakeBox.max.y - cakeBox.min.y;
+  // Stratified: divide wall into angle × height cells, place one per cell
+        const ANGLE_SEGS_P  = 30;  // slices around circumference
+        const HEIGHT_SEGS_P = 7;   // rows from bottom to top
+        for (let ai = 0; ai < ANGLE_SEGS_P; ai++) {
+            for (let hi = 0; hi < HEIGHT_SEGS_P; hi++) {
+                const angleBase   = (ai / ANGLE_SEGS_P) * Math.PI * 2;
+                const angleJitter = (Math.random() - 0.5) * (Math.PI * 2 / ANGLE_SEGS_P) * 0.85;
+                const angle       = angleBase + angleJitter;
+                const heightBase  = 0.04 + (hi / HEIGHT_SEGS_P) * 0.88;
+                const heightFrac  = heightBase + Math.random() * (0.88 / HEIGHT_SEGS_P) * 0.85;
+                const y = cakeBox.min.y + heightFrac * cakeH;
+                const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
+                if (!hit) continue;
+                const pal  = PEARL_COLORS[Math.floor(Math.random() * PEARL_COLORS.length)];
+                const size = PEARL_MIN + Math.random() * (PEARL_MAX - PEARL_MIN);
+                const geo  = new THREE.SphereGeometry(size, 9, 9);
+                const mat  = new THREE.MeshStandardMaterial({
+                    color:             new THREE.Color(pal.color),
+                    emissive:          new THREE.Color(pal.emissive),
+                    emissiveIntensity: 0.07,
+                    roughness:         0.05,
+                    metalness:         0.12,
+                    envMapIntensity:   1.6,
+                });
+                const mesh = new THREE.Mesh(geo, mat);
+                const pearlOut = size * 0.5;
+                mesh.position.set(
+                    hit.x + Math.cos(angle) * pearlOut,
+                    hit.y,
+                    hit.z + Math.sin(angle) * pearlOut
+                );
+                mesh.castShadow = true;
+                group.add(mesh);
+            }
+        }
+    }
+
+    scene.add(group);
+    sprinklesMeshes.pearl = group;
+}
+function clearSprinkles(type) {
+    if (type === 'cylinder' && sprinklesMeshes.cylinder) {
+        scene.remove(sprinklesMeshes.cylinder);
+        sprinklesMeshes.cylinder = null;
+    }
+    if (type === 'pearl' && sprinklesMeshes.pearl) {
+        scene.remove(sprinklesMeshes.pearl);
+        sprinklesMeshes.pearl = null;
+    }
+}
+
+window.buildCylinderSprinkles = buildCylinderSprinkles;
+window.buildPearlSprinkles    = buildPearlSprinkles;
+window.clearSprinkles         = clearSprinkles;
+
+// ── Sprinkle placement toggle handlers ──
+document.querySelectorAll('.sprinkle-place-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const type      = btn.dataset.type;      // 'cylinder' or 'pearl'
+        const placement = btn.dataset.placement; // 'top','sides','both'
+
+        // Update state
+        sprinklePlacement[type] = placement;
+
+        // Sync button styles within this group
+        document.querySelectorAll(`.sprinkle-place-btn[data-type="${type}"]`).forEach(b => {
+            const on = b.dataset.placement === placement;
+            b.style.background = on ? 'var(--caramel)' : 'var(--surface)';
+            b.style.color      = on ? '#fff'           : 'var(--text-muted)';
+            b.style.fontWeight = on ? '700'            : '600';
+        });
+
+        // Rebuild the active sprinkle
+        if (type === 'cylinder' && sprinklesMeshes.cylinder) {
+            scene.remove(sprinklesMeshes.cylinder);
+            sprinklesMeshes.cylinder = null;
+            buildCylinderSprinkles();
+        }
+        if (type === 'pearl' && sprinklesMeshes.pearl) {
+            scene.remove(sprinklesMeshes.pearl);
+            sprinklesMeshes.pearl = null;
+            buildPearlSprinkles();
+        }
+    });
+});
+
+// Re-apply active sprinkles after cake model reloads
+const _origUpdateScene = window.updateModel;
+window._reapplySprinkles = function() {
+    if (sprinklesMeshes.cylinder) { scene.remove(sprinklesMeshes.cylinder); sprinklesMeshes.cylinder = null; buildCylinderSprinkles(); }
+    if (sprinklesMeshes.pearl)    { scene.remove(sprinklesMeshes.pearl);    sprinklesMeshes.pearl    = null; buildPearlSprinkles(); }
+};
 
 // ── Shared GLB loader for placed decorations ──
 const decoGLBCache={};
@@ -2720,6 +3199,7 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){const map={'Strawberr
 fg.position.set(sp.x,sp.y+_fOffset,sp.z);if(ei!==undefined&&ei>=0&&fruitModels[ei])return ei;scene.add(fg);const idx=fruitModels.length;fruitModels.push({group:fg,fruit:fruitName,halfH:fh,bottomOffset:_fOffset});
 return idx;}catch(err){console.error('[Fruit]',fruitName,err);return -1;}};
 window.clearFruitModels=function(){fruitModels.forEach(m=>scene.remove(m.group));fruitModels.length=0;_draggingFruitIdx=-1;};
+window.removeFruitModel=function(idx){if(idx<0||idx>=fruitModels.length)return false;scene.remove(fruitModels[idx].group);fruitModels.splice(idx,1);if(window._placedFruitRecord)window._placedFruitRecord.splice(idx,1);return true;};
 window.getFruitIndexAtScreen=function(cx,cy){const rect=document.getElementById('viewerEl').getBoundingClientRect(),ndc=new THREE.Vector2(((cx-rect.left)/rect.width)*2-1,-((cy-rect.top)/rect.height)*2+1),rc=new THREE.Raycaster();rc.setFromCamera(ndc,camera);for(let i=fruitModels.length-1;i>=0;i--){const t=[];fruitModels[i].group.traverse(c=>{if(c.isMesh)t.push(c);});if(rc.intersectObjects(t,false).length>0)return i;}return -1;};
 window.moveDraggingFruit=function(cx,cy){if(_draggingFruitIdx<0||!fruitModels[_draggingFruitIdx])return;const e=fruitModels[_draggingFruitIdx];fruitModels.forEach(m=>m.group.visible=false);const h=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);if(h){e.group.position.set(h.x,h.y+e.bottomOffset,h.z);}};
 window.setDraggingFruitIdx=function(idx){_draggingFruitIdx=idx;};
@@ -2766,6 +3246,7 @@ window.placeFerreroOnCake = async function(cx, cy, ei) {
     } catch (err) { console.error('[Ferrero]', err); return -1; }
 };
 window.clearFerreroModels = function() { ferreroModels.forEach(m => scene.remove(m.group)); ferreroModels.length = 0; _draggingFerreroIdx = -1; };
+window.removeFerreroModel = function(idx) { if(idx<0||idx>=ferreroModels.length)return false; scene.remove(ferreroModels[idx].group); ferreroModels.splice(idx,1); if(window._placedFerreroRecord)window._placedFerreroRecord.splice(idx,1); return true; };
 window.getFerreroIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -2843,6 +3324,7 @@ window.placeKitkatOnCake = async function(cx, cy, orientation, ei) {
     } catch (err) { console.error('[KitKat]', err); return -1; }
 };
 window.clearKitkatModels = function() { kitkatModels.forEach(m => scene.remove(m.group)); kitkatModels.length = 0; _draggingKitkatIdx = -1; };
+window.removeKitkatModel = function(idx) { if(idx<0||idx>=kitkatModels.length)return false; scene.remove(kitkatModels[idx].group); kitkatModels.splice(idx,1); if(window._placedKitkatRecord)window._placedKitkatRecord.splice(idx,1); return true; };
 window.getKitkatIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -2929,6 +3411,7 @@ window.placeOreoOnCake = async function(cx, cy, orientation, ei) {
     } catch (err) { console.error('[Oreo]', err); return -1; }
 };
 window.clearOreoModels = function() { oreoModels.forEach(m => scene.remove(m.group)); oreoModels.length = 0; _draggingOreoIdx = -1; };
+window.removeOreoModel = function(idx) { if(idx<0||idx>=oreoModels.length)return false; scene.remove(oreoModels[idx].group); oreoModels.splice(idx,1); if(window._placedOreoRecord)window._placedOreoRecord.splice(idx,1); return true; };
 window.getOreoIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -2960,9 +3443,178 @@ window.updateOreoOrientations = function(orientation) {
     });
 };
 
-// ── Bar Shard system (procedural mesh — no GLB needed) ──
 const barShardModels = [];
 let _draggingBarShardIdx = -1;
+
+// ── Cupcake system ──
+const cupcakeModels = [];
+window.placeCupcakesOnScene = async function(count) {
+    cupcakeModels.forEach(m => scene.remove(m.group));
+    cupcakeModels.length = 0;
+    if (count <= 0) return;
+    try {
+        const url = '/models/cupcake.glb';
+        // Load a fresh copy for each cupcake so materials/geometry are independent
+        const loadFresh = () => new Promise((resolve, reject) => {
+            new GLTFLoader().load(url, gltf => {
+                const s = gltf.scene;
+                s.traverse(c => {
+                    if (c.isMesh) {
+                        c.material = c.material.clone();
+                        c.castShadow = true;
+                        c.receiveShadow = true;
+                    }
+                });
+                resolve(s);
+            }, undefined, reject);
+        });
+
+// Cupcake flavor color palette — sponge body tint
+        const CUPCAKE_FLAVOR_COLORS = {
+            'Vanilla':    { body: '#F5DFA0', frosting: '#FDF6E3', wrapper: '#E8C86A' },
+            'Chocolate':  { body: '#3A1206', frosting: '#5A2010', wrapper: '#2A0E04' },
+            'Red Velvet': { body: '#8B1111', frosting: '#F6EEEA', wrapper: '#6A0A0A' },
+            'Strawberry': { body: '#E8607A', frosting: '#FFB8C8', wrapper: '#C8405A' },
+            'Ube':        { body: '#7A3FAA', frosting: '#C8A8E8', wrapper: '#5A2A88' },
+            'Mocha':      { body: '#6B3A1E', frosting: '#A87850', wrapper: '#4A2210' },
+        };
+
+        function recolorCupcake(glbScene, flavorName) {
+            const pal = CUPCAKE_FLAVOR_COLORS[flavorName] || CUPCAKE_FLAVOR_COLORS['Vanilla'];
+            const meshes = [];
+            glbScene.traverse(c => { if (c.isMesh) meshes.push(c); });
+            // Heuristic: sort meshes by bounding box Y — bottom=wrapper, mid=body, top=frosting
+            meshes.sort((a, b) => {
+                const ba = new THREE.Box3().setFromObject(a);
+                const bb = new THREE.Box3().setFromObject(b);
+                return ba.getCenter(new THREE.Vector3()).y - bb.getCenter(new THREE.Vector3()).y;
+            });
+            meshes.forEach((mesh, idx) => {
+                const isTop    = idx === meshes.length - 1;
+                const isBottom = idx === 0;
+                let col;
+                if (isTop)    col = pal.frosting;
+                else if (isBottom) col = pal.wrapper;
+                else          col = pal.body;
+                mesh.material = new THREE.MeshStandardMaterial({
+                    color: new THREE.Color(col),
+                    roughness: isTop ? 0.55 : 0.72,
+                    metalness: 0.0,
+                    envMapIntensity: isTop ? 0.80 : 0.55,
+                });
+                mesh.castShadow = mesh.receiveShadow = true;
+            });
+        }
+
+        // Measure size from first load
+        const sampleGLB = await loadFresh();
+        sampleGLB.updateMatrixWorld(true);
+        const rb = new THREE.Box3().setFromObject(sampleGLB);
+        const sz = rb.getSize(new THREE.Vector3());
+        const maxD = Math.max(sz.x, sz.y, sz.z);
+        const targetSize = 0.36;
+
+        // Pre-load all instances in parallel
+        const allLoaded = [sampleGLB];
+        if (count > 1) {
+            const rest = await Promise.all(Array.from({length: count - 1}, () => loadFresh()));
+            allLoaded.push(...rest);
+        }
+
+        sceneRoot.updateMatrixWorld(true);
+        const cakeBox = new THREE.Box3().setFromObject(sceneRoot);
+        const cakeRadius = (cakeBox.max.x - cakeBox.min.x) * 0.5;
+        const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+        const cakeFloorY = cakeBox.min.y;
+
+ // Build one procedural plate mesh
+        function makeCupcakePlate() {
+            const plateGroup = new THREE.Group();
+            const SEGS = 64;
+            const plateMat = new THREE.MeshStandardMaterial({ color: 0xF5EEE0, roughness: 0.24, metalness: 0.01, envMapIntensity: 0.70 });
+            const rimMat  = new THREE.MeshStandardMaterial({ color: 0xEDE4D0, roughness: 0.30, metalness: 0.01, envMapIntensity: 0.60 });
+            const pR = targetSize * 0.72;
+            const pts = [];
+            for (let i = 0; i <= 12; i++) {
+                const t = i / 12;
+                pts.push(new THREE.Vector2(pR * t, -0.012 * Math.sin(t * Math.PI * 0.5)));
+            }
+            pts.push(new THREE.Vector2(0, 0));
+            const plateMesh = new THREE.Mesh(new THREE.LatheGeometry(pts, SEGS), plateMat);
+            plateMesh.castShadow = plateMesh.receiveShadow = true;
+            plateGroup.add(plateMesh);
+            const rimMesh = new THREE.Mesh(new THREE.TorusGeometry(pR * 0.96, 0.016, 8, SEGS), rimMat);
+            rimMesh.rotation.x = Math.PI / 2; rimMesh.position.y = 0.002; rimMesh.castShadow = true;
+            plateGroup.add(rimMesh);
+            return plateGroup;
+        }
+
+        // Arc layout: cupcakes fan out in a semicircle behind/beside the cake
+        // For large counts, use a second outer ring
+        const RING_CAPACITY = [0, 8, 16, 30, 48]; // max cupcakes per cumulative ring
+        const RING_RADIUS_MULT = [0, 1.55, 2.20, 2.85]; // orbit radius multiplier from cake edge
+
+       // Rings: inner ring 8, subsequent rings +4 each, up to 48 total
+        let rings = [];
+        let remaining = count;
+        let ringIdx = 0;
+        const ringCaps = [8, 12, 16, 12]; // inner → outer ring capacities
+        while (remaining > 0 && ringIdx < ringCaps.length) {
+            const cap = ringCaps[ringIdx];
+            const inRing = Math.min(remaining, cap);
+            rings.push(inRing);
+            remaining -= inRing;
+            ringIdx++;
+        }
+        // Safety: if still remaining (>48), add to last ring
+        if (remaining > 0) rings[rings.length - 1] += remaining;
+
+   let placed = 0;
+        for (let r = 0; r < rings.length; r++) {
+            const inRing = rings[r];
+            // Each ring sits slightly further from the cake
+            const orbitR = cakeRadius + targetSize * (1.20 + r * 1.10);
+            // Full 360° circle — every cupcake visible at any camera angle
+            const FULL_CIRCLE = Math.PI * 2;
+
+            for (let i = 0; i < inRing; i++) {
+                const angle = (i / inRing) * FULL_CIRCLE - Math.PI / 2;
+
+                const wrapper = new THREE.Group();
+
+                // Plate
+                const plate = makeCupcakePlate();
+                wrapper.add(plate);
+
+       // Fresh loaded GLB — recolor per flavor
+                const fg = allLoaded[placed];
+                recolorCupcake(fg, state.cupcakeFlavor || 'Vanilla');
+                const scale = maxD > 0.0001 ? targetSize / maxD : 1.0;
+                fg.scale.setScalar(scale);
+                fg.updateMatrixWorld(true);
+                const fb = new THREE.Box3().setFromObject(fg);
+                fg.position.y = -fb.min.y + 0.006;
+                // Face each cupcake outward from cake center
+                fg.rotation.y = angle;
+                wrapper.add(fg);
+
+                // Position on circle
+                const wx = cakeCenter.x + Math.cos(angle) * orbitR;
+                const wz = cakeCenter.z + Math.sin(angle) * orbitR;
+                wrapper.position.set(wx, cakeFloorY, wz);
+
+                scene.add(wrapper);
+                cupcakeModels.push({ group: wrapper });
+                placed++;
+            }
+        }
+    } catch(err) { console.error('[Cupcake]', err); }
+};
+window.clearCupcakeModels = function() {
+    cupcakeModels.forEach(m => scene.remove(m.group));
+    cupcakeModels.length = 0;
+};
+window.getCupcakeModels = function() { return cupcakeModels; };
 
 function buildBarShardMesh() {
     const g = new THREE.Group();
@@ -3027,6 +3679,7 @@ window.placeBarShardOnCake = async function(cx, cy, ei) {
     } catch (err) { console.error('[BarShard]', err); return -1; }
 };
 window.clearBarShardModels = function() { barShardModels.forEach(m => scene.remove(m.group)); barShardModels.length = 0; _draggingBarShardIdx = -1; };
+window.removeBarShardModel = function(idx) { if(idx<0||idx>=barShardModels.length)return false; scene.remove(barShardModels[idx].group); barShardModels.splice(idx,1); if(window._placedBarShardRecord)window._placedBarShardRecord.splice(idx,1); return true; };
 window.getBarShardIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -3236,8 +3889,23 @@ window._reprojectAllToppings=function(){
     reprojectModels(candleModels);
 };
 
+// Expose Three.js internals for beauty-shot capture
+window._threeCamera   = camera;
+window._threeControls = controls;
+window._threeRenderer = renderer;
+window._threeScene    = scene;
+
 window.updateModel=(state)=>updateScene(state);
-window.resetCamera=()=>{camera.position.set(0,1.8,8.5);controls.target.set(0,-0.30,0);controls.reset();};
+window.resetCamera=()=>{
+    // Scale back based on tier — taller cakes need more distance
+    const tier = state ? state.tier : 'Single';
+    let camY = 2.8, camZ = 9.5, targetY = 0.0;
+    if (tier === 'Two-tier')   { camY = 3.8; camZ = 10.5; targetY = 0.4; }
+    if (tier === 'Three-tier') { camY = 5.2; camZ = 12.5; targetY = 0.8; }
+    camera.position.set(0, camY, camZ);
+    controls.target.set(0, targetY, 0);
+    controls.update();
+};
 window._viewerReady=true;
 // ── FRUIT ROTATE INLINE PANEL ──
 (function(){
@@ -3320,12 +3988,24 @@ window._viewerReady=true;
             if(m){ const axis = getAxis(m.fruit); m.group.rotation[axis] = d * Math.PI / 180; }
         });
     });
-
-    document.getElementById('fruitRotPanelApply').addEventListener('click', () => {
+document.getElementById('fruitRotPanelApply').addEventListener('click', () => {
         const deg = parseInt(range.value);
         const em = emojiEl.textContent;
         showToast(`${em} Rotated ${deg}°`, 1600);
         hidePanel();
+    });
+
+    document.getElementById('fruitRotPanelDelete').addEventListener('click', () => {
+        const idx = activeFruitPanelIdx;
+        const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+        const m = models[idx];
+        if (!m) { hidePanel(); return; }
+        const em = FRUIT_EMOJI[m.fruit] || '🍓';
+        const name = m.fruit;
+        if (typeof window.removeFruitModel === 'function') window.removeFruitModel(idx);
+        hidePanel();
+        showToast(`${em} ${name} removed`, 1800);
+        if (typeof window._updateAll === 'function') window._updateAll();
     });
 
 document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
@@ -3436,11 +4116,29 @@ range.addEventListener('input', function(){
             if(m){ m.group.rotation.z = d * Math.PI / 180; }
         });
     });
-    document.getElementById('chocoRotInlineApply').addEventListener('click', () => {
+document.getElementById('chocoRotInlineApply').addEventListener('click', () => {
         const deg = parseInt(range.value);
         const em = emojiEl.textContent;
         showToast(`${em} Rotated ${deg}°`, 1600);
         hideChocoPanel();
+    });
+
+    document.getElementById('chocoRotInlineDelete').addEventListener('click', () => {
+        const type = activeChocoType;
+        const idx  = activeChocoPanelIdx;
+        const em   = CHOCO_EMOJI[type]  || '🍫';
+        const name = CHOCO_NAME[type]   || type;
+        const removeFnMap = {
+            ferrero:  window.removeFerreroModel,
+            kitkat:   window.removeKitkatModel,
+            oreo:     window.removeOreoModel,
+            barshard: window.removeBarShardModel,
+        };
+        const removeFn = removeFnMap[type];
+        if (typeof removeFn === 'function') removeFn(idx);
+        hideChocoPanel();
+        showToast(`${em} ${name} removed`, 1800);
+        if (typeof window._updateAll === 'function') window._updateAll();
     });
 document.getElementById('chocoRotInlineReset').addEventListener('click', () => {
         range.value = 0; degLabel.textContent = '0°';
@@ -3481,7 +4179,7 @@ const BASE_COAT_VALS =['Smooth Buttercream','Sugar Icing'];
 const SHAPE_PRICES   ={'Round':350,'Square':500,'Heart':520,'Two-tier Round':950,'Three-tier Round':1400,'Number':600};
 const ROUND_SIZE_PRICES={4:180,5:220,6:280,7:350,8:420,9:500,10:600};
 const FRUIT_KEYS=['Strawberry','Blueberry','Raspberry','Cherry'];
-
+const CAKE_STYLE_VALS_INIT = ['Smooth Buttercream','Semi-naked Style','Fondant Smooth'];
 const state={
     shape:'Round', tier:'Single', roundSize:6,
     numberDigits:1, numberChoice:0, numberTens:1, numberUnits:0,
@@ -3497,7 +4195,10 @@ const state={
     oreoOrientation:'lying',
     placedOreo:[],
     placedBarShard:[],
-    placedCandles:[],
+  placedCandles:[],
+  cupcakeQty: 0,
+    cupcakeFlavor: 'Vanilla',
+    cupcakeFlavorColor: '#C8882A',
 };
 
 function showToast(msg,duration=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration);}
@@ -3582,22 +4283,93 @@ document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el=
 document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberUnits=parseInt(el.dataset.val);refreshDualPreview();updateAll();});});
 document.getElementById('btnSingleDigit').addEventListener('click',()=>{state.numberDigits=1;document.getElementById('btnSingleDigit').classList.add('active');document.getElementById('btnDualDigit').classList.remove('active');document.getElementById('singleDigitSection').style.display='';document.getElementById('dualDigitSection').classList.remove('visible');updateAll();});
 document.getElementById('btnDualDigit').addEventListener('click',()=>{state.numberDigits=2;document.getElementById('btnDualDigit').classList.add('active');document.getElementById('btnSingleDigit').classList.remove('active');document.getElementById('singleDigitSection').style.display='none';document.getElementById('dualDigitSection').classList.add('visible');refreshDualPreview();updateAll();});
-
 // ── FLAVOUR ──
 document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.flavor=el.dataset.val;updateAll();});});
-
-// ── FROSTING ──
-allFrostingOpts().forEach(el=>{
+const CAKE_STYLE_VALS = ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'];
+const CAKE_STYLE_VALS_ALL = ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'];
+document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(el=>{
     el.addEventListener('click',()=>{
-        if(el.classList.contains('frosting-locked')){showToast('Fondant is solo only — deselect it first');return;}
-        const v=el.dataset.val;
-        if(v===FONDANT_VAL){
-            if(state.frostings.has(FONDANT_VAL)){state.frostings.clear();state.frostings.add('Smooth Buttercream');}
-            else{state.frostings.clear();state.frostings.add(FONDANT_VAL);}
-        } else if(BASE_COAT_VALS.includes(v)){
-            state.frostings.delete(v==='Smooth Buttercream'?'Sugar Icing':'Smooth Buttercream');
-            state.frostings.add(v);
+        const v = el.dataset.val;
+        if(el.classList.contains('active')) return;
+
+        // Visually uncheck ALL cake style buttons
+        document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(x=>{
+            x.classList.remove('active');
+            const chk = x.querySelector('.addon-check');
+            if(chk){ chk.style.background=''; chk.style.borderColor=''; }
+            const svg = x.querySelector('.addon-check svg');
+            if(svg) svg.style.opacity='0';
+            const nm = x.querySelector('.a-name');
+            if(nm) nm.style.color='';
+            x.style.borderColor='';
+            x.style.background='';
+            x.style.boxShadow='';
+        });
+
+        // Visually check the clicked one
+        el.classList.add('active');
+        const chk = el.querySelector('.addon-check');
+        if(chk){ chk.style.background='var(--caramel)'; chk.style.borderColor='var(--caramel)'; }
+        const svg = el.querySelector('.addon-check svg');
+        if(svg) svg.style.opacity='1';
+        const nm = el.querySelector('.a-name');
+        if(nm) nm.style.color='var(--caramel)';
+
+CAKE_STYLE_VALS_ALL.forEach(s=>state.frostings.delete(s));
+state.frostings.add(v);
+
+if(v===FONDANT_VAL){
+    state.frostings.delete('Textured Buttercream');
+    state.frostings.delete(SUGAR_ICING_VAL);
+    state.frostings.delete('Smooth Buttercream');
+} else if(v==='Smooth Buttercream'){
+    // If Sugar Icing is already the active base icing, don't override it
+    // Just remove the 'Smooth Buttercream' that was blindly added above
+    if(state.frostings.has(SUGAR_ICING_VAL)){
+        state.frostings.delete('Smooth Buttercream');
+    }
+    // Textured and other add-ons stay as-is
+}
+// Semi-naked and other non-fondant styles: don't auto-add Smooth BC
+        syncFrostingUI(); updateAll();
+    });
+});
+// ── FROSTING / ICING (base icing + texture) ──
+allFrostingOpts().forEach(el=>{
+    if(el.closest('#opts-cake-style')) return;
+    el.addEventListener('click',()=>{
+        if(state.frostings.has(FONDANT_VAL)){showToast('Fondant is selected — deselect it first from Cake Style');return;}
+        const v = el.dataset.val;
+if(v === 'Smooth Buttercream'){
+            if(activeCakeStyleFn() === 'Semi-naked Style'){
+                // In semi-naked: toggle Shell Border on/off independently
+                // WITHOUT touching the cake style (Semi-naked stays selected)
+                const shellOn = state.frostings.has('Smooth Buttercream');
+                if(shellOn){
+                    state.frostings.delete('Smooth Buttercream');
+                } else {
+                    state.frostings.delete(SUGAR_ICING_VAL);
+                    state.frostings.add('Smooth Buttercream');
+                }
+                // Ensure Semi-naked Style stays as the cake style
+                state.frostings.delete('Fondant Smooth');
+                if(!state.frostings.has('Semi-naked Style')) state.frostings.add('Semi-naked Style');
+                syncFrostingUI(); updateAll();
+                return;
+            } else {
+    // Normal Smooth BC cake style — just remove sugar icing, ensure Smooth BC is in frostings
+    state.frostings.delete(SUGAR_ICING_VAL);
+    if(!state.frostings.has('Smooth Buttercream')) state.frostings.add('Smooth Buttercream');
+}
+        } else if(v === SUGAR_ICING_VAL){
+            if(state.frostings.has(SUGAR_ICING_VAL)){
+                state.frostings.delete(SUGAR_ICING_VAL);
+            } else {
+                state.frostings.delete('Smooth Buttercream');
+                state.frostings.add(SUGAR_ICING_VAL);
+            }
         } else {
+            // Textured — toggle
             if(state.frostings.has(v)) state.frostings.delete(v);
             else state.frostings.add(v);
         }
@@ -3605,22 +4377,109 @@ allFrostingOpts().forEach(el=>{
     });
 });
 
-function syncFrostingUI(){
-    const fondantActive=state.frostings.has(FONDANT_VAL);
-    const isSugarIcing =state.frostings.has(SUGAR_ICING_VAL);
-    allFrostingOpts().forEach(el=>{
-        el.classList.toggle('active',state.frostings.has(el.dataset.val));
-        if(fondantActive&&el.dataset.val!==FONDANT_VAL) el.classList.add('frosting-locked');
-        else el.classList.remove('frosting-locked');
-    });
-    document.getElementById('icingPanel').classList.toggle('visible',isSugarIcing&&!fondantActive);
-    document.getElementById('fondantNotice').classList.toggle('visible',fondantActive);
-    const all=[...state.frostings];
-    const hint=document.getElementById('frostingComboHint');
-    if(!fondantActive&&all.length>1){hint.classList.add('visible');document.getElementById('frostingComboLabel').textContent=all.join(' + ');}
-    else hint.classList.remove('visible');
+function activeCakeStyleFn(){
+    return CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
 }
+function syncFrostingUI(){
+    const fondantActive   = state.frostings.has(FONDANT_VAL);
+    const isSugarIcing    = state.frostings.has(SUGAR_ICING_VAL);
+    const isTextured      = state.frostings.has('Textured Buttercream');
+    const activeCakeStyle = CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
 
+    // ── Cake Style buttons (radio-style) ──
+    document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(el=>{
+        const isActive = el.dataset.val === activeCakeStyle;
+        el.classList.toggle('active', isActive);
+        const chk = el.querySelector('.addon-check');
+        if(chk){ chk.style.background = isActive ? 'var(--caramel)' : ''; chk.style.borderColor = isActive ? 'var(--caramel)' : ''; }
+        const svg = el.querySelector('.addon-check svg');
+        if(svg) svg.style.opacity = isActive ? '1' : '0';
+        const nm = el.querySelector('.a-name');
+        if(nm) nm.style.color = isActive ? 'var(--caramel)' : '';
+        el.style.borderColor  = isActive ? 'var(--caramel)' : '';
+        el.style.background   = isActive ? 'var(--accent-lt)' : '';
+        el.style.boxShadow    = isActive ? '0 0 0 3px rgba(200,137,74,0.15)' : '';
+    });
+
+    // ── Frosting/Icing section: fully lock when Fondant active ──
+    const frostingBase    = document.getElementById('opts-frosting-base');
+    const frostingSpecial = document.getElementById('opts-frosting-special');
+    const icingLockOverlay = document.getElementById('frostingIcingLock');
+
+    if(fondantActive){
+        if(frostingBase)    { frostingBase.style.opacity='0.38'; frostingBase.style.pointerEvents='none'; }
+        if(frostingSpecial) { frostingSpecial.style.opacity='0.38'; frostingSpecial.style.pointerEvents='none'; }
+        if(icingLockOverlay) icingLockOverlay.style.display='flex';
+    } else {
+        if(frostingBase)    { frostingBase.style.opacity=''; frostingBase.style.pointerEvents=''; }
+        if(frostingSpecial) { frostingSpecial.style.opacity=''; frostingSpecial.style.pointerEvents=''; }
+        if(icingLockOverlay) icingLockOverlay.style.display='none';
+    }
+document.getElementById('opts-frosting-base').querySelectorAll('.frosting-opt').forEach(el=>{
+        let isActive = false;
+        if(el.dataset.val === 'Smooth Buttercream'){
+            // Active if Smooth BC cake style selected OR if semi-naked and shell border toggled on
+            if(activeCakeStyle === 'Semi-naked Style'){
+                isActive = state.frostings.has('Smooth Buttercream') && !fondantActive;
+            } else {
+                isActive = (activeCakeStyle === 'Smooth Buttercream')
+                        && !isSugarIcing
+                        && !fondantActive;
+            }
+        } else if(el.dataset.val === SUGAR_ICING_VAL){
+            isActive = isSugarIcing && !fondantActive;
+        } else {
+            isActive = state.frostings.has(el.dataset.val) && !fondantActive;
+        }
+        el.classList.toggle('active', isActive);
+        const chk = el.querySelector('.addon-check');
+        if(chk){ chk.style.background = isActive ? 'var(--caramel)' : ''; chk.style.borderColor = isActive ? 'var(--caramel)' : ''; }
+        const svg = el.querySelector('.addon-check svg');
+        if(svg) svg.style.opacity = isActive ? '1' : '0';
+        const nm = el.querySelector('.a-name');
+        if(nm) nm.style.color = isActive ? 'var(--caramel)' : '';
+        el.style.borderColor = isActive ? 'var(--caramel)' : '';
+        el.style.background  = isActive ? 'var(--accent-lt)' : '';
+        el.style.boxShadow   = isActive ? '0 0 0 3px rgba(200,137,74,0.12)' : '';
+    });
+
+   // ── Texture button ──
+    const isSemiNaked = activeCakeStyle === 'Semi-naked Style';
+    document.getElementById('opts-frosting-special').querySelectorAll('.frosting-opt').forEach(el=>{
+        const isActive = isTextured && !fondantActive && !isSemiNaked;
+        el.classList.toggle('active', isActive);
+        const chk = el.querySelector('.addon-check');
+        if(chk){ chk.style.background = isActive ? 'var(--caramel)' : ''; chk.style.borderColor = isActive ? 'var(--caramel)' : ''; }
+        const svg = el.querySelector('.addon-check svg');
+        if(svg) svg.style.opacity = isActive ? '1' : '0';
+        const nm = el.querySelector('.a-name');
+        if(nm) nm.style.color = isActive ? 'var(--caramel)' : '';
+        el.style.borderColor = isActive ? 'var(--caramel)' : '';
+        el.style.background  = isActive ? 'var(--accent-lt)' : '';
+        el.style.boxShadow   = isActive ? '0 0 0 3px rgba(200,137,74,0.12)' : '';
+        // Disable visually when semi-naked is active
+        el.style.opacity = isSemiNaked ? '0.38' : '';
+        el.style.pointerEvents = isSemiNaked ? 'none' : '';
+    });
+    // Also remove Textured from state when semi-naked is selected
+    if(isSemiNaked) state.frostings.delete('Textured Buttercream');
+
+    // ── Icing color panel ──
+    document.getElementById('icingPanel').classList.toggle('visible', isSugarIcing && !fondantActive);
+
+    // ── Fondant notice ──
+    document.getElementById('fondantNotice').classList.toggle('visible', fondantActive);
+
+    // ── Combo hint ──
+    const hint = document.getElementById('frostingComboHint');
+    const allActive = [...state.frostings].filter(f => f !== FONDANT_VAL);
+    if(!fondantActive && allActive.length > 1){
+        hint.classList.add('visible');
+        document.getElementById('frostingComboLabel').textContent = allActive.join(' + ');
+    } else {
+        hint.classList.remove('visible');
+    }
+}
 document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>{
     el.addEventListener('click',()=>{
         document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(x=>x.classList.remove('active'));
@@ -3708,6 +4567,138 @@ document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]')
     else{state.addons.set(v,0);btn.classList.add('active');}
     updateBarShardTray();updateAll();
 });
+// ── CUPCAKE TOGGLE & QTY ──
+let _cupcakeQty = 1;
+(function(){
+    const btn = document.getElementById('cupcakeToggleBtn');
+    const v = 'Cupcake';
+
+    function setCupcakeActive(active) {
+        if (active) {
+            btn.classList.add('active');
+            btn.style.borderColor = 'var(--caramel)';
+            btn.style.background = 'var(--accent-lt)';
+            btn.style.boxShadow = '0 0 0 3px rgba(200,137,74,0.12)';
+            const chk = btn.querySelector('.addon-check');
+            if (chk) { chk.style.background = 'var(--caramel)'; chk.style.borderColor = 'var(--caramel)'; }
+            const svg = btn.querySelector('.addon-check svg');
+            if (svg) svg.style.opacity = '1';
+            const aName = btn.querySelector('.a-name');
+            if (aName) aName.style.color = 'var(--caramel)';
+        } else {
+            btn.classList.remove('active');
+            btn.style.borderColor = '';
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+            const chk = btn.querySelector('.addon-check');
+            if (chk) { chk.style.background = ''; chk.style.borderColor = ''; }
+            const svg = btn.querySelector('.addon-check svg');
+            if (svg) svg.style.opacity = '0';
+            const aName = btn.querySelector('.a-name');
+            if (aName) aName.style.color = '';
+        }
+    }
+
+    btn.addEventListener('click', () => {
+        if (state.addons.has(v)) {
+            // DESELECT
+            state.addons.delete(v);
+            setCupcakeActive(false);
+            document.getElementById('cupcakeQtyPanel').style.display = 'none';
+            if (typeof window.clearCupcakeModels === 'function') window.clearCupcakeModels();
+            state.cupcakeQty = 0;
+            _cupcakeQty = 1;
+            document.getElementById('cupcakeQtyDisplay').textContent = '1';
+            const lt = document.getElementById('cupcakeLiveTotal');
+            if (lt) lt.textContent = '85';
+            document.querySelectorAll('.cupcake-preset-btn').forEach(b => {
+                const on = parseInt(b.dataset.qty) === 1;
+                b.style.background = on ? 'var(--caramel)' : 'var(--accent-lt)';
+                b.style.color = on ? '#fff' : 'var(--accent-dk)';
+                b.style.borderColor = on ? 'var(--caramel)' : 'rgba(200,137,74,.30)';
+            });
+            document.getElementById('cupcakeQtyMinus').style.opacity = '0.38';
+            document.getElementById('cupcakeQtyPlus').style.opacity = '1';
+        } else {
+            // SELECT
+            state.addons.set(v, 85 * _cupcakeQty);
+            setCupcakeActive(true);
+            document.getElementById('cupcakeQtyPanel').style.display = 'block';
+            state.cupcakeQty = _cupcakeQty;
+            const lt = document.getElementById('cupcakeLiveTotal');
+            if (lt) lt.textContent = (85 * _cupcakeQty).toLocaleString();
+            setTimeout(() => {
+                if (typeof window.placeCupcakesOnScene === 'function') window.placeCupcakesOnScene(_cupcakeQty);
+            }, 200);
+        }
+        updateAll();
+    });
+})();
+
+function updateCupcakeQty(newQty) {
+    newQty = Math.max(1, Math.min(48, newQty));
+    _cupcakeQty = newQty;
+    document.getElementById('cupcakeQtyDisplay').textContent = newQty;
+    document.querySelectorAll('.cupcake-preset-btn').forEach(b => {
+        const active = parseInt(b.dataset.qty) === newQty;
+        b.style.background = active ? 'var(--caramel)' : 'var(--accent-lt)';
+        b.style.color = active ? '#fff' : 'var(--accent-dk)';
+        b.style.borderColor = active ? 'var(--caramel)' : 'rgba(200,137,74,.30)';
+        b.style.fontWeight = active ? '700' : '600';
+    });
+document.getElementById('cupcakeQtyMinus').style.opacity = newQty <= 1 ? '0.38' : '1';
+    document.getElementById('cupcakeQtyPlus').style.opacity = newQty >= 48 ? '0.38' : '1';
+    const liveTotalEl = document.getElementById('cupcakeLiveTotal');
+    if (liveTotalEl) liveTotalEl.textContent = (85 * newQty).toLocaleString();
+// Auto-activate cupcake addon if not already active
+const _cupcakeBtn = document.getElementById('cupcakeToggleBtn');
+    // Auto-activate if not already
+    if (!state.addons.has('Cupcake')) {
+        state.addons.set('Cupcake', 85 * newQty);
+        _cupcakeBtn.classList.add('active');
+        _cupcakeBtn.style.borderColor = 'var(--caramel)';
+        _cupcakeBtn.style.background = 'var(--accent-lt)';
+        _cupcakeBtn.style.boxShadow = '0 0 0 3px rgba(200,137,74,0.12)';
+        document.getElementById('cupcakeQtyPanel').style.display = 'block';
+    } else {
+        state.addons.set('Cupcake', 85 * newQty);
+    }
+    state.cupcakeQty = newQty;
+    // Sync checkbox
+    const _chkC = _cupcakeBtn.querySelector('.addon-check');
+    if (_chkC) { _chkC.style.background = 'var(--caramel)'; _chkC.style.borderColor = 'var(--caramel)'; }
+    const _svgC = _cupcakeBtn.querySelector('.addon-check svg');
+    if (_svgC) _svgC.style.opacity = '1';
+    const _nameC = _cupcakeBtn.querySelector('.a-name');
+    if (_nameC) _nameC.style.color = 'var(--caramel)';
+    if (typeof window.placeCupcakesOnScene === 'function') window.placeCupcakesOnScene(newQty);
+    updateAll();
+}
+document.getElementById('cupcakeQtyMinus').addEventListener('click', () => updateCupcakeQty(_cupcakeQty - 1));
+document.getElementById('cupcakeQtyPlus').addEventListener('click', () => updateCupcakeQty(_cupcakeQty + 1));
+
+document.getElementById('opts-cupcake-flavor').querySelectorAll('.cupcake-flavor-opt').forEach(el => {
+    el.addEventListener('click', () => {
+        document.getElementById('opts-cupcake-flavor').querySelectorAll('.cupcake-flavor-opt').forEach(x => {
+            x.style.background = 'var(--warm-white)';
+            x.style.color = 'var(--text-muted)';
+            x.style.borderColor = 'var(--border)';
+        });
+        el.style.background = 'var(--caramel)';
+        el.style.color = '#fff';
+        el.style.borderColor = 'var(--caramel)';
+        state.cupcakeFlavor = el.dataset.cupcakeFlavor;
+        state.cupcakeFlavorColor = el.dataset.cupcakeColor;
+        // Re-render cupcakes with new color if active
+        if (state.addons.has('Cupcake') && typeof window.placeCupcakesOnScene === 'function') {
+            window.placeCupcakesOnScene(_cupcakeQty);
+        }
+    });
+});
+document.querySelectorAll('.cupcake-preset-btn').forEach(b => {
+    b.addEventListener('click', () => updateCupcakeQty(parseInt(b.dataset.qty)));
+});
+
 function updateChocoTray(){
     const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard');
     const hasAny=hasF||hasK||hasO||hasB;
@@ -3770,6 +4761,7 @@ const kitkatDropRing=document.getElementById('kitkatDropRing');
 const oreoDropRing=document.getElementById('oreoDropRing');
 const barShardDropRing=document.getElementById('barShardDropRing');
 const placedFruitRecord=[],placedFerreroRecord=[],placedKitkatRecord=[],placedOreoRecord=[],placedBarShardRecord=[],placedCandleRecord=[];
+window._placedFruitRecord=placedFruitRecord;window._placedFerreroRecord=placedFerreroRecord;window._placedKitkatRecord=placedKitkatRecord;window._placedOreoRecord=placedOreoRecord;window._placedBarShardRecord=placedBarShardRecord;window._placedCandleRecord=placedCandleRecord;
 let attachedFruitIdx=-1,_pointerDownOnFruit=false;
 let attachedFerreroIdx=-1,_pointerDownOnFerrero=false;
 let attachedKitkatIdx=-1,_pointerDownOnKitkat=false;
@@ -4008,14 +5000,31 @@ document.getElementById('btnClearAllChoco').addEventListener('click',()=>{
 
 ['opts-choco','opts-sprinkles','opts-candles','opts-deco'].forEach(id=>{
     document.getElementById(id).querySelectorAll('.addon-opt').forEach(el=>{
-        // These all have their own dedicated toggle listeners — skip them here
         if(['ferreroToggleBtn','kitkatToggleBtn','oreoToggleBtn'].includes(el.id))return;
         if(el.dataset.val==='Chocolate Bar Shard')return;
         if(el.dataset.val==='Number Candles')return;
+        if(el.dataset.val==='Cupcake')return;
         el.addEventListener('click',()=>{
             const v=el.dataset.val,p=parseInt(el.dataset.price)||0;
-            if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');}
-            else{state.addons.set(v,p);el.classList.add('active');}
+            if(state.addons.has(v)){
+                state.addons.delete(v);
+                el.classList.remove('active');
+             if(v==='Cylinder Sprinkles' && typeof window.clearSprinkles==='function') { window.clearSprinkles('cylinder'); document.getElementById('cylinderPlacementPanel').style.display='none'; }
+                if(v==='Sphere Sprinkles'   && typeof window.clearSprinkles==='function') { window.clearSprinkles('pearl');    document.getElementById('pearlPlacementPanel').style.display='none'; }
+            } else {
+                state.addons.set(v,p);
+                el.classList.add('active');
+                // Wait for cake to be in scene then build
+                const _tryBuild = (attempts) => {
+                    if (typeof window.buildCylinderSprinkles === 'function') {
+                       if(v==='Cylinder Sprinkles') { window.buildCylinderSprinkles(); document.getElementById('cylinderPlacementPanel').style.display='block'; }
+                if(v==='Sphere Sprinkles')   { window.buildPearlSprinkles();    document.getElementById('pearlPlacementPanel').style.display='block'; }
+                    } else if (attempts > 0) {
+                        setTimeout(() => _tryBuild(attempts - 1), 150);
+                    }
+                };
+                setTimeout(() => _tryBuild(10), 300);
+            }
             updateAll();
         });
     });
@@ -4032,7 +5041,7 @@ function getShapeLabel(){const eff=getEffectiveShape();if(eff==='Round')return `
 function updateAll(){
     const base=getBasePrice(),frostExtra=getFrostingExtraPrice();
 // These are priced per placed piece — exclude from flat addon sum
-    const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Strawberry','Blueberry','Raspberry','Cherry']);
+   const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Strawberry','Blueberry','Raspberry','Cherry','Cupcake']);
     let addonTotal=0;state.addons.forEach((p,k)=>{if(!PER_PIECE_KEYS.has(k))addonTotal+=p;});
  const FRUIT_PRICES={'Strawberry':45,'Blueberry':25,'Raspberry':55,'Cherry':35};
     const fruitCounts={};
@@ -4047,7 +5056,8 @@ if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*55;
     if(state.addons.has('Kitkat Sticks'))addonTotal+=kitkatCount*30;
     if(state.addons.has('Oreo Cookie'))addonTotal+=oreoCount*20;
     if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*40;
-    if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
+if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
+    if(state.addons.has('Cupcake'))addonTotal+=85*(state.cupcakeQty||1);
     // Fruits: always count placed pieces regardless of addons map value
     // (already computed above via fruitCounts loop)
     const total=base+frostExtra+addonTotal;
@@ -4077,7 +5087,9 @@ if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*55;
     if(hasO){document.getElementById('selOreoRow').style.display='';const ol=state.oreoOrientation==='standing'?'Standing':'Lying Flat';document.getElementById('selOreo').textContent=oreoCount>0?`${oreoCount} placed · ${ol}`:`Selected · ${ol}`;}else document.getElementById('selOreoRow').style.display='none';
     const hasB=state.addons.has('Chocolate Bar Shard');
     const barShardCount=(typeof window.getBarShardModels==='function')?window.getBarShardModels().length:state.placedBarShard.length;
-    if(hasB){document.getElementById('selBarShardRow').style.display='';document.getElementById('selBarShard').textContent=barShardCount>0?`${barShardCount} placed`:'Selected · drag to place';}else document.getElementById('selBarShardRow').style.display='none';
+   if(hasB){document.getElementById('selBarShardRow').style.display='';document.getElementById('selBarShard').textContent=barShardCount>0?`${barShardCount} placed`:'Selected · drag to place';}else document.getElementById('selBarShardRow').style.display='none';
+    const hasCupcake=state.addons.has('Cupcake');
+if(hasCupcake){document.getElementById('selCupcakeRow').style.display='';document.getElementById('selCupcake').textContent=`${state.cupcakeQty} pc${state.cupcakeQty>1?'s':''} · ${state.cupcakeFlavor} · ₱${(85*state.cupcakeQty).toLocaleString()}`;}else document.getElementById('selCupcakeRow').style.display='none';
     const chips=[];
     if(isFondant)chips.push(`<span class="cfg-chip chip-gold">⬜ Fondant</span>`);
     else{[...state.frostings].forEach(f=>{if(f===SUGAR_ICING_VAL)chips.push(`<span class="cfg-chip chip-gold">🍦 Sugar Icing · ${state.icingColorName}</span>`);else if(state.frostings.size>1||f!=='Smooth Buttercream')chips.push(`<span class="cfg-chip chip-teal">${f}</span>`);});}
@@ -4086,10 +5098,11 @@ if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*55;
     if(hasK)chips.push(`<span class="cfg-chip chip-accent">🍬 KitKat${kitkatCount>0?' ×'+kitkatCount:''} · ${state.kitkatOrientation==='standing'?'Standing':'Flat'}</span>`);
     if(hasO)chips.push(`<span class="cfg-chip chip-accent">⚫ Oreo${oreoCount>0?' ×'+oreoCount:''} · ${state.oreoOrientation==='standing'?'Standing':'Flat'}</span>`);
  if(hasB)chips.push(`<span class="cfg-chip chip-accent">🍫 Bar Shard${barShardCount>0?' ×'+barShardCount:''}</span>`);
-    if(state.addons.has('Number Candles'))chips.push(`<span class="cfg-chip chip-gold">🕯️ Candles${candleCount>0?' ×'+candleCount:''}</span>`);
-  const fruitChipKeys=new Set(FRUIT_KEYS);
+   if(state.addons.has('Number Candles'))chips.push(`<span class="cfg-chip chip-gold">🕯️ Candles${candleCount>0?' ×'+candleCount:''}</span>`);
+   if(state.addons.has('Cupcake'))chips.push(`<span class="cfg-chip chip-accent">🧁 Cupcake ×${state.cupcakeQty||1} · ${state.cupcakeFlavor||'Vanilla'} · ₱${(85*(state.cupcakeQty||1)).toLocaleString()}</span>`);
+const fruitChipKeys=new Set(FRUIT_KEYS);
     state.addons.forEach((p,k)=>{
-        if(['Drip','Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles'].includes(k))return;
+        if(['Drip','Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Cupcake'].includes(k))return;
         if(fruitChipKeys.has(k))return; // fruits shown via selFruitsRow, not chips
         chips.push(`<span class="cfg-chip chip-accent">${k}</span>`);
     });
@@ -4155,6 +5168,7 @@ function proceed(){
     const kitkatCount=(typeof window.getKitkatModels==='function')?window.getKitkatModels().length:0;
     const oreoCount=(typeof window.getOreoModels==='function')?window.getOreoModels().length:0;
 
+
     document.getElementById('configInput').value=JSON.stringify({
         shape:state.shape,
         roundSize:state.shape==='Round'?state.roundSize:null,
@@ -4181,15 +5195,58 @@ function proceed(){
         total:base+frostExtra+addonTotal
     });
 
-    // Capture canvas and submit via POST to a save-preview route
+  // Capture canvas at beauty-shot angle then submit
     const canvas = document.querySelector('#model-container canvas');
-    if (canvas) {
+  if (canvas &&
+        window._threeCamera &&
+        window._threeControls &&
+        window._threeRenderer &&
+        window._threeScene) {
+
+        const _cam = window._threeCamera;
+        const _ctl = window._threeControls;
+        const _ren = window._threeRenderer;
+        const _scn = window._threeScene;
+
+        // Save current camera state
+        const savedPos    = _cam.position.clone();
+        const savedTarget = _ctl.target.clone();
+
+// Move to a good front-facing angle
+        const tier = state ? state.tier : 'Single';
+        let camY = 0.8, camZ = 7.0, tgtY = -0.6;
+        if (tier === 'Two-tier')   { camY = 1.2; camZ = 8.5; tgtY = -0.2; }
+        if (tier === 'Three-tier') { camY = 1.8; camZ = 10.5; tgtY = 0.2; }
+
+        _cam.position.set(0, camY, camZ);
+        _ctl.target.set(0, tgtY, 0);
+        _ctl.update();
+        _ren.render(_scn, _cam);
+
+        // Composite: warm background + WebGL canvas
         try {
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-            document.getElementById('cakePreviewInput').value = dataUrl;
+            const off = document.createElement('canvas');
+            off.width  = canvas.width;
+            off.height = canvas.height;
+            const ctx  = off.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, off.width, off.height);
+            grad.addColorStop(0,   '#E8D5B0');
+            grad.addColorStop(0.4, '#D9C49A');
+            grad.addColorStop(0.7, '#C8AC7A');
+            grad.addColorStop(1,   '#A07840');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, off.width, off.height);
+            ctx.drawImage(canvas, 0, 0);
+            document.getElementById('cakePreviewInput').value =
+                off.toDataURL('image/jpeg', 0.92);
         } catch(e) {
-            console.warn('Could not capture canvas:', e);
+            console.warn('Canvas capture failed:', e);
         }
+
+// Restore camera instantly
+        _cam.position.copy(savedPos);
+        _ctl.target.copy(savedTarget);
+        _ctl.update();
     }
 
     document.getElementById('proceedForm').submit();
@@ -4197,15 +5254,13 @@ function proceed(){
 document.getElementById('btnProceed').addEventListener('click',proceed);
 document.getElementById('btnProceedLg').addEventListener('click',proceed);
 document.getElementById('btnResetView').addEventListener('click',()=>{if(typeof window.resetCamera==='function')window.resetCamera();showToast('View reset');});
-document.getElementById('spotBrightnessSlider').addEventListener('input', function(){
-    const val = parseInt(this.value) / 100;
-    document.getElementById('spotBrightnessVal').textContent = this.value + '%';
-    if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(val);
-});
-
+if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.10);
+window._updateAll=updateAll;
 syncFrostingUI();
 function tryInit(){if(typeof window.updateModel==='function')updateAll();else setTimeout(tryInit,80);}
 tryInit();
+
+
 
 // ── MOBILE SUMMARY SHEET ──
 function initMobileSummary(){
@@ -4301,8 +5356,9 @@ initMobileSummary();
             <button class="choco-rot-inline-preset" data-deg="180" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">180°</button>
             <button class="choco-rot-inline-preset" data-deg="270" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">270°</button>
         </div>
-        <div style="display:flex;gap:6px;">
+     <div style="display:flex;gap:6px;">
             <button id="chocoRotInlineApply" style="flex:1;padding:9px;background:var(--gold);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">✓ Apply Rotation</button>
+            <button id="chocoRotInlineDelete" title="Remove this item" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'">🗑</button>
             <button id="chocoRotInlineReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
         </div>
     </div>
@@ -4319,7 +5375,7 @@ initMobileSummary();
         <button id="fruitRotPanelClose" style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);border-radius:7px;color:rgba(232,176,122,0.7);font-size:.75rem;cursor:pointer;padding:4px 8px;font-family:var(--font-display);">Done</button>
     </div>
     <div style="background:var(--warm-white);padding:12px 14px;">
-       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
             <span id="fruitRotPanelPreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;">🍓</span>
             <div style="flex:1;">
                 <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↕ Tilt (up/down)</div>
@@ -4343,6 +5399,7 @@ initMobileSummary();
         </div>
         <div style="display:flex;gap:6px;">
             <button id="fruitRotPanelApply" style="flex:1;padding:9px;background:var(--caramel);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .18s;">✓ Apply Rotation</button>
+            <button id="fruitRotPanelDelete" title="Remove this fruit" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'">🗑</button>
             <button id="fruitRotPanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
         </div>
     </div>

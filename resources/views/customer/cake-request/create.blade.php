@@ -501,7 +501,10 @@ textarea.form-control { resize: vertical; min-height: 75px; }
             @if(!empty($config))
                 <div class="config-chips-row">
                     @foreach($config as $key => $val)
-                        @if(!empty($val) && !in_array($key, ['addons','total','roundSize']))
+                        @php
+                            $skipKeys = ['addons','total','roundSize','placedFruits','placedFerrero','placedKitkat','placedOreo','placedBarShard','placedCandles','frostings','hasDrip','hasIcing','icingColor','numberDigits','numberChoice','numberTens','numberUnits','ferreroCount','kitkatCount','oreoCount'];
+                        @endphp
+                        @if(!empty($val) && !is_bool($val) && !in_array($key, $skipKeys))
                         <div class="chip">
                       @php
 $chipLabels = [
@@ -514,12 +517,12 @@ $chipLabels = [
     'kitKatOrientation' => 'KitKat',
     'oreoOrientation'   => 'Oreo',
     'size'              => 'Size',
-    'layers'            => 'Layers',
+   'layers'            => 'Layers',
     'color'             => 'Color',
 ];
 @endphp
 <span class="chip-key">{{ $chipLabels[$key] ?? ucfirst($key) }}</span>
-                            {{ is_array($val) ? implode(', ', $val) : $val }}
+                          {{ is_array($val) ? implode(', ', array_filter(array_map(fn($v) => is_scalar($v) ? (string)$v : null, $val))) : (string)$val }}
                         </div>
                         @endif
                     @endforeach
