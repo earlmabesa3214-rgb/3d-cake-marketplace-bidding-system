@@ -216,7 +216,7 @@ $cancelledOrders = $orders->where('status', 'CANCELLED');
             <div style="display:flex; gap:0.6rem; align-items:center;">
                 <span class="status-badge active">● {{ str_replace('_',' ',$order->status) }}</span>
                 <span class="days-left-badge {{ $daysLeft <= 2 ? 'urgent' : 'ok' }}">
-                    {{ $daysLeft <= 2 ? '🔥 ' : '📅 ' }}{{ $daysLeft }}d left
+                    {{ $daysLeft <= 2 ? ' ' : '📅 ' }}{{ $daysLeft }}d left
                 </span>
             </div>
         </div>
@@ -263,7 +263,7 @@ $cancelledOrders = $orders->where('status', 'CANCELLED');
 {{-- ════════════════ COMPLETED ORDERS ════════════════ --}}
 @if($completedOrders->count())
 <div class="section-heading" style="margin-top:2.5rem;">
-    🎉 Completed Orders
+    Completed Orders
     <span class="section-count" style="background:#166534;">{{ $completedOrders->count() }}</span>
 </div>
 <div class="orders-grid">

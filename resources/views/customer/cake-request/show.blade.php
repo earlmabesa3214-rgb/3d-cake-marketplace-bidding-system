@@ -576,12 +576,12 @@
     // Rush and normal orders now follow the same bidding flow.
     // Rush orders just show an ⚡ badge to bakers so they know to prioritise.
 $steps = [
-        ['key'=>'OPEN',                  'label'=>'Submitted',    'icon'=>'📋'],
-        ['key'=>'RUSH_MATCHING',         'label'=>'⚡ Matching',   'icon'=>'⚡'],
+        ['key'=>'OPEN',                  'label'=>'Submitted',    'icon'=>'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>'],
+        ['key'=>'RUSH_MATCHING',         'label'=>'Matching',     'icon'=>'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'],
         ['key'=>'WAITING_FOR_PAYMENT',   'label'=>'Downpay',      'icon'=>'₱'],
-        ['key'=>'IN_PROGRESS',           'label'=>'Preparing',    'icon'=>'🥣'],
-        ['key'=>'WAITING_FINAL_PAYMENT', 'label'=>$cakeRequest->isPickup() ? 'Pickup' : 'Final Pay', 'icon'=>$cakeRequest->isPickup() ? '🏪' : '💰'],
-        ['key'=>'COMPLETED',             'label'=>$cakeRequest->isPickup() ? 'Collected' : 'Delivered', 'icon'=>'🎉'],
+        ['key'=>'IN_PROGRESS',           'label'=>'Preparing',    'icon'=>'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M4 11V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4"/><path d="M9 11V6"/><path d="M15 11V6"/><rect x="2" y="11" width="20" height="9" rx="2"/></svg>'],
+        ['key'=>'WAITING_FINAL_PAYMENT', 'label'=>$cakeRequest->isPickup() ? 'Pickup' : 'Final Pay', 'icon'=>$cakeRequest->isPickup() ? '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/><path d="M9 14h6"/></svg>' : '₱'],
+        ['key'=>'COMPLETED',             'label'=>$cakeRequest->isPickup() ? 'Collected' : 'Delivered', 'icon'=>'<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'],
     ];
     $rushOrder = ['OPEN','RUSH_MATCHING','WAITING_FOR_PAYMENT','IN_PROGRESS','WAITING_FINAL_PAYMENT','COMPLETED'];
     $order = $cakeRequest->is_rush
@@ -600,13 +600,13 @@ $steps = [
         'IN_PROGRESS'            => ['title'=>'Your Cake is Being Made!',     'sub'=>'Your baker is crafting your cake. You\'ll receive a photo once it\'s ready!'],
             'WAITING_FINAL_PAYMENT'  => [
                 'title' => $cakeRequest->isPickup()
-                    ? '🏪 Ready for Pickup — Pay Cash'
+                    ? ' Ready for Pickup — Pay Cash'
                     : '💰 Pay Final 50%',
                 'sub'   => $cakeRequest->isPickup()
                     ? 'Your cake is ready! Visit the baker, collect your cake, and pay the remaining balance in cash.'
                     : 'Your cake is ready! Pay the remaining balance so your baker can deliver it to you.',
             ],
-            'COMPLETED'              => ['title'=>'Order Completed! 🎉',          'sub'=>$cakeRequest->isPickup() ? 'Your cake has been collected. Enjoy!' : 'Your cake has been delivered. Enjoy!'],
+            'COMPLETED'              => ['title'=>'Order Completed! ',          'sub'=>$cakeRequest->isPickup() ? 'Your cake has been collected. Enjoy!' : 'Your cake has been delivered. Enjoy!'],
             'CANCELLED'              => ['title'=>'Request Cancelled',            'sub'=>'This request was cancelled.'],
             'EXPIRED'                => ['title'=>'Request Expired',              'sub'=>'No baker accepted this request in time.'],
         ];
@@ -620,7 +620,7 @@ $steps = [
 
         $bOrderStatuses = ['ACCEPTED','WAITING_FOR_PAYMENT','PREPARING','READY','WAITING_FINAL_PAYMENT','DELIVERED'];
         $bOrderLabels   = ['Accepted','Awaiting Down','Preparing','Ready',$cakeRequest->isPickup() ? 'Pickup Pay' : 'Awaiting Final',$cakeRequest->isPickup() ? 'Collected' : 'Delivered'];
-        $bOrderIcons    = ['✓','₱','🥣','📦',$cakeRequest->isPickup() ? '🏪' : '💰',$cakeRequest->isPickup() ? '🏪' : ''];
+        $bOrderIcons    = ['✓','₱','🥣','📦',$cakeRequest->isPickup() ? '' : '💰',$cakeRequest->isPickup() ? '' : ''];
 
         $bakerDisplayStatus = $bakerOrder?->status === 'COMPLETED' ? 'DELIVERED' : $bakerOrder?->status;
         $bCurrentStep = $bakerOrder ? (array_search($bakerDisplayStatus, $bOrderStatuses) ?: 0) : -1;
@@ -695,12 +695,12 @@ if ($acceptedBid) {
                 <div class="hero-subtitle">{{ $msg['sub'] }}</div>
             </div>
             <div class="hero-status-badge">
-                @if(in_array($cakeRequest->status, ['OPEN','BIDDING','WAITING_FOR_PAYMENT','WAITING_FINAL_PAYMENT']))
+             @if(in_array($cakeRequest->status, ['OPEN','BIDDING','WAITING_FOR_PAYMENT','WAITING_FINAL_PAYMENT']))
                     <div class="pulse-dot"></div>
                 @else
                     <span>
-                        @if($cakeRequest->status === 'COMPLETED') ✓
-                        @elseif(in_array($cakeRequest->status, ['CANCELLED','EXPIRED'])) ✕
+                        @if($cakeRequest->status === 'COMPLETED') <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        @elseif(in_array($cakeRequest->status, ['CANCELLED','EXPIRED'])) <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                         @else ●
                         @endif
                     </span>
@@ -708,8 +708,7 @@ if ($acceptedBid) {
     {{ str_replace('_',' ',$cakeRequest->status) }}
             </div>
         </div>
-
-        @if(!in_array($cakeRequest->status, ['CANCELLED','EXPIRED']))
+@if(!in_array($cakeRequest->status, ['CANCELLED','EXPIRED']) && !in_array($cakeRequest->status, ['OPEN','BIDDING','RUSH_MATCHING']))
         <div class="tracker-steps">
             @foreach($steps as $step)
             @php
@@ -719,7 +718,7 @@ if ($acceptedBid) {
             @endphp
             <div class="tracker-step">
                 <div class="tracker-step-dot {{ $isDone ? 'done' : ($isActive ? 'active' : '') }}">
-                    @if($isDone) ✓ @else {{ $step['icon'] }} @endif
+     @if($isDone) <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> @else {!! $step['icon'] !!} @endif
                 </div>
                 <div class="tracker-step-label {{ $isDone ? 'done' : ($isActive ? 'active' : '') }}">
                     {{ $step['label'] }}
@@ -733,20 +732,31 @@ if ($acceptedBid) {
 
     {{-- ── WHAT HAPPENS NEXT ── --}}
     @php
-        $nextInfo = [
-    'OPEN'                   => ['icon'=>'⏳','color'=>'yellow','title'=>'What happens next?',              'desc'=>"Bakers are reviewing your request. You'll be notified as soon as someone places a bid."],
-'RUSH_MATCHING'          => ['icon'=>'⚡','color'=>'blue',  'title'=>'Choose your rush baker!',          'desc'=>'Nearby rush bakers have been notified and will submit their prices. Accept the best offer before the 60-second timer expires!'],            'BIDDING'                => ['icon'=>'🔔','color'=>'yellow','title'=>'You have bids!',                  'desc'=>'Review each baker\'s offer below — check their price, estimated days, and message, then accept the best one.'],
-        'ACCEPTED'               => ['icon'=>'🎂','color'=>'green','title'=>'Your baker is confirmed!',         'desc'=>'Your baker is getting started on your order. You\'ll be notified when it\'s time to pay your downpayment.'],
-            'WAITING_FOR_PAYMENT'    => ['icon'=>'₱','color'=>'orange','title'=>'Action required: Pay now!',       'desc'=>'Your baker is confirmed and ready to start. Pay the 50% downpayment so they can begin preparing your cake.'],
+     $nextInfo = [
+    'OPEN'                   => ['icon'=>'hourglass','color'=>'yellow','title'=>'What happens next?',              'desc'=>"Bakers are reviewing your request. You'll be notified as soon as someone places a bid."],
+    'RUSH_MATCHING'          => ['icon'=>'bolt',     'color'=>'blue',  'title'=>'Choose your rush baker!',         'desc'=>'Nearby rush bakers have been notified and will submit their prices. Accept the best offer before the 60-second timer expires!'],
+    'BIDDING'                => ['icon'=>'bell',     'color'=>'yellow','title'=>'You have bids!',                  'desc'=>'Review each baker\'s offer below — check their price, estimated days, and message, then accept the best one.'],
+    'ACCEPTED'               => ['icon'=>'cake',     'color'=>'green', 'title'=>'Your baker is confirmed!',        'desc'=>'Your baker is getting started on your order. You\'ll be notified when it\'s time to pay your downpayment.'],
+    'WAITING_FOR_PAYMENT'    => ['icon'=>'peso',     'color'=>'orange','title'=>'Action required: Pay now!',       'desc'=>'Your baker is confirmed and ready to start. Pay the 50% downpayment so they can begin preparing your cake.'],
     'WAITING_FINAL_PAYMENT'  => $cakeRequest->isPickup()
-                ? ['icon'=>'🏪','color'=>'orange','title'=>'Action required: Go collect your cake!',   'desc'=>'Your cake is ready at the baker\'s location. Visit them, bring ₱' . number_format($downpaymentAmount, 2) . ' cash, and collect your cake!']
-                : ['icon'=>'💰','color'=>'orange','title'=>'Action required: Pay final 50%!',          'desc'=>'Your baker has finished your cake and sent a photo above for your review. Pay the remaining balance so your baker can deliver it to you.'],
-    
-            'COMPLETED'              => ['icon'=>'🎉','color'=>'green', 'title'=>'Order complete!',                 'desc'=>'We hope you loved it! Feel free to place another order anytime.'],
-            'CANCELLED'              => ['icon'=>'✕', 'color'=>'red',   'title'=>'Request cancelled',               'desc'=>'You can create a new cake request anytime from your dashboard.'],
-            'EXPIRED'                => ['icon'=>'⌛','color'=>'red',   'title'=>'No bakers responded',             'desc'=>'Try a new request with a wider budget or further delivery date.'],
+                ? ['icon'=>'store',   'color'=>'orange','title'=>'Action required: Go collect your cake!',  'desc'=>'Your cake is ready at the baker\'s location. Visit them, bring ₱' . number_format($downpaymentAmount, 2) . ' cash, and collect your cake!']
+                : ['icon'=>'peso',    'color'=>'orange','title'=>'Action required: Pay final 50%!',         'desc'=>'Your baker has finished your cake and sent a photo above for your review. Pay the remaining balance so your baker can deliver it to you.'],
+    'COMPLETED'              => ['icon'=>'check',    'color'=>'green', 'title'=>'Order complete!',                 'desc'=>'We hope you loved it! Feel free to place another order anytime.'],
+    'CANCELLED'              => ['icon'=>'x',        'color'=>'red',   'title'=>'Request cancelled',               'desc'=>'You can create a new cake request anytime from your dashboard.'],
+    'EXPIRED'                => ['icon'=>'clock',    'color'=>'red',   'title'=>'No bakers responded',             'desc'=>'Try a new request with a wider budget or further delivery date.'],
         ];
-        $next = $nextInfo[$effectiveStatus] ?? $nextInfo[$cakeRequest->status] ?? null;
+       $next = $nextInfo[$effectiveStatus] ?? $nextInfo[$cakeRequest->status] ?? null;
+        $nextIconSvg = [
+            'hourglass' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>',
+            'bolt'      => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+            'bell'      => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+            'cake'      => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>',
+            'peso'      => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg>',
+            'store'     => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/><path d="M9 14h6"/></svg>',
+            'check'     => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+            'x'         => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+            'clock'     => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        ];
     @endphp
 
     {{-- ── MAIN TWO-COLUMN LAYOUT ── --}}
@@ -757,7 +767,7 @@ if ($acceptedBid) {
         <div>
             <div class="bids-list-wrap" style="margin-bottom:1.5rem;">
                 <div class="bids-list-header">
-                    <h3>🏷 Baker Offers</h3>
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Baker Offers</h3>
                     <span class="bid-count-pill">{{ $cakeRequest->bids->count() }} bid{{ $cakeRequest->bids->count() !== 1 ? 's' : '' }}</span>
                 </div>
                 @foreach($cakeRequest->bids->sortBy('amount') as $bid)
@@ -774,7 +784,7 @@ if ($acceptedBid) {
                             <div class="bid-name">
                                 {{ $bid->baker->first_name }} {{ $bid->baker->last_name }}
                                 @if($cakeRequest->is_rush && $bid->baker->baker?->accepts_rush_orders)
-                                    <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 5px; font-weight:700; vertical-align:middle; margin-left:4px;">⚡ Rush</span>
+                                    <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 5px; font-weight:700; vertical-align:middle; margin-left:4px; display:inline-flex; align-items:center; gap:2px;"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush</span>
                                 @endif
                             </div>
                             <div class="bid-meta">
@@ -841,7 +851,7 @@ if ($acceptedBid) {
     @if($cakeRequest->cake_preview_image)
     <div class="card" style="margin-bottom:1.5rem;">
         <div class="card-header">
-            <h3>🎂 Your Cake Design Preview</h3>
+            <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Your Cake Design Preview</h3>
         </div>
         <img src="{{ asset('storage/' . $cakeRequest->cake_preview_image) }}"
             alt="3D Cake Preview"
@@ -853,7 +863,7 @@ if ($acceptedBid) {
     @endif
     {{-- Cake Design --}}
     <div class="card">
-        <div class="card-header"><h3>🎂 Cake Design</h3></div>
+        <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake Design</h3></div>
         <div class="config-grid">
             @foreach(['shape','size','flavor','frosting'] as $key)
                 @if(!empty($config[$key])) <div class="config-item"><div class="c-label">{{ ucfirst($key) }}</div><div class="c-value">{{ $config[$key] }}</div></div> @endif
@@ -869,7 +879,7 @@ if ($acceptedBid) {
         {{-- Pickup: no baker confirmed yet, nothing to show --}}
     @elseif($cakeRequest->delivery_lat && $cakeRequest->delivery_lng)
     <div class="card">
-        <div class="card-header"><h3>📍 Delivery Location</h3></div>
+        <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Delivery Location</h3></div>
         @if($cakeRequest->delivery_address)
             <div style="padding:0.85rem 1.5rem; border-bottom:1px solid var(--border); font-size:0.82rem; color:var(--text-mid); line-height:1.5;">{{ $cakeRequest->delivery_address }}</div>
         @endif
@@ -880,7 +890,7 @@ if ($acceptedBid) {
     {{-- Notes --}}
     @if($cakeRequest->custom_message || $cakeRequest->special_instructions)
     <div class="card">
-        <div class="card-header"><h3>📝 Notes</h3></div>
+        <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notes</h3></div>
         @if($cakeRequest->custom_message)
             <div class="notes-box" style="border-bottom:1px solid var(--border);">
                 <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);font-weight:600;margin-bottom:0.4rem;">Message on Cake</div>
@@ -916,11 +926,15 @@ if ($acceptedBid) {
     <span class="bss-val" style="color:var(--caramel); font-weight:700;">
         {{ $cakeRequest->delivery_date->format('M d, Y') }}
         @if($cakeRequest->needed_time)
-            <span style="font-size:0.72rem; display:block; margin-top:1px;">🕐 {{ \Carbon\Carbon::parse($cakeRequest->needed_time)->format('g:i A') }}</span>
+            <span style="font-size:0.72rem; display:flex; align-items:center; gap:3px; margin-top:1px;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>{{ \Carbon\Carbon::parse($cakeRequest->needed_time)->format('g:i A') }}</span>
         @endif
     </span>
 </div>
-                <div class="bss-row"><span class="bss-key">Fulfillment</span><span class="bss-val" style="color:{{ $cakeRequest->isPickup() ? '#8A5010' : 'var(--caramel)' }}; font-weight:700;">{{ $cakeRequest->fulfillment_label }}</span></div>
+               @if(!in_array($cakeRequest->status, ['OPEN','BIDDING','RUSH_MATCHING']))
+<div class="bss-row"><span class="bss-key">Method</span><span class="bss-val" style="color:{{ $cakeRequest->isPickup() ? '#8A5010' : 'var(--caramel)' }}; font-weight:700;">{{ $cakeRequest->fulfillment_label }}</span></div>
+@else
+<div class="bss-row"><span class="bss-key">Method</span><span class="bss-val" style="color:var(--text-muted); font-size:0.72rem;">Chosen when baker is accepted</span></div>
+@endif
                 @if(!empty($config['addons']))
                 <div class="bss-row" style="flex-direction:column; align-items:flex-start; gap:0.3rem;">
                     <span class="bss-key">Add-ons</span>
@@ -929,7 +943,7 @@ if ($acceptedBid) {
                 @endif
             </div>
             <div class="card">
-                <div class="card-header"><h3>🕐 Activity Log</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity Log</h3></div>
                 <ul class="timeline-log">
                     <li><div class="log-dot"></div><div><div class="log-event">Request submitted</div><div class="log-time">{{ $cakeRequest->created_at->format('M d, Y · g:i A') }}</div></div></li>
                     @if($cakeRequest->bids->count() > 0)
@@ -938,7 +952,7 @@ if ($acceptedBid) {
                 </ul>
             </div>
         <div class="card">
-        <div class="card-header"><h3>⚙️ Actions</h3></div>
+        <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Actions</h3></div>
         <div style="padding:1.25rem 1.5rem;">
             <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.6;">Review the offers on the left and accept the one that suits you best.</p>
             <form id="form-cancel-request" method="POST" action="{{ route('customer.cake-requests.destroy', $cakeRequest->id) }}">
@@ -952,7 +966,7 @@ if ($acceptedBid) {
     {{-- Reference Image --}}
     @if($cakeRequest->reference_image)
     <div class="card">
-        <div class="card-header"><h3>🖼️ Reference Image</h3></div>
+        <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Reference Image</h3></div>
         <img src="{{ asset('storage/'.$cakeRequest->reference_image) }}" alt="Reference" style="width:100%; max-height:220px; object-fit:cover; border-radius:0 0 20px 20px;">
     </div>
     @endif
@@ -961,7 +975,7 @@ if ($acceptedBid) {
         <div>
             <div class="card" style="margin-bottom:1.5rem;">
                 <div class="card-header">
-                    <h3>⚡ Rush Matching</h3>
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Rush Matching</h3>
                     @if($cakeRequest->rush_expires_at)
                     <span id="rush-countdown" style="font-size:0.75rem; font-weight:700; color:#3A2A7A; background:#EEF; padding:0.2rem 0.7rem; border-radius:20px; border:1px solid #C0C0FF;">
                         ⏱ <span id="rush-timer">--</span>
@@ -970,13 +984,13 @@ if ($acceptedBid) {
                 </div>
    @if($cakeRequest->bids->count() > 0)
                 <div class="bids-waiting">
-                    <span class="bids-waiting-icon">⚡</span>
+                  <span class="bids-waiting-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--caramel)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                     <div class="bids-waiting-title" style="color:var(--caramel);">{{ $cakeRequest->bids->count() }} baker{{ $cakeRequest->bids->count() !== 1 ? 's' : '' }} responded!</div>
                     <div class="bids-waiting-sub">Review their prices below and accept the best one. Your timer is running!</div>
                 </div>
                 @else
                 <div class="bids-waiting">
-                    <span class="bids-waiting-icon">⚡</span>
+                   <span class="bids-waiting-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                     <div class="bids-waiting-title">Waiting for rush bakers…</div>
                     <div class="bids-waiting-sub">We've notified the nearest available rush bakers.<br>They'll submit their prices — you pick the best one.</div>
                 </div>
@@ -986,7 +1000,7 @@ if ($acceptedBid) {
 @if($cakeRequest->bids->count() > 0)
             <div class="bids-list-wrap" style="margin-bottom:1.5rem;">
                 <div class="bids-list-header">
-                    <h3>⚡ Rush Bids</h3>
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Rush Bids</h3>
                     <span class="bid-count-pill">{{ $cakeRequest->bids->count() }} bid{{ $cakeRequest->bids->count() !== 1 ? 's' : '' }}</span>
                 </div>
                 @foreach($cakeRequest->bids->sortBy('amount') as $bid)
@@ -1002,7 +1016,7 @@ if ($acceptedBid) {
                         <div style="flex:1; min-width:0;">
                             <div class="bid-name">
                                 {{ $bid->baker->first_name }} {{ $bid->baker->last_name }}
-                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 5px; font-weight:700; vertical-align:middle; margin-left:4px;">⚡ Rush</span>
+                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 5px; font-weight:700; vertical-align:middle; margin-left:4px; display:inline-flex; align-items:center; gap:2px;"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush</span>
                             </div>
                             <div class="bid-meta">{{ $bid->created_at->diffForHumans() }}</div>
                         </div>
@@ -1042,7 +1056,7 @@ if ($acceptedBid) {
 
             {{-- Cake design + location cards same as OPEN --}}
             <div class="card">
-                <div class="card-header"><h3>🎂 Cake Design</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake Design</h3></div>
                 <div class="config-grid">
                     @foreach(['shape','size','flavor','frosting'] as $key)
                         @if(!empty($config[$key]))
@@ -1066,7 +1080,7 @@ if ($acceptedBid) {
                 <div style="font-weight:700; font-size:0.9rem; color:#C8C8FF;">⚡ Rush Matching</div>
             </div>
             <div class="card">
-                <div class="card-header"><h3>⚙️ Actions</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Actions</h3></div>
                 <div style="padding:1.25rem 1.5rem;">
                     <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.6;">You can cancel while we're still searching for a baker.</p>
                     <form id="form-cancel-request" method="POST" action="{{ route('customer.cake-requests.destroy', $cakeRequest->id) }}">@csrf @method('DELETE')</form>
@@ -1079,16 +1093,16 @@ if ($acceptedBid) {
 @elseif($cakeRequest->status === 'OPEN')
         <div>
             <div class="card" style="margin-bottom:1.5rem;">
-                <div class="card-header"><h3>🏷 Baker Offers</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Baker Offers</h3></div>
                 <div class="bids-waiting">
-                    <span class="bids-waiting-icon">⏳</span>
+                   <span class="bids-waiting-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></span>
                     <div class="bids-waiting-title">Waiting for bakers…</div>
                     <div class="bids-waiting-sub">Bakers will see your request and place bids soon.<br>This page refreshes automatically every minute.</div>
                 </div>
             </div>
 
     <div class="card">
-                <div class="card-header"><h3>🎂 Cake Design</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake Design</h3></div>
                 <div class="config-grid">
                     @foreach(['shape','size','flavor','frosting'] as $key)
                         @if(!empty($config[$key]))
@@ -1104,7 +1118,7 @@ if ($acceptedBid) {
             {{-- ── ADD THIS RIGHT HERE (OPEN state) ── --}}
             @if($cakeRequest->cake_preview_image)
             <div class="card" style="margin-bottom:1.5rem;">
-                <div class="card-header"><h3>🎂 3D Cake Preview</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>3D Cake Preview</h3></div>
                 <img src="{{ asset('storage/' . $cakeRequest->cake_preview_image) }}"
                     alt="3D Cake Preview"
                     style="width:100%; max-height:320px; object-fit:cover; display:block;">
@@ -1121,7 +1135,7 @@ if ($acceptedBid) {
                 {{-- Pickup: no baker confirmed yet --}}
             @elseif($cakeRequest->delivery_lat && $cakeRequest->delivery_lng)
             <div class="card">
-                <div class="card-header"><h3>📍 Delivery Location</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Delivery Location</h3></div>
                 @if($cakeRequest->delivery_address)
                     <div style="padding:0.85rem 1.5rem; border-bottom:1px solid var(--border); font-size:0.82rem; color:var(--text-mid); line-height:1.5;">{{ $cakeRequest->delivery_address }}</div>
                 @endif
@@ -1141,7 +1155,7 @@ if ($acceptedBid) {
                 <div style="font-weight:700; font-size:0.9rem; color:var(--caramel-light, #E8C9A8);">{{ $cakeRequest->status_label ?? str_replace('_',' ',$cakeRequest->status) }}</div>
             </div>
             <div class="card">
-                <div class="card-header"><h3>🕐 Activity Log</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity Log</h3></div>
                 <ul class="timeline-log">
                     <li><div class="log-dot"></div><div><div class="log-event">Request submitted</div><div class="log-time">{{ $cakeRequest->created_at->format('M d, Y · g:i A') }}</div></div></li>
                     <li style="opacity:0.4;"><div class="log-dot" style="background:var(--border);"></div><div><div class="log-event">Waiting for baker bids…</div><div class="log-time">Pending</div></div></li>
@@ -1150,14 +1164,21 @@ if ($acceptedBid) {
 
             {{-- ── ADD THIS ORDER DETAILS SUMMARY ── --}}
             <div class="card">
-                <div class="card-header"><h3>📦 Order Details</h3></div>
-                <div class="info-row">
-                    <span class="i-key">Fulfillment</span>
-                    <span class="i-val" style="font-weight:700; color:{{ $cakeRequest->isPickup() ? '#8A5010' : 'var(--caramel)' }};">{{ $cakeRequest->fulfillment_label }}</span>
-                </div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>Order Details</h3></div>
+               @if(!in_array($cakeRequest->status, ['OPEN','BIDDING','RUSH_MATCHING']))
+<div class="info-row">
+    <span class="i-key">Method</span>
+    <span class="i-val" style="font-weight:700; color:{{ $cakeRequest->isPickup() ? '#8A5010' : 'var(--caramel)' }};">{{ $cakeRequest->fulfillment_label }}</span>
+</div>
+@else
+<div class="info-row">
+    <span class="i-key">Method</span>
+    <span class="i-val" style="font-weight:600; color:var(--text-muted);">Chosen when baker is accepted</span>
+</div>
+@endif
                 <div class="info-row"><span class="i-key">Budget</span><span class="i-val">₱{{ number_format($cakeRequest->budget_min,0) }} — ₱{{ number_format($cakeRequest->budget_max,0) }}</span></div>
               <div class="info-row">
-    <span class="i-key">Delivery Date</span>
+    <span class="i-key">Date & Time needed</span>
     <span class="i-val" style="font-weight:700; color:var(--caramel);">
         {{ $cakeRequest->delivery_date->format('M d, Y') }}
         @if($cakeRequest->needed_time)
@@ -1171,7 +1192,7 @@ if ($acceptedBid) {
             </div>
 
             <div class="card">
-                <div class="card-header"><h3>⚙️ Actions</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Actions</h3></div>
                 <div style="padding:1.25rem 1.5rem;">
                     <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.6;">You can cancel this request while no baker has accepted it.</p>
                     <form id="form-cancel-request" method="POST" action="{{ route('customer.cake-requests.destroy', $cakeRequest->id) }}">@csrf @method('DELETE')</form>
@@ -1182,7 +1203,7 @@ if ($acceptedBid) {
             {{-- Reference Image --}}
             @if($cakeRequest->reference_image)
             <div class="card">
-                <div class="card-header"><h3>🖼️ Reference Image</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Reference Image</h3></div>
                 <img src="{{ asset('storage/'.$cakeRequest->reference_image) }}" alt="Reference" style="width:100%; max-height:220px; object-fit:cover; border-radius:0 0 20px 20px;">
             </div>
             @endif
@@ -1194,7 +1215,7 @@ if ($acceptedBid) {
     @if($bakerOrder && in_array($cakeRequest->status, ['ACCEPTED','WAITING_FOR_PAYMENT','WAITING_FINAL_PAYMENT','IN_PROGRESS','COMPLETED']))
     <div class="card" style="margin-bottom:1.5rem;">
         <div class="card-header">
-            <h3>@if($cakeRequest->status === 'COMPLETED') 🎉 {{ $cakeRequest->isPickup() ? 'Collected from' : 'Delivered by' }} @else 👨‍🍳 Your Baker @endif</h3>
+            <h3>@if($cakeRequest->status === 'COMPLETED') <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>{{ $cakeRequest->isPickup() ? 'Collected from' : 'Delivered by' }} @else <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Your Baker @endif</h3>
             <span style="font-size:0.72rem; color:var(--caramel,#C07840); font-weight:700; background:#FBF4EC; padding:0.2rem 0.7rem; border-radius:20px; border:1px solid #D4B896;">✓ Confirmed</span>
         </div>
 
@@ -1230,7 +1251,7 @@ if ($acceptedBid) {
     @if($bakerOrder->cake_final_photo)
     <div style="border-top:1px solid var(--border);">
         <div style="padding:0.75rem 1.5rem; background:var(--cream); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0.5rem;">
-            <span style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted);">📸 Finished Cake Photo</span>
+            <span style="font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); display:inline-flex; align-items:center; gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Finished Cake Photo</span>
             <span style="font-size:0.62rem; background:#EBF5EE; color:#166534; padding:0.1rem 0.45rem; border-radius:4px; font-weight:700;">FROM YOUR BAKER</span>
         </div>
     <div style="width:100%; background:#2C1A0E; display:flex; align-items:center; justify-content:center; max-height:380px; overflow:hidden;">
@@ -1245,7 +1266,7 @@ if ($acceptedBid) {
 
         @if($cakeRequest->status === 'COMPLETED')
         <div style="padding:1.1rem 1.5rem; text-align:center; background:#FBF4EC; border-top:1px solid #D4B896;">
-            <div style="font-size:1.25rem; margin-bottom:0.3rem;">🎂✨</div>
+            <div style="margin-bottom:0.3rem; display:flex; justify-content:center; gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div>
             <div style="font-weight:700; color:var(--brown-deep,#5C3D2E); font-size:0.88rem;">{{ $cakeRequest->isPickup() ? 'Cake collected successfully!' : 'Cake delivered successfully!' }}</div>
             <div style="font-size:0.75rem; color:var(--caramel,#C07840); margin-top:0.2rem;">Thank you for using BakeSphere.</div>
         </div>
@@ -1280,7 +1301,7 @@ if ($acceptedBid) {
 
         @if($downpayment->rejection_count >= 2)
         <div style="margin:0 1.5rem 1rem; text-align:center; padding:0.85rem 1rem; background:#FDF0EE; border:1px solid #F5C5BE; border-radius:10px;">
-            <div style="font-size:1.1rem; margin-bottom:0.25rem;">🚫</div>
+            <div style="margin-bottom:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2A1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
             <div style="font-size:0.82rem; font-weight:700; color:#8B2A1E; margin-bottom:0.2rem;">Order automatically cancelled</div>
             <div style="font-size:0.72rem; color:#7A2A20; line-height:1.4;">Contact support if you believe this is an error.</div>
         </div>
@@ -1353,7 +1374,7 @@ if ($acceptedBid) {
 
         @if($finalPayment->rejection_count >= 2)
         <div style="margin:0 1.5rem 1rem; text-align:center; padding:0.85rem 1rem; background:#FDF0EE; border:1px solid #F5C5BE; border-radius:10px;">
-            <div style="font-size:1.1rem; margin-bottom:0.25rem;">🚫</div>
+            <div style="margin-bottom:0.25rem;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2A1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
             <div style="font-size:0.82rem; font-weight:700; color:#8B2A1E; margin-bottom:0.2rem;">Order automatically cancelled</div>
             <div style="font-size:0.72rem; color:#7A2A20; line-height:1.4;">Contact support if you believe this is an error.</div>
         </div>
@@ -1408,7 +1429,7 @@ if ($acceptedBid) {
             </div>
             @elseif($cakeRequest->isPickup())
             <div class="psc-cta" style="background:#FEF9E8; border-top-color:#F0D090;">
-                <div style="font-size:0.85rem; font-weight:600; color:#8A5010;">🏪 Visit your baker and pay <strong>₱{{ number_format($downpaymentAmount, 2) }}</strong> cash to collect your cake.</div>
+                <div style="font-size:0.85rem; font-weight:600; color:#8A5010;"> Pick up the cake and pay <strong>₱{{ number_format($downpaymentAmount, 2) }}</strong> cash to collect your cake.</div>
                 <p class="psc-cta-note">The baker will confirm receipt and complete your order.</p>
             </div>
         @else
@@ -1417,9 +1438,9 @@ if ($acceptedBid) {
         @else
         <div class="psc-paid-notice">
             @if($cakeRequest->isPickup())
-                ✅ Downpayment confirmed · Remaining ₱{{ number_format($downpaymentAmount, 2) }} due as cash on pickup
+                 Downpayment confirmed · Remaining ₱{{ number_format($downpaymentAmount, 2) }} due as cash on pickup
             @else
-                ✅ Downpayment confirmed · Remaining ₱{{ number_format($downpaymentAmount, 2) }} due on delivery
+                 Downpayment confirmed · Remaining ₱{{ number_format($downpaymentAmount, 2) }} due on delivery
             @endif
         </div>
         @endif
@@ -1428,7 +1449,7 @@ if ($acceptedBid) {
     @if($cakeRequest->cake_preview_image)
     <div class="card" style="margin-bottom:1.5rem;">
         <div class="card-header">
-            <h3>🎂 Your Cake Design Preview</h3>
+            <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Your Cake Design Preview</h3>
         </div>
         <img src="{{ asset('storage/' . $cakeRequest->cake_preview_image) }}"
             alt="3D Cake Preview"
@@ -1440,7 +1461,7 @@ if ($acceptedBid) {
     @endif
         {{-- Cake Design + Order Details (combined) --}}
             <div class="card">
-                <div class="card-header"><h3>🎂 Cake & Order Details</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Cake &amp; Order Details</h3></div>
                 <div class="config-grid">
                     @foreach(['shape','size','flavor','frosting'] as $key)
                         @if(!empty($config[$key])) <div class="config-item"><div class="c-label">{{ ucfirst($key) }}</div><div class="c-value">{{ $config[$key] }}</div></div> @endif
@@ -1449,7 +1470,7 @@ if ($acceptedBid) {
                 </div>
                 <div style="border-top:1px solid var(--border);">
                     <div class="info-row">
-                        <span class="i-key">Fulfillment</span>
+                        <span class="i-key">Method</span>
                         <span class="i-val" style="font-weight:700; color:{{ $cakeRequest->isPickup() ? '#8A5010' : 'var(--caramel)' }};">{{ $cakeRequest->fulfillment_label }}</span>
                     </div>
                     <div class="info-row"><span class="i-key">Budget</span><span class="i-val">₱{{ number_format($cakeRequest->budget_min,0) }} — ₱{{ number_format($cakeRequest->budget_max,0) }}</span></div>
@@ -1485,7 +1506,7 @@ if ($acceptedBid) {
             @if($cakeRequest->isPickup())
                 @if($bakerOrder && in_array($cakeRequest->status, ['ACCEPTED','WAITING_FOR_PAYMENT','IN_PROGRESS','WAITING_FINAL_PAYMENT','COMPLETED']))
                 <div class="card">
-                    <div class="card-header"><h3>🏪 Pickup Location</h3></div>
+                    <div class="card-header"><h3> Pickup Location</h3></div>
                     @php
                         $bakerProfile = \App\Models\Baker::where('user_id', $bakerOrder->baker_id)->first();
                     @endphp
@@ -1509,7 +1530,7 @@ if ($acceptedBid) {
                 @endif
             @elseif($cakeRequest->delivery_lat && $cakeRequest->delivery_lng)
             <div class="card">
-                <div class="card-header"><h3>📍 Delivery Location</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Delivery Location</h3></div>
                 @if($cakeRequest->delivery_address)
                 <div style="padding:0.85rem 1.5rem; border-bottom:1px solid var(--border); font-size:0.82rem; color:var(--text-mid); line-height:1.5;">{{ $cakeRequest->delivery_address }}</div>
                 @endif
@@ -1555,7 +1576,7 @@ if ($acceptedBid) {
     $cakeBasePrice  = $acceptedBid->amount;
 @endphp
                             <div style="display:flex; gap:0.5rem; margin-top:0.35rem; flex-wrap:wrap;">
-                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 6px; font-weight:700;">⚡ Rush Order</span>
+                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 6px; font-weight:700; display:inline-flex; align-items:center; gap:2px;"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush Order</span>
                                 <span style="font-size:0.62rem; color:var(--text-muted);">Cake ₱{{ number_format($cakeBasePrice, 2) }} + Rush ₱{{ number_format($rushFeeDisplay, 2) }}</span>
                             </div>
                             @endif
@@ -1596,7 +1617,7 @@ if ($acceptedBid) {
                     @php $customerWalletInProgress = \App\Models\Wallet::forUser(auth()->id()); @endphp
                     @if($customerWalletInProgress->hasEnough(round($bakerOrder->agreed_price * 0.5, 2)))
                     <button type="button" onclick="openConfirmModal('modal-pay-final')" class="psc-pay-btn" style="background:linear-gradient(135deg,#7B4A1E,#C07840); border:none; cursor:pointer; width:100%;">
-                        ✅ Confirm Cake & Pay ₱{{ number_format(round($bakerOrder->agreed_price * 0.5, 2), 2) }}
+                         Confirm Cake & Pay ₱{{ number_format(round($bakerOrder->agreed_price * 0.5, 2), 2) }}
                     </button>
                     <p class="psc-cta-note"> Wallet: ₱{{ number_format($customerWalletInProgress->balance, 2) }}</p>
                     @else
@@ -1606,7 +1627,7 @@ if ($acceptedBid) {
                     @endif
                 </div>
                 @else
-                <div class="psc-paid-notice">✅ Downpayment confirmed · Final payment unlocks when cake photo is ready</div>
+                <div class="psc-paid-notice"> Downpayment confirmed · Final payment unlocks when cake photo is ready</div>
                 @endif
             </div>
             @endif
@@ -1625,7 +1646,7 @@ if ($acceptedBid) {
     $cakeBasePrice  = $acceptedBid->amount;
 @endphp
                             <div style="display:flex; gap:0.5rem; margin-top:0.35rem; flex-wrap:wrap;">
-                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 6px; font-weight:700;">⚡ Rush Order</span>
+                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 6px; font-weight:700; display:inline-flex; align-items:center; gap:2px;"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush Order</span>
                                 <span style="font-size:0.62rem; color:var(--text-muted);">Cake ₱{{ number_format($cakeBasePrice, 2) }} + Rush ₱{{ number_format($rushFeeDisplay, 2) }}</span>
                             </div>
                             @endif
@@ -1663,7 +1684,7 @@ if ($acceptedBid) {
                         @if($finalIsRejected)
                             <div style="width:32px;height:32px;background:#FDF0EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✕</div>
                         @elseif($cakeRequest->isPickup())
-                            <div style="width:32px;height:32px;background:#FEF9E8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">🏪</div>
+                            <div style="width:32px;height:32px;background:#FEF9E8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;"></div>
                         @else
                             <div style="width:32px;height:32px;background:#FEF3D8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">₱</div>
                         @endif
@@ -1672,19 +1693,19 @@ if ($acceptedBid) {
     @if($finalIsRejected)
                     <div class="psc-paid-notice" style="background:#FDF0EE; border-top-color:#F5C5BE; color:#8B2A1E;">✕ Proof rejected — re-upload above</div>
         @elseif($finalPayment && $finalPayment->escrow_status === 'held')
-                    <div class="psc-paid-notice" style="background:#EBF3FE; border-top-color:#BEDAF5; color:#1A3A6B;">✅ Final payment paid — waiting for baker to confirm delivery</div>
+                    <div class="psc-paid-notice" style="background:#EBF3FE; border-top-color:#BEDAF5; color:#1A3A6B;"> Final payment paid — waiting for baker to confirm delivery</div>
                 @elseif($finalIsPending)
                     <div class="psc-paid-notice" style="background:#EBF3FE; border-top-color:#BEDAF5; color:#1A3A6B;">⏳ Proof submitted — under review</div>
                 @elseif($finalPayment && $finalPayment->isPaid())
-                    <div class="psc-paid-notice" style="background:#EFF5EF; border-top-color:#BFDFBE; color:#1B4D2E;">✅ Final payment confirmed — confirm receipt below</div>
+                    <div class="psc-paid-notice" style="background:#EFF5EF; border-top-color:#BFDFBE; color:#1B4D2E;"> Final payment confirmed — confirm receipt below</div>
                 @elseif($cakeRequest->isPickup())
-                    <div class="psc-paid-notice">🏪 Pay ₱{{ number_format($downpaymentAmount, 2) }} cash when you collect</div>
+                    <div class="psc-paid-notice"> Pay ₱{{ number_format($downpaymentAmount, 2) }} cash when you collect</div>
                 @else
                     <div class="psc-cta">
                         @php $customerWallet = \App\Models\Wallet::forUser(auth()->id()); @endphp
                         @if($customerWallet->hasEnough(round($bakerOrder->agreed_price * 0.5, 2)))
                         <button type="button" onclick="openConfirmModal('modal-pay-final')" class="psc-pay-btn" style="background:linear-gradient(135deg,#7B4A1E,#C07840); border:none; cursor:pointer; width:100%;">
-                            ✅ Confirm Cake & Pay ₱{{ number_format(round($bakerOrder->agreed_price * 0.5, 2), 2) }}
+                             Confirm Cake & Pay ₱{{ number_format(round($bakerOrder->agreed_price * 0.5, 2), 2) }}
                         </button>
                         <p class="psc-cta-note">Wallet: ₱{{ number_format($customerWallet->balance, 2) }}</p>
                         @else
@@ -1714,7 +1735,7 @@ if ($acceptedBid) {
     $cakeBasePrice  = $acceptedBid->amount;
 @endphp
                             <div style="display:flex; gap:0.5rem; margin-top:0.35rem; flex-wrap:wrap;">
-                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 6px; font-weight:700;">⚡ Rush Order</span>
+                                <span style="font-size:0.62rem; background:#FEF3E8; color:#C8562A; border:1px solid #F0C0A0; border-radius:4px; padding:1px 6px; font-weight:700; display:inline-flex; align-items:center; gap:2px;"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush Order</span>
                                 <span style="font-size:0.62rem; color:var(--text-muted);">Cake ₱{{ number_format($cakeBasePrice, 2) }} + Rush ₱{{ number_format($rushFeeDisplay, 2) }}</span>
                             </div>
                             @endif
@@ -1797,12 +1818,12 @@ if ($acceptedBid) {
                         @endif
                     </div>
                 </div>
-                <div class="psc-paid-notice">🎉 All payments complete!</div>
+                <div class="psc-paid-notice"> All payments complete!</div>
             </div>
             @endif
 
             <div class="card">
-                <div class="card-header"><h3>⚙️ Actions</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Actions</h3></div>
                 <div style="padding:1.25rem 1.5rem;">
                 @if(in_array($cakeRequest->status, ['OPEN', 'ACCEPTED']))
                         <form id="form-cancel-request-sidebar" method="POST" action="{{ route('customer.cake-requests.destroy', $cakeRequest->id) }}">@csrf @method('DELETE')</form>
@@ -1814,7 +1835,7 @@ if ($acceptedBid) {
     @elseif($effectiveStatus === 'WAITING_FINAL_PAYMENT' && !$finalIsRejected)
                         @if($cakeRequest->isPickup())
                             <div style="background:#FEF9E8; border:1.5px solid #F0D090; border-radius:10px; padding:0.85rem 1rem; font-size:0.78rem; color:#8A5010; font-weight:600; text-align:center; margin-bottom:0.75rem;">
-                                🏪 Go to the baker and pay <strong>₱{{ number_format(round($bakerOrder?->agreed_price * 0.5, 2), 2) }}</strong> cash to collect your cake.
+                                 Pickup the cake and pay <strong>₱{{ number_format(round($bakerOrder?->agreed_price * 0.5, 2), 2) }}</strong> cash to collect your cake.
                             </div>
                         @elseif($finalIsPending)
                             <div style="background:#FEF9E8; border:1.5px solid #F0D090; border-radius:10px; padding:0.85rem 1rem; font-size:0.78rem; color:#8A5010; font-weight:600; text-align:center; margin-bottom:0.75rem;">
@@ -1825,7 +1846,7 @@ if ($acceptedBid) {
                                 @csrf
                             </form>
                             <button type="button" onclick="openConfirmModal('modal-confirm-received')" style="width:100%; padding:0.75rem; background:linear-gradient(135deg,#5C3D2E,#9B6030); color:white; border:none; border-radius:10px; font-size:0.875rem; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; box-shadow:0 4px 12px rgba(92,61,46,0.3); transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:0.4rem; margin-bottom:0.5rem;">
-                                🎉 Cake Received — Complete Order
+                                 Cake Received — Complete Order
                             </button>
                             <p style="font-size:0.72rem; color:var(--text-muted); text-align:center; line-height:1.5; margin-bottom:0.5rem;">Click once you have physically received your cake.</p>
                         @else
@@ -1834,7 +1855,7 @@ if ($acceptedBid) {
                     @elseif($downIsRejected || $finalIsRejected)
                         <div style="background:#FDF0EE; border:1.5px solid #F5C5BE; border-radius:10px; padding:0.85rem 1rem; font-size:0.78rem; color:#8B2A1E; font-weight:600; text-align:center; margin-bottom:0.75rem;">❌ Re-upload your proof above to continue</div>
                     @elseif($cakeRequest->status === 'COMPLETED')
-                        <p style="font-size:0.82rem; color:var(--caramel,#C07840); font-weight:600; text-align:center; padding:0.5rem 0;">🎉 Order complete!</p>
+                        <p style="font-size:0.82rem; color:var(--caramel,#C07840); font-weight:600; text-align:center; padding:0.5rem 0;"> Order complete!</p>
                         @if($bakerOrder)
                         @php $alreadyReported = \App\Models\Report::where('reporter_id', auth()->id())->where('baker_order_id', $bakerOrder->id)->exists(); @endphp
                         @if(!$alreadyReported)
@@ -1866,7 +1887,7 @@ if ($acceptedBid) {
             </div>
 
             <div class="card">
-                <div class="card-header"><h3>🕐 Activity Log</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity Log</h3></div>
                 <ul class="timeline-log">
                     <li><div class="log-dot"></div><div><div class="log-event">Request submitted</div><div class="log-time">{{ $cakeRequest->created_at->format('M d, Y · g:i A') }}</div></div></li>
                     @if($cakeRequest->bids->count() > 0)
@@ -1891,10 +1912,10 @@ if ($acceptedBid) {
                     <li><div class="log-dot" style="background:#5C3D2E;"></div><div><div class="log-event">📸 Cake photo received from baker</div><div class="log-time">Baker marked cake as ready</div></div></li>
                     @endif
                     @if($effectiveStatus === 'WAITING_FINAL_PAYMENT' && !$finalIsRejected && (!$finalPayment || !$finalPayment->isPaid()))
-                    <li><div class="log-dot" style="background:#c8862a;"></div><div><div class="log-event" style="color:#c8862a;">{{ $cakeRequest->isPickup() ? '🏪 Cake ready for pickup' : '💰 Final payment requested' }}</div><div class="log-time">Action required</div></div></li>
+                    <li><div class="log-dot" style="background:#c8862a;"></div><div><div class="log-event" style="color:#c8862a;">{{ $cakeRequest->isPickup() ? ' Cake ready for pickup' : '💰 Final payment requested' }}</div><div class="log-time">Action required</div></div></li>
                     @endif
                     @if($cakeRequest->status === 'COMPLETED')
-                    <li><div class="log-dot" style="background:var(--caramel,#C07840);"></div><div><div class="log-event" style="color:var(--caramel,#C07840);">{{ $cakeRequest->isPickup() ? 'Cake collected 🎉' : 'Order delivered 🎉' }}</div><div class="log-time">{{ $bakerOrder?->completed_at?->format('M d, Y · g:i A') }}</div></div></li>
+                    <li><div class="log-dot" style="background:var(--caramel,#C07840);"></div><div><div class="log-event" style="color:var(--caramel,#C07840);">{{ $cakeRequest->isPickup() ? 'Cake collected ' : 'Order delivered ' }}</div><div class="log-time">{{ $bakerOrder?->completed_at?->format('M d, Y · g:i A') }}</div></div></li>
                     @endif
                 </ul>
             </div>
@@ -1902,7 +1923,7 @@ if ($acceptedBid) {
         {{-- Reference Image --}}
             @if($cakeRequest->reference_image)
             <div class="card">
-                <div class="card-header"><h3>🖼️ Reference Image</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Reference Image</h3></div>
                 <img src="{{ asset('storage/'.$cakeRequest->reference_image) }}" alt="Reference" style="width:100%; max-height:220px; object-fit:cover; border-radius:0 0 20px 20px;">
             </div>
             @endif
@@ -1981,14 +2002,14 @@ if ($acceptedBid) {
     <div class="confirm-modal-backdrop" id="modal-cancel-request" role="dialog" aria-modal="true">
         <div class="confirm-modal">
             <div class="confirm-modal-header variant-danger">
-                <div class="confirm-modal-icon">✕</div>
+                <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
                 <div class="confirm-modal-title">Cancel This Request?</div>
                 <div class="confirm-modal-subtitle">This action cannot be undone</div>
             </div>
             <div class="confirm-modal-body">
                 <div class="confirm-modal-detail">
                     <div class="confirm-modal-detail-row"><span class="confirm-modal-detail-key">Order ID</span><span class="confirm-modal-detail-val">#{{ str_pad($cakeRequest->id, 4, '0', STR_PAD_LEFT) }}</span></div>
-                    <div class="confirm-modal-detail-row"><span class="confirm-modal-detail-key">Delivery Date</span><span class="confirm-modal-detail-val">{{ $cakeRequest->delivery_date->format('M d, Y') }}</span></div>
+                    <div class="confirm-modal-detail-row"><span class="confirm-modal-detail-key">Date & time needed</span><span class="confirm-modal-detail-val">{{ $cakeRequest->delivery_date->format('M d, Y') }}</span></div>
                     <div class="confirm-modal-detail-row"><span class="confirm-modal-detail-key">Current Status</span><span class="confirm-modal-detail-val">{{ str_replace('_', ' ', $cakeRequest->status) }}</span></div>
                 </div>
                 <p class="confirm-modal-note">Cancelling will remove this request permanently. You can always create a new one from your dashboard.</p>
@@ -2007,7 +2028,7 @@ if ($acceptedBid) {
 
             {{-- HEADER --}}
             <div class="modal-header" style="flex-shrink:0;">
-                <span class="modal-header-icon">🎂</span>
+                <span class="modal-header-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></span>
                 <div class="modal-header-title">Confirm Your Baker</div>
                 <div class="modal-header-sub">Review details before accepting this bid</div>
             </div>
@@ -2056,7 +2077,7 @@ if ($acceptedBid) {
                     </button>
                 </div>
 
-                {{-- RIGHT: Fulfillment + Price --}}
+                {{-- RIGHT: Method + Price --}}
                 <div style="padding:1.25rem; display:flex; flex-direction:column; gap:0.75rem; overflow-y:auto;">
 
                     {{-- Smart suggestion banner --}}
@@ -2079,7 +2100,7 @@ if ($acceptedBid) {
                             </label>
     <label id="modal-ft-pickup" onclick="setModalFulfillment('pickup')" style="border:2px solid var(--border,#EAE0D0); border-radius:10px; padding:0.6rem 0.7rem; cursor:pointer; background:white; position:relative; transition:all 0.2s;">                            <input type="radio" name="modal_fulfillment" value="pickup" style="position:absolute;opacity:0;width:0;height:0;">
                                 <div style="display:flex; align-items:center; gap:0.5rem;">
-                                    <span style="font-size:1.1rem;">🏪</span>
+                                    <span style="font-size:1.1rem;"></span>
                                     <div>
                                         <div style="font-weight:700; font-size:0.78rem; color:var(--brown-deep);">Pickup</div>
                                         <div style="font-size:0.62rem; color:var(--text-muted);">Collect · Pay cash</div>
@@ -2088,7 +2109,7 @@ if ($acceptedBid) {
                             </label>
                         </div>
                         <div id="modalPickupNotice" style="display:none; margin-top:0.5rem; background:#FEF9E8; border:1.5px solid #F0D090; border-radius:8px; padding:0.55rem 0.75rem; font-size:0.72rem; color:#8A5010; line-height:1.5;">
-                            🏪 Baker's address shared after confirmation. Pay final 50% in cash when you collect.
+                             Baker's address shared after confirmation. Pay final 50% in cash when you collect.
                         </div>
                     </div>
 
@@ -2144,7 +2165,7 @@ if ($acceptedBid) {
     <div class="modal-backdrop" id="reviewsModal" role="dialog" aria-modal="true" style="z-index:10000;">
         <div class="modal-box" style="max-width:480px; max-height:88vh; display:flex; flex-direction:column;">
             <div class="modal-header">
-                <span class="modal-header-icon">⭐</span>
+                <span class="modal-header-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
                 <div class="modal-header-title" id="reviewsModalTitle">Baker Reviews</div>
                 <div class="modal-header-sub" id="reviewsModalSub">Loading…</div>
             </div>
@@ -2173,7 +2194,7 @@ if ($acceptedBid) {
     <div class="confirm-modal-backdrop" id="modal-pay-downpayment" role="dialog" aria-modal="true">
         <div class="confirm-modal">
             <div class="confirm-modal-header variant-accept">
-                <div class="confirm-modal-icon">₱</div>
+                <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg></div>
                 <div class="confirm-modal-title">Confirm Downpayment?</div>
                 <div class="confirm-modal-subtitle">This will be deducted from your wallet immediately</div>
             </div>
@@ -2214,7 +2235,7 @@ if ($acceptedBid) {
     <div class="confirm-modal-backdrop" id="modal-pay-final" role="dialog" aria-modal="true">
         <div class="confirm-modal">
             <div class="confirm-modal-header variant-accept">
-                <div class="confirm-modal-icon">🎂</div>
+                <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg></div>
                 <div class="confirm-modal-title">Confirm Final Payment?</div>
                 <div class="confirm-modal-subtitle">Your cake is ready — pay to receive delivery</div>
             </div>
@@ -2254,7 +2275,7 @@ if ($acceptedBid) {
     <div class="confirm-modal-backdrop" id="modal-cancel-in-progress" role="dialog" aria-modal="true">
         <div class="confirm-modal">
             <div class="confirm-modal-header variant-danger">
-                <div class="confirm-modal-icon">⚠️</div>
+                <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
                 <div class="confirm-modal-title">Cancel This Order?</div>
                 <div class="confirm-modal-subtitle">Your baker is already preparing your cake</div>
             </div>
@@ -2285,7 +2306,7 @@ if ($acceptedBid) {
     <div class="confirm-modal-backdrop" id="modal-confirm-received" role="dialog" aria-modal="true">
         <div class="confirm-modal">
             <div class="confirm-modal-header variant-accept">
-                <div class="confirm-modal-icon">🎉</div>
+                <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
                 <div class="confirm-modal-title">Confirm Cake Received?</div>
                 <div class="confirm-modal-subtitle">This will complete your order and release payment to your baker</div>
             </div>
@@ -2312,7 +2333,7 @@ if ($acceptedBid) {
                 <button class="confirm-modal-btn-cancel" onclick="closeConfirmModal('modal-confirm-received')">Not Yet</button>
                 <button class="confirm-modal-btn-ok style-accept" onclick="submitConfirmReceived(this)">
                     <span class="btn-spinner"></span>
-                    <span class="btn-text">🎉 Yes, I Got My Cake!</span>
+                    <span class="btn-text"> Yes, I Got My Cake!</span>
                 </button>
             </div>
         </div>
@@ -2948,7 +2969,7 @@ document.getElementById('modalPrice').textContent = '₱' + agreedTotal.toLocale
 
         // Name / shop
         document.getElementById('bpd-name').textContent = d.name;
-        document.getElementById('bpd-shop').textContent  = d.shop_name ? '🏪 ' + d.shop_name : '';
+        document.getElementById('bpd-shop').textContent  = d.shop_name ? ' ' + d.shop_name : '';
 
         // Rating row
         const ratingRow = document.getElementById('bpd-rating-row');
@@ -2971,8 +2992,8 @@ document.getElementById('modalPrice').textContent = '₱' + agreedTotal.toLocale
         const expVal  = expMap[d.experience] || d.experience || null;
         const portVal = d.portfolio && d.portfolio.length > 0 ? d.portfolio.length + ' photo' + (d.portfolio.length !== 1 ? 's' : '') : null;
         const stats = [
-            ['⏱️', 'Experience', expVal],
-            ['🎂', 'Designs',    portVal],
+            ['<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', 'Experience', expVal],
+            ['<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>', 'Designs', portVal],
         ];
     document.getElementById('bpd-stats').innerHTML = `
             <div style="display:grid;grid-template-columns:1fr 1fr;width:100%;border-top:1px solid #EAE0D0;">

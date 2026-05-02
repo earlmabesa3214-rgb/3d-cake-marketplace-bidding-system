@@ -19,7 +19,9 @@
             <div class="bal-card-bg"></div>
             <div class="bal-label">Available Balance</div>
             <div class="bal-amount">₱{{ number_format($wallet->balance, 2) }}</div>
-            <div class="wallet-icon-bg">💳</div>
+            <div class="wallet-icon-bg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
         </div>
         <div class="stat-card stat-deposited">
             <div class="stat-lbl">Total Deposited</div>
@@ -34,7 +36,9 @@
     {{-- PENDING NOTICE --}}
     @if($pendingCashin)
         <div class="pending-notice">
-            <div class="pending-icon">⏳</div>
+            <div class="pending-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
             <div class="pending-text">
                 <strong>Cash-in Pending Review</strong>
                 <span>₱{{ number_format($pendingCashin->amount, 2) }} — GCash Ref: {{ $pendingCashin->gcash_reference }}</span>
@@ -43,17 +47,19 @@
         </div>
     @endif
 
-<div class="wallet-grid {{ $pendingCashin ? 'no-cashin' : '' }}">
+    <div class="wallet-grid {{ $pendingCashin ? 'no-cashin' : '' }}">
 
         {{-- CASH IN FORM --}}
         @if(!$pendingCashin)
         <div class="card cashin-card">
             <div class="card-head">
-                <div class="card-title">💰 Top Up via GCash</div>
+          <div class="card-title">
+                    Top Up via GCash
+                </div>
                 <div class="card-desc">Send money to our GCash number, then upload your proof here.</div>
             </div>
 
-            <div class="gcash-info-box">
+         <div class="gcash-info-box">
                 <div class="gcash-number-label">Send to GCash Number</div>
                 <div class="gcash-number">0917 – XXX – XXXX</div>
                 <div class="gcash-name">BakeSphere Official</div>
@@ -90,7 +96,9 @@
                         <input type="file" name="proof" id="proofFile" accept="image/jpg,image/jpeg,image/png"
                                class="file-input @error('proof') is-error @enderror" required onchange="previewFile(this)">
                         <div class="file-drop-content" id="fileDropContent">
-                            <div class="file-drop-icon">📸</div>
+                            <div class="file-drop-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            </div>
                             <div class="file-drop-text">Click or drag your GCash screenshot here</div>
                             <div class="file-drop-sub">JPG, JPEG, PNG — max 5MB</div>
                         </div>
@@ -106,48 +114,55 @@
         {{-- TRANSACTION HISTORY --}}
         <div class="card txn-card">
             <div class="card-head">
-                <div class="card-title">📋 Transaction History</div>
+                <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Transaction History
+                </div>
             </div>
 
             @if($transactions->isEmpty())
                 <div class="empty-state">
-                    <div class="empty-icon">🪙</div>
+                    <div class="empty-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.35;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
                     <p>No transactions yet.</p>
                     <span>Your transaction history will appear here.</span>
                 </div>
             @else
-<div class="card-body-scroll"><table class="txn-table">
-                    <thead>
-                        <tr>
-                            <th style="width:38%">Description</th>
-                            <th style="width:18%">Type</th>
-                            <th style="width:26%">Date</th>
-                            <th style="width:18%;text-align:right">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($transactions as $txn)
-                        <tr>
-                            <td>
-                                <div class="txn-type">{{ $txn->typeLabel() }}</div>
-                                <div class="txn-desc">{{ $txn->description ?? '—' }}</div>
-                            </td>
-                            <td>
-                                <span class="badge {{ $txn->isCredit() ? 'badge-credit' : 'badge-debit' }}">
-                                    {{ $txn->isCredit() ? 'Credit' : 'Debit' }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="txn-date-main">{{ $txn->created_at->format('M d, Y') }}</div>
-                                <div class="txn-date-sub">{{ $txn->created_at->format('h:i A') }}</div>
-                            </td>
-                            <td class="{{ $txn->isCredit() ? 'amount-green' : 'amount-red' }}">
-                                {{ $txn->isCredit() ? '+' : '-' }}₱{{ number_format($txn->amount, 2) }}
-                            </td>
-                        </tr>
-                        @endforeach
-  </tbody>
-                </table></div>
+                <div class="card-body-scroll">
+                    <table class="txn-table">
+                        <thead>
+                            <tr>
+                                <th style="width:38%">Description</th>
+                                <th style="width:18%">Type</th>
+                                <th style="width:26%">Date</th>
+                                <th style="width:18%;text-align:right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($transactions as $txn)
+                            <tr>
+                                <td>
+                                    <div class="txn-type">{{ $txn->typeLabel() }}</div>
+                                    <div class="txn-desc">{{ $txn->description ?? '—' }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge {{ $txn->isCredit() ? 'badge-credit' : 'badge-debit' }}">
+                                        {{ $txn->isCredit() ? 'Credit' : 'Payment' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="txn-date-main">{{ $txn->created_at->format('M d, Y') }}</div>
+                                    <div class="txn-date-sub">{{ $txn->created_at->format('h:i A') }}</div>
+                                </td>
+                                <td class="{{ $txn->isCredit() ? 'amount-green' : 'amount-red' }}">
+                                    {{ $txn->isCredit() ? '+' : '-' }}₱{{ number_format($txn->amount, 2) }}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </div>
 
@@ -157,7 +172,8 @@
 <style>
 .wallet-page { padding: 0 2rem 1.5rem; max-width: 100%; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--brown-deep); letter-spacing: -0.02em; margin: 0; }.page-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--brown-deep); letter-spacing: -0.02em; margin: 0; }
+.page-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
 
 .alert { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; border-radius: 10px; font-size: 0.9rem; font-weight: 500; margin-bottom: 1.25rem; }
 .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
@@ -170,7 +186,7 @@
 .bal-card-bg { position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; background: rgba(255,255,255,0.07); border-radius: 50%; }
 .bal-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 0.35rem; position: relative; z-index: 1; }
 .bal-amount { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; position: relative; z-index: 1; }
-.wallet-icon-bg { position: absolute; bottom: -10px; right: 16px; font-size: 4.5rem; opacity: 0.1; z-index: 0; user-select: none; }
+.wallet-icon-bg { position: absolute; bottom: -10px; right: 16px; opacity: 0.1; z-index: 0; user-select: none; color: white; }
 
 .stat-card { background: var(--warm-white, #fff); border: 1px solid var(--border, #e8e0d8); border-radius: 16px; padding: 1.25rem 1.5rem; }
 .stat-lbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted, #9a8a7a); margin-bottom: 0.35rem; }
@@ -180,12 +196,12 @@
 
 /* PENDING */
 .pending-notice { display: flex; align-items: flex-start; gap: 1rem; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
-.pending-icon { font-size: 1.4rem; }
+.pending-icon { flex-shrink: 0; margin-top: 0.1rem; }
 .pending-text { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.875rem; color: #92400e; }
 .pending-text strong { font-size: 0.9rem; color: #78350f; }
 .pending-sub { font-size: 0.78rem; opacity: 0.8; }
+
 .wallet-grid { display: grid; grid-template-columns: 400px 1fr; gap: 1.25rem; }
-.wallet-grid.no-cashin { grid-template-columns: 1fr; }
 .wallet-grid.no-cashin { grid-template-columns: 1fr; }
 @media (max-width: 900px) { .wallet-grid { grid-template-columns: 1fr; } .balance-row { grid-template-columns: 1fr; } }
 
@@ -220,7 +236,7 @@
 .file-drop-area:hover { border-color: #c8894a; background: rgba(200,137,74,0.04); }
 .file-input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 .file-drop-content { pointer-events: none; }
-.file-drop-icon { font-size: 1.5rem; margin-bottom: 0.35rem; }
+.file-drop-icon { margin-bottom: 0.35rem; display: flex; justify-content: center; }
 .file-drop-text { font-size: 0.78rem; font-weight: 600; color: var(--text-dark, #374151); }
 .file-drop-sub { font-size: 0.68rem; color: var(--text-muted, #9a8a7a); margin-top: 0.15rem; }
 .file-preview { max-height: 100px; border-radius: 8px; object-fit: contain; width: 100%; }
@@ -254,7 +270,7 @@
 .pagination li.disabled span { opacity: 0.4; cursor: not-allowed; }
 
 .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted, #9a8a7a); }
-.empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.empty-icon { display: flex; justify-content: center; margin-bottom: 0.75rem; }
 .empty-state p { font-size: 0.9rem; font-weight: 600; color: var(--text-dark, #555); margin: 0 0 0.2rem; }
 .empty-state span { font-size: 0.78rem; }
 </style>

@@ -189,13 +189,11 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 <div class="sidebar-brand">
     <div class="brand-logo">
 <div class="brand-icon">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
-        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
-        <line x1="6" y1="1" x2="6" y2="4"/>
-        <line x1="10" y1="1" x2="10" y2="4"/>
-        <line x1="14" y1="1" x2="14" y2="4"/>
-    </svg>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 17h12v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2z"/>
+    <path d="M6 17v-2.5C4 13.5 3 12 3 10a5 5 0 0 1 5-5 5 5 0 0 1 4 2 5 5 0 0 1 4-2 5 5 0 0 1 5 5c0 2-1 3.5-3 4.5V17"/>
+    <line x1="6" y1="15" x2="18" y2="15"/>
+</svg>
 </div>
         <div class="brand-text">
             <div class="brand-name">BakeSphere</div>
@@ -212,7 +210,8 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 
         <div class="nav-section-label">Work</div>
       <a href="{{ route('baker.requests.index') }}" class="nav-link {{ request()->routeIs('baker.requests*') ? 'active' : '' }}">
-            <span class="icon">🎂</span> <span style="white-space:nowrap;">Browse Cake Orders</span>
+         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>
+<span style="white-space:nowrap;">Browse Cake Orders</span>
             @php $openCount = \App\Models\CakeRequest::where('status', 'OPEN')->count(); @endphp
             @if($openCount > 0)
             <span style="margin-left:auto; background:var(--caramel); color:white; font-size:0.65rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:10px;">{{ $openCount }}</span>
@@ -227,20 +226,20 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 
    <div class="nav-section-label">Finance</div>
         @php $bakerWalletBalance = \App\Models\Wallet::forUser(auth()->id())->balance; @endphp
-        <a href="{{ route('baker.wallet.index') }}" class="nav-link {{ request()->routeIs('baker.wallet*') ? 'active' : '' }}">
-            <span class="icon">₱</span>
+  <a href="{{ route('baker.wallet.index') }}" class="nav-link {{ request()->routeIs('baker.wallet*') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/><path d="M2 10h20"/></svg>
             <span style="flex:1;">Wallet</span>
             <span style="background:rgba(200,137,74,0.25); color:var(--caramel-light); font-size:0.65rem; font-weight:700; padding:0.1rem 0.5rem; border-radius:8px; white-space:nowrap;">
                 ₱{{ number_format($bakerWalletBalance, 0) }}
             </span>
         </a>
         <a href="{{ route('baker.earnings.index') }}" class="nav-link {{ request()->routeIs('baker.earnings*') ? 'active' : '' }}">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Earnings
+<span class="icon" style="font-size:0.9rem; font-weight:700;">₱</span> Earnings
         </a>
 
         <div class="nav-section-label">Account</div>
         <a href="{{ route('baker.profile.index') }}" class="nav-link {{ request()->routeIs('baker.profile*') ? 'active' : '' }}">
-            <span class="icon">👤</span> Profile & Portfolio
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profile
         </a>
         <a href="{{ route('baker.notifications.index') }}" class="nav-link {{ request()->routeIs('baker.notifications*') ? 'active' : '' }}">
             <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Notifications

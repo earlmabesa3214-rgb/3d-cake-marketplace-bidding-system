@@ -98,8 +98,8 @@
 <div class="filters">
     <span style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">Sort:</span>
     <a href="{{ route('baker.requests.index', array_merge(request()->query(), ['sort'=>'newest'])) }}" class="filter-btn {{ request('sort','newest')==='newest' ? 'active':'' }}">Newest</a>
-    <a href="{{ route('baker.requests.index', array_merge(request()->query(), ['sort'=>'deadline'])) }}" class="filter-btn {{ request('sort')==='deadline' ? 'active':'' }}">🔥 Urgent First</a>
-    <a href="{{ route('baker.requests.index', array_merge(request()->query(), ['sort'=>'budget_high'])) }}" class="filter-btn {{ request('sort')==='budget_high' ? 'active':'' }}">💰 High Budget</a>
+    <a href="{{ route('baker.requests.index', array_merge(request()->query(), ['sort'=>'deadline'])) }}" class="filter-btn {{ request('sort')==='deadline' ? 'active':'' }}"> Urgent First</a>
+    <a href="{{ route('baker.requests.index', array_merge(request()->query(), ['sort'=>'budget_high'])) }}" class="filter-btn {{ request('sort')==='budget_high' ? 'active':'' }}"> High Budget</a>
     <span style="width:1px;height:20px;background:var(--border);"></span>
     <form method="GET" class="search-bar">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by flavor, shape…">
@@ -136,7 +136,7 @@ $daysLeft = (int) now()->diffInDays($req->delivery_date, false);
                 <span class="req-detail-label">Cake Needed by</span>
                 <span class="req-detail-val {{ $daysLeft <= 3 ? 'urgency-high' : 'urgency-normal' }}">
                     {{ $req->delivery_date->format('M d, Y') }}
-                    @if($daysLeft <= 3) 🔥 @endif
+                    @if($daysLeft <= 3)  @endif
                     <span style="font-weight:400; font-size:0.7rem; color:var(--text-muted);"> ({{ $daysLeft }}d)</span>
                 </span>
             </div>

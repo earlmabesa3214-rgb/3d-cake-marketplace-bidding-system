@@ -508,7 +508,7 @@
         'READY'                 => ['icon' => '📦', 'label' => 'Ready',          'sub' => 'Cake is ready for delivery'],
         'WAITING_FINAL_PAYMENT' => ['icon' => '₱', 'label' => 'Awaiting Final', 'sub' => 'Waiting for final payment'],
         'DELIVERED'             => ['icon' => '🚚', 'label' => 'Delivered',      'sub' => 'Cake delivered'],
-        'COMPLETED'             => ['icon' => '🎉', 'label' => 'Completed',      'sub' => 'Order fully completed'],
+        'COMPLETED'             => ['icon' => '', 'label' => 'Completed',      'sub' => 'Order fully completed'],
         'CANCELLED'             => ['icon' => '✕',  'label' => 'Cancelled',      'sub' => 'Order cancelled'],
     ];
 
@@ -537,9 +537,9 @@
 
     if ($isPickup) {
         $statusLabels['WAITING_FINAL_PAYMENT']['label'] = 'Pickup Pay';
-        $statusLabels['WAITING_FINAL_PAYMENT']['icon']  = '🏪';
+        $statusLabels['WAITING_FINAL_PAYMENT']['icon']  = '';
         $statusLabels['DELIVERED']['label'] = 'Collected';
-        $statusLabels['DELIVERED']['icon']  = '🏪';
+        $statusLabels['DELIVERED']['icon']  = '';
     }
 
     $rejectionReasons = \App\Models\Payment::REJECTION_REASONS;
@@ -560,7 +560,7 @@
   {{-- ── HERO ── --}}
     @php
         $heroTitle = $info['icon'] . ' ' . $info['label'];
-        $heroSub   = $isPickup ? '🏪 Pickup order — customer will collect and pay cash on pickup' : $info['sub'];
+        $heroSub   = $isPickup ? ' Pickup order — customer will collect and pay cash on pickup' : $info['sub'];
         if ($order->status === 'WAITING_FINAL_PAYMENT' && $finalEscrow === 'held') {
             $heroTitle = 'Out for Delivery';
             $heroSub   = 'Payment secured — deliver the cake. Your payment releases once the customer confirms receipt.';
@@ -574,7 +574,7 @@
                 <div class="hero-sub">{{ $heroSub }}</div>
             </div>
             <div class="status-badge">
-                @if($isPickup)<span style="font-size:0.75rem;">🏪</span>@endif
+                @if($isPickup)<span style="font-size:0.75rem;"></span>@endif
                 {{ str_replace('_', ' ', $order->status) }}
             </div>
         </div>
@@ -611,7 +611,7 @@
             {{-- ── ACTIONS CARD (all states except ACCEPTED/COMPLETED/CANCELLED/DELIVERED) ── --}}
             @if(!in_array($order->status, ['ACCEPTED','COMPLETED','CANCELLED','DELIVERED']))
             <div class="card">
-                <div class="card-header"><h3>⚡ Actions</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Actions</h3></div>
                 <div class="action-area">
 
                @if($order->status === 'WAITING_FOR_PAYMENT')
@@ -644,7 +644,7 @@
                             @csrf
                         </form>
                         <div style="width:100%; background:#FEF9E8; border:1.5px solid #F0D090; border-radius:12px; padding:1rem 1.25rem;">
-                            <div style="font-size:1.2rem; margin-bottom:0.4rem;">🏪</div>
+                            <div style="font-size:1.2rem; margin-bottom:0.4rem;"></div>
                             <div style="font-weight:700; font-size:0.85rem; color:#8A5010; margin-bottom:0.25rem;">Customer Notified — Waiting for Pickup</div>
                             <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">The customer has been notified that their cake is ready. Wait for them to arrive at your location with <strong>₱{{ number_format(round($order->agreed_price * 0.5, 2), 2) }}</strong> cash.</div>
                         </div>
@@ -668,7 +668,7 @@
                     @elseif($order->status === 'WAITING_FINAL_PAYMENT')
                         @if($isPickup)
                             <div class="waiting-box has-proof" style="background:#FEF9E8; border-color:#F0D090; width:100%;">
-                                <div class="w-icon">🏪</div>
+                                <div class="w-icon"></div>
                                 <div class="w-title" style="color:#8A5010;">Waiting for customer to arrive</div>
                                 <div class="w-sub">When the customer arrives and pays cash, click below to complete the order.</div>
                             </div>
@@ -689,7 +689,7 @@
     @if($finalEscrow === 'held')
     <button type="button" class="btn-confirm-pay"
         onclick="openConfirmModal('modal-confirm-final')">
-        🎉 Confirm Delivered & Complete
+         Confirm Delivered & Complete
     </button>
     <p class="action-note" style="color:#1A3A6B;">✓ Final payment verified and held in escrow.</p>
     @else
@@ -725,7 +725,7 @@
             @elseif(in_array($order->status, ['COMPLETED','DELIVERED']))
             <div class="card">
                 <div style="padding:2rem; text-align:center;">
-                    <div style="font-size:2.5rem; margin-bottom:0.75rem;">🎉</div>
+                    <div style="margin-bottom:0.75rem;"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--caramel)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
                     <div style="font-weight:700; color:var(--brown-deep); font-size:1rem;">Order Complete!</div>
                     <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.3rem;">
                         @if($isPickup) Cash received and order completed.
@@ -737,7 +737,7 @@
 {{-- ── 3D CAKE PREVIEW ── --}}
 @if($order->cakeRequest->cake_preview_image)
 <div class="card">
-    <div class="card-header"><h3>🎂 Cake Design Preview</h3></div>
+    <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Cake Design Preview</h3></div>
     <img src="{{ asset('storage/' . $order->cakeRequest->cake_preview_image) }}"
          alt="3D Cake Preview"
          style="width:100%; max-height:320px; object-fit:cover; display:block;">
@@ -748,7 +748,7 @@
 @endif
           {{-- ── CAKE & ORDER DETAILS (combined) ── --}}
             <div class="card">
-                <div class="card-header"><h3>🎂 Cake & Order Details</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake &amp; Order Details</h3></div>
                 <div class="config-grid">
                     @foreach(['shape','size','flavor','frosting'] as $key)
                         @if(!empty($config[$key]))
@@ -814,7 +814,7 @@
             @if(!$isPickup && $order->cakeRequest->delivery_lat && $order->cakeRequest->delivery_lng)
             <div class="card">
                 <div class="card-header">
-                    <h3>📍 Customer's Delivery Location</h3>
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Customer's Delivery Location</h3>
                 </div>
               
                 <div id="baker-delivery-map" style="width:100%; height:260px;"></div>
@@ -837,7 +837,7 @@
                 @if($isPickup)
                 <hr class="id-divider">
                 <div class="id-sub">Type</div>
-                <div class="id-val" style="color:#F0D090; font-size:0.85rem;">🏪 Pickup Order</div>
+                <div class="id-val" style="color:#F0D090; font-size:0.85rem;"> Pickup Order</div>
                 @endif
                 <hr class="id-divider">
                 <div class="id-sub">Agreed Price</div>
@@ -906,7 +906,7 @@
 
   @if(in_array($order->status, ['DELIVERED','COMPLETED']))
                 <div style="padding:0.75rem 1rem; background:#EFF5EF; border-top:1px solid #BFDFBE; font-size:0.75rem; color:#1B4D2E; font-weight:600; display:flex; align-items:center; gap:0.4rem;">
-                    🎉 Funds released! <a href="{{ route('baker.wallet.index') }}" style="color:var(--caramel); font-weight:700;">View wallet →</a>
+                     Funds released! <a href="{{ route('baker.wallet.index') }}" style="color:var(--caramel); font-weight:700;">View wallet →</a>
                 </div>
                 @endif
             </div>
@@ -914,13 +914,13 @@
 
             @if($order->cakeRequest->reference_image)
             <div class="card">
-                <div class="card-header"><h3>🖼️ Reference</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Reference</h3></div>
                 <img src="{{ asset('storage/'.$order->cakeRequest->reference_image) }}" alt="Reference" style="width:100%; max-height:220px; object-fit:cover;">
             </div>
             @endif
 
             <div class="card">
-                <div class="card-header"><h3>🕐 Activity</h3></div>
+                <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activity</h3></div>
                 <ul class="timeline-log">
                     <li>
                         <div class="log-dot"></div>
@@ -955,7 +955,7 @@
                     <li>
                         <div class="log-dot" style="background:var(--caramel);"></div>
                         <div>
-                            <div class="log-event" style="color:var(--caramel);">🎉 Order {{ $isPickup ? 'collected & completed' : 'completed' }}</div>
+                            <div class="log-event" style="color:var(--caramel);"> Order {{ $isPickup ? 'collected & completed' : 'completed' }}</div>
                             <div class="log-time">{{ $order->completed_at->format('M d, Y · g:i A') }}</div>
                         </div>
                     </li>
@@ -973,7 +973,7 @@
 <div class="confirm-modal-backdrop" id="modal-mark-ready" role="dialog" aria-modal="true">
     <div class="confirm-modal">
         <div class="confirm-modal-header variant-advance">
-            <div class="confirm-modal-icon">{{ $isPickup ? '🏪' : '📦' }}</div>
+            <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
             <div class="confirm-modal-title">Mark as Ready?</div>
             <div class="confirm-modal-subtitle">Upload your finished cake photo to notify the customer</div>
         </div>
@@ -1022,7 +1022,7 @@
         <div class="confirm-modal-footer">
             <button class="confirm-modal-btn-cancel" onclick="closeConfirmModal('modal-mark-ready')">Cancel</button>
             <button class="confirm-modal-btn-ok style-advance" onclick="submitMarkReadyWithPhoto(this)">
-                <span class="btn-spinner"></span><span class="btn-text">{{ $isPickup ? '🏪 Mark as Ready' : '📦 Mark as Ready' }}</span>
+                <span class="btn-spinner"></span><span class="btn-text">{{ $isPickup ? ' Mark as Ready' : '📦 Mark as Ready' }}</span>
             </button>
         </div>
     </div>
@@ -1031,7 +1031,7 @@
 <div class="confirm-modal-backdrop" id="modal-request-final" role="dialog" aria-modal="true">
     <div class="confirm-modal">
         <div class="confirm-modal-header variant-advance">
-            <div class="confirm-modal-icon">{{ $isPickup ? '🏪' : '₱' }}</div>
+            <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg></div>
             <div class="confirm-modal-title">{{ $isPickup ? 'Notify — Ready for Pickup?' : 'Request Final Payment?' }}</div>
             <div class="confirm-modal-subtitle">{{ $isPickup ? 'Customer will come to collect and pay cash' : 'Prompt the customer to pay the remaining balance' }}</div>
         </div>
@@ -1064,7 +1064,7 @@
             <button class="confirm-modal-btn-cancel" onclick="closeConfirmModal('modal-request-final')">Cancel</button>
          <button class="confirm-modal-btn-ok style-advance" id="btn-request-final"
                 onclick="submitModal('modal-request-final','form-request-final',this)">
-                <span class="btn-spinner"></span><span class="btn-text">🏪 Notify Customer</span>
+                <span class="btn-spinner"></span><span class="btn-text"> Notify Customer</span>
             </button>
         </div>
     </div>
@@ -1073,7 +1073,7 @@
 <div class="confirm-modal-backdrop" id="modal-confirm-final" role="dialog" aria-modal="true">
     <div class="confirm-modal">
         <div class="confirm-modal-header variant-complete">
-            <div class="confirm-modal-icon">{{ $isPickup ? '💵' : '🎉' }}</div>
+            <div class="confirm-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
             <div class="confirm-modal-title">{{ $isPickup ? 'Confirm Cash Received?' : 'Complete This Order?' }}</div>
             <div class="confirm-modal-subtitle">{{ $isPickup ? 'Confirm the customer has paid in cash and collected their cake' : 'Confirm final payment received to mark as complete' }}</div>
         </div>
@@ -1103,7 +1103,7 @@
         <div class="confirm-modal-footer">
             <button class="confirm-modal-btn-cancel" onclick="closeConfirmModal('modal-confirm-final')">Cancel</button>
             <button class="confirm-modal-btn-ok style-complete" onclick="submitModal('modal-confirm-final', 'form-confirm-final', this)">
-                <span class="btn-spinner"></span><span class="btn-text">{{ $isPickup ? '💵 Yes, Complete Order' : '🎉 Complete Order' }}</span>
+                <span class="btn-spinner"></span><span class="btn-text">{{ $isPickup ? '💵 Yes, Complete Order' : ' Complete Order' }}</span>
             </button>
         </div>
     </div>
@@ -1113,7 +1113,7 @@
 <div class="reject-modal-backdrop" id="rejectPaymentModal" role="dialog" aria-modal="true">
     <div class="reject-modal">
         <div class="reject-modal-header">
-            <div class="reject-modal-icon">✕</div>
+            <div class="reject-modal-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
             <div class="reject-modal-title">Reject Payment Proof?</div>
             <div class="reject-modal-sub" id="rejectModalSub">Select a reason for the rejection</div>
         </div>

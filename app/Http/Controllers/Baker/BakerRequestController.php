@@ -81,15 +81,14 @@ return view('baker.requests.index', [
     {
         $cakeRequest = CakeRequest::with(['user', 'bids'])
             ->findOrFail($id);
+$baker = \App\Models\Baker::where('user_id', Auth::id())->first();
 
-        // Check if the authenticated baker has already placed a bid
-        $existingBid = $cakeRequest->bids
-            ->where('baker_id', Auth::id())
-            ->first();
+        $existingBid = $baker
+            ? $cakeRequest->bids->where('baker_id', $baker->id)->first()
+            : null;
 
         // For rush orders: calculate distance to show baker
         $distanceKm = null;
-        $baker = \App\Models\Baker::where('user_id', Auth::id())->first();
         if ($baker && $cakeRequest->is_rush && $baker->latitude && $baker->longitude
             && $cakeRequest->delivery_lat && $cakeRequest->delivery_lng)
         {

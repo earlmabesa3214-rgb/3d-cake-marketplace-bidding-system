@@ -297,7 +297,7 @@ textarea.form-control { resize: vertical; min-height: 75px; }
 }
 .submit-modal-backdrop.is-open { opacity: 1; pointer-events: all; }
 .submit-modal {
-    background: var(--warm-white); border-radius: 24px; width: 100%; max-width: 400px;
+    background: var(--warm-white); border-radius: 20px; width: 100%; max-width: 540px;
     overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.25);
     transform: translateY(20px) scale(0.96);
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -305,55 +305,63 @@ textarea.form-control { resize: vertical; min-height: 75px; }
 .submit-modal-backdrop.is-open .submit-modal { transform: translateY(0) scale(1); }
 .smodal-header {
     background: linear-gradient(135deg, #3B1F0F 0%, #7A4A28 100%);
-    padding: 2rem 2rem 1.75rem; text-align: center; color: white;
+    padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1rem; color: white;
 }
 .smodal-header-icon {
-    width: 64px; height: 64px; border-radius: 50%;
+    width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
     background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.2);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.75rem; margin: 0 auto 1rem;
 }
 .smodal-title {
-    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.25rem;
-    font-weight: 600; color: white; margin-bottom: 0.3rem;
+    font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem;
+    font-weight: 700; color: white; margin-bottom: 0.15rem;
 }
-.smodal-subtitle { font-size: 0.78rem; color: rgba(255,255,255,0.6); line-height: 1.55; }
-.smodal-body { padding: 1.5rem 1.75rem; }
+.smodal-subtitle { font-size: 0.73rem; color: rgba(255,255,255,0.6); line-height: 1.45; }
+.smodal-body { padding: 1rem 1.25rem; }
 .smodal-note {
     background: var(--accent-lt); border: 1.5px solid rgba(200,137,74,0.25);
-    border-radius: 12px; padding: 0.9rem 1.1rem;
-    font-size: 0.78rem; color: var(--text-mid); line-height: 1.65;
-    margin-bottom: 1.25rem;
+    border-radius: 10px; padding: 0.65rem 0.9rem;
+    font-size: 0.75rem; color: var(--text-mid); line-height: 1.55;
+    margin-bottom: 0.85rem;
+    display: flex; align-items: flex-start; gap: 0.5rem;
 }
+.smodal-note > span { flex-shrink: 0; margin-top: 1px; }
 .smodal-note strong { color: var(--caramel); }
 .smodal-summary {
     background: var(--cream); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden; margin-bottom: 0;
+    border-radius: 10px; overflow: hidden; margin-bottom: 0;
+    display: grid; grid-template-columns: 1fr 1fr;
 }
 .smodal-sum-row {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.78rem; padding: 0.55rem 1rem;
+    display: flex; flex-direction: column; gap: 0.15rem;
+    font-size: 0.78rem; padding: 0.5rem 0.85rem;
     border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
 }
-.smodal-sum-row:last-child { border-bottom: none; }
-.smodal-sum-key { color: var(--text-muted); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
-.smodal-sum-val { font-weight: 700; color: var(--brown-deep); font-size: 0.82rem; }
-.smodal-sum-val.price { color: var(--caramel); font-size: 1rem; font-weight: 700; }
-.smodal-footer { display: flex; gap: 0.65rem; padding: 0 1.75rem 1.75rem; }
+.smodal-sum-row:nth-child(even) { border-right: none; }
+.smodal-sum-row:nth-last-child(-n+2) { border-bottom: none; }
+.smodal-sum-row.full-width {
+    grid-column: 1 / -1; flex-direction: row;
+    justify-content: space-between; align-items: center;
+    border-right: none;
+}
+.smodal-sum-key { color: var(--text-muted); font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
+.smodal-sum-val { font-weight: 700; color: var(--brown-deep); font-size: 0.78rem; }
+.smodal-sum-val.price { color: var(--caramel); font-size: 0.92rem; font-weight: 700; }
+.smodal-footer { display: flex; gap: 0.55rem; padding: 0 1.25rem 1.25rem; }
 .smodal-btn-cancel {
-    flex: 1; padding: 0.75rem; border-radius: 12px;
+    flex: 1; padding: 0.65rem; border-radius: 10px;
     border: 1.5px solid var(--border); background: white;
-    color: var(--text-mid); font-size: 0.85rem; font-weight: 600;
+    color: var(--text-mid); font-size: 0.82rem; font-weight: 600;
     cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
- transition: all 0.2s;
+    transition: all 0.2s;
 }
 .smodal-btn-cancel:hover { border-color: var(--caramel); color: var(--caramel); }
 .smodal-btn-confirm {
-    flex: 2; padding: 0.75rem; border-radius: 12px; border: none;
+    flex: 2; padding: 0.65rem; border-radius: 10px; border: none;
     background: linear-gradient(135deg, #3B1F0F 0%, #7A4A28 100%);
-    color: white; font-size: 0.85rem; font-weight: 700;
+    color: white; font-size: 0.82rem; font-weight: 700;
     cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
-
     box-shadow: 0 4px 14px rgba(59,31,15,0.35);
     transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.45rem;
 }
@@ -461,9 +469,22 @@ textarea.form-control { resize: vertical; min-height: 75px; }
 }
 .fulfillment-badge.delivery { background: #EBF3FE; color: #1A3A6B; border-color: #BEDAF5; }
 .fulfillment-badge.pickup   { background: #FEF9E8; color: #8A5010; border-color: #F0D090; }
-
 .empty-state { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.83rem; }
 .empty-state a { color: var(--caramel); text-decoration: none; }
+
+/* Time select compact */
+#needed_time {
+    max-height: 38px;
+    appearance: auto;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.85rem;
+}
+#needed_time:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--border);
+}
 </style>
 @endpush
 
@@ -569,13 +590,12 @@ $chipLabels = [
             {{-- DATE ── --}}
             <div class="form-section">
                 <div class="section-heading">
-                    <span>📅</span> <span id="date-heading-text">When do you need the</span> cake ready?
+                   <span><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span> <span id="date-heading-text">When do you need the</span> cake ready?
                 </div>
-                <div class="form-group">
-                    <label for="delivery_date" id="date-label">Please set a Date *</label>
+            <div class="form-group">
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
     <div class="form-group" style="margin-bottom:0;">
-        <label for="delivery_date">Date *</label>
+        <label for="delivery_date">Pick a Date *</label>
         <input type="date" id="delivery_date" name="delivery_date"
                class="form-control @error('delivery_date') is-invalid @enderror"
                value="{{ old('delivery_date') }}"
@@ -585,28 +605,36 @@ $chipLabels = [
     </div>
     <div class="form-group" style="margin-bottom:0;">
         <label for="needed_time">Time Needed *</label>
-        <input type="time" id="needed_time" name="needed_time"
-               class="form-control @error('needed_time') is-invalid @enderror"
-               value="{{ old('needed_time', '12:00') }}"
-               onchange="updateRushTime()"
-               required>
+ <input type="hidden" id="needed_time" name="needed_time" value="{{ old('needed_time') }}" required>
+  <div id="time-picker-wrap" style="position:relative;">
+      <div id="time-display" class="form-control" style="cursor:pointer; display:flex; align-items:center; justify-content:space-between; user-select:none;" onclick="toggleTimePicker()">
+          <span id="time-display-text" style="color:var(--text-muted);">Pick a date first</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div id="time-dropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; right:0;
+           background:white; border:1.5px solid var(--caramel); border-radius:10px; z-index:500;
+           box-shadow:0 8px 24px rgba(44,26,14,0.12); overflow:hidden;">
+          <div id="time-slots" style="display:grid; grid-template-columns: repeat(4,1fr); gap:2px; padding:6px; max-height:220px; overflow-y:auto;"></div>
+      </div>
+  </div>
+  <p class="hint" id="time-hint" style="margin-top:0.3rem;"></p>
         @error('needed_time')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
 </div>
-<p class="hint" id="date-hint">Need it tomorrow? Rush orders are matched instantly.</p>
+
 
            <div id="rush-banner" style="display:none; background:linear-gradient(135deg,#1A0A00,#3B1F0F);
                          border:1.5px solid #C8893A; border-radius:12px; padding:0.85rem 1rem;
                          margin-top:0.75rem; align-items:center; gap:0.75rem;">
-                        <span style="font-size:1.3rem; flex-shrink:0;">⚡</span>
+                     <span style="flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                         <div style="flex:1;">
                             <div style="font-weight:700;font-size:0.85rem;color:#E8A94A;">Rush Order — Bakers Compete for You!</div>
                             <div style="font-size:0.73rem;color:rgba(255,255,255,0.55);margin-top:0.1rem;line-height:1.5;">
                                 Nearby rush bakers will submit their prices (including rush fee).
                             </div>
                             <div style="margin-top:0.6rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-                               <span style="font-size:0.68rem;background:rgba(200,137,58,0.2);border:1px solid rgba(200,137,58,0.4);color:#E8C07A;padding:0.15rem 0.55rem;border-radius:20px;font-weight:600;">📅 Needed: <span id="rush-needed-time">—</span></span>
-<span style="font-size:0.68rem;background:rgba(200,137,58,0.2);border:1px solid rgba(200,137,58,0.4);color:#E8C07A;padding:0.15rem 0.55rem;border-radius:20px;font-weight:600;">🕐 By: <span id="rush-needed-clock">—</span></span>
+                            <span style="font-size:0.68rem;background:rgba(200,137,58,0.2);border:1px solid rgba(200,137,58,0.4);color:#E8C07A;padding:0.15rem 0.55rem;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Needed: <span id="rush-needed-time">—</span></span>
+<span style="font-size:0.68rem;background:rgba(200,137,58,0.2);border:1px solid rgba(200,137,58,0.4);color:#E8C07A;padding:0.15rem 0.55rem;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> By: <span id="rush-needed-clock">—</span></span>
                           
                             </div>
                         </div>
@@ -619,17 +647,17 @@ $chipLabels = [
                     <div class="form-group" style="margin-bottom:0;">
                         <label>Preferred delivery location (if delivery is chosen later) *</label>
                         <div class="map-search-wrap">
-                            <span class="map-search-icon">🔍</span>
+                        <span class="map-search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9C8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
                             <input type="text" id="map-search" class="form-control"
                                    placeholder="Search for your street, barangay, or landmark…"
                                    autocomplete="off">
                         </div>
-                        <div class="map-instruction">
-                            📌 <span>Search or <strong>click the map</strong> to drop a pin. Drag to fine-tune.</span>
+                    <div class="map-instruction">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9C8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> <span>Search or <strong>click the map</strong> to drop a pin. Drag to fine-tune.</span>
                         </div>
                         <div id="delivery-map"></div>
                         <div class="selected-address-display" id="address-display">
-                            <span>✓</span>
+                          <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D6A30" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
                             <div class="addr-text" id="address-text">—</div>
                         </div>
                         @error('delivery_address')<div class="invalid-feedback" style="display:block;">{{ $message }}</div>@enderror
@@ -675,7 +703,7 @@ $chipLabels = [
             <div class="sum-row">
                     <span class="key">Fulfillment</span>
                     <span class="val" id="sidebar-fulfillment">
-                        <span class="fulfillment-badge delivery" id="sidebar-ft-badge">🚚 Delivery</span>
+                        <span class="fulfillment-badge delivery" id="sidebar-ft-badge" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Delivery</span>
                     </span>
                 </div>
            
@@ -688,7 +716,7 @@ $chipLabels = [
 
             {{-- BUDGET ── --}}
             <div class="sidebar-form-section">
-                <div class="sidebar-section-heading"><span>💰</span> Budget Range *</div>
+              <div class="sidebar-section-heading"><span><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v2"/><path d="M12 16v2"/><path d="M9 9.5A2.5 2.5 0 0 1 14.5 12a2.5 2.5 0 0 1-5 1"/></svg></span> Budget Range *</div>
                 <div class="budget-row">
                     <div class="form-group" style="margin-bottom:0;">
                         <label>Min (₱)</label>
@@ -712,7 +740,7 @@ $chipLabels = [
 
             {{-- CUSTOMIZATION ── --}}
             <div class="sidebar-form-section">
-                <div class="sidebar-section-heading"><span>✏️</span> Customization</div>
+             <div class="sidebar-section-heading"><span><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Customization</div>
 
                 <div class="form-group">
                     <label>Message on Cake</label>
@@ -733,7 +761,7 @@ $chipLabels = [
                 <div class="form-group">
                     <label>Special Instructions</label>
                     <textarea name="special_instructions" class="form-control" rows="3"
-                              placeholder="Allergies, dietary restrictions, or other notes…">{{ old('special_instructions') }}</textarea>
+                              placeholder="Birthday cake but i want it like this..">{{ old('special_instructions') }}</textarea>
                 </div>
             </div>
 
@@ -754,27 +782,33 @@ $chipLabels = [
     <div class="submit-modal">
 
         {{-- Header changes based on rush --}}
-        <div class="smodal-header" id="smodal-header-normal" style="background:linear-gradient(135deg, #3B1F0F 0%, #7A4A28 100%);">
-            <div class="smodal-header-icon">🎂</div>
+      <div class="smodal-header" id="smodal-header-normal" style="background:linear-gradient(135deg, #3B1F0F 0%, #7A4A28 100%); display:flex; flex-direction:row; align-items:center; gap:1rem;">
+        <div class="smodal-header-icon" style="flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div>
+        <div>
             <div class="smodal-title">Submit Your Request?</div>
             <div class="smodal-subtitle">Your order will be posted to available bakers who will send you their best offers.</div>
         </div>
-        <div class="smodal-header" id="smodal-header-rush" style="background:linear-gradient(135deg,#1A0A00,#5C3010); display:none;">
-            <div class="smodal-header-icon">⚡</div>
-            <div class="smodal-title">Rush Order — Submit?</div>
-            <div class="smodal-subtitle">The nearest available baker will be auto-matched and assigned instantly.</div>
+      </div>
+       <div class="smodal-header" id="smodal-header-rush" style="background:linear-gradient(135deg,#1A0A00,#5C3010); display:none; flex-direction:row; align-items:center; gap:1rem;">
+            <div class="smodal-header-icon" style="flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <div>
+                <div class="smodal-title">Rush Order — Submit?</div>
+                <div class="smodal-subtitle">The nearest available baker will be auto-matched and assigned instantly.</div>
+            </div>
         </div>
 
       <div class="smodal-body">
 
             {{-- Normal note --}}
             <div class="smodal-note" id="smodal-note-normal">
-                📦 You'll choose <strong>delivery or pickup</strong> when you accept a baker's bid — no need to decide now!
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+                <span>You'll choose <strong>delivery or pickup</strong> when you accept a baker's bid — no need to decide now!</span>
             </div>
 
             {{-- Rush note --}}
             <div class="smodal-note" id="smodal-note-rush" style="display:none; background:#FEF3E8; border-color:rgba(200,137,74,0.35);">
-                ⚡ Nearby rush bakers will be notified. Each submits their own price + rush fee. You have <strong>60 seconds</strong> to pick the best offer.
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Nearby rush bakers will be notified. Each submits their own price + rush fee. You have <strong>60 seconds</strong> to pick the best offer.</span>
             </div>
 
             <div class="smodal-summary">
@@ -792,15 +826,15 @@ $chipLabels = [
                     <span class="smodal-sum-val" style="font-size:0.75rem;">{{ implode(', ', (array)$config['addons']) }}</span>
                 </div>
                 @endif
-                <div class="smodal-sum-row" id="smodal-date-row">
+                <div class="smodal-sum-row full-width" id="smodal-date-row">
                     <span class="smodal-sum-key">Date Needed</span>
                     <span class="smodal-sum-val" id="smodal-date-val" style="color:#C8893A;">—</span>
                 </div>
-                <div class="smodal-sum-row" id="smodal-time-row" style="display:none;">
+                <div class="smodal-sum-row full-width" id="smodal-time-row" style="display:none;">
                     <span class="smodal-sum-key">Time Needed</span>
                     <span class="smodal-sum-val" id="smodal-time-val" style="color:#C8893A;">—</span>
                 </div>
-                <div class="smodal-sum-row">
+                <div class="smodal-sum-row full-width">
                     <span class="smodal-sum-key">Budget</span>
                     <span class="smodal-sum-val" id="smodal-budget-val">
                         ₱<span id="smodal-budget-min">{{ number_format($config['total'] ?? 0, 0) }}</span>
@@ -808,26 +842,26 @@ $chipLabels = [
                     </span>
                 </div>
                 {{-- Rush badge row --}}
-                <div class="smodal-sum-row" id="smodal-rush-row" style="display:none;">
+                <div class="smodal-sum-row full-width" id="smodal-rush-row" style="display:none;">
                     <span class="smodal-sum-key">Type</span>
-                    <span class="smodal-sum-val" style="color:#C8893A; font-weight:700;">⚡ Rush Order</span>
+                    <span class="smodal-sum-val" style="color:#C8893A; font-weight:700;display:inline-flex;align-items:center;gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush Order</span>
                 </div>
                 {{-- Normal total --}}
-                <div class="smodal-sum-row" id="smodal-normal-total-row">
+                <div class="smodal-sum-row full-width" id="smodal-normal-total-row">
                     <span class="smodal-sum-key">Est. Total</span>
                     <span class="smodal-sum-val price">₱{{ number_format($config['total'] ?? 0, 0) }}</span>
                 </div>
                 {{-- Rush price breakdown --}}
-                <div id="smodal-rush-breakdown" style="display:none;">
-                    <div class="smodal-sum-row">
+                <div id="smodal-rush-breakdown" style="display:none; grid-column: 1 / -1;">
+                    <div class="smodal-sum-row full-width" style="border-right:none;">
                         <span class="smodal-sum-key">Cake Price</span>
                         <span class="smodal-sum-val">₱{{ number_format($config['total'] ?? 0, 0) }}</span>
                     </div>
-                    <div class="smodal-sum-row">
-                        <span class="smodal-sum-key" style="color:#C8893A;">⚡ Rush Fee</span>
+                    <div class="smodal-sum-row full-width" style="border-right:none;">
+                        <span class="smodal-sum-key" style="color:#C8893A;display:inline-flex;align-items:center;gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Rush Fee</span>
                         <span class="smodal-sum-val" style="color:#C8893A;">+ set by each baker</span>
                     </div>
-                    <div class="smodal-sum-row" style="border-top:1.5px solid #EAE0D0; margin-top:2px; padding-top:4px;">
+                    <div class="smodal-sum-row full-width" style="border-top:1.5px solid #EAE0D0; border-right:none; margin-top:2px; padding-top:4px;">
                         <span class="smodal-sum-key" style="font-size:0.72rem;">Est. Total</span>
                         <span class="smodal-sum-val price">₱{{ number_format($config['total'] ?? 0, 0) }}+</span>
                     </div>
@@ -958,6 +992,124 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('click', e => {
         if (!searchInput.parentElement.contains(e.target)) dropdown.style.display = 'none';
     });
+// ── PH TIME HELPERS ──
+    function getPHNow() {
+        return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+    }
+    function getTodayPH() {
+        return getPHNow().toLocaleDateString('en-CA');
+    }
+    function toHHMM(h, m) {
+        return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+    }
+    function formatSlotLabel(h, m) {
+        const period = h < 12 ? 'AM' : 'PM';
+        const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+        const mm = String(m).padStart(2,'0');
+        return `${h12}:${mm} ${period}`;
+    }
+
+const timeInput   = document.getElementById('needed_time');
+    const dateInput   = document.getElementById('delivery_date');
+    const timeHint    = document.getElementById('time-hint');
+    const timeDisplay = document.getElementById('time-display-text');
+    const timeSlotsEl = document.getElementById('time-slots');
+    const timeDropdown= document.getElementById('time-dropdown');
+
+    function buildTimeSlots() {
+        const selectedDate = dateInput.value;
+        if (!selectedDate) return;
+        const isToday = selectedDate === getTodayPH();
+        const phNow   = getPHNow();
+
+        // Min allowed = PH now + 5 hrs, rounded up to next 30-min slot
+        let minH = phNow.getHours() + 5;
+        let minM = phNow.getMinutes();
+        if (minM === 0 || minM === 30) { /* on slot */ }
+        else if (minM < 30) minM = 30;
+        else { minM = 0; minH++; }
+        if (minH >= 24) minH -= 24;
+        const minMins = minH * 60 + minM;
+
+        const oldVal = timeInput.value;
+        timeSlotsEl.innerHTML = '';
+        let firstValidVal = null;
+
+        for (let h = 0; h < 24; h++) {
+            for (let m of [0, 30]) {
+                const slotMins = h * 60 + m;
+                if (isToday && slotMins < minMins) continue;
+                const val   = toHHMM(h, m);
+                const label = formatSlotLabel(h, m);
+                if (!firstValidVal) firstValidVal = val;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = label;
+                btn.dataset.val = val;
+                btn.style.cssText = `
+                    padding:0.3rem 0.2rem; border-radius:6px; border:1px solid var(--border);
+                    background:${val === oldVal ? 'var(--caramel)' : 'var(--cream)'};
+                    color:${val === oldVal ? 'white' : 'var(--text-dark)'};
+                    font-size:0.68rem; font-weight:600; cursor:pointer;
+                    font-family:'Plus Jakarta Sans',sans-serif;
+                    transition:all 0.15s; white-space:nowrap;
+                `;
+                btn.addEventListener('mouseenter', () => { if (btn.dataset.val !== timeInput.value) btn.style.background = '#FEF3E8'; });
+                btn.addEventListener('mouseleave', () => { if (btn.dataset.val !== timeInput.value) btn.style.background = 'var(--cream)'; });
+                btn.addEventListener('click', () => selectTime(val, label));
+                timeSlotsEl.appendChild(btn);
+            }
+        }
+
+        // Restore or default to earliest
+        const restoreVal = oldVal || firstValidVal;
+        if (restoreVal) {
+            const restoreLabel = formatSlotLabel(parseInt(restoreVal.split(':')[0]), parseInt(restoreVal.split(':')[1]));
+            selectTime(restoreVal, restoreLabel, false);
+        }
+
+        if (isToday) {
+            timeHint.textContent = `⏱ Earliest available: ${formatSlotLabel(minH, minM)} (5 hrs from now)`;
+            timeHint.style.color = '#C8894A';
+        } else {
+            timeHint.textContent = '';
+        }
+    }
+
+    function selectTime(val, label, closeDropdown = true) {
+        timeInput.value = val;
+        timeDisplay.textContent = label;
+        timeDisplay.style.color = 'var(--text-dark)';
+        // Update button highlights
+        timeSlotsEl.querySelectorAll('button').forEach(b => {
+            const active = b.dataset.val === val;
+            b.style.background = active ? 'var(--caramel)' : 'var(--cream)';
+            b.style.color = active ? 'white' : 'var(--text-dark)';
+        });
+        if (closeDropdown) timeDropdown.style.display = 'none';
+        updateRushTime();
+    }
+window.toggleTimePicker = function() {
+        if (!dateInput.value) return;
+        timeDropdown.style.display = timeDropdown.style.display === 'none' ? 'block' : 'none';
+    };
+
+    // Close on outside click
+    document.addEventListener('click', e => {
+        if (!document.getElementById('time-picker-wrap').contains(e.target)) {
+            timeDropdown.style.display = 'none';
+        }
+    });
+
+    dateInput.addEventListener('change', () => {
+        timeDisplay.textContent = 'Select time…';
+        timeInput.value = '';
+        buildTimeSlots();
+    });
+
+    if (dateInput.value) buildTimeSlots();
+    else timeDisplay.textContent = 'Pick a date first';
 
     // Run on page load in case old() date is pre-filled
     const existingDate = document.getElementById('delivery_date').value;
@@ -965,6 +1117,8 @@ document.addEventListener('click', e => {
 
 
 });
+
+
 function checkRush(dateVal) {
     if (!dateVal) return;
     const selected = new Date(dateVal);
@@ -994,19 +1148,24 @@ function updateRushTime() {
     const clockEl = document.getElementById('rush-needed-clock');
     if (!clockEl || !dateVal) return;
 
-    const selected = new Date(dateVal);
-    selected.setHours(0,0,0,0);
-    const now = new Date(); now.setHours(0,0,0,0);
-    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0,0,0,0);
+    // Use PH time for today/tomorrow comparison
+    const phNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+    const todayPH = phNow.toLocaleDateString('en-CA');
+    const tomorrowPH = new Date(phNow);
+    tomorrowPH.setDate(tomorrowPH.getDate() + 1);
+    const tomorrowStr = tomorrowPH.toLocaleDateString('en-CA');
 
     let prefix = '';
-    if (selected.toDateString() === now.toDateString()) prefix = 'Today';
-    else if (selected.toDateString() === tomorrow.toDateString()) prefix = 'Tomorrow';
-    else prefix = selected.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+    if (dateVal === todayPH) prefix = 'Today';
+    else if (dateVal === tomorrowStr) prefix = 'Tomorrow';
+    else {
+        const d = new Date(dateVal + 'T00:00:00');
+        prefix = d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+    }
 
     if (timeVal) {
         const [h, m] = timeVal.split(':');
-        const t = new Date(); t.setHours(h, m, 0);
+        const t = new Date(); t.setHours(parseInt(h), parseInt(m), 0, 0);
         const timeStr = t.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
         clockEl.textContent = prefix + ' by ' + timeStr;
     } else {
@@ -1018,8 +1177,8 @@ function openSubmitModal() {
     const isRush = document.getElementById('is_rush_input').value === '1';
 
     // Swap header
-    document.getElementById('smodal-header-normal').style.display = isRush ? 'none' : 'block';
-    document.getElementById('smodal-header-rush').style.display   = isRush ? 'block' : 'none';
+    document.getElementById('smodal-header-normal').style.display = isRush ? 'none' : 'flex';
+    document.getElementById('smodal-header-rush').style.display   = isRush ? 'flex' : 'none';
 
     // Swap note
     document.getElementById('smodal-note-normal').style.display = isRush ? 'none' : 'block';
@@ -1031,7 +1190,7 @@ function openSubmitModal() {
     document.getElementById('smodal-normal-total-row').style.display   = isRush ? 'none' : 'flex';
 
     // Button label
-    document.getElementById('smodal-confirm-text').textContent = isRush ? '⚡ Yes, Submit Rush!' : 'Yes, Submit!';
+    document.getElementById('smodal-confirm-text').innerHTML = isRush ? '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Yes, Submit Rush!' : 'Yes, Submit!';
 
     // ── Populate date ──
     const dateVal = document.getElementById('delivery_date').value;
@@ -1041,8 +1200,8 @@ function openSubmitModal() {
         dateEl.textContent = d.toLocaleDateString('en-PH', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
     }
 
-    // ── Populate time ──
-    const timeVal = document.getElementById('needed_time')?.value;
+const timeVal = document.getElementById('needed_time')?.value;
+    // timeVal is already HH:MM from the select
     const timeRow = document.getElementById('smodal-time-row');
     const timeEl  = document.getElementById('smodal-time-val');
     if (timeVal && timeRow && timeEl) {

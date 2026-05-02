@@ -112,7 +112,7 @@
 <!-- TOP BANNER -->
 <div class="top-banner">
     <div class="top-banner-left">
-        <a href="{{ route('login') }}" class="btn-back-login">&#8592; Back to Login</a>
+        <a href="{{ route('login') }}" class="btn-back-login"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back to Login</a>
         <div class="top-banner-brand">Bake<span>Sphere</span></div>
     </div>
 
@@ -121,7 +121,7 @@
 <!-- PROGRESS STEPS -->
 <div class="progress-wrap">
     <div class="step done">
-        <div class="step-num">&#10003;</div>
+        <div class="step-num"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg></div>
         <span>Google Sign-Up</span>
     </div>
     <div class="step-line"></div>
@@ -141,7 +141,7 @@
 
     <div class="brand">
         <div class="brand-name">Bake<span>Sphere</span></div>
-        <div class="brand-sub">One last step before you start ordering 🎂</div>
+        <div class="brand-sub">One last step before you start ordering <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg></div>
     </div>
 
     <div class="avatar-wrap">
@@ -154,16 +154,16 @@
             <div class="avatar-name">{{ $user->first_name }} {{ $user->last_name }}</div>
             <div class="avatar-email">{{ $user->email }}</div>
         </div>
-        <span class="locked-badge">✓ From Google</span>
+        <span class="locked-badge"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> From Google</span>
     </div>
 
     <div class="prefill-notice">
-        ℹ️ <span>Your name and email were filled in from Google. Please complete the remaining details below to finish your customer profile.</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> <span>  Your name and email were filled in from Google. Please complete the remaining details below to finish your customer profile.</span>
     </div>
 
     @if($errors->any())
         <div style="background:#FDF0EE;border:1px solid #F5C5BE;border-radius:9px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#8B2A1E;">
-            ✕ {{ $errors->first() }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> {{ $errors->first() }}
         </div>
     @endif
 
@@ -171,7 +171,7 @@
         @csrf
 
         {{-- PERSONAL --}}
-        <div class="section-label">👤 Personal Details</div>
+        <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg> Personal Details</div>
 
         <div class="form-row">
             <div class="form-group">
@@ -209,7 +209,7 @@
         </div>
 
         {{-- DELIVERY ADDRESS --}}
-        <div class="section-label">📍 Delivery Address</div>
+        <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Delivery Address</div>
 
      <div class="form-group">
             <label class="form-label">Street / House No. / Barangay <span class="req">*</span></label>
@@ -248,7 +248,7 @@
                 @error('zip') <div class="field-error">{{ $message }}</div> @enderror
             </div>
         </div>
-        <button type="submit" class="btn-submit">🛍️ Complete Profile &amp; Start Ordering</button>
+        <button type="submit" class="btn-submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Complete Profile &amp; Start Ordering</button>
     </form>
 
     <div class="logout-link">

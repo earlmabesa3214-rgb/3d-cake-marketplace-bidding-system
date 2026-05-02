@@ -286,7 +286,7 @@
     {{-- SIDEBAR --}}
     <div class="left-panel">
         <div class="brand">
-            <div class="brand-icon">🎂</div>
+          <div class="brand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg></div>
             <div>
                 <div class="brand-name">BakeSphere</div>
                 <div class="brand-sub">Baker Portal</div>
@@ -295,15 +295,15 @@
         <h2 class="panel-heading">Turn your passion into profit</h2>
         <p class="panel-sub">Join our network of talented bakers — home-based or registered. Receive orders and grow your baking business.</p>
         <ul class="perks">
-            <li><div class="perk-icon">💼</div><div><div class="perk-title">Bid on Orders</div>Browse custom cake requests and submit competitive bids.</div></li>
-            <li><div class="perk-icon">💰</div><div><div class="perk-title">Set Your Price</div>You decide what your creations are worth.</div></li>
-            <li><div class="perk-icon">🏠</div><div><div class="perk-title">Home Bakers Welcome</div>No business permit needed — just a valid government ID.</div></li>
-            <li><div class="perk-icon">⭐</div><div><div class="perk-title">Build Your Reputation</div>Earn reviews and grow your baker profile over time.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><div><div class="perk-title">Bid on Orders</div>Browse custom cake requests and submit competitive bids.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="6" x2="12" y2="18"/></svg></div><div><div class="perk-title">Set Your Price</div>You decide what your creations are worth.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div><div class="perk-title">Home Bakers Welcome</div>No business permit needed — just a valid government ID.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="perk-title">Build Your Reputation</div>Earn reviews and grow your baker profile over time.</div></li>
         </ul>
         <div class="already-link">
             <span class="already-link-label">Quick Links</span>
-            <a href="{{ route('login') }}">🔑 Already a baker? Sign in</a>
-            <a href="{{ route('register') }}">🛍️ Ordering a cake? Customer sign up</a>
+            <a href="{{ route('login') }}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5l3 3L22 7l-3-3"/></svg> Already a baker? Sign in</a>
+            <a href="{{ route('register') }}"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Ordering a cake? Customer sign up</a>
         </div>
     </div>
 
@@ -316,11 +316,11 @@
         </div>
 
         @if($errors->any())
-        <div class="alert-error">✕ {{ $errors->first() }}</div>
+        <div class="alert-error"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> {{ $errors->first() }}</div>
         @endif
 
         <div class="approval-notice">
-            <div class="approval-notice-icon">⏳</div>
+            <div class="approval-notice-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
             <div class="approval-notice-text"><strong>Approval required.</strong> After registering, an admin will review your profile and documents before you can start receiving orders. This usually takes 1–2 business days.</div>
         </div>
 
@@ -328,15 +328,15 @@
         <div class="seller-type-toggle">
             <label class="seller-type-card active" id="card-registered" onclick="setSellerType('registered')">
                 <input type="radio" name="_seller_type_ui" value="registered" checked>
-                <span class="stc-badge badge-registered">✓ Verified</span>
-                <div class="stc-icon">🏢</div>
+                <span class="stc-badge badge-registered"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>
+                <div class="stc-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-bottom:.4rem"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
                 <div class="stc-title">Registered Business</div>
                 <div class="stc-desc">DTI/SEC registration and business permit. Higher bid limits and a Verified badge.</div>
             </label>
             <label class="seller-type-card" id="card-homebased" onclick="setSellerType('homebased')">
                 <input type="radio" name="_seller_type_ui" value="homebased">
-                <span class="stc-badge badge-homebased">🏠 Home Baker</span>
-                <div class="stc-icon">🧁</div>
+                <span class="stc-badge badge-homebased"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home Baker</span>
+                <div class="stc-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-bottom:.4rem"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg></div>
                 <div class="stc-title">Home-Based Baker</div>
                 <div class="stc-desc">No business permit needed — just a valid government ID and a selfie. Great for starting out!</div>
             </label>
@@ -351,7 +351,7 @@
                 {{-- ── LEFT COLUMN: Personal + Bakery + Profile ── --}}
                 <div>
 
-                    <div class="section-label">👤 Personal Information</div>
+                    <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg> Personal Information</div>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -388,7 +388,7 @@
                             <label class="form-label">Password <span class="req">*</span></label>
                             <div class="pw-wrap">
                                 <input type="password" name="password" id="password" class="form-input" required placeholder="Min. 8 characters">
-                                <button type="button" class="pw-toggle" onclick="togglePw('password', this)">👁</button>
+                                <button type="button" class="pw-toggle" onclick="togglePw('password', this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                             </div>
                             <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
                             <div class="strength-label" id="strengthLabel"></div>
@@ -398,13 +398,13 @@
                             <label class="form-label">Confirm Password <span class="req">*</span></label>
                             <div class="pw-wrap">
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" required placeholder="Repeat password">
-                                <button type="button" class="pw-toggle" onclick="togglePw('password_confirmation', this)">👁</button>
+                                <button type="button" class="pw-toggle" onclick="togglePw('password_confirmation', this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                             </div>
                             <div class="match-msg" id="pw_match_msg"></div>
                         </div>
                     </div>
 
-                    <div class="section-label">🧁 Bakery Information</div>
+                    <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Bakery Information</div>
 
                     <div class="form-group">
                         <label class="form-label">Cake Shop / Brand Name <span class="req">*</span></label>
@@ -431,7 +431,7 @@
                         @error('social_media') <div class="field-error">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="section-label">✨ Baker Profile</div>
+                    <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline-block;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Baker Profile</div>
 
                     <div class="form-group">
                         <label class="form-label">Short Bio <span class="hint">(optional)</span></label>
@@ -443,7 +443,7 @@
                         <div class="file-upload-area" id="portfolio-area" style="height:auto;min-height:150px;cursor:pointer;">
                             <input type="file" name="portfolio[]" accept=".jpg,.jpeg,.png" multiple onchange="handlePortfolio(this)" style="z-index:4;">
                             <div id="portfolio-empty-state">
-                                <div class="file-upload-icon">📸</div>
+                                <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
                                 <div class="file-upload-title">Upload Cake Designs</div>
                                 <div class="file-upload-hint">Select up to 3 cake photos · JPG or PNG · Max 5MB each</div>
                             </div>
@@ -473,7 +473,7 @@
 
                     <div class="submit-wrap">
                   <button type="button" class="btn-submit" onclick="openModal(this.closest('form'))">
-    🎂 Submit Baker Application
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Submit Baker Application
 </button>
  
 <div style="display:flex;align-items:center;gap:12px;margin-top:1.25rem;margin-bottom:1rem;">
@@ -500,7 +500,7 @@
                 <div class="map-column">
 
                     {{-- MAP --}}
-               <div class="section-label">📍 Bakery Location</div>
+               <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Bakery Location</div>
                     <p style="font-size:.82rem;color:var(--text-muted);line-height:1.65;margin-bottom:.9rem;">Pin your location so customers know how far you are when reviewing your bids.</p>
 
                     <div class="map-card">
@@ -510,9 +510,9 @@
                         </div>
                         <div id="baker-map"></div>
                         <div class="map-card-footer">
-                            <button type="button" class="btn-locate" onclick="locateMe()">🎯 Use My Current Location</button>
-                            <div class="map-coords" id="map-coords">📍 Pinned: <span id="coords-display"></span></div>
-                            <div class="map-instructions">🖱️ Click the map to place your pin, or drag to fine-tune.</div>
+                            <button type="button" class="btn-locate" onclick="locateMe()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Use My Current Location</button>
+                            <div class="map-coords" id="map-coords"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Pinned: <span id="coords-display"></span></div>
+                            <div class="map-instructions"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M4 4l7.07 17 2.51-7.39L21 11.07z"/></svg> Click the map to place your pin, or drag to fine-tune.</div>
                         </div>
                         <div class="address-field-wrap">
                             <label class="form-label">Full Address</label>
@@ -530,7 +530,7 @@
                     <div class="section-registered show" id="section-registered">
                         <div class="docs-card">
                             <div class="docs-card-header">
-                                <h3>📋 Business Documents <span class="docs-type-badge registered">✓ Registered</span></h3>
+                                <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Business Documents <span class="docs-type-badge registered"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Registered</span></h3>
                                 <p>Upload your DTI/SEC registration, business permit, and sanitary permit.</p>
                             </div>
                             <div class="docs-card-body">
@@ -546,7 +546,7 @@
                                         <label class="form-label">Business Permit <span class="req">*</span></label>
                                         <div class="file-upload-area" id="permit-upload-area">
                                             <input type="file" name="business_permit" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFile(this,'permit-upload-area','permit-file-name')">
-                                            <div class="file-upload-icon">📄</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                                             <div class="file-upload-title">Mayor's Permit</div>
                                             <div class="file-upload-hint">JPG, PNG, PDF · Max 5MB</div>
                                             <div class="file-name-display" id="permit-file-name"></div>
@@ -558,7 +558,7 @@
                                         <label class="form-label">DTI / SEC Certificate <span class="req">*</span></label>
                                         <div class="file-upload-area" id="dti-upload-area">
                                             <input type="file" name="dti_certificate" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFile(this,'dti-upload-area','dti-file-name')">
-                                            <div class="file-upload-icon">📋</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
                                             <div class="file-upload-title">DTI / SEC Cert</div>
                                             <div class="file-upload-hint">JPG, PNG, PDF · Max 5MB</div>
                                             <div class="file-name-display" id="dti-file-name"></div>
@@ -570,7 +570,7 @@
                                         <label class="form-label">Sanitary / Health Permit <span class="req">*</span></label>
                                         <div class="file-upload-area" id="sanitary-upload-area">
                                             <input type="file" name="sanitary_permit" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFile(this,'sanitary-upload-area','sanitary-file-name')">
-                                            <div class="file-upload-icon">🛡️</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
                                             <div class="file-upload-title">Sanitary Permit</div>
                                             <div class="file-upload-hint">Food Safety / Health · Max 5MB</div>
                                             <div class="file-name-display" id="sanitary-file-name"></div>
@@ -582,7 +582,7 @@
                                         <label class="form-label">BIR COR <span class="hint">(optional)</span></label>
                                         <div class="file-upload-area" id="bir-upload-area">
                                             <input type="file" name="bir_certificate" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFile(this,'bir-upload-area','bir-file-name')">
-                                            <div class="file-upload-icon">📑</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
                                             <div class="file-upload-title">BIR Certificate</div>
                                             <div class="file-upload-hint">JPG, PNG, PDF · Max 5MB</div>
                                             <div class="file-name-display" id="bir-file-name"></div>
@@ -599,13 +599,13 @@
                     <div class="section-homebased" id="section-homebased">
                         <div class="docs-card">
                             <div class="docs-card-header">
-                                <h3>🏠 Home Baker Verification <span class="docs-type-badge homebased">🏠 Home Baker</span></h3>
+                                <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home Baker Verification <span class="docs-type-badge homebased"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home Baker</span></h3>
                                 <p>No business permit needed — just a valid government ID and a selfie.</p>
                             </div>
                             <div class="docs-card-body">
 
                                 <div class="homebased-notice">
-                                    <div class="homebased-notice-icon">ℹ️</div>
+                                    <div class="homebased-notice-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
                                     <div class="homebased-notice-text">
                                         <strong>No business permit required.</strong> Similar to how Shopee and Lazada verify sellers — submit a government ID and selfie. You'll get a <em>Home Baker</em> badge with the option to upgrade to Verified later.
                                     </div>
@@ -632,7 +632,7 @@
                                         <label class="form-label">Gov't ID — Front <span class="req">*</span></label>
                                         <div class="file-upload-area" id="gov-id-front-area">
                                             <input type="file" name="gov_id_front" accept=".jpg,.jpeg,.png" onchange="handleFile(this,'gov-id-front-area','gov-id-front-name')">
-                                            <div class="file-upload-icon">🪪</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><line x1="13" y1="10" x2="20" y2="10"/><line x1="13" y1="14" x2="20" y2="14"/></svg></div>
                                             <div class="file-upload-title">Front of ID</div>
                                             <div class="file-upload-hint">Clear photo · JPG/PNG</div>
                                             <div class="file-name-display" id="gov-id-front-name"></div>
@@ -644,7 +644,7 @@
                                         <label class="form-label" style="white-space:nowrap; font-size:.75rem;">Gov't ID — Back <span class="hint">(if applicable)</span></label>
                                         <div class="file-upload-area" id="gov-id-back-area">
                                             <input type="file" name="gov_id_back" accept=".jpg,.jpeg,.png" onchange="handleFile(this,'gov-id-back-area','gov-id-back-name')">
-                                            <div class="file-upload-icon">🪪</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><line x1="13" y1="10" x2="20" y2="10"/><line x1="13" y1="14" x2="20" y2="14"/></svg></div>
                                             <div class="file-upload-title">Back of ID</div>
                                             <div class="file-upload-hint">Clear photo · JPG/PNG</div>
                                             <div class="file-name-display" id="gov-id-back-name"></div>
@@ -656,7 +656,7 @@
                                         <label class="form-label">Selfie Holding Your ID <span class="req">*</span></label>
                                         <div class="file-upload-area" id="selfie-area">
                                             <input type="file" name="id_selfie" accept=".jpg,.jpeg,.png" onchange="handleFile(this,'selfie-area','selfie-name')">
-                                            <div class="file-upload-icon">🤳</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg></div>
                                             <div class="file-upload-title">Selfie with ID</div>
                                             <div class="file-upload-hint">Hold your ID clearly beside your face · JPG/PNG · Max 5MB</div>
                                             <div class="file-name-display" id="selfie-name"></div>
@@ -668,7 +668,7 @@
                                         <label class="form-label">Food Safety Certificate <span class="hint">(optional but preferred)</span></label>
                                         <div class="file-upload-area" id="food-cert-area">
                                             <input type="file" name="food_safety_cert" accept=".jpg,.jpeg,.png,.pdf" onchange="handleFile(this,'food-cert-area','food-cert-name')">
-                                            <div class="file-upload-icon">🛡️</div>
+                                            <div class="file-upload-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 4px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
                                             <div class="file-upload-title">Food Safety Certificate</div>
                                             <div class="file-upload-hint">NCDA / DOH certificate · JPG, PNG, PDF · Max 5MB</div>
                                             <div class="file-name-display" id="food-cert-name"></div>
@@ -691,18 +691,18 @@
 <div class="modal-overlay" id="confirmModal">
     <div class="modal-box">
         <div class="modal-head">
-            <h2>🎂 Review Your Application</h2>
-            <button type="button" class="modal-close" onclick="closeModal()">✕</button>
+            <h2><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Review Your Application</h2>
+            <button type="button" class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
         <div class="modal-body">
 
             <div class="modal-missing-banner" id="missingBanner">
-                ⚠️ Please go back and fill in the highlighted required fields before submitting.
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Please go back and fill in the highlighted required fields before submitting.
             </div>
 
             <!-- Personal Info -->
             <div class="modal-section">
-                <div class="modal-section-title">👤 Personal Information</div>
+                <div class="modal-section-title"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><circle cx="12" cy="7" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg> Personal Information</div>
                 <div class="modal-grid">
                     <div class="modal-item" id="ms-first_name">
                         <div class="modal-item-label">First Name</div>
@@ -725,7 +725,7 @@
 
             <!-- Bakery Info -->
             <div class="modal-section">
-                <div class="modal-section-title">🧁 Bakery Information</div>
+                <div class="modal-section-title"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Bakery Information</div>
                 <div class="modal-grid">
                     <div class="modal-item" id="ms-shop_name">
                         <div class="modal-item-label">Shop / Brand Name</div>
@@ -745,7 +745,7 @@
 
             <!-- Baker Profile -->
             <div class="modal-section">
-                <div class="modal-section-title">✨ Baker Profile</div>
+                <div class="modal-section-title"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline-block;vertical-align:middle"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Baker Profile</div>
                 <div class="modal-grid">
                     <div class="modal-item">
                         <div class="modal-item-label">Bio</div>
@@ -764,7 +764,7 @@
 
             <!-- Location -->
             <div class="modal-section">
-                <div class="modal-section-title">📍 Location</div>
+                <div class="modal-section-title"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location</div>
                 <div class="modal-item">
                     <div class="modal-item-label">Address</div>
                     <div class="modal-item-value" id="mv-full_address">Not pinned</div>
@@ -773,7 +773,7 @@
 
             <!-- Seller Type -->
             <div class="modal-section">
-                <div class="modal-section-title">📋 Seller Type &amp; Documents</div>
+                <div class="modal-section-title"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Seller Type &amp; Documents</div>
                 <div class="modal-item" style="margin-bottom:.5rem;">
                     <div class="modal-item-label">Type</div>
                     <div class="modal-item-value" id="mv-seller_type">—</div>
@@ -820,7 +820,7 @@
         <div class="modal-footer">
             <button type="button" class="btn-modal-back" onclick="closeModal()">← Go Back &amp; Edit</button>
        <button type="button" class="btn-modal-confirm" id="btnConfirmSubmit" onclick="doSubmit()">
-    🎂 Confirm &amp; Submit Application
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Confirm &amp; Submit Application
 </button>
         </div>
     </div>
@@ -840,7 +840,7 @@
     document.querySelectorAll('.specialty-check').forEach(label => {
         label.addEventListener('click', function () {
             const input = this.querySelector('input'), indicator = this.querySelector('.check-indicator');
-            setTimeout(() => { this.classList.toggle('checked', input.checked); indicator.textContent = input.checked ? '✓' : ''; }, 0);
+            setTimeout(() => { this.classList.toggle('checked', input.checked); wrap.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;pointer-events:none;display:block;margin:auto;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'; }, 0);
         });
     });
 function handleFile(input, areaId, nameId) {
@@ -988,8 +988,8 @@ function handleFile(input, areaId, nameId) {
     const pwc=document.getElementById('password_confirmation'), matchMsg=document.getElementById('pw_match_msg');
     function checkMatch() {
         if(!pwc.value){matchMsg.textContent='';pwc.classList.remove('is-invalid','is-valid');return;}
-        if(pw.value===pwc.value){matchMsg.textContent='✓ Passwords match';matchMsg.style.color='var(--success)';pwc.classList.remove('is-invalid');pwc.classList.add('is-valid');}
-        else{matchMsg.textContent='✕ Passwords do not match';matchMsg.style.color='var(--err)';pwc.classList.remove('is-valid');pwc.classList.add('is-invalid');}
+        if(pw.value===pwc.value){matchMsg.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Passwords match';matchMsg.style.color='var(--success)';pwc.classList.remove('is-invalid');pwc.classList.add('is-valid');}
+        else{matchMsg.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Passwords do not match';matchMsg.style.color='var(--err)';pwc.classList.remove('is-valid');pwc.classList.add('is-invalid');}
     }
     pwc.addEventListener('input', checkMatch);
 function togglePw(id,btn){const f=document.getElementById(id);if(f.type==='password'){f.type='text';btn.textContent='Hide';}else{f.type='password';btn.textContent='Show';}}
@@ -1081,7 +1081,9 @@ function openModal(form) {
 
     // Seller type
     var type = document.getElementById('seller_type_input').value;
-    document.getElementById('mv-seller_type').textContent = type === 'registered' ? '🏢 Registered Business' : '🏠 Home-Based Baker';
+    const buildingIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>';
+const homeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>';
+document.getElementById('mv-seller_type').innerHTML = type === 'registered' ? buildingIcon + ' Registered Business' : homeIcon + ' Home-Based Baker';
     document.getElementById('mv-docs-registered').style.display = type === 'registered' ? 'block' : 'none';
     document.getElementById('mv-docs-homebased').style.display  = type === 'homebased'  ? 'block' : 'none';
 
@@ -1103,11 +1105,11 @@ function openModal(form) {
     if (missing.length > 0) {
         banner.classList.add('show');
         btn.disabled = true;
-        btn.textContent = '⚠️ Fill in ' + missing.length + ' required field(s) first';
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Fill in ' + missing.length + ' required field(s) first';
     } else {
         banner.classList.remove('show');
         btn.disabled = false;
-        btn.textContent = '🎂 Confirm & Submit Application';
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Confirm & Submit Application';
     }
 
     document.getElementById('confirmModal').classList.add('open');
@@ -1121,7 +1123,7 @@ function closeModal() {
 
 function doSubmit() {
     if (_bakerForm) {
-        document.getElementById('btnConfirmSubmit').textContent = 'Submitting…';
+        document.getElementById('btnConfirmSubmit').textContent = 'Submitting\u2026';
         document.getElementById('btnConfirmSubmit').disabled = true;
         _bakerForm.submit();
     }

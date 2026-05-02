@@ -987,7 +987,7 @@ nav {
             Save Draft
         </button>
         <button class="btn-proceed" id="btnProceed">
-            Request Cake
+          Submit Request
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
     </div>
@@ -1608,7 +1608,7 @@ nav {
             <div style="display:flex;flex-direction:column;gap:8px;">
                 <button class="btn-proceed-lg" id="btnProceedLg">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    Request This Cake
+                    Submit Request
                 </button>
                 <button class="btn-load-draft" id="btnLoadDraft">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>

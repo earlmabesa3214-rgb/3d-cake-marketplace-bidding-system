@@ -354,7 +354,7 @@
     <!-- ══ SIDEBAR ══ -->
     <div class="left-panel">
         <div class="brand">
-            <div class="brand-icon">🍰</div>
+     <div class="brand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8C9A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div>
             <div>
                 <div class="brand-name">BakeSphere</div>
                 <div class="brand-sub">Customer Portal</div>
@@ -365,16 +365,16 @@
         <p class="panel-sub">Connect with talented local bakers and get a custom cake made just for you.</p>
 
         <ul class="perks">
-            <li><div class="perk-icon">🎂</div><div><div class="perk-title">Custom Cake Builder</div>Design with flavors, tiers, and decorations.</div></li>
-            <li><div class="perk-icon">📋</div><div><div class="perk-title">Request & Get Bids</div>Post your request and receive bids from local bakers.</div></li>
-            <li><div class="perk-icon">⭐</div><div><div class="perk-title">Review Bakers</div>Rate and review after your order is delivered.</div></li>
-            <li><div class="perk-icon">🚚</div><div><div class="perk-title">Fresh Delivery</div>Get your handcrafted cake delivered to your door.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8C9A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div><div><div class="perk-title">Custom Cake Builder</div>Design with flavors, tiers, and decorations.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8C9A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></div><div><div class="perk-title">Request & Get Bids</div>Post your request and receive bids from local bakers.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8C9A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div><div class="perk-title">Review Bakers</div>Rate and review after your order is delivered.</div></li>
+            <li><div class="perk-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E8C9A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div><div><div class="perk-title">Fresh Delivery</div>Get your handcrafted cake delivered to your door.</div></li>
         </ul>
 
         <div class="side-links">
             <span class="side-links-label">Quick Links</span>
-            <a href="{{ route('login') }}" class="side-link">🔑 Already have an account? Sign in</a>
-            <a href="{{ route('baker.register') }}" class="side-link">🎂 Are you a baker? Join here</a>
+            <a href="{{ route('login') }}" class="side-link"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5 18 10"/></svg> Already have an account? Sign in</a>
+            <a href="{{ route('baker.register') }}" class="side-link"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg> Are you a baker? Join here</a>
         </div>
     </div>
 
@@ -404,7 +404,7 @@
                 @csrf
 
                 {{-- ── 1. PERSONAL INFORMATION ── --}}
-                <div class="section-label">👤 Personal Information</div>
+                <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> Personal Information</div>
 
                 <div class="form-row-2">
                     <div class="form-group">
@@ -477,7 +477,7 @@
                 </div>
 
                 {{-- ── 2. DELIVERY ADDRESS ── --}}
-                <div class="section-label">📍 Delivery Address</div>
+                <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 13-8 13s-8-7-8-13a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg> Delivery Address</div>
 
       <div class="form-group">
                     <label class="form-label">Street / House No. / Barangay <span class="req">*</span></label>
@@ -520,7 +520,7 @@
                 </div>
 
                 {{-- ── 3. SECURITY ── --}}
-                <div class="section-label">🔒 Security</div>
+                <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Security</div>
 
                 <div class="form-row-2">
                     <div class="form-group">
@@ -529,7 +529,7 @@
                             <input type="password" name="password" id="password"
                                 class="form-input {{ $errors->has('password') ? 'is-invalid' : '' }}"
                                 placeholder="At least 8 characters" required>
-                            <button type="button" class="pw-toggle" onclick="togglePw('password', this)">👁</button>
+                            <button type="button" class="pw-toggle" onclick="togglePw('password', this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
                         </div>
                         <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
                         <div class="strength-label" id="strengthLabel"></div>
@@ -540,7 +540,7 @@
                         <div class="pw-wrap">
                             <input type="password" name="password_confirmation" id="password_confirmation"
                                 class="form-input" placeholder="Repeat password" required>
-                            <button type="button" class="pw-toggle" onclick="togglePw('password_confirmation', this)">👁</button>
+                            <button type="button" class="pw-toggle" onclick="togglePw('password_confirmation', this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
                         </div>
                         <div class="match-msg" id="pw_match_msg"></div>
                     </div>
@@ -731,8 +731,8 @@
     /* PASSWORD TOGGLE */
     function togglePw(id, btn) {
         const f = document.getElementById(id);
-        if (f.type === 'password') { f.type = 'text'; btn.textContent = '🙈'; }
-        else { f.type = 'password'; btn.textContent = '👁'; }
+        if (f.type === 'password') { f.type = 'text'; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'; }
+        else { f.type = 'password'; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'; }
     }
 
     /* MODALS */

@@ -67,11 +67,13 @@ public function show()
         $baker = $user->baker;
 
         $request->validate([
-            'phone' => 'required|string|size:11',
+         'phone'     => 'required|string|size:11',
+'birthdate' => 'required|date|before:' . now()->subYears(18)->toDateString(),
+'password'  => 'required|string|min:8|confirmed',
 
             'shop_name'        => 'required|string|max:255',
             'experience_years' => 'required|string',
-            'min_order_price'  => 'required|numeric|min:0',
+   
             'seller_type'      => 'required|in:registered,homebased',
             'full_address'     => 'nullable|string|max:500',
             'latitude'         => 'nullable|numeric',
@@ -96,8 +98,11 @@ public function show()
             'food_safety_cert' => 'nullable|file|max:5120',
         ]);
 
-        // Update the user's phone
-        $user->update(['phone' => $request->phone]);
+ $user->update([
+    'phone'     => $request->phone,
+    'birthdate' => $request->birthdate,
+    'password'  => bcrypt($request->password),
+]);
 
         // Helper to store uploaded file
         $store = fn($file, $path) => $file ? $file->store($path, 'public') : null;
@@ -106,7 +111,7 @@ public function show()
         $data = [
             'shop_name'        => $request->shop_name,
             'experience_years' => $request->experience_years,
-            'min_order_price'  => $request->min_order_price,
+           
             'seller_type'      => $request->seller_type,
             'bio'              => $request->bio,
             'social_media'     => $request->social_media,

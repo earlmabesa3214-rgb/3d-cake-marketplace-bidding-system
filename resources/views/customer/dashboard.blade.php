@@ -539,7 +539,7 @@
     <div class="hero-content">
         <div class="hero-eyebrow">Welcome</div>
         <div class="hero-title">
-            Hello, {{ auth()->user()->first_name }}! <span class="wave"> </span>
+            Hello, {{ auth()->user()->first_name }}! <span class="wave"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L8 15"/></svg></span>
         </div>
         <div class="hero-sub">
             @if($totalRequests === 0)
@@ -614,7 +614,7 @@
 </div>
 <div class="stats-grid dash-animate d2">
 <a href="{{ route('customer.cake-requests.index') }}" class="stat-card c1">
-    <div class="stat-icon-box">📋</div>
+    <div class="stat-icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></div>
     <div class="stat-meta">
         <div class="stat-value">{{ $totalRequests }}</div>
         <div class="stat-label">Total Requests</div>
@@ -623,7 +623,7 @@
 </a>
 
 <a href="{{ route('customer.cake-requests.index', ['status' => 'OPEN']) }}" class="stat-card c2">
-    <div class="stat-icon-box">⏳</div>
+    <div class="stat-icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9A6028" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
     <div class="stat-meta">
         <div class="stat-value">{{ $pendingRequests }}</div>
         <div class="stat-label">Active Orders</div>
@@ -632,7 +632,8 @@
 </a>
 
 <a href="{{ route('customer.cake-requests.index', ['status' => 'COMPLETED']) }}" class="stat-card c3">
-    <div class="stat-icon-box">✅</div>
+    <div class="stat-icon-box"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5C3D2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+
     <div class="stat-meta">
         <div class="stat-value">{{ $completedRequests }}</div>
         <div class="stat-label">Completed</div>
@@ -654,7 +655,7 @@
         </div>
         <div class="actions-grid">
             <a href="{{ route('customer.cake-builder.index') }}" class="action-card">
-                <div class="action-icon-wrap caramel">🎨</div>
+                <div class="action-icon-wrap caramel"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="13.5" cy="17.5" r="2.5"/><path d="M17.5 12a4.5 4.5 0 0 1-9 0 4.5 4.5 0 0 1 9 0z" opacity="0.3"/><path d="M21 12c0 1.66-4 3-4 3s-4-1.34-4-3 4-3 4-3 4 1.34 4 3z"/></svg></div>
                 <div class="action-text">
                     <div class="action-title">Cake Builder</div>
                     <div class="action-desc">Design a custom cake</div>
@@ -662,23 +663,23 @@
                 <span class="action-arrow">→</span>
             </a>
             <a href="{{ route('customer.cake-requests.index') }}" class="action-card">
-                <div class="action-icon-wrap rose">📋</div>
+                <div class="action-icon-wrap rose"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></div>
                 <div class="action-text">
                     <div class="action-title">My Requests</div>
                     <div class="action-desc">Track all your orders</div>
                 </div>
                 <span class="action-arrow">→</span>
             </a>
-            <a href="{{ route('customer.cake-requests.create') }}" class="action-card">
-                <div class="action-icon-wrap sage">✨</div>
+          <a href="{{ route('customer.cake-requests.index', ['status' => 'COMPLETED']) }}" class="action-card">
+                <div class="action-icon-wrap sage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6A30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg></div>
                 <div class="action-text">
-                    <div class="action-title">New Request</div>
-                    <div class="action-desc">Submit manually</div>
+                    <div class="action-title">Order History</div>
+                    <div class="action-desc">View past orders</div>
                 </div>
                 <span class="action-arrow">→</span>
             </a>
             <a href="{{ route('customer.profile.index') }}" class="action-card">
-                <div class="action-icon-wrap brown">👤</div>
+                <div class="action-icon-wrap brown"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7B4F3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
                 <div class="action-text">
                     <div class="action-title">My Profile</div>
                     <div class="action-desc">Update your details</div>
@@ -730,9 +731,9 @@
                 </table>
             @else
                 <div class="empty-state">
-                    <span class="emoji">🎂</span>
+                    <span class="emoji"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></span>
                     <p>No requests yet. Start your first one!</p>
-                    <a href="{{ route('customer.cake-builder.index') }}" class="empty-cta">🎨 Build a Cake</a>
+                    <a href="{{ route('customer.cake-builder.index') }}" class="empty-cta"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Build a Cake</a>
                 </div>
             @endif
         </div>
@@ -794,7 +795,7 @@
                 </ul>
             @else
                 <div class="activity-empty">
-                    <div class="activity-empty-icon">🎂</div>
+                    <div class="activity-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C8894A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div>
                     No activity yet.<br>
                     <a href="{{ route('customer.cake-builder.index') }}" style="color:var(--caramel); font-weight:700; text-decoration:none; font-size:0.78rem;">Start your first order →</a>
                 </div>

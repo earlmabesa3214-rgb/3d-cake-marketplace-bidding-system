@@ -213,31 +213,7 @@
                 Welcome back — here's what's happening today.
             @endif
         </div>
-    <div class="hero-rush-wrap">
-    <div style="display:inline-flex; flex-direction:column; gap:0.5rem; background:rgba(255,255,255,0.07); border:1px solid rgba(200,137,74,0.35); border-radius:16px; padding:0.85rem 1.1rem; backdrop-filter:blur(8px);">
-        <div style="display:flex; align-items:center; gap:0.85rem;">
-            <div class="rush-dot {{ auth()->user()->baker->accepts_rush_orders ? '' : 'off' }}" id="rushDot"></div>
-            <span class="rush-label">⚡ Rush Orders</span>
-            <label class="rush-switch" style="margin-left:auto;">
-                <input type="checkbox" id="rushToggle"
-                       {{ auth()->user()->baker->accepts_rush_orders ? 'checked' : '' }}
-                       onchange="toggleRush(this)">
-                <span class="rush-slider"></span>
-            </label>
-        </div>
-        <div style="font-size:0.68rem; color:rgba(255,255,255,0.38); line-height:1.5; padding-left:1.35rem;">
-            When on, you'll be auto-matched and assigned to customers who need a cake ASAP.
-        </div>
-    </div>
-    <div class="rush-fee-field" id="rush-fee-wrap"
-         style="{{ auth()->user()->baker->accepts_rush_orders ? '' : 'display:none' }}">
-        <span>Rush Fee ₱</span>
-        <input type="number" id="rushFeeInput"
-               value="{{ auth()->user()->baker->rush_fee ?? 150 }}"
-               min="0" max="9999"
-               onchange="saveRushFee(this.value)">
-    </div>
-</div>
+ 
 </div>
 
     <div class="hero-illustration">
@@ -274,7 +250,7 @@
 @if($profileIncomplete)
 <div class="pib">
     <div class="pib-left">
-        <div style="font-size:1.4rem; flex-shrink:0; margin-top:0.1rem;">⚠️</div>
+        <div style="flex-shrink:0; margin-top:0.1rem;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
         <div>
             <div class="pib-title">Complete your profile to start bidding</div>
             <div class="pib-missing">
@@ -291,25 +267,25 @@
 
 <div class="stats-grid">
     <div class="stat-card c1">
-        <div class="stat-icon">🎂</div>
+        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--caramel)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div>
         <div class="stat-value">{{ $openRequestsCount }}</div>
         <div class="stat-label">Open Requests</div>
         <div class="stat-change">↑ Available to bid</div>
     </div>
     <div class="stat-card c2">
-        <div class="stat-icon">💼</div>
+        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9A6028" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
         <div class="stat-value">{{ $myActiveBidsCount }}</div>
         <div class="stat-label">My Active Bids</div>
         <div class="stat-change">Awaiting response</div>
     </div>
     <div class="stat-card c3">
-        <div class="stat-icon">📦</div>
+        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7A4A28" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
         <div class="stat-value">{{ $activeOrdersCount }}</div>
         <div class="stat-label">Orders in Progress</div>
         <div class="stat-change">Currently baking</div>
     </div>
     <div class="stat-card c4">
-        <div class="stat-icon">💰</div>
+        <div class="stat-icon" style="font-size:1.6rem; font-weight:700; color:var(--brown-deep); line-height:1;">₱</div>
         <div class="stat-value">₱{{ number_format($monthEarnings, 0) }}</div>
         <div class="stat-label">This Month</div>
         <div class="stat-change">{{ $completedThisMonth }} completed</div>
@@ -320,7 +296,7 @@
     <div>
         <div class="card" style="margin-bottom:1.5rem;">
             <div class="card-header">
-                <h2 class="card-title">🍰 Open Requests Near You</h2>
+                <h2 class="card-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Open Requests Near You</h2>
                 <a href="{{ route('baker.requests.index') }}" class="card-link">View all →</a>
             </div>
             @forelse($openRequests as $req)
@@ -329,7 +305,7 @@
                 $bidCount = $req->bids()->count();
             @endphp
             <a class="request-item" href="{{ route('baker.requests.show', $req->id) }}">
-                <div class="req-icon">🎂</div>
+                <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--caramel)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg></div>
                 <div class="req-info">
                     <div class="req-name">{{ $config['flavor'] ?? 'Custom' }} {{ $config['shape'] ?? 'Cake' }}</div>
                     <div class="req-meta">
@@ -338,7 +314,7 @@
                         · Due {{ $req->delivery_date->format('M d') }}
                     </div>
                     @if($bidCount > 0)
-                    <div class="req-bid-count">🏷 {{ $bidCount }} bid{{ $bidCount > 1 ? 's' : '' }}</div>
+                    <div class="req-bid-count"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> {{ $bidCount }} bid{{ $bidCount > 1 ? 's' : '' }}</div>
                     @endif
                 </div>
                 <div class="req-budget">
@@ -348,7 +324,7 @@
             </a>
             @empty
             <div class="empty-mini">
-                <div class="emo">🫙</div>
+                <div class="emo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/></svg></div>
                 No open requests right now. Check back soon!
             </div>
             @endforelse
@@ -376,7 +352,7 @@
             </div>
             @empty
             <div class="empty-mini">
-                <div class="emo">💼</div>
+                <div class="emo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
                 No bids placed yet.
             </div>
             @endforelse
