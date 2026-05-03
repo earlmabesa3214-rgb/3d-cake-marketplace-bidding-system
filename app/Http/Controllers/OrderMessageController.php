@@ -10,22 +10,14 @@ use Illuminate\Support\Facades\Storage;
 
 class OrderMessageController extends Controller
 {
-    /**
-     * Store a new message (text and/or image).
-     * Returns JSON so the chat bubble can do optimistic UI.
-     */
-public function store(Request $request, BakerOrder $order)
+  public function store(Request $request, BakerOrder $order)
     {
-        $user = Auth::user();
-$recipient->notify(new \App\Notifications\NewMessageNotification($message, $order));
         $user = Auth::user();
 
         $isCustomer = $order->cakeRequest->user_id === $user->id;
         $isBaker    = $order->baker_id === $user->id;
         abort_if(!$isCustomer && !$isBaker, 403);
 
-        // Validate — body and image are both optional individually,
-        // but at least one must be present (checked after validation).
         $validated = $request->validate([
             'body'  => 'nullable|string|max:2000',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
@@ -35,21 +27,10 @@ $recipient->notify(new \App\Notifications\NewMessageNotification($message, $orde
         $hasBody  = $bodyText !== '';
         $hasImage = $request->hasFile('image') && $request->file('image')->isValid();
 
-        // Must have at least text or image
         if (!$hasBody && !$hasImage) {
-        $recipient = $message->sender_id === $user->id
-            ? $order->baker->user
-            : $order->cakeRequest->user;
+            return response()->json(['error' => 'Message cannot be empty.'], 422);
+        }
 
-        $recipient->notify(
-            new \App\Notifications\NewMessageNotification($message, $order)
-        );
-
-        return response()->json([
-            'message' => $this->formatMessage($message),
-        ], 201);
-    }
-        // Store image if provided
         $imagePath = null;
         if ($hasImage) {
             $imagePath = $request->file('image')
@@ -63,13 +44,22 @@ $recipient->notify(new \App\Notifications\NewMessageNotification($message, $orde
             'image_path'     => $imagePath,
         ]);
 
-        // Mark messages from other party as read
         OrderMessage::where('baker_order_id', $order->id)
             ->where('sender_id', '!=', $user->id)
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
         $message->load('sender');
+try {
+    $recipient = $isCustomer ? $order->baker : $order->cakeRequest->user;
+    if ($recipient) {
+        $recipient->notify(
+            new \App\Notifications\NewMessageNotification($message, $order)
+        );
+    }
+} catch (\Throwable $e) {
+    \Log::error('Chat notification failed for order #' . $order->id . ': ' . $e->getMessage());
+}
 
         return response()->json([
             'message' => $this->formatMessage($message),
@@ -92,12 +82,12 @@ $recipient->notify(new \App\Notifications\NewMessageNotification($message, $orde
 
         $afterId = (int) $request->query('after', 0);
 
-        $messages = OrderMessage::where('baker_order_id', $order->id)
+   $messages = OrderMessage::where('baker_order_id', $order->id)
             ->where('id', '>', $afterId)
+            ->where('sender_id', '!=', $user->id)
             ->with('sender')
             ->orderBy('id')
             ->get();
-
         // Mark messages from the other party as read
         if ($messages->isNotEmpty()) {
             OrderMessage::where('baker_order_id', $order->id)

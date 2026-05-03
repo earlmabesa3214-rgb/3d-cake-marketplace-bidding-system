@@ -319,8 +319,6 @@
     .ocb-btn{ right:.6rem; bottom:.6rem; }
 }
 </style>
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -328,11 +326,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var ME_ID      = {{ $me->id }};
     var OTHER_INIT = @json($otherInitial);
     var POLL_URL   = @json(route('order.messages.poll', $order->id));
-    var CSRF       = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
+    var CSRF       = document.querySelector('meta[name="csrf-token"]')
+                       ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
     var IS_ARCH    = {{ $isArchived ? 'true' : 'false' }};
     var lastId     = {{ $lastMsgId }};
     var isOpen     = false;
     var pollTimer  = null;
+    var inFlight   = false;
 
     var btn       = document.getElementById('ocbBtn');
     var panel     = document.getElementById('ocpPanel');
@@ -350,6 +350,60 @@ document.addEventListener('DOMContentLoaded', function () {
     var prevRm    = document.getElementById('ocpPreviewRm');
     var sendBtn   = document.getElementById('ocpSend');
 
+    // ── Poll ─────────────────────────────────────────────────────────────────
+
+    function startPoll() {
+        if (pollTimer || IS_ARCH) return;
+        pollTimer = setInterval(doPoll, POLL_MS);
+    }
+
+    function stopPoll() {
+        clearInterval(pollTimer);
+        pollTimer = null;
+    }
+
+    function doPoll() {
+        if (inFlight) return;
+        var after = lastId; // snapshot before async
+        fetch(POLL_URL + '?after=' + after, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept':           'application/json',
+                'X-CSRF-TOKEN':     CSRF
+            }
+        })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+            if (!data || !data.messages || !data.messages.length) return;
+            var empty = bodyEl.querySelector('.ocp-empty');
+            if (empty) empty.remove();
+            var newUnread = 0;
+            data.messages.forEach(function(m) {
+                // Server already filters own messages, but double-guard here
+                if (m.sender_id === ME_ID) return;
+                if (m.id <= after) return;
+                // Skip if already in DOM (e.g. from a previous overlapping poll)
+                if (bodyEl.querySelector('.ocm[data-id="' + m.id + '"]')) return;
+                appendMsg(m);
+                lastId = Math.max(lastId, m.id);
+                newUnread++;
+            });
+            if (newUnread > 0) {
+                scrollDown();
+                if (!isOpen) {
+                    var cur = parseInt((badge && badge.textContent) || '0') || 0;
+                    if (badge) {
+                        badge.textContent = (cur + newUnread > 9) ? '9+' : String(cur + newUnread);
+                        badge.style.display = 'flex';
+                    }
+                }
+            }
+        })
+        .catch(function() {});
+    }
+
+    // ── Toggle ────────────────────────────────────────────────────────────────
+
     function toggle() {
         isOpen = !isOpen;
         btn.classList.toggle('open', isOpen);
@@ -358,175 +412,181 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isOpen) {
             if (badge) badge.style.display = 'none';
             scrollDown();
-            if (input) setTimeout(function(){ input.focus(); }, 110);
-            startPoll();
+            if (input) setTimeout(function() { input.focus(); }, 110);
         }
     }
 
     btn.addEventListener('click', toggle);
     if (closeBtn) closeBtn.addEventListener('click', toggle);
 
-    document.addEventListener('click', function(e){
+    document.addEventListener('click', function(e) {
         if (!isOpen) return;
         if (panel.contains(e.target) || btn.contains(e.target)) return;
         toggle();
     });
 
-    document.addEventListener('keydown', function(e){
+    document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && isOpen) toggle();
     });
 
     function scrollDown() {
-        if (anchor) setTimeout(function(){ anchor.scrollIntoView({ behavior: 'smooth' }); }, 35);
+        if (anchor) setTimeout(function() { anchor.scrollIntoView({ behavior: 'smooth' }); }, 35);
     }
 
-    function startPoll() {
-        if (pollTimer || IS_ARCH) return;
-        pollTimer = setInterval(doPoll, POLL_MS);
-    }
+    // ── Append helpers ────────────────────────────────────────────────────────
 
-    function doPoll() {
-        fetch(POLL_URL + '?after=' + lastId, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': CSRF
-            }
-        })
-        .then(function(r){ return r.ok ? r.json() : null; })
-        .then(function(data){
-            if (!data || !data.messages || !data.messages.length) return;
-            var empty = bodyEl.querySelector('.ocp-empty');
-            if (empty) empty.remove();
-            var newUnread = 0;
-            data.messages.forEach(function(m){
-                if (bodyEl.querySelector('.ocm[data-id="'+m.id+'"]')) return;
-                appendMsg(m, m.sender_id === ME_ID);
-                lastId = Math.max(lastId, m.id);
-                if (m.sender_id !== ME_ID) newUnread++;
-            });
-            scrollDown();
-            if (!isOpen && newUnread > 0) {
-                var cur = parseInt((badge && badge.textContent) || '0') || 0;
-                if (badge) {
-                    badge.textContent = (cur + newUnread > 9) ? '9+' : String(cur + newUnread);
-                    badge.style.display = 'flex';
-                }
-            }
-        })
-        .catch(function(){});
-    }
-
-    function appendMsg(m, mine) {
+    function appendMsg(m) {
         var row = document.createElement('div');
-        row.className = 'ocm ' + (mine ? 'ocm-mine' : 'ocm-theirs');
-        row.dataset.id = m.id;
-        var t    = fmtTime(m.created_at);
-        var seen = (mine && m.read_at) ? '<span class="ocm-seen">· Seen</span>' : '';
-        var imgH = m.image_url ? '<a href="'+esc(m.image_url)+'" target="_blank" class="ocm-imglink"><img src="'+esc(m.image_url)+'" class="ocm-img" loading="lazy"></a>' : '';
-        var txtH = m.body ? '<div class="ocm-txt">'+esc(m.body)+'</div>' : '';
-        row.innerHTML = (!mine ? '<div class="ocm-av">'+OTHER_INIT+'</div>' : '') +
-            '<div class="ocm-bub '+(mine?'ocm-bub-mine':'ocm-bub-theirs')+'">'+imgH+txtH+'<div class="ocm-time">'+t+seen+'</div></div>';
+        row.className  = 'ocm ocm-theirs';
+        row.dataset.id = String(m.id);
+        var imgH = m.image_url
+            ? '<a href="' + esc(m.image_url) + '" target="_blank" class="ocm-imglink"><img src="' + esc(m.image_url) + '" class="ocm-img" loading="lazy"></a>'
+            : '';
+        var txtH = m.body ? '<div class="ocm-txt">' + esc(m.body) + '</div>' : '';
+        row.innerHTML =
+            '<div class="ocm-av">' + OTHER_INIT + '</div>' +
+            '<div class="ocm-bub ocm-bub-theirs">' +
+                imgH + txtH +
+                '<div class="ocm-time">' + fmtTime(m.created_at) + '</div>' +
+            '</div>';
         bodyEl.insertBefore(row, anchor);
-    }
-
-    if (attachBtn && fileIn) {
-        attachBtn.addEventListener('click', function(){ fileIn.click(); });
-        fileIn.addEventListener('change', function(){
-            var f = this.files[0];
-            if (!f) return;
-            if (!f.type.startsWith('image/')) { alert('Select an image file.'); this.value=''; return; }
-            if (f.size > 5*1024*1024) { alert('Max 5 MB.'); this.value=''; return; }
-            var rd = new FileReader();
-            rd.onload = function(e){ prevImg.src=e.target.result; prevName.textContent=f.name; preview.style.display='flex'; attachBtn.classList.add('has-file'); };
-            rd.readAsDataURL(f);
-        });
-        if (prevRm) prevRm.addEventListener('click', clearPreview);
-    }
-
-if (form) {
-        form.addEventListener('submit', function(e){
-            e.preventDefault();
-            var txt  = input ? input.value.trim() : '';
-            var hasF = fileIn && fileIn.files.length > 0;
-            if (!txt && !hasF) return;
-            if (sendBtn) sendBtn.disabled = true;
-
-            // ── IMPORTANT: capture FormData FIRST before clearing anything ──
-            var fd = new FormData(form);
-
-            var imgDataUrl = (hasF && prevImg && prevImg.src) ? prevImg.src : null;
-            var optEl = appendOptimistic(txt, imgDataUrl);
-
-            // Clear inputs AFTER FormData is captured
-            if (input) input.value = '';
-            clearPreview();
-            scrollDown();
-
-            fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': CSRF
-                },
-                body: fd
-            })
-            .then(function(r){ return r.json().then(function(d){ return {ok:r.ok,data:d}; }); })
-            .then(function(res){
-                if (res.ok && res.data.message) {
-                    var m = res.data.message;
-                    lastId = Math.max(lastId, m.id);
-                    if (optEl) {
-                        optEl.dataset.id = m.id;
-                        var t = optEl.querySelector('.ocm-time');
-                        if (t) t.textContent = fmtTime(m.created_at);
-                    }
-                } else {
-                    if (optEl) optEl.remove();
-                    if (input && txt) input.value = txt;
-                }
-            })
-            .catch(function(){
-                if (optEl) optEl.remove();
-                if (input && txt) input.value = txt;
-            })
-            .finally(function(){
-                if (sendBtn) sendBtn.disabled = false;
-                if (fileIn) fileIn.value = '';
-                scrollDown();
-            });
-        });
     }
 
     function appendOptimistic(txt, imgDataUrl) {
         var empty = bodyEl.querySelector('.ocp-empty');
         if (empty) empty.remove();
         var row = document.createElement('div');
-        row.className = 'ocm ocm-mine'; row.dataset.id = 'pending';
-        var imgH = imgDataUrl ? '<div class="ocm-imglink"><img src="'+imgDataUrl+'" class="ocm-img"></div>' : '';
-        var txtH = txt ? '<div class="ocm-txt">'+esc(txt)+'</div>' : '';
-        var t = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-        row.innerHTML = '<div class="ocm-bub ocm-bub-mine">'+imgH+txtH+'<div class="ocm-time">'+t+' <span style="opacity:.45">· Sending…</span></div></div>';
+        row.className  = 'ocm ocm-mine';
+        row.dataset.id = 'pending-' + Date.now();
+        var imgH = imgDataUrl
+            ? '<div class="ocm-imglink"><img src="' + imgDataUrl + '" class="ocm-img"></div>'
+            : '';
+        var txtH = txt ? '<div class="ocm-txt">' + esc(txt) + '</div>' : '';
+        var t = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        row.innerHTML =
+            '<div class="ocm-bub ocm-bub-mine">' +
+                imgH + txtH +
+                '<div class="ocm-time">' + t + '<span class="ocm-sending"> · Sending…</span></div>' +
+            '</div>';
         bodyEl.insertBefore(row, anchor);
         return row;
     }
 
-    function clearPreview() {
-        if (preview) preview.style.display='none';
-        if (prevImg) prevImg.src='';
-        if (prevName) prevName.textContent='';
-        if (attachBtn) attachBtn.classList.remove('has-file');
-        if (fileIn) fileIn.value='';
+    // ── File attachment ───────────────────────────────────────────────────────
+
+    if (attachBtn && fileIn) {
+        attachBtn.addEventListener('click', function() { fileIn.click(); });
+        fileIn.addEventListener('change', function() {
+            var f = this.files[0];
+            if (!f) return;
+            if (!f.type.startsWith('image/')) { alert('Select an image file.'); this.value = ''; return; }
+            if (f.size > 5 * 1024 * 1024)    { alert('Max 5 MB.');             this.value = ''; return; }
+            var rd = new FileReader();
+            rd.onload = function(ev) {
+                prevImg.src = ev.target.result;
+                prevName.textContent = f.name;
+                preview.style.display = 'flex';
+                attachBtn.classList.add('has-file');
+            };
+            rd.readAsDataURL(f);
+        });
+        if (prevRm) prevRm.addEventListener('click', clearPreview);
     }
 
-    function esc(s) { var d=document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
-    function fmtTime(iso) { var d=new Date(iso); return isNaN(d)?'':d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+    function clearPreview() {
+        if (preview)   preview.style.display = 'none';
+        if (prevImg)   prevImg.src = '';
+        if (prevName)  prevName.textContent = '';
+        if (attachBtn) attachBtn.classList.remove('has-file');
+        if (fileIn)    fileIn.value = '';
+    }
 
-    // scroll on load
+    // ── Send ──────────────────────────────────────────────────────────────────
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (inFlight) return;
+
+            var txt  = input ? input.value.trim() : '';
+            var hasF = fileIn && fileIn.files && fileIn.files.length > 0;
+            if (!txt && !hasF) return;
+
+            var fd = new FormData(form);
+            var imgDataUrl = (hasF && prevImg && prevImg.src && prevImg.src !== window.location.href)
+                ? prevImg.src : null;
+
+            var optEl = appendOptimistic(txt, imgDataUrl);
+            if (input) input.value = '';
+            clearPreview();
+            scrollDown();
+
+            inFlight = true;
+            if (sendBtn) sendBtn.disabled = true;
+            stopPoll();
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept':           'application/json',
+                    'X-CSRF-TOKEN':     CSRF
+                },
+                body: fd
+            })
+            .then(function(r) {
+                return r.ok ? r.json() : Promise.reject(r.status);
+            })
+            .then(function(data) {
+                if (data && data.message) {
+                    var m = data.message;
+                    lastId = Math.max(lastId, m.id); // advance BEFORE poll restarts
+                    if (optEl && optEl.parentNode) {
+                        optEl.dataset.id = String(m.id);
+                        var sp = optEl.querySelector('.ocm-sending');
+                        if (sp) sp.remove();
+                        var te = optEl.querySelector('.ocm-time');
+                        if (te) te.textContent = fmtTime(m.created_at);
+                    }
+                } else {
+                    if (optEl && optEl.parentNode) optEl.remove();
+                }
+            })
+           .catch(function(err) {
+    console.error('Chat send error:', err);
+    if (err === 422 || err === 403) {
+        if (optEl && optEl.parentNode) optEl.remove();
+    } else {
+        var sp = optEl && optEl.querySelector('.ocm-sending');
+        if (sp) sp.textContent = ' · Failed to confirm';
+    }
+})
+            .finally(function() {
+                inFlight = false;
+                if (sendBtn) sendBtn.disabled = false;
+                if (fileIn)  fileIn.value = '';
+                startPoll(); // restart poll ONCE here only
+                scrollDown();
+            });
+        });
+    }
+
+    // ── Utilities ─────────────────────────────────────────────────────────────
+
+    function esc(s) {
+        var d = document.createElement('div');
+        d.appendChild(document.createTextNode(s));
+        return d.innerHTML;
+    }
+
+    function fmtTime(iso) {
+        var d = new Date(iso);
+        return isNaN(d) ? '' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+
     if (anchor) anchor.scrollIntoView({ behavior: 'instant' });
 
-    // start background polling immediately (updates badge even when closed)
+    // Poll runs always in background — badge updates even when chat is closed
     if (!IS_ARCH) startPoll();
 
     @if(session('message_sent'))

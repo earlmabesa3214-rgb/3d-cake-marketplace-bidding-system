@@ -176,14 +176,14 @@
 
 {{-- ── HERO ── --}}
 <div class="gallery-hero">
-    <div class="hero-title">🎂 Cake Gallery</div>
+    <div class="hero-title"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg> Cake Gallery</div>
     <div class="hero-sub">Browse designs, pick a template, or get inspired — then build your perfect cake.</div>
     <div class="hero-actions">
         <a href="{{ route('customer.cake-builder.index') }}" class="hero-btn-primary">
-            ✨ Build My Cake
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Build My Cake
         </a>
         <a href="{{ route('customer.cake-requests.index') }}" class="hero-btn-secondary">
-            📋 My Orders
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg> My Orders
         </a>
     </div>
 </div>
@@ -192,7 +192,7 @@
 <div class="gallery-section">
     <div class="section-header">
         <div>
-            <div class="section-title">💰 Shop by Budget</div>
+            <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg> Shop by Budget</div>
             <div class="section-sub">Find cakes that fit your price range</div>
         </div>
     </div>
@@ -213,7 +213,7 @@
 <div class="gallery-section">
     <div class="section-header">
         <div>
-            <div class="section-title">🔥 Trending Cakes</div>
+            <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> Trending Cakes</div>
             <div class="section-sub">Most ordered by customers like you</div>
         </div>
     </div>
@@ -229,7 +229,7 @@
                 @if($item['image'])
                     <img src="{{ asset('storage/' . $item['image']) }}" alt="{{ $label }}">
                 @else
-                    🎂
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>
                 @endif
                 <div class="trending-rank">#{{ $i + 1 }}</div>
             </div>
@@ -256,7 +256,7 @@
 <div class="gallery-section">
     <div class="section-header">
         <div>
-            <div class="section-title">🎉 Shop by Occasion</div>
+            <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2z"/></svg> Shop by Occasion</div>
             <div class="section-sub">Find the perfect cake for every celebration</div>
         </div>
     </div>
@@ -275,7 +275,7 @@
 <div class="gallery-section">
     <div class="section-header">
         <div>
-            <div class="section-title">✏️ Start from a Template</div>
+            <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg> Start from a Template</div>
             <div class="section-sub">Pick a base design and customize it in the 3D builder</div>
         </div>
         <a href="{{ route('customer.cake-builder.index') }}" class="section-link">Customize freely →</a>
@@ -293,7 +293,7 @@
             </div>
             <a href="{{ route('customer.cake-builder.index') }}?flavor={{ urlencode($tpl['flavor']) }}&frosting={{ urlencode($tpl['frosting']) }}&size={{ urlencode($tpl['size']) }}"
                class="template-btn">
-                🎂 Customize This
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg> Customize This
             </a>
         </div>
         @endforeach
@@ -305,7 +305,7 @@
 <div class="gallery-section">
     <div class="section-header">
         <div>
-            <div class="section-title">👨‍🍳 Baker Showcase</div>
+            <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg> Baker Showcase</div>
             <div class="section-sub">Top-rated bakers on BakeSphere</div>
         </div>
     </div>
@@ -316,7 +316,7 @@
                 @if($b['sample_photo'])
                     <img src="{{ asset('storage/' . $b['sample_photo']) }}" alt="Sample">
                 @else
-                    🎂
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>
                 @endif
             </div>
             <div class="baker-showcase-body">
@@ -360,7 +360,7 @@
 <div class="gallery-section">
     <div class="section-header">
         <div>
-            <div class="section-title">📸 Recently Made</div>
+            <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg> Recently Made</div>
             <div class="section-sub">Real cakes made by our bakers</div>
         </div>
     </div>
@@ -370,7 +370,7 @@
             @if($cake->cake_preview_image)
                 <img src="{{ asset('storage/' . $cake->cake_preview_image) }}" alt="Recent cake">
             @else
-                🎂
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/></svg>
             @endif
             <div class="recent-card-overlay">
                 <div class="recent-card-label">
@@ -384,7 +384,7 @@
 </div>
 @else
 <div class="gallery-empty">
-    <div class="e-icon">📷</div>
+    <div class="e-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
     <h3>No completed cakes yet</h3>
     <p>Be the first — order a cake and it'll appear here once delivered!</p>
 </div>

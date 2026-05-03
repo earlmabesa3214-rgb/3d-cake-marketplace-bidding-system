@@ -64,7 +64,12 @@ public function show()
             Auth::login($user);
         }
 
-        $baker = $user->baker;
+      $baker = $user->baker ?? Baker::create([
+            'user_id' => $user->id,
+            'name'    => $user->first_name . ' ' . $user->last_name,
+            'email'   => $user->email,
+            'status'  => 'pending',
+        ]);
 
         $request->validate([
          'phone'     => 'required|string|size:11',

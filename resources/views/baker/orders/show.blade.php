@@ -50,14 +50,14 @@
     width: 200px; height: 200px; border-radius: 50%;
     background: rgba(255,255,255,0.06);
 }
-.order-hero.s-ACCEPTED            { background: linear-gradient(135deg, #3B1F0F, #6A3518); }
-.order-hero.s-WAITING_FOR_PAYMENT { background: linear-gradient(135deg, #5A2E00, #9A5A1A); }
-.order-hero.s-PREPARING           { background: linear-gradient(135deg, #3B2A10, #7A5020); }
-.order-hero.s-READY               { background: linear-gradient(135deg, #4A2E08, #8A5E18); }
-.order-hero.s-WAITING_FINAL_PAYMENT { background: linear-gradient(135deg, #3A2510, #7A4A20); }
-.order-hero.s-DELIVERED           { background: linear-gradient(135deg, #2A1A08, #6A3A18); }
-.order-hero.s-COMPLETED           { background: linear-gradient(135deg, #2A1A08, #6A3A18); }
-.order-hero.s-CANCELLED           { background: linear-gradient(135deg, #5A1A1A, #8B2A2A); }
+.order-hero.s-ACCEPTED,
+.order-hero.s-WAITING_FOR_PAYMENT,
+.order-hero.s-PREPARING,
+.order-hero.s-READY,
+.order-hero.s-WAITING_FINAL_PAYMENT,
+.order-hero.s-DELIVERED,
+.order-hero.s-COMPLETED            { background: linear-gradient(135deg, #3B1F0F, #6A3518); }
+.order-hero.s-CANCELLED            { background: linear-gradient(135deg, #5A1A1A, #8B2A2A); }
 
 .hero-top {
     display: flex; justify-content: space-between; align-items: flex-start;
@@ -648,11 +648,7 @@
                             <div style="font-weight:700; font-size:0.85rem; color:#8A5010; margin-bottom:0.25rem;">Customer Notified — Waiting for Pickup</div>
                             <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">The customer has been notified that their cake is ready. Wait for them to arrive at your location with <strong>₱{{ number_format(round($order->agreed_price * 0.5, 2), 2) }}</strong> cash.</div>
                         </div>
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                document.getElementById('form-request-final').submit();
-                            });
-                        </script>
+                       
                         @else
                         <form id="form-request-final" method="POST" action="{{ route('baker.orders.advance', $order->id) }}">
                             @csrf
@@ -814,7 +810,7 @@
             @if(!$isPickup && $order->cakeRequest->delivery_lat && $order->cakeRequest->delivery_lng)
             <div class="card">
                 <div class="card-header">
-                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Customer's Delivery Location</h3>
+                    <h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Location</h3>
                 </div>
               
                 <div id="baker-delivery-map" style="width:100%; height:260px;"></div>
@@ -1260,6 +1256,101 @@ document.addEventListener('keydown', function(e) {
     if (document.getElementById('rejectPaymentModal').classList.contains('is-open')) closeRejectModal();
 });
 </script>
+
+@php $terminalBakerStates = ['COMPLETED','CANCELLED','DELIVERED']; @endphp
+@if(!in_array($order->status, $terminalBakerStates))
+<script>
+(function () {
+    'use strict';
+
+    var POLL_URL    = @json(route('baker.orders.state-poll', $order->id));
+   var POLL_MS     = 3000;
+    var lastFp      = null;
+    var reloading   = false;
+
+  function fp(d) {
+    return [
+        d.order_status,
+        d.request_status,
+        d.down_status,
+        d.down_escrow,
+        d.final_status,
+        d.final_escrow,
+        d.has_cake_photo ? '1' : '0',
+        d.agreed_price ?? '',
+        d.baker_payout ?? '',
+    ].join('|');
+}
+    function ensureStyle() {
+        if (document.getElementById('rt-style')) return;
+        var s = document.createElement('style');
+        s.id  = 'rt-style';
+        s.textContent =
+            '@keyframes rt-slidein{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}' +
+            '@keyframes rt-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}';
+        document.head.appendChild(s);
+    }
+
+    function triggerReload(msg) {
+        if (reloading) return;
+        reloading = true;
+        ensureStyle();
+
+        var el = document.createElement('div');
+        el.style.cssText = [
+            'position:fixed','top:1.1rem','left:50%',
+            'transform:translateX(-50%)','z-index:99999',
+            'background:#3B1F0F','color:white',
+            'padding:0.55rem 1.2rem','border-radius:20px',
+            'font-size:0.8rem','font-weight:600',
+            'display:flex','align-items:center','gap:0.5rem',
+            'box-shadow:0 4px 24px rgba(0,0,0,0.28)',
+            'white-space:nowrap',
+            'animation:rt-slidein 0.25s ease',
+        ].join(';');
+        el.innerHTML =
+            '<span style="width:8px;height:8px;border-radius:50%;background:#E8A94A;' +
+            'display:inline-block;animation:rt-pulse 1s ease-in-out infinite;"></span> ' +
+            (msg || 'Order updated — reloading…');
+        document.body.appendChild(el);
+        setTimeout(function () { window.location.reload(); }, 950);
+    }
+
+  var STATUS_MSGS = {
+    'WAITING_FOR_PAYMENT'    : 'Customer is ready to pay — reloading…',
+    'PREPARING'              : 'Downpayment confirmed — start baking!',
+    'READY'                  : 'Cake marked ready — reloading…',
+    'WAITING_FINAL_PAYMENT'  : 'Final payment received — reloading…',
+    'DELIVERED'              : 'Order delivered — reloading…',
+    'COMPLETED'              : 'Order completed — reloading…',
+    'CANCELLED'              : 'Order was cancelled.',
+    'ACCEPTED'               : 'Order updated — reloading…',
+};
+
+    setInterval(function () {
+        fetch(POLL_URL, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept':           'application/json',
+            },
+        })
+        .then(function (r) { return r.ok ? r.json() : null; })
+       .then(function (data) {
+            if (!data) return;
+            var current = fp(data);
+            if (lastFp === null) { lastFp = current; return; }
+            if (current !== lastFp) {
+                var msg = STATUS_MSGS[data.order_status]
+                       || STATUS_MSGS[data.request_status]
+                       || 'Order updated — reloading…';
+                triggerReload(msg);
+            }
+        })
+        .catch(function () {});
+    }, POLL_MS);
+})();
+</script>
+@endif
 
 @if(!$isPickup && $order->cakeRequest->delivery_lat && $order->cakeRequest->delivery_lng)
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

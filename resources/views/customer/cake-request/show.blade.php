@@ -604,7 +604,7 @@ $steps = [
                     : '💰 Pay Final 50%',
                 'sub'   => $cakeRequest->isPickup()
                     ? 'Your cake is ready! Visit the baker, collect your cake, and pay the remaining balance in cash.'
-                    : 'Your cake is ready! Pay the remaining balance so your baker can deliver it to you.',
+                    : 'Your cake is ready! Pay the remaining balance to finalize your order and arrange delivery.',
             ],
             'COMPLETED'              => ['title'=>'Order Completed! ',          'sub'=>$cakeRequest->isPickup() ? 'Your cake has been collected. Enjoy!' : 'Your cake has been delivered. Enjoy!'],
             'CANCELLED'              => ['title'=>'Request Cancelled',            'sub'=>'This request was cancelled.'],
@@ -740,7 +740,7 @@ if ($acceptedBid) {
     'WAITING_FOR_PAYMENT'    => ['icon'=>'peso',     'color'=>'orange','title'=>'Action required: Pay now!',       'desc'=>'Your baker is confirmed and ready to start. Pay the 50% downpayment so they can begin preparing your cake.'],
     'WAITING_FINAL_PAYMENT'  => $cakeRequest->isPickup()
                 ? ['icon'=>'store',   'color'=>'orange','title'=>'Action required: Go collect your cake!',  'desc'=>'Your cake is ready at the baker\'s location. Visit them, bring ₱' . number_format($downpaymentAmount, 2) . ' cash, and collect your cake!']
-                : ['icon'=>'peso',    'color'=>'orange','title'=>'Action required: Pay final 50%!',         'desc'=>'Your baker has finished your cake and sent a photo above for your review. Pay the remaining balance so your baker can deliver it to you.'],
+                : ['icon'=>'peso',    'color'=>'orange','title'=>'Action required: Pay final 50%!',         'desc'=>'Your baker has finished your cake and sent a photo above for your review. Pay the remaining balance to finalize your order and arrange delivery'],
     'COMPLETED'              => ['icon'=>'check',    'color'=>'green', 'title'=>'Order complete!',                 'desc'=>'We hope you loved it! Feel free to place another order anytime.'],
     'CANCELLED'              => ['icon'=>'x',        'color'=>'red',   'title'=>'Request cancelled',               'desc'=>'You can create a new cake request anytime from your dashboard.'],
     'EXPIRED'                => ['icon'=>'clock',    'color'=>'red',   'title'=>'No bakers responded',             'desc'=>'Try a new request with a wider budget or further delivery date.'],
@@ -2145,7 +2145,11 @@ if ($acceptedBid) {
 
                     {{-- Note --}}
                     <div style="background:#FEF9E8; border:1px solid #F0D090; border-radius:8px; padding:0.6rem 0.85rem; font-size:0.72rem; color:#8A5010; line-height:1.5;">
-                        ℹ️ Once confirmed, your baker begins preparations. A down payment is required to start. Down payments are non-refundable as they cover initial preparation costs.
+                        ℹ️ Once your order is confirmed, the baker will begin preparation after receiving the required down payment.
+
+Down payments are generally non-refundable as they cover initial preparation costs.
+
+However, if the baker fails to meet the agreed deadline, you may request a refund or compensation subject to admin verification.
                     </div>
 
                     {{-- Spacer to push footer --}}
@@ -2405,34 +2409,164 @@ if ($acceptedBid) {
     </script>
     @endif
 
-@if(in_array($cakeRequest->status, ['OPEN','BIDDING']))
-    <script>setTimeout(function() { window.location.reload(); }, 60000);</script>
-    @endif
-
-    @if($cakeRequest->status === 'RUSH_MATCHING')
-    <script>
-// Auto-reload every 5s to show new rush bids
-    setTimeout(function() { window.location.reload(); }, 5000);
-
-    // Countdown timer
-    @if($cakeRequest->rush_expires_at)
-    (function() {
-        const expiresAt = new Date('{{ $cakeRequest->rush_expires_at->toISOString() }}');
-        const timerEl   = document.getElementById('rush-timer');
-        if (!timerEl) return;
-        function tick() {
-            const diff = Math.max(0, Math.floor((expiresAt - new Date()) / 1000));
-            const m = Math.floor(diff / 60);
-            const s = diff % 60;
-            timerEl.textContent = m + ':' + String(s).padStart(2,'0');
-            if (diff > 0) setTimeout(tick, 1000);
-            else timerEl.closest('#rush-countdown').style.background = '#FFE0E0';
+{{-- ── Rush countdown (keep the timer, ditch the dumb reload) ── --}}
+@if($cakeRequest->status === 'RUSH_MATCHING' && $cakeRequest->rush_expires_at)
+<script>
+(function () {
+    var expiresAt = new Date(@json($cakeRequest->rush_expires_at->toISOString()));
+    var timerEl   = document.getElementById('rush-timer');
+    if (!timerEl) return;
+    function tick() {
+        var diff = Math.max(0, Math.floor((expiresAt - new Date()) / 1000));
+        var m = Math.floor(diff / 60);
+        var s = diff % 60;
+        timerEl.textContent = m + ':' + String(s).padStart(2, '0');
+        if (diff > 0) { setTimeout(tick, 1000); }
+        else {
+            var badge = timerEl.closest('#rush-countdown');
+            if (badge) badge.style.background = '#FFE0E0';
         }
-        tick();
-    })();
-    @endif
-    </script>
-    @endif
+    }
+    tick();
+})();
+</script>
+@endif
+@php
+    $pollTerminalStates = ['COMPLETED', 'CANCELLED', 'EXPIRED'];
+@endphp
+@if(!in_array($cakeRequest->status, $pollTerminalStates))
+<script>
+(function () {
+    'use strict';
+ 
+    var POLL_URL    = @json(route('customer.cake-requests.state-poll', $cakeRequest->id));
+   var POLL_MS     = 3000;    /* ms between polls                            */
+var RUSH_MS     = 2000;    /* faster polling during rush matching          */
+    var IS_RUSH     = @json($cakeRequest->status === 'RUSH_MATCHING');
+ 
+    var lastFp    = null;
+    var reloading = false;
+ 
+    function fp(d) {
+    return [
+        d.request_status,
+        d.baker_order_status,
+        d.bids_count,
+        d.last_bid_id,
+        d.down_status,
+        d.down_escrow,
+        d.final_status,
+        d.final_escrow,
+        d.has_cake_photo ? '1' : '0',
+        d.baker_order_id ?? '',
+        d.agreed_price ?? '',
+    ].join('|');
+}
+ 
+    /* ── inject animation style once ── */
+    function ensureStyle() {
+        if (document.getElementById('rt-style')) return;
+        var s = document.createElement('style');
+        s.id  = 'rt-style';
+        s.textContent =
+            '@keyframes rt-slidein{' +
+            'from{opacity:0;transform:translateX(-50%) translateY(-10px)}' +
+            'to{opacity:1;transform:translateX(-50%) translateY(0)}}' +
+            '@keyframes rt-pulse{0%,100%{opacity:1;transform:scale(1)}' +
+            '50%{opacity:.4;transform:scale(.65)}}';
+        document.head.appendChild(s);
+    }
+ 
+    /* ── show banner and reload once ── */
+    function triggerReload(msg) {
+        if (reloading) return;
+        reloading = true;
+        ensureStyle();
+ 
+        var el = document.createElement('div');
+        el.id  = 'rt-update-banner';
+        el.style.cssText = [
+            'position:fixed','top:1.1rem','left:50%',
+            'transform:translateX(-50%)','z-index:99999',
+            'background:#3B1F0F','color:white',
+            'padding:0.55rem 1.2rem','border-radius:20px',
+            'font-size:0.8rem','font-weight:600',
+            'display:flex','align-items:center','gap:0.5rem',
+            'box-shadow:0 4px 24px rgba(0,0,0,0.28)',
+            'white-space:nowrap',
+            'animation:rt-slidein 0.25s ease',
+        ].join(';');
+ 
+        el.innerHTML =
+            '<span style="width:8px;height:8px;border-radius:50%;background:#E8A94A;' +
+            'display:inline-block;animation:rt-pulse 1s ease-in-out infinite;"></span> ' +
+            (msg || 'Order updated — reloading…');
+ 
+        document.body.appendChild(el);
+        setTimeout(function () { window.location.reload(); }, 950);
+    }
+ 
+   var STATUS_MSGS = {
+    'BIDDING'               : 'New baker offer received!',
+    'RUSH_MATCHING'         : 'Rush baker responded!',
+    'ACCEPTED'              : 'Baker confirmed — reloading…',
+    'WAITING_FOR_PAYMENT'   : 'Time to pay your downpayment!',
+    'IN_PROGRESS'           : 'Downpayment confirmed — baker is preparing!',
+    'WAITING_FINAL_PAYMENT' : 'Your cake is ready — pay final balance!',
+    'DELIVERED'             : 'Order delivered — reloading…',
+    'COMPLETED'             : 'Order completed — reloading…',
+    'CANCELLED'             : 'Order was cancelled.',
+    'OPEN'                  : 'Request updated — reloading…',
+};
+ 
+    /* ── choose polling interval ── */
+    var interval = IS_RUSH ? RUSH_MS : POLL_MS;
+ 
+    /* ── main poll function ── */
+    function doPoll() {
+        fetch(POLL_URL, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept':           'application/json',
+            },
+        })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+            if (!data) return;
+ 
+            var current = fp(data);
+ 
+            if (lastFp === null) {      /* first tick — baseline only */
+                lastFp = current;
+                return;
+            }
+ 
+            if (current !== lastFp) {
+                /* determine friendliest message */
+                var msg = STATUS_MSGS[data.request_status]
+                       || STATUS_MSGS[data.baker_order_status]
+                       || 'Order updated — reloading…';
+ 
+                /* if only a new bid arrived, say so */
+                if (data.request_status === 'BIDDING' || data.request_status === 'RUSH_MATCHING') {
+                    msg = 'New baker offer — reloading…';
+                }
+ 
+                /* cake photo appeared while IN_PROGRESS */
+                if (data.has_cake_photo && !lastFp.endsWith('|0')) {
+                    msg = 'Your baker sent a cake photo — reloading…';
+                }
+ 
+                triggerReload(msg);
+            }
+        })
+        .catch(function () {/* network blip — silent */});
+    }
+ 
+    setInterval(doPoll, interval);
+})();
+</script>
+@endif
     <script>
     function openConfirmModal(id) {
         const modal = document.getElementById(id);

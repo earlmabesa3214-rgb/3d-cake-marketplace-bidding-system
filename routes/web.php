@@ -310,13 +310,18 @@ Route::get('/rush-baker-preview', function (\Illuminate\Http\Request $request) {
     ]);
 })->name('rush-baker-preview');
 
-    Route::post('/cake-requests/{cakeRequest}/update-fulfillment', function (\Illuminate\Http\Request $request, \App\Models\CakeRequest $cakeRequest) {
+   Route::post('/cake-requests/{cakeRequest}/update-fulfillment', function (\Illuminate\Http\Request $request, \App\Models\CakeRequest $cakeRequest) {
         abort_if($cakeRequest->user_id !== auth()->id(), 403);
         $cakeRequest->update([
             'fulfillment_type' => $request->fulfillment_type === 'pickup' ? 'pickup' : 'delivery'
         ]);
         return response()->json(['ok' => true]);
     })->name('cake-requests.update-fulfillment');
+
+    // Real-time state polling
+    Route::get('/cake-requests/{cakeRequest}/state-poll',
+        [\App\Http\Controllers\OrderStatePollController::class, 'customerPoll']
+    )->name('cake-requests.state-poll');
 
 }); // ← closes the customer group
 // ─── BAKER ROUTES ─────────────────────────────────────────────────────────────
@@ -365,6 +370,11 @@ Route::post('/availability', [BakerProfileController::class, 'toggleAvailability
     Route::post('/notifications/read-all',  [BakerNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::post('/notifications/{id}/read', [BakerNotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::delete('/notifications/{id}',    [BakerNotificationController::class, 'destroy'])->name('notifications.destroy');
+
+    // Real-time state polling
+    Route::get('/orders/{order}/state-poll',
+        [\App\Http\Controllers\OrderStatePollController::class, 'bakerPoll']
+    )->name('orders.state-poll');
 });
 
 // ─── SHARED CHAT ROUTES ───────────────────────────────────────────────────────

@@ -961,6 +961,10 @@ nav {
 .viewer {
     animation: fadeInUp 0.60s 0.08s cubic-bezier(0.4,0,0.2,1) both;
 }
+.btn-save-draft,
+.btn-proceed {
+    display: none !important;
+}
     </style>
 </head>
 <body>
@@ -981,15 +985,7 @@ nav {
         <div class="step-line"></div>
         <div class="nav-step"><div class="step-dot"></div>Submit</div>
     </div>
-    <div class="nav-right">
-        <button class="btn-save-draft" id="btnSaveDraft">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Save Draft
-        </button>
-        <button class="btn-proceed" id="btnProceed">
-          Submit Request
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
+  <div class="nav-right">
     </div>
 </nav>
 
@@ -1010,8 +1006,8 @@ nav {
             <div>
         <div class="section-label">Cake Shape <span class="section-req">required</span></div>
                 <div class="shape-grid" id="opts-shape">
-                    <div class="shape-opt active" data-val="Round"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="14" r="7"/><path d="M5 14c0-2 1.5-5 7-5s7 3 7 5"/><path d="M9 9c0-2 1-4 3-4s3 2 3 4"/><path d="M10 6c0-1 .5-2 2-2s2 1 2 2"/></svg><span class="sh-name">Round</span></div>
-                    <div class="shape-opt" data-val="Square"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 13h18"/><path d="M7 8c0-3 1.5-5 5-5s5 2 5 5"/></svg><span class="sh-name">Square</span></div>
+                  <div class="shape-opt active" data-val="Round"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><line x1="3" y1="12" x2="3" y2="16"/><line x1="21" y1="12" x2="21" y2="16"/><ellipse cx="12" cy="8.5" rx="9" ry="3.5"/><line x1="3" y1="8.5" x2="3" y2="12"/><line x1="21" y1="8.5" x2="21" y2="12"/></svg><span class="sh-name">Round</span></div>
+                  <div class="shape-opt" data-val="Square"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="13" width="18" height="6" rx="1"/><rect x="3" y="8" width="18" height="5" rx="1"/><rect x="5" y="4" width="14" height="4" rx="1"/></svg><span class="sh-name">Square</span></div>
                     <div class="shape-opt" data-val="Heart"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21C12 21 3 15 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12z"/><path d="M3 13h18"/></svg><span class="sh-name">Heart</span></div>
                     <div class="shape-opt" data-val="Number"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><text x="4" y="18" font-size="14" font-weight="700" fill="currentColor" stroke="none" font-family="sans-serif">18</text></svg><span class="sh-name">Number</span></div>
                 </div>
@@ -1428,7 +1424,7 @@ nav {
                     </div>
                     <div class="candle-active-badge" id="candleActiveBadge">Selected: Candle #1 — drag to place</div>
                 </div>
-                <div class="candle-drag-notice" id="candleDragNotice" style="display:none;flex-direction:row;">
+          <div class="candle-drag-notice" id="candleDragNotice" style="display:none;flex-direction:row;">
                     <span class="candle-drag-icon">🕯️</span>
                     <div>
                         <span class="candle-drag-label">Drag candles onto your cake!</span>
@@ -1436,7 +1432,11 @@ nav {
                     </div>
                 </div>
 
-<div class="cupcake-qty-panel" id="cupcakeQtyPanel" style="display:none;margin-top:8px;background:var(--accent-lt);border:1.5px solid rgba(200,137,74,.30);border-radius:10px;padding:10px 12px;">
+                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6"/><path d="M8 10c1-3 2-5 4-6 2 1 3 3 4 6"/></svg> Cupcakes</div>
+                <div class="addon-grid" style="margin-bottom:6px;">
+                    <div class="addon-opt" data-group="deco" data-val="Cupcake" data-price="85" id="cupcakeToggleBtn"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6H4z"/><path d="M12 4v-2M9 5l-1-2M15 5l1-2"/></svg></div><div class="a-info"><span class="a-name">Cupcake</span><span class="a-price">+₱85/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                </div>
+                <div class="cupcake-qty-panel" id="cupcakeQtyPanel" style="display:none;margin-top:8px;background:var(--accent-lt);border:1.5px solid rgba(200,137,74,.30);border-radius:10px;padding:10px 12px;">
                     <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🧁 How many cupcakes?<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
                     <div style="display:flex;align-items:center;justify-content:space-between;background:var(--warm-white);border:1.5px solid rgba(200,137,74,.25);border-radius:10px;padding:8px 14px;margin-bottom:8px;">
                         <button id="cupcakeQtyMinus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(200,137,74,.45);background:transparent;color:var(--accent-dk);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font-display);">−</button>
@@ -1453,7 +1453,7 @@ nav {
                         <button class="cupcake-preset-btn" data-qty="12" style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">12</button>
                         <button class="cupcake-preset-btn" data-qty="24" style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">24</button>
                     </div>
-           <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;margin-top:4px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🎨 Cupcake Flavour<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
+                    <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;margin-top:4px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🎨 Cupcake Flavour<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
                     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;" id="opts-cupcake-flavor">
                         <div class="cupcake-flavor-opt active" data-cupcake-flavor="Vanilla"    data-cupcake-color="#C8882A" style="padding:6px 12px;border:1.5px solid var(--caramel);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--caramel);color:#fff;display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#F2C96A;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Vanilla</div>
                         <div class="cupcake-flavor-opt" data-cupcake-flavor="Chocolate"  data-cupcake-color="#3A1206" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#5C2D0E;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Chocolate</div>
@@ -1479,12 +1479,7 @@ nav {
                     <div class="addon-opt" data-group="deco" data-val="Macarons" data-price="48"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="9" rx="7" ry="4"/><ellipse cx="12" cy="15" rx="7" ry="4"/><line x1="5" y1="9" x2="5" y2="15"/><line x1="19" y1="9" x2="19" y2="15"/></svg></div><div class="a-info"><span class="a-name">Macarons</span><span class="a-price">+₱48/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
-                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6"/><path d="M8 10c1-3 2-5 4-6 2 1 3 3 4 6"/></svg> Cupcakes</div>
-                <div class="addon-grid" style="margin-bottom:6px;">
-                    <div class="addon-opt" data-group="deco" data-val="Cupcake" data-price="85" id="cupcakeToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;position:relative;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6H4z"/><path d="M12 4v-2M9 5l-1-2M15 5l1-2"/></svg><span class="a-name" style="font-size:.68rem;text-align:center;">Cupcake</span><span class="a-price" style="font-size:.60rem;text-align:center;">+₱85/pc</span><div class="addon-check" style="position:absolute;top:6px;right:6px;width:14px;height:14px;border-radius:4px;border:1.5px solid var(--border-dk);background:transparent;display:flex;align-items:center;justify-content:center;transition:all var(--transition);"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2" style="width:8px;height:8px;opacity:0;"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                </div>
-            </div>
-
+              </div>
         </div>
     </div>
 
@@ -5119,7 +5114,7 @@ async function saveDraft(){
         if(res.ok){btn.classList.add('saved');btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;showToast('✓ Draft saved successfully');setTimeout(()=>{btn.classList.remove('saved');btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Draft`;},3000);}
     }catch(e){showToast('⚠ Could not save draft');}
 }
-document.getElementById('btnSaveDraft').addEventListener('click',saveDraft);
+if(document.getElementById('btnSaveDraft')) document.getElementById('btnSaveDraft').addEventListener('click',saveDraft);
 
 // ── LOAD DRAFT ──
 async function loadDraft(){
@@ -5251,7 +5246,7 @@ function proceed(){
 
     document.getElementById('proceedForm').submit();
 }
-document.getElementById('btnProceed').addEventListener('click',proceed);
+if(document.getElementById('btnProceed')) document.getElementById('btnProceed').addEventListener('click',proceed);
 document.getElementById('btnProceedLg').addEventListener('click',proceed);
 document.getElementById('btnResetView').addEventListener('click',()=>{if(typeof window.resetCamera==='function')window.resetCamera();showToast('View reset');});
 if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.10);

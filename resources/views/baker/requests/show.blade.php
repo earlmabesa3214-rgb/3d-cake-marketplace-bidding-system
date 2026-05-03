@@ -448,7 +448,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
             <div class="section-header">
                 <span class="section-title">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Delivery Location
+                    Location
                 </span>
             </div>
             <div style="padding:1rem 1.5rem;">
@@ -842,6 +842,7 @@ document.getElementById('withdraw-modal').addEventListener('click', function(e) 
 @endsection
 
 @push('scripts')
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @if($request->hasMapLocation())
