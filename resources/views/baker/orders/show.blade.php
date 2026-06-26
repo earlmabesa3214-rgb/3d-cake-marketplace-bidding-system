@@ -608,8 +608,25 @@
 
 
 
-            {{-- ── ACTIONS CARD (all states except ACCEPTED/COMPLETED/CANCELLED/DELIVERED) ── --}}
-            @if(!in_array($order->status, ['ACCEPTED','COMPLETED','CANCELLED','DELIVERED']))
+           @php
+    $reportAgainstBakerOnOrder = \App\Models\Report::where('reported_id', auth()->id())
+        ->where('baker_order_id', $order->id)
+        ->first();
+@endphp
+@if($reportAgainstBakerOnOrder)
+<div style="background:#FDF0EE;border:1.5px solid #F5C5BE;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:.75rem;">
+    <span style="font-size:1.2rem;flex-shrink:0;">⚠️</span>
+    <div>
+        <div style="font-weight:700;font-size:.88rem;color:#8B2A1E;margin-bottom:.2rem;">A report has been filed against you for this order</div>
+        <div style="font-size:.78rem;color:#7A2A20;line-height:1.5;">
+            Category: <strong>{{ strip_tags(\App\Models\Report::CATEGORIES[$reportAgainstBakerOnOrder->category] ?? $reportAgainstBakerOnOrder->category) }}</strong><br>
+            Status: <strong>{{ ucfirst($reportAgainstBakerOnOrder->status) }}</strong> — Our admin team is reviewing this. Please continue to communicate with the customer.
+        </div>
+    </div>
+</div>
+@endif
+
+@if(!in_array($order->status, ['COMPLETED','DELIVERED','CANCELLED']))
             <div class="card">
                 <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Actions</h3></div>
                 <div class="action-area">

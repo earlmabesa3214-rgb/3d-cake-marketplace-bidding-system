@@ -125,6 +125,20 @@
                 <div class="report-desc-preview">{{ $report->description }}</div>
             </div>
         </div>
+      @if($report->refund_requested)
+        <div style="margin:0 1.5rem 1rem;padding:0.75rem 1rem;border-radius:10px;border:1.5px solid {{ $report->refund_status==='approved' ? '#B8DFC6' : ($report->refund_status==='rejected' ? '#F5C5BE' : '#F0D090') }};background:{{ $report->refund_status==='approved' ? '#EFF5EF' : ($report->refund_status==='rejected' ? '#FDF0EE' : '#FEF9E8') }};">
+            <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:{{ $report->refund_status==='approved' ? '#166534' : ($report->refund_status==='rejected' ? '#8B2A1E' : '#9B6A10') }};margin-bottom:0.25rem;">
+                💰 Refund Request ·
+                @if($report->refund_status==='approved') ✓ Approved — ₱{{ number_format($report->refund_amount,2) }} credited to your wallet
+                @elseif($report->refund_status==='rejected') ✕ Rejected by admin
+                @elseif($report->refund_status==='on_hold') 🔒 Payment on hold — under review
+                @else ⏳ Pending admin review @endif
+            </div>
+            @if($report->refund_note)
+            <div style="font-size:0.75rem;color:#6B4A2A;font-style:italic;">"{{ $report->refund_note }}"</div>
+            @endif
+        </div>
+        @endif
         @if($report->admin_note)
         <div class="admin-note-box">
             <div class="an-label">Admin Response</div>

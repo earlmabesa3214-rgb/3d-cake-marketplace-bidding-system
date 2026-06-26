@@ -234,7 +234,7 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
             </span>
         </a>
         <a href="{{ route('baker.earnings.index') }}" class="nav-link {{ request()->routeIs('baker.earnings*') ? 'active' : '' }}">
-<span class="icon" style="font-size:0.9rem; font-weight:700;">₱</span> Earnings
+<span class="icon" style="font-size:0.9rem; font-weight:700;">₱</span>Earnings
         </a>
 
         <div class="nav-section-label">Account</div>

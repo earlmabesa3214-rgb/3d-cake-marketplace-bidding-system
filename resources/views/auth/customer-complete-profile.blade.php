@@ -448,6 +448,11 @@
     }
         makeCombo('cp-province-display','cp-province-val','cp-province-drop','cp-city-display','cp-city-val','cp-city-drop','{{ old("province") }}','{{ old("city") }}');
 
+    // Restore city placeholder if province is already set
+    if ('{{ old("province") }}') {
+        document.getElementById('cp-city-display').placeholder = 'Type city...';
+    }
+
 </script>
 </body>
 </html>

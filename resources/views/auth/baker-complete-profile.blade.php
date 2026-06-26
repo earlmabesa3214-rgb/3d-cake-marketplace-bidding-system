@@ -348,7 +348,7 @@
             <input type="radio" name="_seller_type_ui" value="registered" checked>
             <span class="stc-badge badge-registered"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>
             <div class="stc-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Registered Business</div>
-            <div class="stc-desc">DTI/SEC registration and business permit. Higher bid limits and a Verified badge.</div>
+            <div class="stc-desc">DTI/SEC registration and business permit.</div>
         </label>
         <label class="seller-type-card" id="card-homebased" onclick="setSellerType('homebased')">
             <input type="radio" name="_seller_type_ui" value="homebased">
@@ -388,29 +388,6 @@
                     </div>
                 </div>
 
-                <!-- ── PASSWORD ── -->
-                <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Set Your Password</div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Password <span class="req">*</span></label>
-                        <div class="pw-wrap">
-                            <input type="password" name="password" id="password" class="form-input" required placeholder="Min. 8 characters">
-                            <button type="button" class="pw-toggle" onclick="togglePw('password', this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                        </div>
-                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-                        <div class="strength-label" id="strengthLabel"></div>
-                        @error('password') <div class="field-error">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Confirm Password <span class="req">*</span></label>
-                        <div class="pw-wrap">
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" required placeholder="Repeat password">
-                            <button type="button" class="pw-toggle" onclick="togglePw('password_confirmation', this)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                        </div>
-                        <div class="match-msg" id="pw_match_msg"></div>
-                    </div>
-                </div>
 
                 <!-- ── BAKERY INFO ── -->
                 <div class="section-label"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/></svg> Bakery Information</div>
@@ -476,7 +453,7 @@
                             @foreach(['Wedding Cakes','Birthday Cakes','Fondant Art','Cupcakes','Macarons','Cheesecakes','Custom Designs','Vegan Cakes','Gluten-Free','Chocolate Cakes','Pastries','Tarts'] as $spec)
                             <label class="specialty-check {{ in_array($spec, $oldSpecs) ? 'checked' : '' }}">
                                 <input type="checkbox" name="specialties[]" value="{{ $spec }}" {{ in_array($spec, $oldSpecs) ? 'checked' : '' }}>
-                                <span class="check-indicator">{{ in_array($spec, $oldSpecs) ? '<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '' }}</span>
+                                <span class="check-indicator">{!! in_array($spec, $oldSpecs) ? '<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '' !!}</span>
                                 {{ $spec }}
                             </label>
                             @endforeach
@@ -529,12 +506,7 @@
                             <p>Upload your DTI/SEC, business permit, and sanitary permit.</p>
                         </div>
                         <div class="docs-card-body">
-                            <div class="form-group">
-                                <label class="form-label">DTI or SEC Registration Number <span class="req">*</span></label>
-                                <input type="text" name="dti_sec_number" class="form-input"
-                                       value="{{ old('dti_sec_number') }}" placeholder="e.g. DTI-0001234">
-                                @error('dti_sec_number') <div class="field-error">{{ $message }}</div> @enderror
-                            </div>
+                   
                             <div class="doc-grid">
                                 <div class="form-group">
                                     <label class="form-label">Business Permit <span class="req">*</span></label>
@@ -684,7 +656,7 @@
             var ind   = this.querySelector('.check-indicator');
             setTimeout(function() {
                 label.classList.toggle('checked', input.checked);
-                ind.textContent = input.checked ? '<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '';
+                ind.innerHTML = input.checked ? '<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '';
             }, 0);
         });
     });
@@ -828,44 +800,6 @@
             else this.classList.remove('is-invalid');
         });
     }
-
-    /* Password strength */
-    var pw   = document.getElementById('password');
-    var fill = document.getElementById('strengthFill');
-    var slabel = document.getElementById('strengthLabel');
-    pw.addEventListener('input', function() {
-        var v = this.value; var s = 0;
-        if (v.length >= 8) s++;
-        if (/[A-Z]/.test(v)) s++;
-        if (/[0-9]/.test(v)) s++;
-        if (/[^A-Za-z0-9]/.test(v)) s++;
-        fill.style.width      = (s / 4 * 100) + '%';
-        fill.style.background = ['#E53935','#FB8C00','#FDD835','#43A047'][s - 1] || 'transparent';
-        slabel.textContent    = s > 0 ? ['Weak','Fair','Good','Strong'][s - 1] : '';
-        checkMatch();
-    });
-
-    /* Password match */
-    var pwc      = document.getElementById('password_confirmation');
-    var matchMsg = document.getElementById('pw_match_msg');
-    function checkMatch() {
-        if (!pwc.value) { matchMsg.textContent = ''; pwc.classList.remove('is-invalid','is-valid'); return; }
-        if (pw.value === pwc.value) {
-            matchMsg.textContent   = '✓ Passwords match';
-            matchMsg.style.color   = 'var(--success)';
-            pwc.classList.remove('is-invalid'); pwc.classList.add('is-valid');
-        } else {
-            matchMsg.textContent   = '✕ Passwords do not match';
-            matchMsg.style.color   = 'var(--err)';
-            pwc.classList.remove('is-valid'); pwc.classList.add('is-invalid');
-        }
-    }
-    pwc.addEventListener('input', checkMatch);
-         function togglePw(id, btn) {
-            var f = document.getElementById(id);
-            if (f.type === 'password') { f.type = 'text';     btn.textContent = 'Hide'; }
-            else                       { f.type = 'password'; btn.textContent = 'Show'; }
-        }
 
     /* Leaflet map */
     var map = L.map('baker-map').setView([14.5995, 120.9842], 13);

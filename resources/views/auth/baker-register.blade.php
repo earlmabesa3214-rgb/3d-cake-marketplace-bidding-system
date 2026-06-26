@@ -331,7 +331,7 @@
                 <span class="stc-badge badge-registered"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg> Verified</span>
                 <div class="stc-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-bottom:.4rem"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
                 <div class="stc-title">Registered Business</div>
-                <div class="stc-desc">DTI/SEC registration and business permit. Higher bid limits and a Verified badge.</div>
+                <div class="stc-desc">DTI/SEC registration and business permit.</div>
             </label>
             <label class="seller-type-card" id="card-homebased" onclick="setSellerType('homebased')">
                 <input type="radio" name="_seller_type_ui" value="homebased">
@@ -535,11 +535,7 @@
                             </div>
                             <div class="docs-card-body">
 
-                                <div class="form-group">
-                                    <label class="form-label">DTI or SEC Registration Number <span class="req">*</span></label>
-                                    <input type="text" name="dti_sec_number" class="form-input" value="{{ old('dti_sec_number') }}" placeholder="e.g. DTI-0001234 or SEC-CS20190012345">
-                                    @error('dti_sec_number') <div class="field-error">{{ $message }}</div> @enderror
-                                </div>
+                        
 
                                 <div class="doc-grid">
                                     <div class="form-group">
@@ -780,10 +776,7 @@
                 </div>
                 <div id="mv-docs-registered" style="display:none;">
                     <div class="modal-grid">
-                        <div class="modal-item" id="ms-dti_sec_number">
-                            <div class="modal-item-label">DTI / SEC Number</div>
-                            <div class="modal-item-value" id="mv-dti_sec_number">—</div>
-                        </div>
+                        
                         <div class="modal-item" id="ms-business_permit">
                             <div class="modal-item-label">Business Permit</div>
                             <div class="modal-item-value" id="mv-business_permit">—</div>
@@ -1087,8 +1080,7 @@ document.getElementById('mv-seller_type').innerHTML = type === 'registered' ? bu
     document.getElementById('mv-docs-registered').style.display = type === 'registered' ? 'block' : 'none';
     document.getElementById('mv-docs-homebased').style.display  = type === 'homebased'  ? 'block' : 'none';
 
-    if (type === 'registered') {
-        fill('dti_sec_number',  document.querySelector('[name=dti_sec_number]')?.value,              true);
+   if (type === 'registered') {
         fill('business_permit', document.querySelector('[name=business_permit]')?.files?.[0]?.name,  true);
         fill('dti_certificate', document.querySelector('[name=dti_certificate]')?.files?.[0]?.name,  true);
         fill('sanitary_permit', document.querySelector('[name=sanitary_permit]')?.files?.[0]?.name,  true);

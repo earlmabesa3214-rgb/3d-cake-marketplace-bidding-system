@@ -1009,15 +1009,37 @@ nav {
                   <div class="shape-opt active" data-val="Round"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><line x1="3" y1="12" x2="3" y2="16"/><line x1="21" y1="12" x2="21" y2="16"/><ellipse cx="12" cy="8.5" rx="9" ry="3.5"/><line x1="3" y1="8.5" x2="3" y2="12"/><line x1="21" y1="8.5" x2="21" y2="12"/></svg><span class="sh-name">Round</span></div>
                   <div class="shape-opt" data-val="Square"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="13" width="18" height="6" rx="1"/><rect x="3" y="8" width="18" height="5" rx="1"/><rect x="5" y="4" width="14" height="4" rx="1"/></svg><span class="sh-name">Square</span></div>
                     <div class="shape-opt" data-val="Heart"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21C12 21 3 15 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12z"/><path d="M3 13h18"/></svg><span class="sh-name">Heart</span></div>
-                    <div class="shape-opt" data-val="Number"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><text x="4" y="18" font-size="14" font-weight="700" fill="currentColor" stroke="none" font-family="sans-serif">18</text></svg><span class="sh-name">Number</span></div>
+                  <div class="shape-opt" data-val="Number"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><text x="4" y="18" font-size="14" font-weight="700" fill="currentColor" stroke="none" font-family="sans-serif">18</text></svg><span class="sh-name">Number</span></div>
+                <div class="shape-opt" data-val="Bundt">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <ellipse cx="12" cy="14" rx="9" ry="4.5"/>
+                        <ellipse cx="12" cy="14" rx="4" ry="2"/>
+                        <path d="M3 14 Q3 7 12 7 Q21 7 21 14"/>
+                        <path d="M8 14 Q8 10 12 10 Q16 10 16 14"/>
+                    </svg>
+                    <span class="sh-name">Bundt</span>
                 </div>
-
+                </div>
               <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round only</span></div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Only applies to <strong>Round</strong> as of now.</p>
                 <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
                     <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
                     <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
-                    <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
+                  <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
+                <div class="shape-opt" data-tier="Four-tier">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <ellipse cx="12" cy="22" rx="8" ry="1.5"/>
+                        <rect x="4" y="18.5" width="16" height="3.5" rx="1"/>
+                        <ellipse cx="12" cy="17.5" rx="5.5" ry="1.2"/>
+                        <rect x="6.5" y="14.5" width="11" height="3" rx="1"/>
+                        <ellipse cx="12" cy="13.5" rx="3.5" ry="1"/>
+                        <rect x="8.5" y="11" width="7" height="2.5" rx="1"/>
+                        <ellipse cx="12" cy="10" rx="2" ry=".8"/>
+                        <rect x="10" y="8" width="4" height="2" rx="1"/>
+                        <path d="M11 8c0-1 .5-2 1-2s1 1 1 2"/>
+                    </svg>
+                    <span class="sh-name">Four-tier</span>
+                </div>
                 </div>
                 <div class="size-slider-wrap visible" id="sizeSliderWrap">
                     <div class="size-slider-header">
@@ -1089,13 +1111,15 @@ nav {
 {{-- FLAVOUR --}}
             <div>
                 <div class="section-label">Cake Flavour <span class="section-req">required</span></div>
-                <div class="opts" id="opts-flavor" style="margin-bottom:2px;">
+               <div class="opts" id="opts-flavor" style="margin-bottom:2px;">
                     <div class="opt active" data-val="Vanilla"    data-price="0">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F2C96A;border:1px solid #E0B040;"></span>Vanilla</span></div>
                     <div class="opt"        data-val="Chocolate"  data-price="80">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#5C2D0E;"></span>Chocolate</span></div>
                     <div class="opt"        data-val="Red Velvet" data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#8B1111;"></span>Red Velvet</span></div>
                     <div class="opt"        data-val="Strawberry" data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#D94070;"></span>Strawberry</span></div>
                     <div class="opt"        data-val="Ube"        data-price="130"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#6B3FA0;"></span>Ube</span></div>
                     <div class="opt"        data-val="Mocha"      data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#4A2810;"></span>Mocha</span></div>
+                    <div class="opt"        data-val="Mango"      data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F5A623;border:1px solid #E09010;"></span>Mango</span></div>
+                    <div class="opt"        data-val="Biscoff"    data-price="140"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#C8752A;border:1px solid #A85A18;"></span>Biscoff</span></div>
                 </div>
             </div>
 
@@ -1114,9 +1138,19 @@ nav {
                         <div class="a-info"><span class="a-name">Semi-naked</span><span class="a-price">+₱200</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
-                    <div class="addon-opt frosting-opt" data-val="Fondant Smooth" data-price="350" data-group="style">
+                  <div class="addon-opt frosting-opt" data-val="Fondant Smooth" data-price="350" data-group="style">
                       <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/><path d="M3 14h18"/></svg></div>
                         <div class="a-info"><span class="a-name">Fondant</span><span class="a-price">+₱350</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                    </div>
+                    <div class="addon-opt frosting-opt" data-val="Naked Style" data-price="150" data-group="style">
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/><line x1="3" y1="14" x2="5" y2="14"/><line x1="19" y1="14" x2="21" y2="14"/></svg></div>
+                        <div class="a-info"><span class="a-name">Naked</span><span class="a-price">+₱150</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                    </div>
+                    <div class="addon-opt frosting-opt" data-val="Ombre Style" data-price="250" data-group="style">
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/><line x1="3" y1="11" x2="21" y2="11"/><line x1="3" y1="13" x2="21" y2="13"/><line x1="3" y1="15" x2="21" y2="15"/></svg></div>
+                        <div class="a-info"><span class="a-name">Ombre</span><span class="a-price">+₱250</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                 </div>
@@ -1201,7 +1235,11 @@ nav {
                         <div class="drip-flavor-opt"        data-drip-flavor="Ube"             data-drip-color="#7030B8"><span class="drip-color-dot" style="background:#7030B8;"></span>Ube</div>
                         <div class="drip-flavor-opt"        data-drip-flavor="Mocha"           data-drip-color="#704018"><span class="drip-color-dot" style="background:#704018;"></span>Mocha</div>
                         <div class="drip-flavor-opt"        data-drip-flavor="Caramel"         data-drip-color="#C47A1A"><span class="drip-color-dot" style="background:#C47A1A;"></span>Caramel</div>
-                        <div class="drip-flavor-opt"        data-drip-flavor="White Chocolate" data-drip-color="#F5ECD0"><span class="drip-color-dot" style="background:#F5ECD0;border:1px solid #D5C8B8;"></span>White Choco</div>
+                       <div class="drip-flavor-opt"        data-drip-flavor="White Chocolate" data-drip-color="#F5ECD0"><span class="drip-color-dot" style="background:#F5ECD0;border:1px solid #D5C8B8;"></span>White Choco</div>
+                        <div class="drip-flavor-opt"        data-drip-flavor="Mango"         data-drip-color="#F5A623"><span class="drip-color-dot" style="background:#F5A623;"></span>Mango</div>
+                        <div class="drip-flavor-opt"        data-drip-flavor="Salted Caramel" data-drip-color="#A0620A"><span class="drip-color-dot" style="background:#A0620A;"></span>Salted Caramel</div>
+                        <div class="drip-flavor-opt"        data-drip-flavor="Blueberry"     data-drip-color="#3A1878"><span class="drip-color-dot" style="background:#3A1878;"></span>Blueberry</div>
+                        <div class="drip-flavor-opt"        data-drip-flavor="Raspberry"     data-drip-color="#C01858"><span class="drip-color-dot" style="background:#C01858;"></span>Raspberry</div>
                     </div>
                 </div>
 <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/></svg> Fruits</div>
@@ -1226,13 +1264,20 @@ nav {
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                      <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                     <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="17" r="4"/><circle cx="17" cy="15" r="4"/><path d="M8 13C8 8 12 4 16 3"/><path d="M17 11C17 7 15 4 12 3"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Cherry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                    </div>
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Mango Slice" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 18 Q5 6 12 4 Q19 6 19 18 Q15 21 12 21 Q9 21 5 18z"/><path d="M12 4 Q12 12 12 21"/><path d="M5 18 Q12 15 19 18"/><path d="M6 13 Q12 11 18 13"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Mango Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40/pc</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Kiwi Slice" data-price="30" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8.5" y2="8.5"/><line x1="15.5" y1="15.5" x2="18.4" y2="18.4"/><line
                     <div id="fruitsDragNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
                         <span style="font-size:1.1rem;">👆</span>
                         <span><strong>Now tap the cake preview</strong> to place your fruit. Tap a placed fruit to move it.</span>
@@ -5252,6 +5297,97 @@ document.getElementById('btnResetView').addEventListener('click',()=>{if(typeof 
 if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.10);
 window._updateAll=updateAll;
 syncFrostingUI();
+
+// ── PRESET LOADER (from dashboard featured cards) ──
+(function applyPreset() {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has('preset_flavor')) return;
+
+    const flavor     = params.get('preset_flavor');
+    const shape      = params.get('preset_shape')       || 'Round';
+    const size       = parseInt(params.get('preset_size') || '6');
+    const frosting   = params.get('preset_frosting')    || 'Smooth Buttercream';
+    const hasDrip    = params.get('preset_drip')        === '1';
+    const dripFlavor = params.get('preset_drip_flavor') || 'Vanilla';
+    const sprinkles  = params.get('preset_addon_sprinkles') || null;
+    const presetName = params.get('preset_name')        || null;
+
+    // Shape
+    state.shape = shape;
+    state.roundSize = size;
+    document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(el => {
+        el.classList.toggle('active', el.dataset.val === shape);
+    });
+    document.getElementById('sizeRange').value = size;
+    document.getElementById('sizeDisplay').textContent = size;
+    document.getElementById('sizeSliderWrap').classList.toggle('visible', shape === 'Round');
+    document.getElementById('numberPickerWrap').classList.toggle('visible', shape === 'Number');
+
+    // Flavor
+    state.flavor = flavor;
+    document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el => {
+        el.classList.toggle('active', el.dataset.val === flavor);
+    });
+
+    // Frosting
+    state.frostings = new Set();
+    const CAKE_STYLE_MAP = {
+        'Smooth Buttercream':   () => { state.frostings.add('Smooth Buttercream'); },
+        'Semi-naked Style':     () => { state.frostings.add('Semi-naked Style'); },
+        'Fondant Smooth':       () => { state.frostings.add('Fondant Smooth'); },
+        'Textured Buttercream': () => {
+            state.frostings.add('Smooth Buttercream');
+            state.frostings.add('Textured Buttercream');
+        },
+    };
+    (CAKE_STYLE_MAP[frosting] || CAKE_STYLE_MAP['Smooth Buttercream'])();
+    syncFrostingUI();
+
+    // Drip
+    if (hasDrip) {
+        state.hasDrip = true;
+        state.dripFlavor = dripFlavor;
+        state.addons.set('Drip', 180);
+        document.getElementById('dripToggleBtn').classList.add('active');
+        document.getElementById('dripFlavorPanel').classList.add('visible');
+        document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el => {
+            el.classList.toggle('active', el.dataset.dripFlavor === dripFlavor);
+        });
+    }
+
+    // Sprinkles
+    if (sprinkles) {
+        const sprinkleEl = document.querySelector(`#opts-sprinkles .addon-opt[data-val="${sprinkles}"]`);
+        if (sprinkleEl) {
+            state.addons.set(sprinkles, parseInt(sprinkleEl.dataset.price) || 30);
+            sprinkleEl.classList.add('active');
+            const _waitAndBuild = (attempts) => {
+                if (typeof window.buildCylinderSprinkles === 'function') {
+                    if (sprinkles === 'Cylinder Sprinkles') {
+                        window.buildCylinderSprinkles();
+                        document.getElementById('cylinderPlacementPanel').style.display = 'block';
+                    }
+                    if (sprinkles === 'Sphere Sprinkles') {
+                        window.buildPearlSprinkles();
+                        document.getElementById('pearlPlacementPanel').style.display = 'block';
+                    }
+                } else if (attempts > 0) {
+                    setTimeout(() => _waitAndBuild(attempts - 1), 300);
+                }
+            };
+            setTimeout(() => _waitAndBuild(15), 800);
+        }
+    }
+
+    // Toast
+    if (presetName) {
+        setTimeout(() => showToast(`✨ "${presetName}" loaded — customize it your way!`, 3200), 1200);
+    }
+
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+})();
+
 function tryInit(){if(typeof window.updateModel==='function')updateAll();else setTimeout(tryInit,80);}
 tryInit();
 

@@ -74,7 +74,6 @@ public function show()
         $request->validate([
          'phone'     => 'required|string|size:11',
 'birthdate' => 'required|date|before:' . now()->subYears(18)->toDateString(),
-'password'  => 'required|string|min:8|confirmed',
 
             'shop_name'        => 'required|string|max:255',
             'experience_years' => 'required|string',
@@ -89,7 +88,6 @@ public function show()
             'portfolio.*'      => 'nullable|image|max:5120',
 
             // Registered business docs
-            'dti_sec_number'   => 'required_if:seller_type,registered|nullable|string',
             'business_permit'  => 'required_if:seller_type,registered|nullable|file|max:5120',
             'dti_certificate'  => 'required_if:seller_type,registered|nullable|file|max:5120',
             'sanitary_permit'  => 'required_if:seller_type,registered|nullable|file|max:5120',
@@ -106,7 +104,6 @@ public function show()
  $user->update([
     'phone'     => $request->phone,
     'birthdate' => $request->birthdate,
-    'password'  => bcrypt($request->password),
 ]);
 
         // Helper to store uploaded file
@@ -129,7 +126,6 @@ public function show()
         ];
 
         if ($request->seller_type === 'registered') {
-            $data['dti_sec_number'] = $request->dti_sec_number;
             if ($request->hasFile('business_permit'))  $data['business_permit']  = $store($request->file('business_permit'),  'baker-docs');
             if ($request->hasFile('dti_certificate'))  $data['dti_certificate']  = $store($request->file('dti_certificate'),  'baker-docs');
             if ($request->hasFile('sanitary_permit'))  $data['sanitary_permit']  = $store($request->file('sanitary_permit'),  'baker-docs');

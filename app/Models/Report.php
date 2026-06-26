@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Report extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
+protected $fillable = [
         'reporter_id',
         'reported_id',
         'baker_order_id',
@@ -20,10 +19,12 @@ class Report extends Model
         'status',
         'admin_note',
         'reviewed_at',
-    ];
-
-    protected $casts = [
-        'reviewed_at' => 'datetime',
+        'refund_requested',
+        'refund_status',
+        'refund_amount',
+        'refund_note',
+        'payment_held',
+        'refund_processed_at',
     ];
 
     const BAKER_CATEGORIES = [
@@ -54,11 +55,26 @@ class Report extends Model
         'other'           => '📝 Other',
     ];
 
-    const STATUSES = [
+   const STATUSES = [
         'pending'   => ['label' => 'Pending Review', 'color' => '#9B6A10'],
         'reviewed'  => ['label' => 'Under Review',   'color' => '#1A5A8A'],
         'resolved'  => ['label' => 'Resolved',        'color' => '#166534'],
         'dismissed' => ['label' => 'Dismissed',       'color' => '#6B4A2A'],
+    ];
+
+    const REFUND_STATUSES = [
+        'pending'  => ['label' => 'Refund Pending',   'color' => '#9B6A10'],
+        'on_hold'  => ['label' => 'Payment On Hold',  'color' => '#1A5A8A'],
+        'approved' => ['label' => 'Refund Approved',  'color' => '#166534'],
+        'rejected' => ['label' => 'Refund Rejected',  'color' => '#8B2A1E'],
+    ];
+
+    protected $casts = [
+        'reviewed_at'          => 'datetime',
+        'refund_processed_at'  => 'datetime',
+        'refund_requested'     => 'boolean',
+        'payment_held'         => 'boolean',
+        'refund_amount'        => 'decimal:2',
     ];
 
     public function reporter()   { return $this->belongsTo(User::class, 'reporter_id'); }
@@ -73,5 +89,15 @@ class Report extends Model
     public function getStatusLabelAttribute(): string
     {
         return self::STATUSES[$this->status]['label'] ?? $this->status;
+    }
+
+    public function getRefundStatusLabelAttribute(): string
+    {
+        return self::REFUND_STATUSES[$this->refund_status]['label'] ?? ($this->refund_status ?? '—');
+    }
+
+    public function hasActiveRefundRequest(): bool
+    {
+        return $this->refund_requested && $this->refund_status !== null;
     }
 }

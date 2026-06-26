@@ -1597,18 +1597,20 @@ if ($acceptedBid) {
                         <div class="psc-total">Total ₱{{ number_format($bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount, 2) }}</div>
                         <div class="psc-divider-line"></div>
                     </div>
-            <div class="psc-half half-locked">
+    <div class="psc-half {{ $finalPayment && $finalPayment->isPaid() ? 'half-paid' : ($bakerOrder && $bakerOrder->cake_final_photo ? 'half-pending' : 'half-locked') }}">
                         <div class="half-left">
                             <div class="half-label">② Final Payment · 50%</div>
                             <div class="half-amount">₱{{ number_format($downpaymentAmount, 2) }}</div>
-                            @if($bakerOrder && $bakerOrder->cake_final_photo)
+                            @if($finalPayment && $finalPayment->isPaid())
+                                <div class="half-status paid">✓ Confirmed & paid</div>
+                            @elseif($bakerOrder && $bakerOrder->cake_final_photo)
                                 <div class="half-status pending">📸 Cake ready — payment incoming</div>
                             @else
                                 <div class="half-status locked">🔒 Unlocks when cake is ready</div>
                             @endif
                         </div>
-                        <div style="width:32px;height:32px;background:#f0f0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">
-                            @if($bakerOrder && $bakerOrder->cake_final_photo) 📸 @else 🔒 @endif
+                        <div style="width:32px;height:32px;background:{{ $finalPayment && $finalPayment->isPaid() ? '#dcfce7' : ($bakerOrder && $bakerOrder->cake_final_photo ? '#FEF9E8' : '#f0f0f0') }};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">
+                            @if($finalPayment && $finalPayment->isPaid()) ✓ @elseif($bakerOrder && $bakerOrder->cake_final_photo) 📸 @else 🔒 @endif
                         </div>
                     </div>
                 </div>
@@ -1667,27 +1669,33 @@ if ($acceptedBid) {
                         <div class="psc-total">Total ₱{{ number_format($bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount, 2) }}</div>
                         <div class="psc-divider-line"></div>
                     </div>
-                    <div class="psc-half {{ $finalIsRejected ? 'half-rejected' : ($finalIsPending ? 'half-pending' : 'half-pending') }}">
+                  <div class="psc-half {{ $finalIsRejected ? 'half-rejected' : ($finalIsPending ? 'half-pending' : (($finalPayment && ($finalPayment->escrow_status === 'held' || $finalPayment->isPaid())) ? 'half-paid' : 'half-pending')) }}">
                         <div class="half-left">
                             <div class="half-label">② {{ $cakeRequest->isPickup() ? 'Cash on Pickup' : 'Final Payment' }} · 50%</div>
                             <div class="half-amount">₱{{ number_format($downpaymentAmount, 2) }}</div>
-                            @if($finalIsRejected)
-                                <div class="half-status rejected">✕ Proof rejected</div>
-                            @elseif($finalIsPending)
-                                <div class="half-status pending">⏳ Under review</div>
-                            @elseif($cakeRequest->isPickup())
-                                <div class="half-status pending">💵 Pay cash at pickup</div>
-                            @else
-                                <div class="half-status pending">⚠ Payment required</div>
-                            @endif
+                           @if($finalIsRejected)
+    <div class="half-status rejected">✕ Proof rejected</div>
+@elseif($finalPayment && $finalPayment->escrow_status === 'held')
+    <div class="half-status paid">✓ Paid — awaiting delivery</div>
+@elseif($finalPayment && $finalPayment->isPaid())
+    <div class="half-status paid">✓ Confirmed & paid</div>
+@elseif($finalIsPending)
+    <div class="half-status pending">⏳ Under review</div>
+@elseif($cakeRequest->isPickup())
+    <div class="half-status pending">💵 Pay cash at pickup</div>
+@else
+    <div class="half-status pending">⚠ Payment required</div>
+@endif
                         </div>
-                        @if($finalIsRejected)
-                            <div style="width:32px;height:32px;background:#FDF0EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✕</div>
-                        @elseif($cakeRequest->isPickup())
-                            <div style="width:32px;height:32px;background:#FEF9E8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;"></div>
-                        @else
-                            <div style="width:32px;height:32px;background:#FEF3D8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">₱</div>
-                        @endif
+                       @if($finalIsRejected)
+    <div style="width:32px;height:32px;background:#FDF0EE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✕</div>
+@elseif($finalPayment && ($finalPayment->escrow_status === 'held' || $finalPayment->isPaid()))
+    <div style="width:32px;height:32px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✓</div>
+@elseif($cakeRequest->isPickup())
+    <div style="width:32px;height:32px;background:#FEF9E8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;"></div>
+@else
+    <div style="width:32px;height:32px;background:#FEF3D8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">₱</div>
+@endif
                     </div>
                 </div>
     @if($finalIsRejected)
@@ -1832,7 +1840,12 @@ if ($acceptedBid) {
                         <form id="form-cancel-request-sidebar2" method="POST" action="{{ route('customer.cake-requests.destroy', $cakeRequest->id) }}">@csrf @method('DELETE')</form>
                         <button type="button" class="btn btn-danger" onclick="openConfirmModal('modal-cancel-request')">✕ Cancel this order</button>
                     {{-- 1D: WAITING_FINAL_PAYMENT sidebar actions — pickup-aware --}}
-    @elseif($effectiveStatus === 'WAITING_FINAL_PAYMENT' && !$finalIsRejected)
+   @elseif($effectiveStatus === 'WAITING_FINAL_PAYMENT' && !$finalIsRejected)
+                        @php
+                            $wfpDeadline = $bakerOrder?->cakeRequest->delivery_date ?? null;
+                            $wfpDeadlinePassed = $wfpDeadline && \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($wfpDeadline));
+                            $wfpAlreadyReported = $bakerOrder ? \App\Models\Report::where('reporter_id', auth()->id())->where('baker_order_id', $bakerOrder->id)->exists() : false;
+                        @endphp
                         @if($cakeRequest->isPickup())
                             <div style="background:#FEF9E8; border:1.5px solid #F0D090; border-radius:10px; padding:0.85rem 1rem; font-size:0.78rem; color:#8A5010; font-weight:600; text-align:center; margin-bottom:0.75rem;">
                                  Pickup the cake and pay <strong>₱{{ number_format(round($bakerOrder?->agreed_price * 0.5, 2), 2) }}</strong> cash to collect your cake.
@@ -1852,30 +1865,81 @@ if ($acceptedBid) {
                         @else
                             <p style="font-size:0.82rem; color:var(--text-muted); text-align:center; padding:0.5rem 0; line-height:1.6;">See payment section above to pay the final balance.</p>
                         @endif
+                    {{-- Help Center — always visible --}}
+                        @if($bakerOrder)
+                            @if($wfpAlreadyReported)
+                            <div style="background:#EBF3FE;border:1.5px solid #BEDAF5;border-radius:10px;padding:.65rem 1rem;margin-top:.75rem;font-size:.78rem;color:#1A3A6B;font-weight:600;text-align:center;">
+                                ✓ Help Center report submitted — admin is reviewing
+                            </div>
+                            @else
+                            <div style="background:{{ $wfpDeadlinePassed ? '#FDF0EE' : '#FBF4EC' }};border:1.5px solid {{ $wfpDeadlinePassed ? '#F5C5BE' : '#D4B896' }};border-radius:12px;padding:.85rem 1rem;margin-top:.75rem;">
+                                <div style="font-weight:700;font-size:.82rem;color:{{ $wfpDeadlinePassed ? '#8B2A1E' : '#7A4A10' }};margin-bottom:.2rem;">{{ $wfpDeadlinePassed ? '⏰ Deadline Passed' : '🙋 Need Help?' }}</div>
+                                <div style="font-size:.74rem;color:{{ $wfpDeadlinePassed ? '#7A2A20' : '#8A5A18' }};line-height:1.5;margin-bottom:.65rem;">
+                                    {{ $wfpDeadlinePassed
+                                        ? 'The agreed delivery date has passed. If your baker has not complied, you can report this to our Help Center.'
+                                        : 'Having an issue with your order? Contact our Help Center and our admin team will assist you.' }}
+                                </div>
+                                <a href="{{ route('report.create', $bakerOrder->id) }}"
+                                   style="display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem 1rem;background:linear-gradient(135deg,#3B1F0F,#6A3518);color:white;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;box-sizing:border-box;">
+                                     Contact Help Center
+                                </a>
+                            </div>
+                            @endif
+                        @endif
                     @elseif($downIsRejected || $finalIsRejected)
                         <div style="background:#FDF0EE; border:1.5px solid #F5C5BE; border-radius:10px; padding:0.85rem 1rem; font-size:0.78rem; color:#8B2A1E; font-weight:600; text-align:center; margin-bottom:0.75rem;">❌ Re-upload your proof above to continue</div>
-                    @elseif($cakeRequest->status === 'COMPLETED')
+         @elseif($cakeRequest->status === 'COMPLETED')
                         <p style="font-size:0.82rem; color:var(--caramel,#C07840); font-weight:600; text-align:center; padding:0.5rem 0;"> Order complete!</p>
                         @if($bakerOrder)
                         @php $alreadyReported = \App\Models\Report::where('reporter_id', auth()->id())->where('baker_order_id', $bakerOrder->id)->exists(); @endphp
                         @if(!$alreadyReported)
-                        <a href="{{ route('report.create', $bakerOrder->id) }}" class="btn btn-danger" style="margin-top:0.5rem;">⚠ Report Baker</a>
+                        <div style="background:#FBF4EC;border:1.5px solid #D4B896;border-radius:12px;padding:.85rem 1rem;margin-top:.5rem;margin-bottom:.25rem;">
+                            <div style="font-weight:700;font-size:.82rem;color:#7A4A10;margin-bottom:.2rem;"> Need Help?</div>
+                            <div style="font-size:.74rem;color:#8A5A18;line-height:1.5;margin-bottom:.65rem;">Have an issue with your completed order? Our Help Center team is here to assist you.</div>
+                            <a href="{{ route('report.create', $bakerOrder->id) }}"
+                               style="display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem 1rem;background:linear-gradient(135deg,#3B1F0F,#6A3518);color:white;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;"> Contact Help Center</a>
+                        </div>
                         @else
-                        <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:0.5rem;">✓ Report submitted</p>
+                        <div style="background:#EBF3FE;border:1.5px solid #BEDAF5;border-radius:10px;padding:.65rem 1rem;margin-top:.5rem;font-size:.78rem;color:#1A3A6B;font-weight:600;text-align:center;">✓ Report submitted — under review</div>
                         @endif
                         @endif
-                    @elseif($cakeRequest->status === 'CANCELLED')
+          @elseif($cakeRequest->status === 'CANCELLED')
                         <p style="font-size:0.82rem; color:var(--text-muted); text-align:center; padding:0.5rem 0;">This request was cancelled.</p>
                         @if($bakerOrder)
-                        @php $alreadyReported = \App\Models\Report::where('reporter_id', auth()->id())->where('baker_order_id', $bakerOrder->id)->exists(); @endphp
-                        @if(!$alreadyReported)
-                        <a href="{{ route('report.create', $bakerOrder->id) }}" class="btn btn-danger" style="margin-top:0.5rem;">⚠ Report Baker</a>
+                        @php $alreadyReportedCancelled = \App\Models\Report::where('reporter_id', auth()->id())->where('baker_order_id', $bakerOrder->id)->exists(); @endphp
+                        @if(!$alreadyReportedCancelled)
+                        <a href="{{ route('report.create', $bakerOrder->id) }}" style="display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem 1rem;background:linear-gradient(135deg,#3B1F0F,#6A3518);color:white;border-radius:10px;font-size:.82rem;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;margin-top:.5rem;"> Contact Help Center</a>
                         @else
-                        <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:0.5rem;">✓ Report submitted</p>
+                        <div style="background:#EBF3FE;border:1.5px solid #BEDAF5;border-radius:10px;padding:.65rem 1rem;margin-top:.5rem;font-size:.78rem;color:#1A3A6B;font-weight:600;text-align:center;">✓ Report submitted — under review</div>
                         @endif
                         @endif
-            @elseif($effectiveStatus === 'IN_PROGRESS')
-                        <button type="button" class="btn btn-danger" onclick="openConfirmModal('modal-cancel-in-progress')">✕ Cancel Order</button>
+  @elseif($effectiveStatus === 'IN_PROGRESS')
+                        @if($bakerOrder)
+                        @php
+                            $deliveryDeadline = $bakerOrder->cakeRequest->delivery_date ?? null;
+                            $deadlinePassed = $deliveryDeadline && \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($deliveryDeadline));
+                            $alreadyReportedInProgress = \App\Models\Report::where('reporter_id', auth()->id())->where('baker_order_id', $bakerOrder->id)->exists();
+                        @endphp
+                        @if($alreadyReportedInProgress)
+                        <div style="background:#EBF3FE;border:1.5px solid #BEDAF5;border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem;font-size:.78rem;color:#1A3A6B;font-weight:600;text-align:center;">
+                            ✓ Help Center report submitted — admin is reviewing
+                        </div>
+                        @else
+                        <div style="background:{{ $deadlinePassed ? '#FDF0EE' : '#FBF4EC' }};border:1.5px solid {{ $deadlinePassed ? '#F5C5BE' : '#D4B896' }};border-radius:12px;padding:.85rem 1rem;margin-bottom:.75rem;">
+                            <div style="font-weight:700;font-size:.82rem;color:{{ $deadlinePassed ? '#8B2A1E' : '#7A4A10' }};margin-bottom:.2rem;">{{ $deadlinePassed ? '⏰ Deadline Passed' : ' Need Help?' }}</div>
+                            <div style="font-size:.74rem;color:{{ $deadlinePassed ? '#7A2A20' : '#8A5A18' }};line-height:1.5;margin-bottom:.65rem;">
+                                {{ $deadlinePassed
+                                    ? 'The agreed delivery date has passed. If your baker has not complied, you can contact our Help Center to report this issue. Note: downpayments are non-refundable, but store credit may be issued at admin\'s discretion.'
+                                    : 'Having an issue with your order? Contact our Help Center and our admin team will assist you.' }}
+                            </div>
+                            <a href="{{ route('report.create', $bakerOrder->id) }}"
+                               style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;background:linear-gradient(135deg,#3B1F0F,#6A3518);color:white;border-radius:10px;font-size:.8rem;font-weight:700;text-decoration:none;width:100%;justify-content:center;box-sizing:border-box;">
+                                 Contact Help Center
+                            </a>
+                        </div>
+                        @endif
+                        @endif
+                     
                     @else
                         <p style="font-size:0.82rem; color:var(--text-muted); text-align:center; padding:0.5rem 0; line-height:1.6;">This request is being processed.</p>
                     @endif
@@ -1912,7 +1976,7 @@ if ($acceptedBid) {
                     <li><div class="log-dot" style="background:#5C3D2E;"></div><div><div class="log-event">📸 Cake photo received from baker</div><div class="log-time">Baker marked cake as ready</div></div></li>
                     @endif
                     @if($effectiveStatus === 'WAITING_FINAL_PAYMENT' && !$finalIsRejected && (!$finalPayment || !$finalPayment->isPaid()))
-                    <li><div class="log-dot" style="background:#c8862a;"></div><div><div class="log-event" style="color:#c8862a;">{{ $cakeRequest->isPickup() ? ' Cake ready for pickup' : '💰 Final payment requested' }}</div><div class="log-time">Action required</div></div></li>
+                    <li><div class="log-dot" style="background:#c8862a;"></div><div><div class="log-event" style="color:#c8862a;">{{ $cakeRequest->isPickup() ? ' Cake ready for pickup' : ' Final payment requested' }}</div><div class="log-time">Action required</div></div></li>
                     @endif
                     @if($cakeRequest->status === 'COMPLETED')
                     <li><div class="log-dot" style="background:var(--caramel,#C07840);"></div><div><div class="log-event" style="color:var(--caramel,#C07840);">{{ $cakeRequest->isPickup() ? 'Cake collected ' : 'Order delivered ' }}</div><div class="log-time">{{ $bakerOrder?->completed_at?->format('M d, Y · g:i A') }}</div></div></li>

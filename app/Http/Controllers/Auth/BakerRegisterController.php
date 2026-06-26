@@ -39,7 +39,6 @@ class BakerRegisterController extends Controller
         ];
 
         if ($sellerType === 'registered') {
-            $rules['dti_sec_number']  = ['required', 'string', 'max:100'];
             $rules['business_permit'] = ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:10240'];
             $rules['dti_certificate'] = ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:10240'];
             $rules['sanitary_permit'] = ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:10240'];
@@ -92,7 +91,6 @@ class BakerRegisterController extends Controller
             'longitude'        => $validated['longitude'] ?? null,
             'full_address'     => $validated['full_address'] ?? null,
             'address'          => $validated['full_address'] ?? null,
-            'dti_sec_number'   => $request->input('dti_sec_number'),
             'gov_id_type'      => $request->input('gov_id_type'),
             'status'           => 'pending',
             'portfolio'        => json_encode($portfolioPaths),

@@ -117,9 +117,7 @@
 
 <a href="{{ route('admin.reports.index') }}" class="back-link">← All Reports</a>
 
-@if(session('success'))
-<div class="success-flash">✅ {{ session('success') }}</div>
-@endif
+
 
 {{-- HERO --}}
 <div class="report-hero">
@@ -232,14 +230,136 @@
             </div>
         </div>
         @endif
-
-        {{-- Admin note (read-only display if set) --}}
+{{-- Admin note (read-only display if set) --}}
         @if($report->admin_note)
         <div class="card">
             <div class="card-header"><span>🔒</span><h3>Admin Note</h3></div>
             <div class="description-box" style="background:#FEF9E8; font-style:italic; color:#7A4A10;">
                 "{{ $report->admin_note }}"
             </div>
+        </div>
+        @endif
+
+        {{-- PAYMENT & REFUND CONTROL PANEL --}}
+        @if($report->bakerOrder)
+        @php
+            $bo = $report->bakerOrder;
+            $downpayment = \App\Models\Payment::where('cake_request_id', $bo->cake_request_id)
+                ->where('payment_type', 'downpayment')->where('status', 'paid')->first();
+            $downpaymentAmount = $downpayment ? $downpayment->amount : round($bo->agreed_price * 0.5, 2);
+        @endphp
+        <div class="card" style="border:2px solid #F0D090;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c8862a,#e8a94a,#c8862a);"></div>
+            <div class="card-header" style="background:linear-gradient(135deg,#3B1F0F,#7A4A28);">
+                <span style="font-size:1rem;">💰</span>
+                <h3 style="color:white;">Payment Control Center</h3>
+            </div>
+
+            {{-- Payment snapshot --}}
+            <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);">
+                <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;margin-bottom:0.75rem;">Order Payment Snapshot</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                    <div style="background:var(--cream);border-radius:10px;padding:0.75rem;">
+                        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;margin-bottom:0.2rem;">Agreed Price</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:var(--brown-deep);">₱{{ number_format($bo->agreed_price, 2) }}</div>
+                    </div>
+                    <div style="background:{{ $downpayment ? '#EFF5EF' : '#FDF0EE' }};border-radius:10px;padding:0.75rem;">
+                        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;margin-bottom:0.2rem;">Downpayment</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:{{ $downpayment ? '#166534' : '#8B2A1E' }};">
+                            {{ $downpayment ? '✓ ₱'.number_format($downpaymentAmount,2) : 'Not Paid' }}
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0.85rem;border-radius:10px;background:{{ $bo->payout_frozen ? '#FDF0EE' : '#F5EFE6' }};border:1.5px solid {{ $bo->payout_frozen ? '#F5C5BE' : '#EAE0D0' }};">
+                    <div>
+                        <div style="font-size:0.72rem;font-weight:700;color:{{ $bo->payout_frozen ? '#8B2A1E' : '#166534' }};">
+                            {{ $bo->payout_frozen ? '🔒 Baker Payout FROZEN' : '✓ Payout Normal' }}
+                        </div>
+                        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:0.1rem;">
+                            Order #{{ str_pad($bo->id, 4, '0', STR_PAD_LEFT) }} · {{ str_replace('_', ' ', $bo->status) }}
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ route('admin.reports.hold-payment', $report->id) }}">
+                        @csrf
+                        <input type="hidden" name="hold" value="{{ $bo->payout_frozen ? '0' : '1' }}">
+                        <button type="submit" style="padding:0.45rem 0.85rem;border-radius:8px;border:none;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;background:{{ $bo->payout_frozen ? 'linear-gradient(135deg,#166534,#22a85a)' : 'linear-gradient(135deg,#8B2A1E,#C44030)' }};color:white;">
+                            {{ $bo->payout_frozen ? '🔓 Release Hold' : '🔒 Freeze Payout' }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Refund request section --}}
+            @if($report->refund_requested)
+            <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+                    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;">Refund Request</div>
+                    @if($report->refund_status)
+                    @php
+                        $rfColors = ['pending'=>['bg'=>'#FEF9E8','c'=>'#9B6A10','b'=>'#F0D090'],'on_hold'=>['bg'=>'#EBF3FE','c'=>'#1A5A8A','b'=>'#B8D4F0'],'approved'=>['bg'=>'#EFF5EF','c'=>'#166534','b'=>'#B8DFC6'],'rejected'=>['bg'=>'#FDF0EE','c'=>'#8B2A1E','b'=>'#F5C5BE']];
+                        $rc = $rfColors[$report->refund_status] ?? $rfColors['pending'];
+                    @endphp
+                    <span style="padding:0.2rem 0.65rem;border-radius:20px;font-size:0.7rem;font-weight:700;background:{{ $rc['bg'] }};color:{{ $rc['c'] }};border:1px solid {{ $rc['b'] }};">
+                        {{ $report->refund_status_label }}
+                    </span>
+                    @endif
+                </div>
+
+                @if(!in_array($report->refund_status, ['approved','rejected']))
+                {{-- Approve refund form --}}
+                <form method="POST" action="{{ route('admin.reports.refund.approve', $report->id) }}" style="margin-bottom:0.75rem;">
+                    @csrf
+                    <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
+                        <div style="flex:1;">
+                            <label style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:700;display:block;margin-bottom:0.3rem;">Refund Amount (₱)</label>
+                            <input type="number" name="refund_amount" step="0.01" min="1"
+                                   value="{{ $downpaymentAmount }}"
+                                   max="{{ $downpaymentAmount }}"
+                                   style="width:100%;padding:0.55rem 0.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:inherit;background:white;"
+                                   placeholder="e.g. {{ $downpaymentAmount }}">
+                        </div>
+                    </div>
+                    <textarea name="refund_note" placeholder="Note to customer (reason for approval)…"
+                              style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.82rem;font-family:inherit;resize:none;min-height:60px;margin-bottom:0.5rem;box-sizing:border-box;"></textarea>
+                    <button type="submit"
+                            onclick="return confirm('Approve this refund and credit ₱{{ $downpaymentAmount }} to the customer\'s wallet?')"
+                            style="width:100%;padding:0.65rem;border:none;border-radius:8px;background:linear-gradient(135deg,#166534,#22a85a);color:white;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;">
+                        ✓ Approve Refund
+                    </button>
+                </form>
+
+                {{-- Reject refund form --}}
+                <form method="POST" action="{{ route('admin.reports.refund.reject', $report->id) }}">
+                    @csrf
+                    <textarea name="refund_note" placeholder="Reason for rejection (required)…" required
+                              style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.82rem;font-family:inherit;resize:none;min-height:55px;margin-bottom:0.5rem;box-sizing:border-box;"></textarea>
+                    <button type="submit"
+                            onclick="return confirm('Reject this refund request?')"
+                            style="width:100%;padding:0.6rem;border:1.5px solid #F5C5BE;border-radius:8px;background:#FDF0EE;color:#8B2A1E;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;">
+                        ✕ Reject Refund
+                    </button>
+                </form>
+
+                @else
+                {{-- Already processed --}}
+                <div style="background:{{ $report->refund_status==='approved' ? '#EFF5EF' : '#FDF0EE' }};border:1.5px solid {{ $report->refund_status==='approved' ? '#B8DFC6' : '#F5C5BE' }};border-radius:10px;padding:0.85rem 1rem;">
+                    <div style="font-size:0.82rem;font-weight:700;color:{{ $report->refund_status==='approved' ? '#166534' : '#8B2A1E' }};margin-bottom:0.3rem;">
+                        {{ $report->refund_status==='approved' ? '✓ Refund of ₱'.number_format($report->refund_amount,2).' credited to customer' : '✕ Refund rejected' }}
+                    </div>
+                    @if($report->refund_note)
+                    <div style="font-size:0.75rem;color:var(--text-muted);font-style:italic;">"{{ $report->refund_note }}"</div>
+                    @endif
+                    @if($report->refund_processed_at)
+                    <div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.3rem;">Processed {{ $report->refund_processed_at->format('M d, Y · g:i A') }}</div>
+                    @endif
+                </div>
+                @endif
+            </div>
+            @else
+            <div style="padding:0.85rem 1.5rem;font-size:0.78rem;color:var(--text-muted);font-style:italic;">
+                No refund request submitted by customer.
+            </div>
+            @endif
         </div>
         @endif
     </div>

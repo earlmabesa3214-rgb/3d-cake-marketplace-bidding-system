@@ -3,559 +3,865 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In — BakeSphere</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">    <style>
+    <title>BakeSphere — Artisan Cake Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --cream: #FDF6EE; --rose: #C9725F; --rose-dk: #A85A48;
-            --rose-pale: #FFF8F5; --mocha: #6B4C3B; --sand: #E8D5C0;
-            --white: #FFFFFF; --err: #D94F38; --success: #5B8F6A;
-            --muted: #B09080;
-        }
-       *, *::before, *::after { font-family: 'Plus Jakarta Sans', sans-serif; }
-        body {
-            min-height: 100vh;
-            background: var(--cream);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
+            --brown-darkest: #1a0d07;
+            --brown-dark:    #2B1810;
+            --brown-mid:     #3D2314;
+            --amber:         #C47B2E;
+            --amber-light:   #D4943A;
+            --amber-pale:    #E8A84A;
+            --cream:         #FDF6EE;
+            --cream-warm:    #F5EBD8;
+            --cream-mid:     #EDD8BC;
+            --text-primary:  #2B1810;
+            --text-muted:    #7A5A40;
+            --text-faint:    #B09070;
+            --white:         #FFFFFF;
+            --sidebar-bg:    #241508;
         }
 
-        /* ── Card ── */
-        .card {
-            background: var(--white);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(107,76,59,0.12);
+        html, body {
+            height: 100%;
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+            background: var(--brown-darkest);
+        }
+
+        /* ═══════════════════════════════════
+           HERO — CSS grid, fills full viewport
+        ═══════════════════════════════════ */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 600px;
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 45% 55%;
+            grid-template-rows: 72px 1fr 64px;
             overflow: hidden;
-            width: 900px;
-            max-width: 100%;
         }
 
-        /* ── Left Panel ── */
-        .card-left {
-            background: linear-gradient(145deg, #6B4C3B 0%, #8A5C48 100%);
-            padding: 56px 42px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        /* Warm atmospheric glow on left */
+        .hero-glow {
+            position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(ellipse 60% 75% at 0%  55%, rgba(196,123,46,0.17) 0%, transparent 60%),
+                radial-gradient(ellipse 45% 55% at 28% 100%, rgba(92,52,32,0.38)  0%, transparent 52%),
+                radial-gradient(ellipse 52% 42% at 22% 0%,   rgba(61,35,20,0.55)  0%, transparent 56%);
+        }
+
+        /* Grain texture */
+        .hero-grain {
+            position: absolute; inset: 0; pointer-events: none; z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+            opacity: 0.55;
+        }
+
+        /* Particles — left half */
+        .particles { position: absolute; left: 0; top: 0; width: 45%; height: 100%; pointer-events: none; z-index: 2; overflow: hidden; }
+        .particle {
+            position: absolute; border-radius: 50%;
+            background: rgba(196,123,46,0.42);
+            animation: rise linear infinite;
+        }
+        @keyframes rise {
+            0%   { transform: translateY(0) scale(0.4); opacity: 0; }
+            8%   { opacity: 0.7; }
+            92%  { opacity: 0.25; }
+            100% { transform: translateY(-100vh) scale(1.4); opacity: 0; }
+        }
+
+        /* ── NAV — row 1, both columns ── */
+        .nav {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            position: relative; z-index: 30;
+            display: flex; align-items: center;
+            padding: 0 52px;
+            border-bottom: 1px solid rgba(196,123,46,0.07);
+        }
+
+        .logo {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 38px; height: 38px; border-radius: 9px;
+            background: var(--amber);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .logo-icon svg { width: 19px; height: 19px; }
+        .logo-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.28rem; font-weight: 900;
+            color: var(--cream); letter-spacing: -0.01em; line-height: 1;
+        }
+        .logo-name span { color: var(--amber); }
+        .logo-sub {
+            font-size: 0.44rem; font-weight: 600;
+            letter-spacing: 0.24em; text-transform: uppercase;
+            color: rgba(253,246,238,0.26); margin-top: 2px;
+        }
+
+        /* ── LEFT — text, row 2, col 1 ── */
+        .hero-left {
+            grid-column: 1;
+            grid-row: 2;
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 0 52px;
+        }
+
+        .eyebrow {
+            font-size: 0.56rem; font-weight: 700;
+            letter-spacing: 0.26em; text-transform: uppercase;
+            color: var(--amber); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 11px;
+        }
+        .eyebrow::before {
+            content: ''; width: 26px; height: 1.5px;
+            background: var(--amber); flex-shrink: 0;
+        }
+
+        .headline {
+            font-family: 'Playfair Display', serif;
+            color: var(--cream); line-height: 0.93;
+            margin-bottom: 22px;
+        }
+       .headline .l1 {
+            font-size: clamp(4.7rem, 3.2vw, 3rem);
+            font-weight: 900; display: block; letter-spacing: -0.03em; white-space: nowrap;
+        }
+        .headline .l2 {
+            font-size: clamp(3.4rem, 5.8vw, 5.2rem);
+            font-weight: 700; font-style: italic;
+            display: block; color: var(--amber); letter-spacing: -0.02em;
+        }
+
+        .hero-sub { 
+            font-size: 0.9rem; line-height: 1.82;
+            color: rgba(253,246,238,0.4);
+            max-width: 360px; margin-bottom: 34px;
+        }
+        .hero-sub strong { color: rgba(253,246,238,0.76); font-weight: 600; }
+
+        .btn-login {
+            background: var(--amber);
+            color: var(--brown-darkest);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem; font-weight: 800;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 15px 36px; border: none; border-radius: 8px;
+            cursor: pointer; transition: all 0.24s;
+            box-shadow: 0 8px 30px rgba(196,123,46,0.44);
+            display: inline-block; text-decoration: none; align-self: flex-start;
+        }
+        .btn-login:hover {
+            background: var(--amber-pale);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 38px rgba(196,123,46,0.6);
+        }
+
+        /* ── RIGHT — GIF full bleed, row 2, col 2 ── */
+        .hero-right {
+            grid-column: 2;
+            grid-row: 2;
             position: relative;
             overflow: hidden;
         }
-        .card-left::before {
-            content: ''; position: absolute;
-            width: 280px; height: 280px; border-radius: 50%;
-            background: rgba(201,114,95,0.13); top: -70px; left: -70px;
+
+        /* Fade left edge into dark background */
+        .hero-right-vignette {
+            position: absolute; inset: 0; z-index: 6; pointer-events: none;
+            background:
+                linear-gradient(to right,  var(--brown-darkest) 0%, rgba(26,13,7,0.55) 12%, transparent 32%),
+                linear-gradient(to bottom, var(--brown-darkest) 0%, transparent 12%),
+                linear-gradient(to top,    var(--brown-darkest) 0%, transparent 12%);
         }
-        .card-left::after {
-            content: ''; position: absolute;
-            width: 200px; height: 200px; border-radius: 50%;
-            background: rgba(201,114,95,0.10); bottom: -50px; right: -50px;
+
+        /* GIF / video — drop in your asset here */
+        .gif-media {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
         }
-     .brand {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 2rem; color: #E8D5C0; font-weight: 800;
+
+        /* Placeholder (remove when GIF is added) */
+        .gif-placeholder {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 14px;
+        }
+        .gif-placeholder-bg {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, #2a1508 0%, #3d2010 50%, #2a1508 100%);
+        }
+        .gif-placeholder-icon {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 2px dashed rgba(196,123,46,0.4);
+            background: rgba(196,123,46,0.1);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; z-index: 1;
+            animation: iconPulse 2.6s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%,100% { transform: scale(1); opacity: 0.65; }
+            50%      { transform: scale(1.08); opacity: 1; }
+        }
+        .gif-placeholder-label {
+            font-size: 0.68rem; font-weight: 700;
+            color: rgba(253,246,238,0.4);
+            letter-spacing: 0.16em; text-transform: uppercase;
             position: relative; z-index: 1;
         }
-        .brand span { color: #C9725F; }
-
-        /* ── Hero SVG ── */
-        .hero-illustration {
-            width: 220px;
-            margin: 18px auto 14px;
-            position: relative;
-            z-index: 1;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
-
-        .slogan-wrap { position: relative; z-index: 1; }
-       .slogan-main {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.05rem; font-weight: 700;
-            color: #E8D5C0; line-height: 1.4; margin-bottom: 7px;
-        }
-        .slogan-sub { font-size: 0.78rem; color: rgba(232,213,192,0.55); line-height: 1.65; }
-
-        /* ── Right Panel ── */
-        .card-right {
-            padding: 40px 44px 36px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .gif-placeholder-sub {
+            font-size: 0.56rem; color: rgba(253,246,238,0.2);
+            letter-spacing: 0.08em; position: relative; z-index: 1;
         }
 
-        .greeting-label {
-            font-size: 0.64rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.14em;
-            color: var(--rose); margin-bottom: 4px;
-        }
-    h1 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1.75rem; color: var(--mocha);
-            font-weight: 800; margin-bottom: 20px; line-height: 1.2;
+        .gif-badge {
+            position: absolute; bottom: 14px; right: 14px; z-index: 10;
+            background: rgba(26,13,7,0.7);
+            border: 1px solid rgba(196,123,46,0.28);
+            border-radius: 6px;
+            font-size: 0.48rem; font-weight: 700;
+            color: var(--amber); letter-spacing: 0.14em; text-transform: uppercase;
+            padding: 5px 10px; backdrop-filter: blur(6px);
         }
 
-        /* ── Alerts ── */
-        .alert { padding: 10px 13px; border-radius: 9px; margin-bottom: 14px; font-size: 0.83rem; }
-        .alert-err  { background: #FEE8E5; border: 1px solid var(--err); color: var(--err); }
-        .alert-ok   { background: #E8F5EC; border: 1px solid var(--success); color: var(--success); }
-        .alert-google {
-            background: #FFF8F5; border: 1px solid #F0C8B8;
-            border-radius: 9px; padding: 0.7rem 0.9rem;
-            margin-bottom: 14px; display: flex; gap: 0.55rem; align-items: flex-start;
-            font-size: 0.8rem; color: #7A4030; line-height: 1.5;
+       .stats-bar {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            position: relative; z-index: 20;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 52px;
+            border-top: 1px solid rgba(253,246,238,0.055);
+            background: rgba(18,9,3,0.7);
+            backdrop-filter: blur(10px);
         }
-        .alert-google img { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; }
+   .stat {
+            display: flex; align-items: baseline; gap: 8px;
+            padding: 0 32px;
+        }
+        .stat:first-child { padding-left: 32px; }
+  .stat-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.45rem; font-weight: 700; color: var(--amber);
+        }
+       .stat-lbl {
+    font-size: 0.54rem; letter-spacing: 0.13em; text-transform: uppercase;
+    color: rgba(253,246,238,0.26); font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .stat-div { width: 1px; height: 26px; background: rgba(253,246,238,0.07); flex-shrink: 0; }
+
+        /* ═══════════════════════════════════
+           LOGIN MODAL
+        ═══════════════════════════════════ */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(10,5,2,0.88);
+            backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal {
+            display: grid;
+            grid-template-columns: 248px 1fr;
+            width: 690px; max-width: 100%;
+            max-height: 96vh;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.78), 0 0 0 1px rgba(196,123,46,0.2);
+            transform: translateY(28px) scale(0.96);
+            transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+            opacity: 0;
+        }
+        .modal-overlay.active .modal { transform: translateY(0) scale(1); opacity: 1; }
+
+        /* Left decorative panel */
+        .modal-left {
+            background: var(--sidebar-bg);
+            padding: 42px 24px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .modal-left::before {
+            content: ''; position: absolute;
+            width: 220px; height: 220px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(196,123,46,0.18) 0%, transparent 70%);
+            top: -70px; left: -70px;
+        }
+        .modal-left::after {
+            content: ''; position: absolute;
+            width: 160px; height: 160px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(196,123,46,0.1) 0%, transparent 70%);
+            bottom: -50px; right: -50px;
+        }
+
+        .modal-logo {
+            display: flex; align-items: center; gap: 9px;
+            position: relative; z-index: 1; margin-bottom: 22px;
+        }
+        .modal-logo-icon {
+            width: 34px; height: 34px; border-radius: 8px;
+            background: var(--amber);
+            display: flex; align-items: center; justify-content: center;
+        }
+       .modal-logo-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.15rem; font-weight: 900;
+            color: var(--cream); line-height: 1;
+        }
+        .modal-logo-name span { color: var(--amber); }
+
+        .modal-cake {
+            position: relative; z-index: 1;
+            width: 108px; margin: 0 auto 16px;
+            animation: float 3.8s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .modal-tagline { position: relative; z-index: 1; }
+        .modal-tagline-main {
+            font-size: 0.82rem; font-weight: 700;
+            color: var(--cream); line-height: 1.5; margin-bottom: 6px;
+        }
+        .modal-tagline-sub {
+            font-size: 0.64rem; color: rgba(253,246,238,0.34); line-height: 1.7;
+        }
+
+        /* Right form panel */
+        .modal-right {
+            background: var(--cream);
+            padding: 32px 30px 28px;
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative; overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute; top: 12px; right: 14px;
+            background: none; border: none;
+            color: var(--text-muted); font-size: 1.2rem;
+            cursor: pointer; transition: color 0.2s; line-height: 1;
+        }
+        .modal-close:hover { color: var(--amber); }
+
+        .form-eyebrow {
+            font-size: 0.52rem; font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--amber); margin-bottom: 3px;
+        }
+       .form-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.42rem; font-weight: 700;
+            color: var(--text-primary); margin-bottom: 18px; line-height: 1.2;
+        }
+
+        /* Alerts */
+        .alert { padding: 9px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.78rem; }
+        .alert-err { background: rgba(180,60,40,0.1); border: 1px solid rgba(180,60,40,0.25); color: #9a2e1e; }
+        .alert-ok  { background: rgba(80,140,90,0.1); border: 1px solid rgba(80,140,90,0.25); color: #3a7a48; }
         .alert-pending {
-            background: #FEF9E8; border: 1px solid #F0D4B0;
-            border-radius: 9px; padding: 0.7rem 0.9rem;
-            margin-bottom: 14px; display: flex; gap: 0.55rem; align-items: flex-start;
+            background: rgba(196,123,46,0.1); border: 1px solid rgba(196,123,46,0.28);
+            border-radius: 8px; padding: 0.6rem 0.85rem;
+            margin-bottom: 12px; display: flex; gap: 0.55rem; align-items: flex-start;
         }
-        .pending-icon { font-size: 1rem; flex-shrink: 0; }
-        .pending-title { font-weight: 700; color: #7A5800; font-size: 0.78rem; margin-bottom: 0.1rem; }
-        .pending-msg { font-size: 0.72rem; color: #9B7A10; line-height: 1.55; }
+        .pending-title { font-weight: 700; color: var(--amber); font-size: 0.74rem; margin-bottom: 2px; }
+        .pending-msg { font-size: 0.68rem; color: var(--text-muted); line-height: 1.5; }
+        .alert-google-hint {
+            background: rgba(196,123,46,0.07); border: 1px solid rgba(196,123,46,0.22);
+            border-radius: 8px; padding: 0.6rem 0.85rem;
+            margin-bottom: 12px; display: flex; gap: 0.55rem; align-items: flex-start;
+            font-size: 0.76rem; color: var(--text-muted); line-height: 1.5;
+        }
+        .alert-google-hint img { width: 13px; height: 13px; flex-shrink: 0; margin-top: 2px; }
 
-        /* ── Form Fields ── */
-        .field { margin-bottom: 12px; }
+        /* Fields */
+        .field { margin-bottom: 10px; }
         .field label {
-            display: block; font-size: 0.69rem; font-weight: 600;
-            color: var(--mocha); text-transform: uppercase;
-            letter-spacing: 0.08em; margin-bottom: 5px;
+            display: block; font-size: 0.57rem; font-weight: 700;
+            color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 0.1em; margin-bottom: 5px;
         }
-.field input {
-            width: 100%; padding: 11px 14px;
-            border: 1.5px solid var(--sand); border-radius: 9px;
-            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;
-            color: var(--mocha); background: var(--white);
+        .field input {
+            width: 100%; padding: 10px 13px;
+            background: var(--white);
+            border: 1.5px solid var(--cream-mid);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.87rem; color: var(--text-primary);
             transition: border-color 0.2s, box-shadow 0.2s; outline: none;
         }
-        .field input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(201,114,95,0.13); }
-        .field input.is-invalid { border-color: var(--err); }
-        .err-msg { font-size: 0.72rem; color: var(--err); margin-top: 3px; }
+        .field input::placeholder { color: var(--text-faint); }
+        .field input:focus {
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px rgba(196,123,46,0.1);
+        }
+        .field input.is-invalid { border-color: rgba(180,60,40,0.5); }
 
         .pw-wrap { position: relative; }
-        .pw-wrap input { padding-right: 42px; }
+        .pw-wrap input { padding-right: 40px; }
         .pw-toggle {
-            position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
-            background: none; border: none; cursor: pointer; color: #9A7B6A;
-            font-size: 0.9rem; display: flex; align-items: center; padding: 3px;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: var(--text-faint); font-size: 0.84rem;
+            display: flex; align-items: center; padding: 3px; transition: color 0.2s;
         }
-        .pw-toggle:hover { color: var(--rose); }
+        .pw-toggle:hover { color: var(--amber); }
 
         .row-extra {
             display: flex; align-items: center;
-            justify-content: space-between; margin-bottom: 16px;
+            justify-content: space-between; margin-bottom: 12px;
         }
-        .row-extra label { display: flex; align-items: center; gap: 6px; font-size: 0.79rem; color: #7A5C4E; cursor: pointer; }
-        .row-extra input[type=checkbox] { accent-color: var(--rose); width: 13px; height: 13px; }
-        .row-extra a { font-size: 0.79rem; color: var(--rose); text-decoration: none; }
+        .row-extra label {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 0.72rem; color: var(--text-muted); cursor: pointer;
+        }
+        .row-extra input[type=checkbox] { accent-color: var(--amber); width: 12px; height: 12px; }
+        .row-extra a { font-size: 0.72rem; color: var(--amber); text-decoration: none; }
         .row-extra a:hover { text-decoration: underline; }
 
-.btn-signin {
+        .btn-signin {
             width: 100%; padding: 12px;
-            background: linear-gradient(135deg, var(--mocha), var(--rose));
-            color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.92rem; font-weight: 600;
-            border: none; border-radius: 9px; cursor: pointer;
-            transition: all 0.2s; letter-spacing: 0.02em;
-            box-shadow: 0 4px 12px rgba(107,76,59,0.22);
+            background: var(--amber); color: var(--brown-darkest);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.86rem; font-weight: 800;
+            border: none; border-radius: 8px; cursor: pointer;
+            transition: all 0.22s; letter-spacing: 0.04em;
+            box-shadow: 0 5px 18px rgba(196,123,46,0.32);
         }
         .btn-signin:hover {
-            background: linear-gradient(135deg, var(--rose), var(--rose-dk));
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(107,76,59,0.32);
+            background: var(--amber-pale); transform: translateY(-1px);
+            box-shadow: 0 9px 26px rgba(196,123,46,0.48);
         }
 
-        /* ── Divider ── */
-        .divider {
-            display: flex; align-items: center; gap: 10px;
-            margin: 16px 0;
-        }
-        .divider-line { flex: 1; height: 1px; background: var(--sand); }
+        .divider { display: flex; align-items: center; gap: 9px; margin: 11px 0; }
+        .divider-line { flex: 1; height: 1px; background: var(--cream-mid); }
         .divider-text {
-            font-size: 0.64rem; color: var(--muted);
-            white-space: nowrap; letter-spacing: 0.04em;
-            text-transform: uppercase; font-weight: 500;
+            font-size: 0.54rem; color: var(--text-faint);
+            white-space: nowrap; letter-spacing: 0.07em; text-transform: uppercase;
         }
 
-        /* ── Google Buttons ── */
-        .google-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .google-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
         .google-card {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 10px 13px;
-            border: 1.5px solid var(--sand); border-radius: 9px;
-            text-decoration: none; background: #faf7f4;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 8px 10px;
+            border: 1.5px solid var(--cream-mid); border-radius: 8px;
+            text-decoration: none; background: var(--white);
+            transition: border-color 0.2s, box-shadow 0.2s; cursor: pointer;
         }
-        .google-card:hover { border-color: var(--rose); background: var(--rose-pale); box-shadow: 0 3px 10px rgba(201,114,95,0.1); }
-        .google-card img { width: 16px; height: 16px; flex-shrink: 0; }
-        .google-card-text { display: flex; flex-direction: column; gap: 1px; }
-        .google-card-sub { font-size: 0.57rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 500; }
-        .google-card-title { font-size: 0.81rem; font-weight: 600; color: var(--mocha); }
+        .google-card:hover { border-color: var(--amber); box-shadow: 0 2px 8px rgba(196,123,46,0.15); }
+        .google-card img { width: 14px; height: 14px; flex-shrink: 0; }
+        .google-card-sub { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+        .google-card-title { font-size: 0.74rem; font-weight: 600; color: var(--text-primary); }
 
-        /* ── Register Links ── */
-        .register-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-     .reg-link {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 10px 12px;
-    border: 1.5px solid var(--sand); border-radius: 9px;
-    text-decoration: none; background: var(--cream);
-    transition: border-color 0.2s, background 0.2s;
-}
-        .reg-link:hover { border-color: var(--rose); background: var(--rose-pale); }
-        .reg-link-icon { font-size: 1rem; flex-shrink: 0; }
-        .reg-link-text { display: flex; flex-direction: column; gap: 1px; }
-        .reg-link-action { font-size: 0.57rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); font-weight: 500; }
-        .reg-link-title { font-size: 0.8rem; font-weight: 600; color: var(--mocha); }
+        .register-links { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+        .reg-link {
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 8px 10px;
+            border: 1.5px solid var(--cream-mid); border-radius: 8px;
+            text-decoration: none; background: var(--white);
+            transition: border-color 0.2s, box-shadow 0.2s; cursor: pointer;
+        }
+        .reg-link:hover { border-color: var(--amber); box-shadow: 0 2px 8px rgba(196,123,46,0.15); }
+        .reg-link-icon { font-size: 14px; flex-shrink: 0; }
+        .reg-link-action { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+        .reg-link-title  { font-size: 0.74rem; font-weight: 600; color: var(--text-primary); }
 
-        /* ── Responsive ── */
-        @media (max-width: 700px) {
-            .card { grid-template-columns: 1fr; }
-            .card-left { display: none; }
-            .card-right { padding: 32px 22px 28px; }
+        /* Responsive */
+        @media (max-width: 820px) {
+            .hero { grid-template-columns: 1fr; grid-template-rows: 64px 1fr 260px 60px; height: auto; }
+            .hero-left { padding: 28px 28px 0; }
+            .hero-right { grid-column: 1; grid-row: 3; }
+            .stats-bar { grid-row: 4; padding: 0 28px; }
+            .modal { grid-template-columns: 1fr; }
+            .modal-left { display: none; }
+            .modal-right { padding: 30px 22px 24px; }
             .google-cards, .register-links { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-<div class="card">
 
-    <!-- Left Panel -->
-    <div class="card-left">
-        <div class="brand">Bake<span>Sphere</span></div>
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-grain"></div>
+    <div class="particles" id="particles"></div>
 
-      <div class="hero-illustration">
-    <svg width="100%" viewBox="0 0 280 260" xmlns="http://www.w3.org/2000/svg">
-        <!-- plate shadow -->
-        <ellipse cx="128" cy="242" rx="88" ry="9" fill="#C9725F" opacity="0.15"/>
-        <!-- plate -->
-        <ellipse cx="128" cy="237" rx="82" ry="8" fill="#E8D5C0"/>
-
-        <!-- BOTTOM TIER -->
-        <rect x="56" y="186" width="144" height="50" rx="5" fill="#6B4C3B"/>
-        <ellipse cx="128" cy="186" rx="72" ry="10" fill="#8A5C48"/>
-        <ellipse cx="128" cy="186" rx="72" ry="10" fill="none" stroke="#FDF6EE" stroke-width="7" opacity="0.85"/>
-
-        <!-- CREAM LAYER 1 -->
-        <ellipse cx="128" cy="178" rx="60" ry="7" fill="#FDF6EE"/>
-
-        <!-- MIDDLE TIER -->
-        <rect x="68" y="130" width="120" height="50" rx="5" fill="#C9725F"/>
-        <ellipse cx="128" cy="130" rx="60" ry="8" fill="#D4836F"/>
-        <ellipse cx="128" cy="130" rx="60" ry="8" fill="none" stroke="#FFF8F5" stroke-width="7" opacity="0.9"/>
-        <!-- drips -->
-        <ellipse cx="82"  cy="179" rx="5" ry="7" fill="#FDF6EE"/>
-        <ellipse cx="98"  cy="181" rx="5" ry="7" fill="#FDF6EE"/>
-        <ellipse cx="114" cy="182" rx="5" ry="7" fill="#FDF6EE"/>
-        <ellipse cx="130" cy="182" rx="5" ry="7" fill="#FDF6EE"/>
-        <ellipse cx="146" cy="181" rx="5" ry="7" fill="#FDF6EE"/>
-        <ellipse cx="162" cy="179" rx="5" ry="7" fill="#FDF6EE"/>
-        <ellipse cx="174" cy="177" rx="4" ry="6" fill="#FDF6EE"/>
-
-        <!-- CREAM LAYER 2 -->
-        <ellipse cx="128" cy="122" rx="48" ry="6" fill="#FDF6EE"/>
-
-        <!-- TOP TIER -->
-        <rect x="80" y="74" width="96" height="50" rx="5" fill="#A85A48"/>
-        <ellipse cx="128" cy="74" rx="48" ry="7" fill="#C4705A"/>
-        <ellipse cx="128" cy="74" rx="48" ry="7" fill="none" stroke="#FFF8F5" stroke-width="7" opacity="0.9"/>
-        <!-- drips -->
-        <ellipse cx="94"  cy="122" rx="4.5" ry="6.5" fill="#FFF8F5"/>
-        <ellipse cx="107" cy="123" rx="4.5" ry="6.5" fill="#FFF8F5"/>
-        <ellipse cx="120" cy="124" rx="4.5" ry="6.5" fill="#FFF8F5"/>
-        <ellipse cx="133" cy="124" rx="4.5" ry="6.5" fill="#FFF8F5"/>
-        <ellipse cx="146" cy="123" rx="4.5" ry="6.5" fill="#FFF8F5"/>
-        <ellipse cx="158" cy="121" rx="4"   ry="6"   fill="#FFF8F5"/>
-
-        <!-- frosting mound on top -->
-        <ellipse cx="128" cy="70" rx="40" ry="6" fill="#FFF8F5" opacity="0.9"/>
-
-        <!-- CANDLES -->
-        <rect x="110" y="36" width="8" height="36" rx="3" fill="#E8D5C0"/>
-        <rect x="110" y="41" width="8" height="3" rx="1" fill="#C9725F" opacity="0.6"/>
-        <rect x="110" y="49" width="8" height="3" rx="1" fill="#C9725F" opacity="0.6"/>
-        <rect x="110" y="57" width="8" height="3" rx="1" fill="#C9725F" opacity="0.6"/>
-        <rect x="132" y="42" width="8" height="30" rx="3" fill="#C9725F" opacity="0.8"/>
-        <rect x="132" y="47" width="8" height="3" rx="1" fill="#E8D5C0" opacity="0.7"/>
-        <rect x="132" y="55" width="8" height="3" rx="1" fill="#E8D5C0" opacity="0.7"/>
-
-        <!-- FLAMES -->
-        <ellipse cx="114" cy="30" rx="5" ry="9" fill="#F0A060"/>
-        <ellipse cx="114" cy="25" rx="3" ry="6" fill="#FFF0A0"/>
-        <ellipse cx="114" cy="22" rx="1.5" ry="3" fill="#FFF"/>
-        <ellipse cx="136" cy="37" rx="4" ry="7" fill="#F0A060"/>
-        <ellipse cx="136" cy="33" rx="2.5" ry="5" fill="#FFF0A0"/>
-        <ellipse cx="136" cy="30" rx="1.2" ry="2.5" fill="#FFF"/>
-
-        <!-- WHISK -->
-        <rect x="212" y="185" width="11" height="55" rx="4" fill="#6B4C3B"/>
-        <rect x="210" y="195" width="15" height="4" rx="2" fill="#8A5C48"/>
-        <rect x="210" y="206" width="15" height="4" rx="2" fill="#8A5C48"/>
-        <rect x="210" y="217" width="15" height="4" rx="2" fill="#8A5C48"/>
-        <path d="M217 185 Q204 155 209 124 Q214 100 222 124 Q227 152 217 185" fill="none" stroke="#C9725F" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M217 185 Q230 155 225 124 Q220 100 212 124 Q207 152 217 185" fill="none" stroke="#C9725F" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M217 185 Q200 160 203 130 Q206 108 214 120" fill="none" stroke="#A85A48" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
-        <path d="M217 185 Q234 160 231 130 Q228 108 220 120" fill="none" stroke="#A85A48" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
-        <ellipse cx="206" cy="183" rx="7" ry="3" fill="#FDF6EE" opacity="0.45"/>
-        <ellipse cx="229" cy="181" rx="6" ry="3" fill="#FDF6EE" opacity="0.35"/>
-
-        <!-- SPARKLES -->
-        <line x1="40" y1="110" x2="40" y2="126" stroke="#C9725F" stroke-width="2.2" stroke-linecap="round"/>
-        <line x1="32" y1="118" x2="48" y2="118" stroke="#C9725F" stroke-width="2.2" stroke-linecap="round"/>
-        <line x1="34" y1="112" x2="46" y2="124" stroke="#C9725F" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
-        <line x1="46" y1="112" x2="34" y2="124" stroke="#C9725F" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
-        <line x1="252" y1="90" x2="252" y2="102" stroke="#E8D5C0" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="246" y1="96" x2="258" y2="96" stroke="#E8D5C0" stroke-width="1.8" stroke-linecap="round"/>
-        <line x1="248" y1="92" x2="256" y2="100" stroke="#E8D5C0" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-        <line x1="256" y1="92" x2="248" y2="100" stroke="#E8D5C0" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-        <line x1="52" y1="62" x2="52" y2="70" stroke="#E8D5C0" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="48" y1="66" x2="56" y2="66" stroke="#E8D5C0" stroke-width="1.4" stroke-linecap="round"/>
-
-        <!-- DOTS -->
-        <circle cx="32"  cy="150" r="2.5" fill="#C9725F" opacity="0.55"/>
-        <circle cx="26"  cy="188" r="1.8" fill="#E8D5C0" opacity="0.7"/>
-        <circle cx="50"  cy="208" r="2"   fill="#C9725F" opacity="0.4"/>
-        <circle cx="250" cy="132" r="2"   fill="#E8D5C0" opacity="0.65"/>
-        <circle cx="260" cy="198" r="1.8" fill="#C9725F" opacity="0.5"/>
-        <circle cx="246" cy="214" r="2.5" fill="#E8D5C0" opacity="0.45"/>
-        <circle cx="38"  cy="84"  r="1.8" fill="#C9725F" opacity="0.5"/>
-        <circle cx="102" cy="16"  r="1.5" fill="#F0A060" opacity="0.5"/>
-        <circle cx="148" cy="22"  r="1.2" fill="#F0A060" opacity="0.45"/>
-    </svg>
-</div>
-
-        <div class="slogan-wrap">
-            <div class="slogan-main">Where Every Slice Tells a Story</div>
-            <div class="slogan-sub">Order handcrafted cakes made with love,<br>delivered fresh to your celebration.</div>
+    <!-- NAV -->
+    <nav class="nav">
+<div class="logo">        <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Bottom tier -->
+                  <ellipse cx="12" cy="20" rx="8" ry="2" fill="#2B1810"/>
+                  <rect x="4" y="16" width="16" height="4" rx="1" fill="#2B1810" opacity="0.9"/>
+                  <ellipse cx="12" cy="16" rx="8" ry="1.5" fill="#3D2314"/>
+                  <!-- Middle tier -->
+                  <ellipse cx="12" cy="15" rx="5.5" ry="1.2" fill="#2B1810"/>
+                  <rect x="6.5" y="11.5" width="11" height="3.5" rx="1" fill="#2B1810" opacity="0.9"/>
+                  <ellipse cx="12" cy="11.5" rx="5.5" ry="1.2" fill="#3D2314"/>
+                  <!-- Top tier -->
+                  <ellipse cx="12" cy="10.5" rx="3.5" ry="1" fill="#2B1810"/>
+                  <rect x="8.5" y="7.5" width="7" height="3" rx="1" fill="#2B1810" opacity="0.9"/>
+                  <ellipse cx="12" cy="7.5" rx="3.5" ry="1" fill="#3D2314"/>
+                  <!-- Candle -->
+                  <rect x="11.3" y="5" width="1.4" height="2.5" rx="0.5" fill="#2B1810"/>
+                  <ellipse cx="12" cy="4.8" rx="0.9" ry="1.4" fill="#E8A84A" opacity="0.95"/>
+                  <ellipse cx="12" cy="4.2" rx="0.5" ry="0.8" fill="#FFD060"/>
+                </svg>
+            </div>
+            <div>
+                <div class="logo-name">Bake<span>Sphere</span></div>
+        
+            </div>
         </div>
+    </nav>
+
+    <!-- LEFT TEXT -->
+    <div class="hero-left">
+        <div class="eyebrow">Est. 2024 — Made to Order</div>
+        <h1 class="headline">
+            <span class="l1">Where Every Slice</span>
+            <span class="l2">Tells a Story</span>
+        </h1>
+        <p class="hero-sub">
+          Fresh, made-to-order cakes from <strong>nearby bakers</strong> perfect for any celebration.
+        </p>
+        <button class="btn-login" onclick="openLogin()">Login to Order →</button>
     </div>
 
-    <!-- Right Panel -->
-    <div class="card-right">
+    <!-- RIGHT: GIF FULL BLEED -->
+    <div class="hero-right">
+        <!--
+        ════════════════════════════════════════════════════════════
+        FIND & REPLACE: Swap the gif-placeholder div below with:
 
-        <div class="greeting-label">BakeSphere Marketplace</div>
-        <h1>Sign In to your Account</h1>
+            <img
+                src="{{ asset('images/cake-customization.gif') }}"
+                alt="Watch our bakers customize your cake"
+                class="gif-media">
 
-        {{-- Google account error --}}
-        @if ($errors->has('email') && str_contains($errors->first('email'), 'Google'))
-            <div class="alert-google">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="">
-                <div>{{ $errors->first('email') }}</div>
-            </div>
-        @elseif ($errors->any())
-            <div class="alert alert-err">
-                @foreach ($errors->all() as $e) <div>{{ $e }}</div> @endforeach
-            </div>
-        @endif
+        GIFs loop automatically by default — no extra attributes needed.
+        The gif-media class makes it fill the entire right column.
+        ════════════════════════════════════════════════════════════
+        -->
+  <img src="{{ asset('GIF/gifcake.gif') }}" alt="Cake customization" class="gif-media">
 
-        @if (session('success'))
-            <div class="alert alert-ok">{{ session('success') }}</div>
-        @endif
+        <!-- Vignette overlay — keep this even after adding GIF -->
+        <div class="hero-right-vignette"></div>
+        <div class="gif-badge">GIF Placeholder</div>
+    </div>
 
-        @if (session('pending_approval'))
-            <div class="alert-pending">
-                <div class="pending-icon">⏳</div>
-                <div>
-                    <div class="pending-title">Application Submitted!</div>
-                    <div class="pending-msg">{{ session('pending_approval') }}</div>
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat">
+            <span class="stat-num">500+</span>
+            <span class="stat-lbl">Cake Decorators</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat">
+            <span class="stat-num">12k</span>
+            <span class="stat-lbl">Cakes Orders</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat">
+            <span class="stat-num">4.9★</span>
+            <span class="stat-lbl">Avg. Rating Bakers</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat">
+            <span class="stat-num">100%</span>
+            <span class="stat-lbl">Made with Love</span>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════════
+     LOGIN MODAL
+════════════════════════ -->
+<div class="modal-overlay" id="loginOverlay" onclick="handleOverlayClick(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Sign in to BakeSphere">
+
+        <div class="modal-left">
+            <div class="modal-logo">
+             <div class="modal-logo-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <ellipse cx="12" cy="20" rx="8" ry="2" fill="#2B1810"/>
+                      <rect x="4" y="16" width="16" height="4" rx="1" fill="#2B1810" opacity="0.9"/>
+                      <ellipse cx="12" cy="16" rx="8" ry="1.5" fill="#3D2314"/>
+                      <ellipse cx="12" cy="15" rx="5.5" ry="1.2" fill="#2B1810"/>
+                      <rect x="6.5" y="11.5" width="11" height="3.5" rx="1" fill="#2B1810" opacity="0.9"/>
+                      <ellipse cx="12" cy="11.5" rx="5.5" ry="1.2" fill="#3D2314"/>
+                      <ellipse cx="12" cy="10.5" rx="3.5" ry="1" fill="#2B1810"/>
+                      <rect x="8.5" y="7.5" width="7" height="3" rx="1" fill="#2B1810" opacity="0.9"/>
+                      <ellipse cx="12" cy="7.5" rx="3.5" ry="1" fill="#3D2314"/>
+                      <rect x="11.3" y="5" width="1.4" height="2.5" rx="0.5" fill="#2B1810"/>
+                      <ellipse cx="12" cy="4.8" rx="0.9" ry="1.4" fill="#E8A84A" opacity="0.95"/>
+                      <ellipse cx="12" cy="4.2" rx="0.5" ry="0.8" fill="#FFD060"/>
+                    </svg>
                 </div>
+                <div class="modal-logo-name">Bake<span>Sphere</span></div>
             </div>
-        @endif
 
-        <!-- ① EMAIL & PASSWORD -->
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="field">
-                <label>Email Address</label>
-                <input type="email" name="email" value="{{ old('email') }}"
-                    placeholder="juan@email.com"
-                    class="{{ $errors->has('email') ? 'is-invalid' : '' }}" required autofocus>
+            <div class="modal-cake">
+                <svg width="100%" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7A4528"/><stop offset="100%" stop-color="#3D2314"/>
+                        </linearGradient>
+                        <linearGradient id="cg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#C47B2E"/><stop offset="100%" stop-color="#7A4528"/>
+                        </linearGradient>
+                        <linearGradient id="cg3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#D4943A"/><stop offset="100%" stop-color="#8A5530"/>
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="100" cy="184" rx="66" ry="8" fill="#E8D5C0"/>
+                    <ellipse cx="100" cy="181" rx="58" ry="5.5" fill="#D0BC9E"/>
+                    <path d="M38 155 Q38 165 100 169 Q162 165 162 155 L162 125 Q162 115 100 111 Q38 115 38 125 Z" fill="url(#cg1)"/>
+                    <ellipse cx="100" cy="111" rx="62" ry="9" fill="#7A4528"/>
+                    <ellipse cx="100" cy="110" rx="62" ry="9" fill="none" stroke="#FDF6EE" stroke-width="7" opacity="0.85"/>
+                    <ellipse cx="100" cy="104" rx="52" ry="7" fill="#FDF6EE"/>
+                    <ellipse cx="60" cy="112" rx="4.5" ry="7" fill="#FDF6EE"/><ellipse cx="74" cy="113" rx="4.5" ry="7" fill="#FDF6EE"/>
+                    <ellipse cx="88" cy="114" rx="4.5" ry="7" fill="#FDF6EE"/><ellipse cx="102" cy="115" rx="4.5" ry="7" fill="#FDF6EE"/>
+                    <ellipse cx="116" cy="114" rx="4.5" ry="7" fill="#FDF6EE"/><ellipse cx="130" cy="112" rx="4" ry="6.5" fill="#FDF6EE"/>
+                    <path d="M52 96 Q52 106 100 110 Q148 106 148 96 L148 68 Q148 58 100 54 Q52 58 52 68 Z" fill="url(#cg2)"/>
+                    <ellipse cx="100" cy="54" rx="48" ry="8" fill="#C47B2E"/>
+                    <ellipse cx="100" cy="53" rx="48" ry="8" fill="none" stroke="#FDF6EE" stroke-width="7" opacity="0.88"/>
+                    <ellipse cx="100" cy="47" rx="40" ry="6" fill="#FDF6EE"/>
+                    <ellipse cx="67" cy="55" rx="4" ry="6.5" fill="#FDF6EE"/><ellipse cx="80" cy="56" rx="4" ry="6.5" fill="#FDF6EE"/>
+                    <ellipse cx="93" cy="57" rx="4" ry="6.5" fill="#FDF6EE"/><ellipse cx="106" cy="57" rx="4" ry="6.5" fill="#FDF6EE"/>
+                    <ellipse cx="119" cy="56" rx="3.5" ry="6" fill="#FDF6EE"/>
+                    <path d="M64 38 Q64 47 100 51 Q136 47 136 38 L136 18 Q136 9 100 5 Q64 9 64 18 Z" fill="url(#cg3)"/>
+                    <ellipse cx="100" cy="5" rx="36" ry="6" fill="#D4943A"/>
+                    <ellipse cx="100" cy="4" rx="36" ry="6" fill="none" stroke="#FDF6EE" stroke-width="6" opacity="0.9"/>
+                    <ellipse cx="100" cy="0" rx="28" ry="5" fill="#FDF6EE" opacity="0.95"/>
+                    <rect x="95" y="-18" width="10" height="22" rx="4" fill="#E8D5C0"/>
+                    <rect x="95" y="-14" width="10" height="3" rx="1.5" fill="#C47B2E" opacity="0.65"/>
+                    <ellipse cx="100" cy="-22" rx="5.5" ry="9" fill="#F0A060" opacity="0.96"/>
+                    <ellipse cx="100" cy="-25" rx="3.2" ry="6" fill="#FFD060"/>
+                    <ellipse cx="100" cy="-28" rx="1.6" ry="3" fill="#fff" opacity="0.88"/>
+                </svg>
             </div>
-            <div class="field">
-                <label>Password</label>
-                <div class="pw-wrap">
-                    <input type="password" name="password" id="loginPassword"
-                        placeholder="Your password"
-                        class="{{ $errors->has('password') ? 'is-invalid' : '' }}" required>
-                    <button type="button" class="pw-toggle" onclick="togglePw()">👁</button>
-                </div>
-            </div>
-            <div class="row-extra">
-                <label><input type="checkbox" name="remember"> Remember me</label>
-                <a href="#">Forgot password?</a>
-            </div>
-            <button type="submit" class="btn-signin">Sign In →</button>
-        </form>
 
-        <!-- ② GOOGLE -->
-        <div class="divider">
-            <div class="divider-line"></div>
-            <span class="divider-text">or continue with Google</span>
-            <div class="divider-line"></div>
+            <div class="modal-tagline">
+                <div class="modal-tagline-sub">Order handcrafted cakes made<br>with love.</div>
+            </div>
         </div>
 
-        <div class="google-cards">
-            <a href="{{ route('auth.google', ['as' => 'customer']) }}" class="google-card">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-                <div class="google-card-text">
-                    <span class="google-card-sub">Sign in as</span>
-                    <span class="google-card-title">Customer</span>
-                </div>
-            </a>
-            <a href="{{ route('auth.google', ['as' => 'baker']) }}" class="google-card">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
-                <div class="google-card-text">
-                    <span class="google-card-sub">Sign in as</span>
-                    <span class="google-card-title">Baker</span>
-                </div>
-            </a>
-        </div>
+        <div class="modal-right">
+            <button class="modal-close" onclick="closeLogin()" aria-label="Close">&times;</button>
 
-        <!-- ③ REGISTER -->
-        <div class="divider">
-            <div class="divider-line"></div>
-            <span class="divider-text">Don't have an account yet?</span>
-            <div class="divider-line"></div>
-        </div>
+            <div class="form-eyebrow">BakeSphere Marketplace</div>
+            <h2 class="form-title">Sign In to your Account</h2>
 
-        <div class="register-links">
-            <a href="{{ route('register') }}" class="reg-link">
-                <span class="reg-link-icon">👤</span>
-                <div class="reg-link-text">
-                    <span class="reg-link-action">Register as</span>
-                    <span class="reg-link-title">Customer</span>
+            {{-- Google account error --}}
+            @if ($errors->has('email') && str_contains($errors->first('email'), 'Google'))
+                <div class="alert-google-hint">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="">
+                    <div>{{ $errors->first('email') }}</div>
                 </div>
-            </a>
-            <a href="{{ route('baker.register') }}" class="reg-link">
-                <span class="reg-link-icon">🎂</span>
-                <div class="reg-link-text">
-                    <span class="reg-link-action">Register as</span>
-                    <span class="reg-link-title">Baker</span>
+            @elseif ($errors->has('password'))
+                {{-- password error: shown inline under field, pw field stays visible --}}
+            @elseif ($errors->any())
+                <div class="alert alert-err">
+                    @foreach ($errors->all() as $e) <div>{{ $e }}</div> @endforeach
                 </div>
-            </a>
-        </div>
+            @endif
 
+            @if (session('success'))
+                <div class="alert alert-ok">{{ session('success') }}</div>
+            @endif
+
+            @if (session('pending_approval'))
+                <div class="alert-pending">
+                    <div style="font-size:0.9rem;flex-shrink:0;">⏳</div>
+                    <div>
+                        <div class="pending-title">Application Submitted!</div>
+                        <div class="pending-msg">{{ session('pending_approval') }}</div>
+                    </div>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="field">
+                    <label>Email Address</label>
+                    <input type="email" name="email" value="{{ old('email') }}"
+                        placeholder="juan@email.com"
+                        class="{{ $errors->has('email') ? 'is-invalid' : '' }}"
+                        id="loginEmail" required autofocus>
+                </div>
+              <div class="field" id="pwFieldWrap"
+                     style="{{ $errors->has('password') ? 'display:block' : 'display:none' }}">
+                    <label>Password</label>
+                    <div class="pw-wrap">
+                        <input type="password" name="password" id="loginPassword"
+                            placeholder="Your password"
+                            class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+                        <button type="button" class="pw-toggle" onclick="togglePw()">👁</button>
+                    </div>
+                    @error('password')
+                        <div style="color:#9a2e1e;font-size:0.72rem;margin-top:4px">{{ $message }}</div>
+                    @enderror
+                </div>
+                            <div class="row-extra" id="extraRow"
+                     style="{{ $errors->has('password') ? 'display:flex' : 'display:none' }}">
+
+                    <label><input type="checkbox" name="remember"> Remember me</label>
+                    <a href="#">Forgot password?</a>
+                </div>
+          <button type="submit" class="btn-signin" id="submitBtn">
+                    {{ $errors->has('password') ? 'Sign In →' : 'Continue →' }}
+                </button>
+            </form>
+
+            <div class="divider"><div class="divider-line"></div><span class="divider-text">or continue with Google</span><div class="divider-line"></div></div>
+            <div class="google-cards">
+                <a href="{{ route('auth.google', ['as' => 'customer']) }}" class="google-card">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                    <div><div class="google-card-sub">Sign in as</div><div class="google-card-title">Customer</div></div>
+                </a>
+                <a href="{{ route('auth.google', ['as' => 'baker']) }}" class="google-card">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+                    <div><div class="google-card-sub">Sign in as</div><div class="google-card-title">Baker</div></div>
+                </a>
+            </div>
+
+            <div class="divider"><div class="divider-line"></div><span class="divider-text">Don't have an account yet?</span><div class="divider-line"></div></div>
+            <div class="register-links">
+                <a href="{{ route('register') }}" class="reg-link">
+                    <span class="reg-link-icon">👤</span>
+                    <div><div class="reg-link-action">Register as</div><div class="reg-link-title">Customer</div></div>
+                </a>
+                <a href="{{ route('baker.register') }}" class="reg-link">
+                    <span class="reg-link-icon">🎂</span>
+                    <div><div class="reg-link-action">Register as</div><div class="reg-link-title">Baker</div></div>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script>
-   function togglePw() {
-    const f = document.getElementById('loginPassword');
-    const b = document.querySelector('.pw-toggle');
-    f.type = f.type === 'password' ? 'text' : 'password';
-    b.textContent = f.type === 'password' ? '👁' : '🙈';
-}
+    /* Particles */
+    const pc = document.getElementById('particles');
+    for (let i = 0; i < 16; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const s = 1.4 + Math.random() * 3;
+        p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*92}%;bottom:0;animation-duration:${7+Math.random()*10}s;animation-delay:${Math.random()*9}s;opacity:0;`;
+        pc.appendChild(p);
+    }
 
-const emailInput   = document.querySelector('input[name="email"]');
-const pwField      = document.querySelector('.field:has(#loginPassword)');
-const submitBtn    = document.querySelector('.btn-signin');
-const googleAlert  = document.querySelector('.alert-google');
+    /* Modal */
+    function openLogin() {
+        document.getElementById('loginOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('loginEmail').focus(), 350);
+    }
+    function closeLogin() {
+        document.getElementById('loginOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function handleOverlayClick(e) {
+        if (e.target === document.getElementById('loginOverlay')) closeLogin();
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLogin(); });
 
-pwField.style.display = 'none';
-submitBtn.textContent  = 'Continue →';
+    @if ($errors->any() || session('success') || session('pending_approval'))
+        document.addEventListener('DOMContentLoaded', () => openLogin());
+    @endif
 
-let debounceTimer;
-emailInput.addEventListener('input', function () {
-    clearTimeout(debounceTimer);
-    pwField.style.display = 'none';
-    submitBtn.style.display = 'block';
-    submitBtn.textContent = 'Continue →';
-    if (googleAlert) googleAlert.style.display = 'none';
-hideGoogleHint();
-    hideNotRegisteredHint();
+    function togglePw() {
+        const f = document.getElementById('loginPassword');
+        const b = document.querySelector('.pw-toggle');
+        f.type = f.type === 'password' ? 'text' : 'password';
+        b.textContent = f.type === 'password' ? '👁' : '🙈';
+    }
 
-    const email = this.value.trim();
-    if (!email.includes('@') || !email.includes('.')) return;
+    /* Smart email provider check */
+    const emailInput = document.getElementById('loginEmail');
+    const pwWrap     = document.getElementById('pwFieldWrap');
+    const extraRow   = document.getElementById('extraRow');
+    const submitBtn  = document.getElementById('submitBtn');
+    let debTimer;
 
-    debounceTimer = setTimeout(() => checkProvider(email), 600);
-});
+    emailInput.addEventListener('input', function () {
+        clearTimeout(debTimer);
+        pwWrap.style.display = extraRow.style.display = 'none';
+        submitBtn.style.display = 'block';
+        submitBtn.textContent = 'Continue →';
+        hideHints();
+        const email = this.value.trim();
+        if (!email.includes('@') || !email.includes('.')) return;
+        debTimer = setTimeout(() => checkProvider(email), 600);
+    });
 
-async function checkProvider(email) {
-    try {
-        const res  = await fetch('{{ route("check.email.provider") }}', {
-            method:  'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-
-        if (data.status === 'google') {
-            pwField.style.display = 'none';
-            submitBtn.style.display = 'none';
-            showGoogleHint();
-        } else if (data.status === 'password') {
-            pwField.style.display = 'block';
+    async function checkProvider(email) {
+        try {
+            const res  = await fetch('{{ route("check.email.provider") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            if (data.status === 'google') {
+                pwWrap.style.display = extraRow.style.display = 'none';
+                submitBtn.style.display = 'none';
+                showHint('google');
+            } else if (data.status === 'password') {
+                pwWrap.style.display = 'block';
+                extraRow.style.display = 'flex';
+                submitBtn.style.display = 'block';
+                submitBtn.textContent = 'Sign In →';
+                hideHints();
+            } else {
+                pwWrap.style.display = extraRow.style.display = 'none';
+                submitBtn.style.display = 'block';
+                submitBtn.textContent = 'Continue →';
+                showHint('noreg');
+            }
+        } catch {
+            pwWrap.style.display = 'block';
+            extraRow.style.display = 'flex';
             submitBtn.style.display = 'block';
             submitBtn.textContent = 'Sign In →';
-            hideGoogleHint();
-} else {
-            // Not registered
-            pwField.style.display = 'none';
-            submitBtn.style.display = 'block';
-            submitBtn.textContent = 'Continue →';
-            showNotRegisteredHint();
         }
-    } catch (e) {
-        pwField.style.display = 'block';
-        submitBtn.style.display = 'block';
-        submitBtn.textContent = 'Sign In →';
     }
-}
 
-function showGoogleHint() {
-    let hint = document.getElementById('dynamic-google-hint');
-    if (!hint) {
-        hint = document.createElement('div');
-        hint.id = 'dynamic-google-hint';
-        hint.className = 'alert-google';
-        hint.innerHTML = `
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="">
-            <div>This account uses Google Sign-In. Use the
-            <strong>Continue with Google</strong> button below.</div>
-        `;
+    function showHint(type) {
+        hideHints();
+        const hint = document.createElement('div');
+        if (type === 'google') {
+            hint.id = 'hint-google'; hint.className = 'alert-google-hint';
+            hint.innerHTML = `<img src="https://www.svgrepo.com/show/475656/google-color.svg" alt=""><div>This account uses Google Sign-In. Use the <strong>Continue with Google</strong> button below.</div>`;
+        } else {
+            hint.id = 'hint-noreg'; hint.className = 'alert-google-hint';
+            hint.style.cssText = 'border-color:rgba(196,123,46,0.2);background:rgba(196,123,46,0.05);';
+            hint.innerHTML = `<div style="font-size:14px;flex-shrink:0">🔍</div><div style="color:#7A5A40">No account found. <a href="{{ route('register') }}" style="color:#C47B2E;font-weight:700">Register as Customer</a> or <a href="{{ route('baker.register') }}" style="color:#C47B2E;font-weight:700">Register as Baker</a>.</div>`;
+        }
         emailInput.closest('.field').after(hint);
     }
-    hint.style.display = 'flex';
-}
 
-function hideGoogleHint() {
-    const hint = document.getElementById('dynamic-google-hint');
-    if (hint) hint.style.display = 'none';
-}
-
-function showNotRegisteredHint() {
-    hideGoogleHint();
-    let hint = document.getElementById('dynamic-noreg-hint');
-    if (!hint) {
-        hint = document.createElement('div');
-        hint.id = 'dynamic-noreg-hint';
-        hint.className = 'alert-google';
-        hint.style.borderColor = '#F0D4B0';
-        hint.style.background = '#FEF9E8';
-        hint.innerHTML = `
-            <div style="font-size:1rem;flex-shrink:0">🔍</div>
-            <div style="color:#7A5800">No account found with this email.
-            <a href="{{ route('register') }}" style="color:var(--rose);font-weight:600">Register as Customer</a>
-            or <a href="{{ route('baker.register') }}" style="color:var(--rose);font-weight:600">Register as Baker</a>.</div>
-        `;
-        emailInput.closest('.field').after(hint);
+    function hideHints() {
+        ['hint-google','hint-noreg'].forEach(id => { const el = document.getElementById(id); if (el) el.remove(); });
     }
-    hint.style.display = 'flex';
-}
-
-function hideNotRegisteredHint() {
-    const hint = document.getElementById('dynamic-noreg-hint');
-    if (hint) hint.style.display = 'none';
-}
 </script>
 </body>
-</html>
+</html> 

@@ -754,6 +754,27 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
             </div>
         </div>
 
+      {{-- Help Center Notice (if a report was filed against baker on this order) --}}
+        @php
+            $bakerOrderForReport = \App\Models\BakerOrder::where('cake_request_id', $request->id)
+                ->where('baker_id', auth()->id())
+                ->first();
+            $reportOnThisRequest = $bakerOrderForReport
+                ? \App\Models\Report::where('reported_id', auth()->id())
+                    ->where('baker_order_id', $bakerOrderForReport->id)
+                    ->first()
+                : null;
+        @endphp
+        @if($reportOnThisRequest)
+        <div style="background:#FDF0EE;border:1.5px solid #F5C5BE;border-radius:14px;padding:1rem 1.25rem;margin-top:1rem;">
+            <div style="font-weight:700;font-size:.82rem;color:#8B2A1E;margin-bottom:.2rem;">⚠️ A report was filed for this order</div>
+            <div style="font-size:.74rem;color:#7A2A20;line-height:1.5;">
+                Category: <strong>{{ strip_tags(\App\Models\Report::CATEGORIES[$reportOnThisRequest->category] ?? $reportOnThisRequest->category) }}</strong><br>
+                Status: <strong>{{ ucfirst($reportOnThisRequest->status) }}</strong> — Our admin team is reviewing this.
+            </div>
+        </div>
+        @endif
+
         {{-- Reference Image --}}
         @if($request->reference_image)
         <div class="section-card" style="margin-top:1rem;">

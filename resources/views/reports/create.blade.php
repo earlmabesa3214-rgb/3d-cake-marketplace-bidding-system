@@ -10,22 +10,22 @@
     $orderId      = str_pad($bakerOrder->id, 4, '0', STR_PAD_LEFT);
 
     $bakerCategories = [
-        'no_show'          => ['icon' => '🚫', 'label' => 'No-Show / Unresponsive'],
-      'payment_fraud'    => ['icon' => '💳', 'label' => 'Payment Fraud / Fake Receipt'],
-        'fake_proof'       => ['icon' => '📄', 'label' => 'Fake Proof of Payment'],
-        'harassment'       => ['icon' => '😡', 'label' => 'Harassment / Rude Behavior'],
-        'order_abandoned'  => ['icon' => '🛒', 'label' => 'Order Abandoned'],
-        'other'            => ['icon' => '💬', 'label' => 'Other'],
+        'no_show'          => ['label' => 'No-Show / Unresponsive'],
+        'payment_fraud'    => ['label' => 'Payment Fraud / Fake Receipt'],
+        'fake_proof'       => ['label' => 'Fake Proof of Payment'],
+        'harassment'       => ['label' => 'Harassment / Rude Behavior'],
+        'order_abandoned'  => ['label' => 'Order Abandoned'],
+        'other'            => ['label' => 'Other'],
     ];
 
-$customerCategories = [
-    'poor_quality'    => ['icon' => '🎂', 'label' => 'Poor Cake Quality'],
-    'no_show'         => ['icon' => '🚫', 'label' => 'Baker No-Show / Unresponsive'],
-    'payment_fraud'   => ['icon' => '💳', 'label' => 'Payment Issue'],
-    'harassment'      => ['icon' => '😡', 'label' => 'Harassment / Rude Behavior'],
-    'order_abandoned' => ['icon' => '📦', 'label' => 'Order Abandoned / Not Delivered'],
-    'other'           => ['icon' => '💬', 'label' => 'Other'],
-];
+    $customerCategories = [
+        'poor_quality'    => ['label' => 'Poor Cake Quality'],
+        'no_show'         => ['label' => 'Baker No-Show / Unresponsive'],
+        'payment_fraud'   => ['label' => 'Payment Issue'],
+        'harassment'      => ['label' => 'Harassment / Rude Behavior'],
+        'order_abandoned' => ['label' => 'Order Abandoned / Not Delivered'],
+        'other'           => ['label' => 'Other'],
+    ];
 
     $categories = $isBaker ? $bakerCategories : $customerCategories;
     $backRoute   = $isBaker
@@ -44,8 +44,8 @@ $customerCategories = [
 }
 
 :root {
-    --brand-deep:    #3B1F0F;
-    --brand-mid:     #7A4A28;
+    --brown-deep:    #3B1F0F;
+    --brown-mid:     #7A4A28;
     --caramel:       #C8893A;
     --caramel-lt:    #E8A94A;
     --cream:         #F5EFE6;
@@ -54,354 +54,385 @@ $customerCategories = [
     --text-dark:     #2C1A0E;
     --text-mid:      #6B4A2A;
     --text-muted:    #9A7A5A;
-    --danger-deep:   #5A1A1A;
-    --danger-mid:    #8B2A2A;
-    --danger-lt:     #C44030;
-    --danger-pale:   #FDF0EE;
-    --danger-border: #F5C5BE;
-    --shadow-sm:     0 2px 8px rgba(59,31,15,0.08);
-    --shadow-md:     0 8px 24px rgba(59,31,15,0.12);
-    --shadow-lg:     0 16px 48px rgba(59,31,15,0.16);
-    --radius-sm:     10px;
-    --radius-md:     16px;
-    --radius-lg:     24px;
+    --red-deep:      #4A1515;
+    --red-mid:       #7A2020;
+    --red-accent:    #B03030;
+    --red-pale:      #FDF2F2;
+    --red-border:    #EABFBF;
+    --shadow-sm:     0 1px 4px rgba(59,31,15,0.07);
+    --shadow-md:     0 4px 16px rgba(59,31,15,0.10);
 }
-
-/* ── PAGE WRAPPER ── */
 .rp-page {
-    max-width: 680px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0 0 4rem;
+    padding: 0 0 5rem;
 }
 
-/* ── BACK LINK ── */
+/* ── BACK ── */
 .rp-back {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
+    gap: 0.35rem;
+    font-size: 0.78rem;
     font-weight: 600;
     color: var(--text-muted);
     text-decoration: none;
-    margin-bottom: 1.5rem;
-    padding: 0.4rem 0.75rem 0.4rem 0.5rem;
-    border-radius: 20px;
-    transition: all 0.2s;
-    border: 1px solid transparent;
+    margin-bottom: 1.75rem;
+    transition: color 0.18s;
 }
-.rp-back:hover {
-    color: var(--caramel);
-    background: var(--cream);
-    border-color: var(--border);
-}
+.rp-back:hover { color: var(--caramel); }
+.rp-back svg { transition: transform 0.18s; }
+.rp-back:hover svg { transform: translateX(-2px); }
 
-/* ── HERO BANNER ── */
-.rp-hero {
-    border-radius: var(--radius-lg);
-    padding: 2rem 2rem 1.75rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, var(--danger-deep) 0%, var(--danger-mid) 60%, #A83530 100%);
-    color: white;
+/* ── PAGE HEADER ── */
+.rp-page-header {
+    margin-bottom: 2rem;
 }
-.rp-hero::before {
-    content: '';
-    position: absolute;
-    right: -50px; top: -60px;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-}
-.rp-hero::after {
-    content: '';
-    position: absolute;
-    right: 60px; bottom: -70px;
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-}
-
-.rp-hero-inner { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 1.25rem; }
-.rp-hero-icon {
-    width: 52px; height: 52px; flex-shrink: 0;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.15);
-    border: 1.5px solid rgba(255,255,255,0.25);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
-}
-.rp-hero-eyebrow {
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    opacity: 0.55;
-    margin-bottom: 0.3rem;
-}
-.rp-hero-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 0.35rem;
-}
-.rp-hero-sub {
-    font-size: 0.8rem;
-    opacity: 0.65;
-    line-height: 1.6;
-}
-
-/* ── SUBJECT CARD ── */
-.rp-subject {
-    background: var(--warm-white);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.25rem;
+.rp-page-header-top {
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+.rp-header-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--red-deep), var(--red-mid));
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.rp-page-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--brown-deep);
+    line-height: 1.2;
+}
+.rp-page-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-left: calc(44px + 1rem);
+}
+
+/* ── SUBJECT STRIP ── */
+.rp-subject {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
     box-shadow: var(--shadow-sm);
 }
 .rp-subject-avatar {
-    width: 44px; height: 44px; border-radius: 50%;
+    width: 40px; height: 40px; border-radius: 50%;
     background: linear-gradient(135deg, var(--caramel), var(--caramel-lt));
     color: white; display: flex; align-items: center;
-    justify-content: center; font-size: 1rem; font-weight: 800;
+    justify-content: center; font-size: 0.95rem; font-weight: 800;
     flex-shrink: 0; overflow: hidden; border: 2px solid var(--border);
 }
 .rp-subject-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.rp-subject-name { font-size: 0.92rem; font-weight: 700; color: var(--text-dark); }
-.rp-subject-role {
-    font-size: 0.7rem; color: var(--text-muted);
-    display: flex; align-items: center; gap: 0.35rem; margin-top: 0.15rem;
+.rp-subject-name { font-size: 0.88rem; font-weight: 700; color: var(--text-dark); }
+.rp-subject-meta {
+    font-size: 0.68rem; color: var(--text-muted);
+    margin-top: 0.15rem; display: flex; align-items: center; gap: 0.4rem;
 }
-.rp-subject-role span {
-    padding: 0.1rem 0.45rem;
+.rp-subject-role-tag {
+    padding: 0.1rem 0.4rem;
     background: var(--cream); border: 1px solid var(--border);
-    border-radius: 4px; font-weight: 600; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.07em;
+    border-radius: 4px; font-weight: 700; font-size: 0.6rem;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--brown-mid);
 }
-.rp-order-pill {
+.rp-order-ref {
     margin-left: auto; flex-shrink: 0;
-    padding: 0.3rem 0.75rem;
-    background: var(--cream); border: 1.5px solid var(--border);
-    border-radius: 20px; font-size: 0.72rem; font-weight: 700;
-    color: var(--caramel); text-align: center;
+    text-align: right;
 }
-.rp-order-pill small { display: block; font-size: 0.6rem; font-weight: 500; color: var(--text-muted); margin-top: 0.1rem; }
+.rp-order-ref-num {
+    font-size: 0.82rem; font-weight: 800; color: var(--caramel);
+}
+.rp-order-ref-label {
+    font-size: 0.6rem; color: var(--text-muted); margin-top: 0.1rem;
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+}
 
-/* ── WARNING BOX ── */
-.rp-warning {
+/* ── NOTICE BAR ── */
+.rp-notice {
     background: #FFFBEB;
-    border: 1.5px solid #F0D060;
-    border-radius: var(--radius-sm);
-    padding: 0.9rem 1.1rem;
-    display: flex; align-items: flex-start; gap: 0.65rem;
+    border: 1.5px solid #EDD070;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    display: flex; align-items: flex-start; gap: 0.6rem;
     margin-bottom: 1.5rem;
-    font-size: 0.78rem; color: #7A5200; line-height: 1.6;
+    font-size: 0.76rem; color: #6B4800; line-height: 1.6;
 }
-.rp-warning-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+.rp-notice-icon { flex-shrink: 0; margin-top: 1px; }
 
-/* ── FORM CARD ── */
-.rp-card {
+/* ── SECTION ── */
+.rp-section {
+    margin-bottom: 1rem;
+}
+.rp-section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.rp-required-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--red-accent); flex-shrink: 0;
+}
+
+/* ── CATEGORY LIST ── */
+.rp-cat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.rp-cat-radio { display: none; }
+.rp-cat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.8rem 1rem;
     background: var(--warm-white);
     border: 1.5px solid var(--border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    margin-bottom: 1.25rem;
-    box-shadow: var(--shadow-sm);
-}
-.rp-card-header {
-    padding: 1rem 1.5rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: center; gap: 0.65rem;
-    background: var(--cream);
-}
-.rp-card-header-icon {
-    width: 30px; height: 30px; border-radius: 8px;
-    background: white; border: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.85rem;
-}
-.rp-card-title {
-    font-size: 0.88rem; font-weight: 700; color: var(--brand-deep);
-}
-.rp-required {
-    margin-left: auto; font-size: 0.62rem;
-    color: var(--danger-mid); font-weight: 700;
-    background: var(--danger-pale); border: 1px solid var(--danger-border);
-    padding: 0.1rem 0.45rem; border-radius: 4px;
-}
-
-/* ── CATEGORY GRID ── */
-.rp-cat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
-    padding: 1.25rem 1.5rem;
-}
-
-.rp-cat-option { display: none; }
-
-.rp-cat-label {
-    display: flex; align-items: center; gap: 0.65rem;
-    padding: 0.75rem 0.9rem;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: 10px;
     cursor: pointer;
-    background: white;
-    transition: all 0.18s cubic-bezier(0.2, 0, 0, 1);
+    transition: all 0.15s;
     position: relative;
-    overflow: hidden;
 }
-.rp-cat-label::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(139,42,30,0.06), transparent);
-    opacity: 0; transition: opacity 0.18s;
+.rp-cat-item:hover {
+    border-color: #C8A0A0;
+    background: #FDFAFA;
 }
-.rp-cat-label:hover {
-    border-color: var(--danger-border);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+.rp-cat-radio:checked + .rp-cat-item {
+    border-color: var(--red-accent);
+    background: var(--red-pale);
 }
-.rp-cat-label:hover::after { opacity: 1; }
-
-.rp-cat-option:checked + .rp-cat-label {
-    border-color: var(--danger-mid);
-    background: var(--danger-pale);
-    box-shadow: 0 0 0 3px rgba(139,42,30,0.12);
+.rp-cat-radio:checked + .rp-cat-item .rp-cat-indicator {
+    border-color: var(--red-accent);
+    background: var(--red-accent);
 }
-.rp-cat-option:checked + .rp-cat-label .rp-cat-check { opacity: 1; }
-
-.rp-cat-emoji { font-size: 1.15rem; flex-shrink: 0; }
-.rp-cat-text { font-size: 0.78rem; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
-.rp-cat-check {
-    position: absolute; top: 6px; right: 6px;
-    width: 16px; height: 16px; border-radius: 50%;
-    background: var(--danger-mid); color: white;
-    font-size: 0.55rem; font-weight: 700;
+.rp-cat-radio:checked + .rp-cat-item .rp-cat-indicator::after {
+    opacity: 1;
+}
+.rp-cat-indicator {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.15s;
     display: flex; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity 0.18s;
+    position: relative;
+}
+.rp-cat-indicator::after {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.rp-cat-label-text {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    flex: 1;
+}
+.rp-cat-svg {
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+.rp-cat-radio:checked + .rp-cat-item .rp-cat-svg {
+    color: var(--red-accent);
 }
 
-/* ── DESCRIPTION TEXTAREA ── */
-.rp-textarea-wrap { padding: 1.25rem 1.5rem; }
+/* ── TEXTAREA ── */
 .rp-textarea {
     width: 100%;
-    min-height: 110px;
-    padding: 0.85rem 1rem;
-    background: var(--cream);
+    min-height: 120px;
+    padding: 0.9rem 1rem;
+    background: var(--warm-white);
     border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 0.85rem;
+    border-radius: 10px;
+    font-size: 0.84rem;
     color: var(--text-dark);
     line-height: 1.6;
     resize: vertical;
-    transition: all 0.18s;
+    transition: all 0.15s;
     outline: none;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
 .rp-textarea::placeholder { color: var(--text-muted); }
 .rp-textarea:focus {
-    border-color: var(--danger-mid);
+    border-color: var(--red-accent);
     background: white;
-    box-shadow: 0 0 0 3px rgba(139,42,30,0.1);
+    box-shadow: 0 0 0 3px rgba(176,48,48,0.08);
+}
+.rp-char-hint {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 0.4rem;
 }
 .rp-char-count {
-    text-align: right;
-    font-size: 0.68rem;
-    color: var(--text-muted);
-    margin-top: 0.4rem;
-    font-weight: 500;
+    font-size: 0.68rem; color: var(--text-muted); font-weight: 500;
 }
-.rp-char-count.warn { color: var(--danger-mid); font-weight: 700; }
+.rp-char-count.warn { color: var(--red-accent); font-weight: 700; }
+.rp-char-min {
+    font-size: 0.68rem; color: var(--text-muted);
+}
 
 /* ── FILE UPLOAD ── */
-.rp-file-wrap { padding: 0 1.5rem 1.25rem; }
 .rp-dropzone {
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-sm);
-    padding: 1.1rem 1.25rem;
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
     cursor: pointer;
-    background: var(--cream);
-    transition: all 0.2s;
+    background: var(--warm-white);
+    transition: all 0.18s;
     display: flex; align-items: center; gap: 0.85rem;
     position: relative;
 }
-.rp-dropzone:hover { border-color: var(--danger-mid); background: var(--danger-pale); }
-.rp-dropzone.has-file { border-style: solid; border-color: var(--danger-mid); background: var(--danger-pale); }
+.rp-dropzone:hover {
+    border-color: var(--red-accent);
+    background: var(--red-pale);
+}
+.rp-dropzone.has-file {
+    border-style: solid;
+    border-color: var(--red-accent);
+    background: var(--red-pale);
+}
 .rp-dropzone input[type="file"] {
     position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
 }
-.rp-dz-icon {
-    width: 38px; height: 38px; border-radius: 10px;
-    background: white; border: 1.5px solid var(--border);
+.rp-dz-icon-wrap {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--cream); border: 1.5px solid var(--border);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem; flex-shrink: 0;
+    flex-shrink: 0; color: var(--text-muted); transition: all 0.18s;
 }
-.rp-dz-title { font-size: 0.82rem; font-weight: 700; color: var(--brand-deep); }
-.rp-dz-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
+.rp-dropzone.has-file .rp-dz-icon-wrap {
+    background: var(--red-pale); border-color: var(--red-border);
+    color: var(--red-accent);
+}
+.rp-dz-text-title { font-size: 0.82rem; font-weight: 700; color: var(--text-dark); }
+.rp-dz-text-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
 .rp-file-preview {
-    width: 44px; height: 44px; border-radius: 8px; object-fit: cover;
+    width: 40px; height: 40px; border-radius: 7px; object-fit: cover;
     border: 1.5px solid var(--border); display: none; flex-shrink: 0; margin-left: auto;
 }
-.rp-file-name {
-    font-size: 0.72rem; font-weight: 600; color: var(--danger-deep);
-    display: none; margin-left: auto; max-width: 140px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+.rp-file-ok {
+    margin-left: auto; flex-shrink: 0;
+    display: none; align-items: center; gap: 0.35rem;
+    font-size: 0.68rem; font-weight: 700; color: #166534;
+    background: #EFF5EF; border: 1px solid #BFDFBE;
+    padding: 0.2rem 0.55rem; border-radius: 20px;
 }
-.rp-file-badge {
-    font-size: 0.6rem; background: #EFF5EF; color: #166534;
-    border: 1px solid #BFDFBE; padding: 0.15rem 0.5rem;
-    border-radius: 4px; font-weight: 700; display: none; margin-left: 0.4rem; flex-shrink: 0;
+.rp-optional-tag {
+    margin-left: auto;
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-style: italic;
 }
 
-/* ── SUBMIT ROW ── */
-.rp-submit-row {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem; flex-wrap: wrap;
+/* ── REFUND CARD ── */
+.rp-refund-card {
+    background: #FFFBEB;
+    border: 1.5px solid #EDD070;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1rem;
 }
-.rp-submit-note {
-    font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; flex: 1; min-width: 180px;
+.rp-refund-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    margin-bottom: 0.75rem;
 }
-.rp-submit-btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.8rem 1.75rem;
-    background: linear-gradient(135deg, var(--danger-deep), var(--danger-mid));
-    color: white; border: none; border-radius: var(--radius-sm);
-    font-size: 0.875rem; font-weight: 700; cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    box-shadow: 0 4px 14px rgba(139,42,30,0.35);
-    transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+.rp-refund-title { font-size: 0.88rem; font-weight: 700; color: var(--brown-deep); }
+.rp-refund-notice {
+    font-size: 0.75rem; color: #6B4800; line-height: 1.6;
+    margin-bottom: 0.85rem;
+    padding: 0.65rem 0.85rem;
+    background: rgba(255,255,255,0.6);
+    border-radius: 8px;
+    border: 1px solid #EDD070;
 }
-.rp-submit-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,42,30,0.45); }
-.rp-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.rp-cancel-btn {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.8rem 1.2rem;
-    background: white; color: var(--text-mid);
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    font-size: 0.875rem; font-weight: 600; cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    text-decoration: none; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+.rp-refund-check-label {
+    display: flex; align-items: flex-start; gap: 0.7rem; cursor: pointer;
 }
-.rp-cancel-btn:hover { border-color: var(--caramel); color: var(--caramel); }
+.rp-refund-check-label input[type="checkbox"] {
+    width: 17px; height: 17px; margin-top: 2px;
+    accent-color: var(--red-accent); flex-shrink: 0;
+}
+.rp-refund-check-title { font-size: 0.84rem; font-weight: 700; color: var(--brown-deep); }
+.rp-refund-check-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; line-height: 1.5; }
+
+/* ── DIVIDER ── */
+.rp-divider {
+    height: 1px; background: var(--border); margin: 1.25rem 0;
+}
 
 /* ── VALIDATION ERROR ── */
 .rp-error {
-    font-size: 0.72rem; color: var(--danger-mid); font-weight: 600;
-    padding: 0.4rem 0.75rem;
-    background: var(--danger-pale); border: 1px solid var(--danger-border);
-    border-radius: 6px; margin-top: 0.5rem; display: none;
+    font-size: 0.72rem; color: var(--red-accent); font-weight: 600;
+    display: flex; align-items: center; gap: 0.35rem;
+    margin-top: 0.45rem; display: none;
 }
-.rp-error.show { display: block; }
+.rp-error.show { display: flex; }
+
+/* ── SUBMIT ROW ── */
+.rp-footer {
+    display: flex; align-items: center; gap: 0.75rem;
+    flex-wrap: wrap; margin-top: 1.5rem;
+}
+.rp-cancel-btn {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.7rem 1.1rem;
+    background: white; color: var(--text-mid);
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-size: 0.84rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all 0.18s; white-space: nowrap;
+}
+.rp-cancel-btn:hover { border-color: var(--caramel); color: var(--caramel); }
+.rp-submit-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    background: linear-gradient(135deg, var(--red-deep), var(--red-mid));
+    color: white; border: none; border-radius: 10px;
+    font-size: 0.84rem; font-weight: 700; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    box-shadow: 0 3px 12px rgba(122,32,32,0.28);
+    transition: all 0.18s; white-space: nowrap;
+}
+.rp-submit-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(122,32,32,0.38);
+}
+.rp-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.rp-footer-note {
+    flex: 1; min-width: 160px;
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    display: flex; align-items: center; gap: 0.4rem;
+}
+
+/* ── VALIDATION ERRORS BLOCK ── */
+.rp-errors-block {
+    background: var(--red-pale);
+    border: 1.5px solid var(--red-border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.78rem; color: var(--red-mid); line-height: 1.6;
+}
 
 @media (max-width: 560px) {
-    .rp-cat-grid { grid-template-columns: 1fr; }
-    .rp-hero-title { font-size: 1.25rem; }
-    .rp-submit-row { flex-direction: column-reverse; align-items: stretch; }
+    .rp-footer { flex-direction: column-reverse; align-items: stretch; }
     .rp-submit-btn, .rp-cancel-btn { justify-content: center; }
+    .rp-page-sub { margin-left: 0; margin-top: 0.35rem; }
 }
 </style>
 @endpush
@@ -410,21 +441,23 @@ $customerCategories = [
 <div class="rp-page">
 
     {{-- Back --}}
-    <a href="{{ $backRoute }}" class="rp-back">← Back to Order</a>
+    <a href="{{ $backRoute }}" class="rp-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Order
+    </a>
 
-    {{-- Hero Banner --}}
-    <div class="rp-hero">
-        <div class="rp-hero-inner">
-            <div class="rp-hero-icon">⚠️</div>
-            <div>
-                <div class="rp-hero-eyebrow">BakeSphere Safety</div>
-                <div class="rp-hero-title">Report {{ $isBaker ? 'Customer' : 'Baker' }}</div>
-                <div class="rp-hero-sub">Help us keep BakeSphere safe — reports are reviewed by our admin team within 24–48 hours.</div>
+    {{-- Page Header --}}
+    <div class="rp-page-header">
+        <div class="rp-page-header-top">
+            <div class="rp-header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             </div>
+            <div class="rp-page-title">Report {{ $isBaker ? 'Customer' : 'Baker' }}</div>
         </div>
+        <div class="rp-page-sub">Help us keep BakeSphere safe — reports are reviewed by our admin team within 24–48 hours.</div>
     </div>
 
-    {{-- Reported Party Card --}}
+    {{-- Reported Party --}}
     <div class="rp-subject">
         <div class="rp-subject-avatar">
             @if($reportedUser->profile_photo)
@@ -435,30 +468,32 @@ $customerCategories = [
         </div>
         <div>
             <div class="rp-subject-name">{{ $reportedUser->first_name }} {{ $reportedUser->last_name }}</div>
-            <div class="rp-subject-role">
-                <span>{{ $isBaker ? 'Customer' : 'Baker' }}</span>
+            <div class="rp-subject-meta">
+                <span class="rp-subject-role-tag">{{ $isBaker ? 'Customer' : 'Baker' }}</span>
                 {{ $reportedUser->email }}
             </div>
         </div>
-        <div class="rp-order-pill">
-            #{{ $orderId }}
-            <small>Order Ref.</small>
+        <div class="rp-order-ref">
+            <div class="rp-order-ref-num">#{{ $orderId }}</div>
+            <div class="rp-order-ref-label">Order Ref.</div>
         </div>
     </div>
 
-    {{-- Warning --}}
-    <div class="rp-warning">
-        <span class="rp-warning-icon">⚠️</span>
+    {{-- Warning notice --}}
+    <div class="rp-notice">
+        <div class="rp-notice-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8B6000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
         <div><strong>Important:</strong> False reports are taken seriously and may result in account suspension. Only submit if you have a genuine concern. All reports are anonymous to the reported party.</div>
     </div>
 
-    {{-- Form --}}
+    {{-- Server validation errors --}}
     @if($errors->any())
-    <div class="rp-warning" style="border-color:var(--danger-border); background:var(--danger-pale); color:var(--danger-deep);">
-        <span class="rp-warning-icon">❌</span>
+    <div class="rp-errors-block">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <div>
             <strong>Please fix the following:</strong>
-            <ul style="margin:0.4rem 0 0 1rem; font-size:0.78rem;">
+            <ul style="margin:0.35rem 0 0 1rem;">
                 @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
             </ul>
         </div>
@@ -469,73 +504,140 @@ $customerCategories = [
         @csrf
 
         {{-- Category --}}
-        <div class="rp-card">
-            <div class="rp-card-header">
-                <div class="rp-card-header-icon">📋</div>
-                <div class="rp-card-title">What is your complaint about?</div>
-                <span class="rp-required">Required</span>
+        <div class="rp-section">
+            <div class="rp-section-label">
+                <span class="rp-required-dot"></span>
+                What is your complaint about?
             </div>
-            <div class="rp-cat-grid">
+            <div class="rp-cat-list">
                 @foreach($categories as $value => $cat)
+                @php
+                    $catIcons = [
+                        'no_show'          => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',
+                        'payment_fraud'    => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+                        'fake_proof'       => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>',
+                        'harassment'       => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                        'order_abandoned'  => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+                        'poor_quality'     => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/></svg>',
+                        'other'            => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>',
+                    ];
+                    $icon = $catIcons[$value] ?? $catIcons['other'];
+                @endphp
                 <div>
-                    <input class="rp-cat-option" type="radio" name="category" id="cat_{{ $value }}" value="{{ $value }}"
+                    <input class="rp-cat-radio" type="radio" name="category" id="cat_{{ $value }}" value="{{ $value }}"
                            {{ old('category') === $value ? 'checked' : '' }}>
-                    <label class="rp-cat-label" for="cat_{{ $value }}">
-                        <span class="rp-cat-emoji">{{ $cat['icon'] }}</span>
-                        <span class="rp-cat-text">{{ $cat['label'] }}</span>
-                        <span class="rp-cat-check">✓</span>
+                    <label class="rp-cat-item" for="cat_{{ $value }}">
+                        <div class="rp-cat-indicator"></div>
+                        <span class="rp-cat-label-text">{{ $cat['label'] }}</span>
+                        <span class="rp-cat-svg">{!! $icon !!}</span>
                     </label>
                 </div>
                 @endforeach
             </div>
-            <div id="cat-error" class="rp-error" style="margin: 0 1.5rem 1rem;">Please select a complaint category.</div>
+            <div id="cat-error" class="rp-error">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Please select a complaint category.
+            </div>
         </div>
+
+        <div class="rp-divider"></div>
 
         {{-- Description --}}
-        <div class="rp-card">
-            <div class="rp-card-header">
-                <div class="rp-card-header-icon">✍️</div>
-                <div class="rp-card-title">Describe what happened</div>
-                <span class="rp-required">Required</span>
+        <div class="rp-section">
+            <div class="rp-section-label">
+                <span class="rp-required-dot"></span>
+                Describe what happened
             </div>
-            <div class="rp-textarea-wrap">
-    <textarea class="rp-textarea" name="description" id="rp-desc" maxlength="2000"
-                    placeholder="Please describe the issue in detail. Include any relevant dates, amounts, or specific incidents that occurred…"
-                    rows="5">{{ old('description') }}</textarea>
-                <div class="rp-char-count" id="char-count">0 / 2000 characters</div>
-                <div id="desc-error" class="rp-error">Please describe what happened (at least 10 characters).</div>
+            <textarea class="rp-textarea" name="description" id="rp-desc" maxlength="2000"
+                placeholder="Describe the issue in detail — include relevant dates, amounts, or specific incidents…"
+                rows="5">{{ old('description') }}</textarea>
+            <div class="rp-char-hint">
+                <div class="rp-char-min">Minimum 10 characters</div>
+                <div class="rp-char-count" id="char-count">0 / 2000</div>
+            </div>
+            <div id="desc-error" class="rp-error">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Please describe what happened (at least 10 characters).
             </div>
         </div>
 
+        <div class="rp-divider"></div>
+
         {{-- Screenshot --}}
-        <div class="rp-card">
-            <div class="rp-card-header">
-                <div class="rp-card-header-icon">📸</div>
-                <div class="rp-card-title">Attach Screenshot</div>
-                <span style="margin-left:auto; font-size:0.62rem; color:var(--text-muted); font-weight:500;">Optional but helpful</span>
+        <div class="rp-section">
+            <div class="rp-section-label" style="justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.4rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    Attach Screenshot
+                </div>
+                <span class="rp-optional-tag">Optional — helps with investigation</span>
             </div>
-            <div class="rp-file-wrap">
-                <div class="rp-dropzone" id="rp-dropzone">
-                    <input type="file" name="screenshot" accept=".jpg,.jpeg,.png,.webp,.pdf"
-                           onchange="handleReportFile(this)">
-                    <div class="rp-dz-icon" id="rp-dz-icon">📎</div>
-                    <div>
-                        <div class="rp-dz-title" id="rp-dz-title">Click to upload screenshot</div>
-                        <div class="rp-dz-sub" id="rp-dz-sub">JPG, PNG, PDF · max 5 MB</div>
-                    </div>
-                    <img class="rp-file-preview" id="rp-file-preview" src="" alt="">
-                    <span class="rp-file-name" id="rp-file-name"></span>
-                    <span class="rp-file-badge" id="rp-file-badge">✓ Ready</span>
+            <div class="rp-dropzone" id="rp-dropzone">
+                <input type="file" name="screenshot" accept=".jpg,.jpeg,.png,.webp,.pdf"
+                       onchange="handleReportFile(this)">
+                <div class="rp-dz-icon-wrap" id="rp-dz-icon-wrap">
+                    <svg id="rp-dz-svg-default" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <svg id="rp-dz-svg-done" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <div class="rp-dz-text-title" id="rp-dz-title">Click to upload screenshot</div>
+                    <div class="rp-dz-text-sub" id="rp-dz-sub">JPG, PNG, PDF · max 5 MB</div>
+                </div>
+                <img class="rp-file-preview" id="rp-file-preview" src="" alt="">
+                <div class="rp-file-ok" id="rp-file-ok">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Attached
                 </div>
             </div>
         </div>
 
-        {{-- Submit --}}
-        <div class="rp-submit-row">
-            <a href="{{ $backRoute }}" class="rp-cancel-btn">← Go Back</a>
-            <p class="rp-submit-note">Your identity will not be revealed to the reported party. We take every report seriously.</p>
+        {{-- Refund request (customer only) --}}
+        @if(!$isBaker)
+        <div class="rp-refund-card" id="refund-request-card" style="display:none;">
+            <div class="rp-refund-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg>
+                <div class="rp-refund-title">Request a Refund?</div>
+            </div>
+            <div class="rp-refund-notice">
+                Downpayments are strictly non-refundable under normal circumstances. However, if your baker failed to comply by the agreed deadline, you may request a refund review. Our admin team will investigate and decide based on evidence.
+            </div>
+            <label class="rp-refund-check-label">
+                <input type="checkbox" name="request_refund" id="request_refund" value="1">
+                <div>
+                    <div class="rp-refund-check-title">Yes, I want to request a refund</div>
+                    <div class="rp-refund-check-sub">Admin will review your evidence and decide. Refunds are credited to your BakeSphere wallet if approved.</div>
+                </div>
+            </label>
+        </div>
+        <script>
+        const refundEligibleCats = ['no_show', 'order_abandoned'];
+        document.querySelectorAll('input[name="category"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const card = document.getElementById('refund-request-card');
+                if (card) {
+                    card.style.display = refundEligibleCats.includes(this.value) ? 'block' : 'none';
+                    if (!refundEligibleCats.includes(this.value)) {
+                        document.getElementById('request_refund').checked = false;
+                    }
+                }
+            });
+        });
+        </script>
+        @endif
+
+        {{-- Footer --}}
+        <div class="rp-footer">
+            <a href="{{ $backRoute }}" class="rp-cancel-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Go Back
+            </a>
+            <div class="rp-footer-note">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Your identity will not be revealed to the reported party.
+            </div>
             <button type="submit" class="rp-submit-btn" id="rp-submit" onclick="return validateReport()">
-                ⚠️ Submit Report
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Submit Report
             </button>
         </div>
 
@@ -543,74 +645,75 @@ $customerCategories = [
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     @if($errors->any())
     const btn = document.getElementById('rp-submit');
-    if (btn) { btn.disabled = false; btn.innerHTML = '⚠️ Submit Report'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Submit Report'; }
     @endif
 });
-// Character counter
-const descEl   = document.getElementById('rp-desc');
-const countEl  = document.getElementById('char-count');
+
+const descEl  = document.getElementById('rp-desc');
+const countEl = document.getElementById('char-count');
 function updateCount() {
     const len = descEl.value.length;
-countEl.textContent = len + ' / 2000 characters';
-countEl.classList.toggle('warn', len > 1800);
+    countEl.textContent = len + ' / 2000';
+    countEl.classList.toggle('warn', len > 1800);
 }
 descEl.addEventListener('input', updateCount);
 updateCount();
 
-// File handler
 function handleReportFile(input) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
     const isImage = file.type.startsWith('image/');
     const dropzone = document.getElementById('rp-dropzone');
     dropzone.classList.add('has-file');
+
     document.getElementById('rp-dz-title').textContent = file.name;
     document.getElementById('rp-dz-sub').textContent   = (file.size / 1024).toFixed(0) + ' KB';
-    document.getElementById('rp-dz-icon').textContent  = isImage ? '🖼️' : '📄';
-    document.getElementById('rp-file-badge').style.display = 'inline-block';
+    document.getElementById('rp-dz-svg-default').style.display = 'none';
+    document.getElementById('rp-dz-svg-done').style.display    = 'block';
+
+    const okEl = document.getElementById('rp-file-ok');
+    okEl.style.display = 'flex';
+
     if (isImage) {
         const reader = new FileReader();
         reader.onload = e => {
             const prev = document.getElementById('rp-file-preview');
             prev.src = e.target.result;
             prev.style.display = 'block';
+            okEl.style.display = 'none'; // hide badge if preview visible
         };
         reader.readAsDataURL(file);
     }
 }
 
-// Validation
 function validateReport() {
     let ok = true;
     const catSelected = document.querySelector('input[name="category"]:checked');
     const catErr  = document.getElementById('cat-error');
     const descErr = document.getElementById('desc-error');
 
-    if (!catSelected) {
-        catErr.classList.add('show');
-        ok = false;
-    } else {
-        catErr.classList.remove('show');
-    }
+    catErr.classList.toggle('show', !catSelected);
+    if (!catSelected) ok = false;
 
     const desc = descEl.value.trim();
-    if (desc.length < 10) {
-        descErr.classList.add('show');
-        ok = false;
-    } else {
-        descErr.classList.remove('show');
-    }
+    descErr.classList.toggle('show', desc.length < 10);
+    if (desc.length < 10) ok = false;
 
-if (ok) {
-    const btn = document.getElementById('rp-submit');
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Submitting…';
-    document.getElementById('report-form').submit();
+    if (ok) {
+        const btn = document.getElementById('rp-submit');
+        btn.disabled = true;
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 0.7s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Submitting…';
+        document.getElementById('report-form').submit();
+    }
+    return false;
 }
-return false;
-}
+
+// Spinner keyframe
+const s = document.createElement('style');
+s.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(s);
 </script>
 @endsection

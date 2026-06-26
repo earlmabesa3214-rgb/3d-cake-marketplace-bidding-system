@@ -424,9 +424,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/wallet/cashin/{cashIn}/reject',                 [\App\Http\Controllers\Admin\WalletAdminController::class, 'rejectCashIn'])->name('admin.wallet.cashin.reject');
     Route::post('/wallet/withdrawals/{withdrawal}/approve',       [\App\Http\Controllers\Admin\WalletAdminController::class, 'approveWithdrawal'])->name('admin.wallet.withdrawal.approve');
     Route::post('/wallet/withdrawals/{withdrawal}/reject',        [\App\Http\Controllers\Admin\WalletAdminController::class, 'rejectWithdrawal'])->name('admin.wallet.withdrawal.reject');
-    Route::get('/admin/reports',            [AdminReportController::class, 'index'])->name('admin.reports.index');
-    Route::get('/admin/reports/{report}',   [AdminReportController::class, 'show'])->name('admin.reports.show');
-    Route::patch('/admin/reports/{report}', [AdminReportController::class, 'update'])->name('admin.reports.update');
+Route::get('/admin/reports',                                    [AdminReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('/admin/reports/{report}',                           [AdminReportController::class, 'show'])->name('admin.reports.show');
+    Route::patch('/admin/reports/{report}',                         [AdminReportController::class, 'update'])->name('admin.reports.update');
+    Route::post('/admin/reports/{report}/hold-payment',             [AdminReportController::class, 'holdPayment'])->name('admin.reports.hold-payment');
+    Route::post('/admin/reports/{report}/refund/approve',           [AdminReportController::class, 'approveRefund'])->name('admin.reports.refund.approve');
+    Route::post('/admin/reports/{report}/refund/reject',            [AdminReportController::class, 'rejectRefund'])->name('admin.reports.refund.reject');
 
 Route::get('/admin/transactions',              [TransactionController::class, 'index'])->name('admin.transactions.index');
     Route::get('/admin/transactions/{bakerOrder}', [TransactionController::class, 'show'])->name('admin.transactions.show');

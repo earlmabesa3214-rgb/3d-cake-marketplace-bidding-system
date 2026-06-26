@@ -130,13 +130,19 @@
                 <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
                 @endforeach
             </select>
-            <select name="role" class="filter-select">
+        <select name="role" class="filter-select">
                 <option value="">All Reporter Roles</option>
                 <option value="customer" {{ request('role') === 'customer' ? 'selected' : '' }}>Customer</option>
                 <option value="baker"    {{ request('role') === 'baker'    ? 'selected' : '' }}>Baker</option>
             </select>
+            <select name="category" class="filter-select">
+                <option value="">All Categories</option>
+                @foreach($categories as $key => $label)
+                <option value="{{ $key }}" {{ request('category') === $key ? 'selected' : '' }}>{{ strip_tags($label) }}</option>
+                @endforeach
+            </select>
             <button type="submit" class="filter-btn">Filter</button>
-            @if(request()->hasAny(['status','role']))
+            @if(request()->hasAny(['status','role','category']))
             <a href="{{ route('admin.reports.index') }}" class="filter-clear">✕ Clear</a>
             @endif
             <span class="filter-count">

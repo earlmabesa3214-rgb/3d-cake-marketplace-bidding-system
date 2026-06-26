@@ -98,17 +98,24 @@ class ReportController extends Controller
             ? $bakerOrder->cakeRequest->user_id // baker reporting → reported is the customer
             : $bakerOrder->baker_id;            // ✅ FIXED: customer reporting → reported is baker (user_id)
 
-        Report::create([
-            'reporter_id'     => $user->id,
-            'reported_id'     => $reportedId,
-            'baker_order_id'  => $bakerOrder->id,
-            'reporter_role'   => $reporterRole,
-            'category'        => $request->category,
-            'description'     => $request->description,
-            'screenshot_path' => $screenshotPath,
-            'status'          => 'pending',
-        ]);
+        // Deadline-missed categories automatically trigger a refund request
+        $refundCategories = ['no_show', 'order_abandoned'];
+        $wantsRefund = in_array($request->category, $refundCategories)
+            && $request->boolean('request_refund')
+            && !$isBaker; // only customers can request refunds
 
+        Report::create([
+            'reporter_id'      => $user->id,
+            'reported_id'      => $reportedId,
+            'baker_order_id'   => $bakerOrder->id,
+            'reporter_role'    => $reporterRole,
+            'category'         => $request->category,
+            'description'      => $request->description,
+            'screenshot_path'  => $screenshotPath,
+            'status'           => 'pending',
+            'refund_requested' => $wantsRefund,
+            'refund_status'    => $wantsRefund ? 'pending' : null,
+        ]);
         $redirectRoute = $isBaker
             ? route('baker.orders.show', $bakerOrder->id)
             : route('customer.cake-requests.show', $bakerOrder->cake_request_id);
