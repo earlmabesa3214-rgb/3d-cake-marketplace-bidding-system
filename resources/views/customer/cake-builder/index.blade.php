@@ -4,967 +4,807 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cake Builder — BakeSphere</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
     <style>
- :root {
-    /* ── Dashboard-matching palette ── */
+/* ============================================================
+   BAKESPHERE — ATELIER CONFIGURATOR
+   New visual system. Same brand palette + fonts as before,
+   completely new layout language: a wide-screen "studio" with
+   a floating step rail, a full-bleed cake stage, and a ticket-
+   style order card. Built on top of the untouched builder logic.
+   ============================================================ */
+
+:root {
     --brown-deep:    #3B1F0E;
     --brown-mid:     #6B3A1F;
-    --caramel:       #C8894A;
-    --caramel-light: #E8B07A;
-    --warm-white:    #FDFAF6;
-    --cream:         #F5EDE0;
+    --caramel:       #A0673A;
+    --caramel-light: #C9A17C;
+    --warm-white:    #FFFFFF;
+    --cream:         #F7F4EF;
 
-    /* ── Mapped to builder vars ── */
-    --bg:        #F5EDE0;
-    --surface:   #FDFAF6;
-    --border:    #E8D8C4;
-    --border-dk: #D4C0A8;
-    --text:      #3B1F0E;
-    --text-muted:#8A7060;
-    --accent:    #C8894A;
-    --accent-dk: #A06830;
-    --accent-lt: #FEF3E8;
-    --gold:      #C49A3C;
-    --gold-lt:   #FBF5E6;
+--bg:        #F7F1E8;
+    --surface:   #FFFFFF;
+    --border:    #E0D2BC;
+    --border-dk: #C9AF8C;
+    --text:      #2E1A0D;
+    --text-muted:#8A7B6C;
+    --accent:    #A0673A;
+    --accent-dk: #7A4C28;
+    --accent-lt: #F5EFE6;
+    --gold:      #B08A3E;
+    --gold-lt:   #F7F1E2;
     --teal:      #1F7A6C;
     --teal-soft: #E4F2EF;
-
-    --panel-w:   360px;
+    --rail-w:    84px;
+    --studio-w:  428px;
+    --ticket-w:  392px;
     --nav-h:     60px;
-    --radius:    16px;
-    --shadow-sm: 0 1px 4px rgba(59,31,14,0.08);
-    --shadow-md: 0 4px 20px rgba(59,31,14,0.12);
-    --shadow-lg: 0 8px 40px rgba(59,31,14,0.16);
-    --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
---font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --radius:    18px;
+    --radius-sm: 12px;
+    --radius-lg: 26px;
+    --radius-pill: 999px;
+
+    --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+    --sp-5: 20px; --sp-6: 24px; --sp-7: 32px; --sp-8: 40px;
+
+    --shadow-xs: 0 1px 2px rgba(59,31,14,0.05);
+    --shadow-sm: 0 3px 10px rgba(59,31,14,0.08);
+    --shadow-md: 0 10px 26px rgba(59,31,14,0.12);
+    --shadow-lg: 0 24px 60px rgba(59,31,14,0.22);
+    --shadow-glow: 0 0 0 2px rgba(200,137,74,0.35);
+
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition: 0.16s var(--ease);
+    --transition-md: 0.28s var(--ease-out);
+
+    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
     --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-mono:    'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono:    'DM Mono', 'Plus Jakarta Sans', monospace;
 }
-html, body {
-    margin: 0;
-    padding: 0;
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 body {
     font-family: var(--font-display);
-    background: var(--cream);
+    background: var(--bg);
     color: var(--text);
+    border-top: 4px solid var(--brown-deep);
     height: 100vh; overflow: hidden;
     display: flex; flex-direction: column;
-    margin: 0;
-    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
-        #spotBrightnessSlider::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--gold); border:2px solid #fff; box-shadow:0 1px 4px rgba(60,30,5,.4); cursor:pointer; }
+
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible,
+.shape-opt:focus-visible, .opt:focus-visible, .addon-opt:focus-visible,
+.icing-color-opt:focus-visible, input:focus-visible {
+    outline: 2.5px solid var(--caramel);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+::selection { background: rgba(200,137,74,0.28); color: var(--brown-deep); }
 
 nav {
     height: var(--nav-h);
-    background: linear-gradient(135deg, #3B1F0E 0%, #6B3A1F 100%);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    background: var(--brown-deep);
+    border-bottom: 2.5px solid var(--brown-deep);
+    display: flex;
     align-items: center;
-    padding: 0 15px;
+    justify-content: space-between;
+    padding: 0 var(--sp-6);
     flex-shrink: 0;
-    box-shadow: 0 2px 20px rgba(59,31,14,0.38);
     z-index: 100;
+    position: relative;
 }
-        .nav-left { display:flex; align-items:center; gap:16px; }
-       .btn-back {
+.nav-left { display: flex; align-items: center; gap: var(--sp-4); }
+.btn-back {
     display: flex; align-items: center; gap: 6px;
     padding: 7px 14px;
-    border: 1.5px solid rgba(255,255,255,0.20);
-    border-radius: 10px;
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.75);
-    font-family: var(--font-body); font-size: .82rem; font-weight: 500;
+    border: 1.5px solid rgba(255,255,255,0.30);
+    border-radius: var(--radius-pill);
+    background: rgba(255,255,255,0.10);
+    color: var(--warm-white);
+    font-family: var(--font-body); font-size: .78rem; font-weight: 600;
     cursor: pointer; text-decoration: none;
     transition: all var(--transition);
 }
-.btn-back:hover {
-    border-color: rgba(255,255,255,0.45);
-    color: #fff;
-    background: rgba(255,255,255,0.16);
-}
-.nav-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.15); }
+.btn-back:hover { border-color: var(--caramel-light); color: var(--caramel-light); background: rgba(255,255,255,0.18); }
+.nav-divider { display: none; }
 .nav-brand {
     font-family: var(--font-display);
-    font-size: 1.35rem; font-weight: 700;
-    color: #fff;
-    text-decoration: none; letter-spacing: -0.01em;
+    font-size: 1.30rem; font-weight: 800;
+    color: var(--warm-white); text-decoration: none; letter-spacing: -0.03em;
 }
-.nav-brand em { color: var(--caramel-light); font-style: italic; font-weight: 400; }
- 
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: flex-end;  /* push buttons to the right */
-}
+.nav-brand em { color: var(--caramel-light); font-style: normal; font-weight: 400; }
+.nav-right { display: flex; align-items: center; gap: var(--sp-3); }
 
+.nav-center {
+    display: flex; align-items: center; gap: 18px;
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+}
 .nav-step {
-    display: flex; align-items: center; gap: 5px;
-    font-family: var(--font-body); font-size: .78rem; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: .66rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
     color: rgba(255,255,255,0.45);
 }
-.nav-step.active { color: var(--caramel-light); }
+.nav-step.active { color: var(--warm-white); }
+.step-dot { width: 18px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.25); flex-shrink: 0; transition: all var(--transition-md); }
+.nav-step.active .step-dot { background: var(--caramel-light); width: 26px; }
+.step-line { display: none; }
+.btn-save-draft { display: none !important; }
+.btn-proceed { display: none !important; }
 
-.step-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: rgba(255,255,255,0.25);
-    flex-shrink: 0;
+/* ================= STUDIO LAYOUT ================= */
+.builder {
+    display: grid;
+    grid-template-columns: var(--studio-w) 1fr var(--ticket-w);
+    flex: 1; min-height: 0;
+    gap: var(--sp-4);
+    padding: var(--sp-4) var(--sp-4) 0;
 }
-.nav-step.active .step-dot { background: var(--caramel-light); }
 
-.step-line { width: 28px; height: 1px; background: rgba(255,255,255,0.15); flex-shrink: 0; }
-.btn-save-draft {
-    display: flex; align-items: center; gap: 6px;
-    padding: 7px 14px;
-    border: 1.5px solid rgba(255,255,255,0.22);
-    border-radius: 10px;
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.75);
-    font-family: var(--font-body); font-size: .82rem; font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition);
-}
-.btn-save-draft:hover { border-color: var(--caramel-light); color: var(--caramel-light); background: rgba(200,137,74,0.15); }
-.btn-save-draft.saved { border-color: #5B9B6A; color: #8DD4A0; background: rgba(91,155,106,0.15); }
- 
-.btn-proceed {
-    display: flex; align-items: center; gap: 8px;
-    padding: 9px 20px;
-    background: var(--caramel);
-    color: #fff;
-    border: none; border-radius: 10px;
-    font-family: var(--font-body); font-size: .88rem; font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition);
-    box-shadow: 0 2px 12px rgba(200,137,74,0.40);
-    letter-spacing: 0.01em;
-}
-.btn-proceed:hover { background: var(--caramel-light); transform: translateY(-1px); }
-.nav-center {
-    /* remove: position:absolute; left:50%; transform:translateX(-50%); */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-}   
-
-        /* LAYOUT */
-        .builder { display:grid; grid-template-columns:var(--panel-w) 1fr var(--panel-w); flex:1; min-height:0; }
-
-        /* PANELS */
-  .panel {
-    background: var(--warm-white);
+.panel {
+    background: transparent;
     overflow-y: auto; overflow-x: hidden;
     display: flex; flex-direction: column;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-dk) transparent;
+    scrollbar-width: thin; scrollbar-color: var(--border-dk) transparent;
 }
-.panel:first-child { border-right: 1px solid var(--border); }
-.panel:last-child  { border-left: 1px solid var(--border); background: var(--cream); }
- 
+.panel:first-child { border-right: none; }
+.panel:last-child  { border-left: none; background: transparent; }
+.panel::-webkit-scrollbar { width: 5px; }
+.panel::-webkit-scrollbar-thumb { background: var(--border-dk); border-radius: 6px; }
+
 .panel-header {
-    padding: 18px 20px 14px;
+    padding: var(--sp-2) 2px var(--sp-4);
     position: sticky; top: 0;
-    background: var(--warm-white);
+    background: var(--bg);
     z-index: 10;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
 }
+.panel:last-child .panel-header { background: var(--bg); }
 .panel-title {
     font-family: var(--font-display);
-    font-size: 1.15rem; font-weight: 700;
+    font-size: 1.36rem; font-weight: 800;
     color: var(--brown-deep);
-    display: flex; align-items: center; gap: 8px;
-    letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: var(--sp-2);
+    letter-spacing: -0.02em;
 }
-.panel-subtitle { font-size: .73rem; color: var(--text-muted); margin-top: 3px; font-family: var(--font-body); }
-        .panel::-webkit-scrollbar { width:4px; }
-        .panel::-webkit-scrollbar-thumb { background:var(--border-dk); border-radius:4px; }
-     
-        .panel-body { padding:14px 18px 24px; display:flex; flex-direction:column; gap:18px; }
+.panel-title svg { display: none; }
+.panel-title::before {
+    content: '';
+    width: 10px; height: 10px; border-radius: 3px;
+    background: var(--caramel);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+}
+.panel-subtitle { font-size: .76rem; color: var(--text-muted); margin-top: 4px; font-family: var(--font-body); }
+.panel-body { padding: 0 2px var(--sp-8); display: flex; flex-direction: column; gap: var(--sp-3); }
+.panel-body > div:not(.price-total-block) { background: var(--warm-white); border: 1.5px solid var(--border-dk); border-radius: var(--radius); padding: var(--sp-5); box-shadow: var(--shadow-xs); }
+.panel-body > div:not(.price-total-block):hover { box-shadow: var(--shadow-sm); }
 
-   .section-label {
-    font-size: .66rem;
-    text-transform: uppercase; letter-spacing: .16em;
-    font-weight: 700; color: var(--brown-mid);
-    margin-bottom: 8px;
-    display: flex; align-items: center; gap: 8px;
+.section-label {
+    font-size: .70rem;
+    text-transform: uppercase; letter-spacing: .08em;
+    font-weight: 700; color: var(--warm-white);
+    margin-bottom: var(--sp-3);
+    display: flex; align-items: center; gap: var(--sp-2);
     font-family: var(--font-display);
+    padding: 8px 12px;
+    background: var(--brown-deep);
+    border-radius: 8px;
+    position: relative;
+    counter-increment: studio-step;
 }
-.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.panel-body { counter-reset: studio-step; }
+.section-label::before {
+    content: counter(studio-step, decimal-leading-zero);
+    position: static;
+    width: auto; height: auto; transform: none;
+    background: none;
+    color: var(--caramel-light);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: .74rem;
+    letter-spacing: 0;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.25); }
 .section-req {
-    font-size: .6rem; font-weight: 700;
-    color: var(--caramel); background: var(--accent-lt);
-    border: 1px solid rgba(200,137,74,.25);
-    padding: .1rem .4rem; border-radius: 4px;
+    font-size: .58rem; font-weight: 700;
+    color: var(--warm-white);
+    background: var(--caramel);
+    border: none;
+    padding: .20rem .55rem; border-radius: var(--radius-pill);
     margin-left: auto; margin-right: 0;
+    letter-spacing: 0.06em; font-family: var(--font-mono); text-transform: uppercase;
 }
- 
 
-        /* FROSTING GUIDE BANNER */
-        .frosting-guide { background:linear-gradient(135deg,#F0F7FF 0%,#E8F2FF 100%); border:1.5px solid rgba(48,100,200,.15); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
-.frosting-guide-title { font-size:.74rem; font-weight:700; color:#1A3A80; font-family:var(--font-display); display:flex; align-items:center; gap:6px; margin-bottom:10px; }        .frosting-guide-title-icon { font-size:1rem; }
-        .frosting-guide-steps { display:flex; flex-direction:column; gap:7px; }
-        .frosting-step { display:flex; align-items:flex-start; gap:8px; }
-        .frosting-step-num { width:18px; height:18px; border-radius:50%; background:#3064C8; color:#fff; font-size:.6rem; font-weight:700; font-family:var(--font-body); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-        .frosting-step-body { flex:1; }
- .frosting-step-label { font-size:.70rem; font-weight:700; color:#1A3A80; font-family:var(--font-display); display:block; margin-bottom:1px; }
-        .frosting-step-desc { font-size:.65rem; color:#2A50A0; font-family:var(--font-display); line-height:1.5; }
-        .frosting-step-desc strong { font-weight:700; }
-        .frosting-guide-note { margin-top:9px; padding:7px 10px; background:rgba(196,154,60,.12); border:1px solid rgba(196,154,60,.25); border-radius:8px; font-size:.65rem; color:#6B4C08; font-family:var(--font-body); line-height:1.5; display:flex; align-items:flex-start; gap:6px; }
-        .frosting-guide-note-icon { font-size:.85rem; flex-shrink:0; margin-top:1px; }
+/* ================= FROSTING GUIDE BANNER ================= */
+.frosting-guide { background: linear-gradient(135deg,#F0F7FF 0%,#E8F2FF 100%); border: 1.5px solid rgba(48,100,200,.14); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; }
+.frosting-guide-title { font-size: .74rem; font-weight: 700; color: #1A3A80; font-family: var(--font-display); display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.frosting-guide-title-icon { font-size: 1rem; }
+.frosting-guide-steps { display: flex; flex-direction: column; gap: 7px; }
+.frosting-step { display: flex; align-items: flex-start; gap: 8px; }
+.frosting-step-num { width: 18px; height: 18px; border-radius: 50%; background: #3064C8; color: #fff; font-size: .6rem; font-weight: 700; font-family: var(--font-body); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.frosting-step-body { flex: 1; }
+.frosting-step-label { font-size: .70rem; font-weight: 700; color: #1A3A80; font-family: var(--font-display); display: block; margin-bottom: 1px; }
+.frosting-step-desc { font-size: .65rem; color: #2A50A0; font-family: var(--font-display); line-height: 1.5; }
+.frosting-step-desc strong { font-weight: 700; }
+.frosting-guide-note { margin-top: 9px; padding: 7px 10px; background: rgba(196,154,60,.10); border: 1px solid rgba(196,154,60,.22); border-radius: 8px; font-size: .65rem; color: #6B4C08; font-family: var(--font-body); line-height: 1.5; display: flex; align-items: flex-start; gap: 6px; }
+.frosting-guide-note-icon { font-size: .85rem; flex-shrink: 0; margin-top: 1px; }
 
-        /* FROSTING SECTION DIVIDERS */
 .frosting-section-label {
-    font-size: .62rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .14em;
-    color: var(--brown-mid);
-    padding: .3rem 0 .2rem;
+    font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .10em;
+    color: var(--brown-mid); padding: .3rem 0 .2rem;
     display: flex; align-items: center; gap: 6px;
-    font-family: var(--font-display);
-    margin-top: 8px;
+    font-family: var(--font-display); margin-top: 6px;
 }
-.frosting-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }    
+.frosting-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        /* SHAPE GRID */
-        .shape-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+/* ================= SHAPE GRID — swatch tiles ================= */
+.shape-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .shape-opt {
     border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 6px;
+    border-radius: 16px;
+    padding: 16px 6px 13px;
     cursor: pointer;
-    transition: all var(--transition);
-    background: var(--warm-white);
+    transition: transform var(--transition-md), box-shadow var(--transition-md), border-color var(--transition), background var(--transition);
+    background: linear-gradient(160deg, var(--cream), var(--surface));
     text-align: center;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-xs);
+    position: relative;
+    min-height: 44px;
 }
-.shape-opt:hover {
-    border-color: var(--caramel);
-    background: var(--accent-lt);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+.shape-opt svg { transition: transform var(--transition-md); color: var(--brown-mid); }
+.shape-opt:hover { border-color: var(--caramel); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.shape-opt:hover svg { transform: scale(1.08) rotate(-2deg); }
+.shape-opt:active { transform: translateY(0) scale(0.98); }
+.shape-opt.active { border-color: var(--caramel); background: linear-gradient(160deg, var(--accent-lt), var(--warm-white)); box-shadow: var(--shadow-glow); }
+.shape-opt.active svg { color: var(--accent-dk); }
+.shape-opt.active::after {
+    content: '';
+    position: absolute; top: 8px; right: 9px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--caramel);
 }
-.shape-opt.active {
-    border-color: var(--caramel);
-    background: var(--accent-lt);
-    box-shadow: 0 0 0 3px rgba(200,137,74,0.15);
-}
-.shape-opt .sh-name { font-size: .68rem; font-weight: 700; color: var(--text); display: block; font-family: var(--font-display); letter-spacing: 0.01em; }
-.shape-opt.active .sh-name { color: var(--caramel); }
+.shape-opt .sh-name { font-size: .66rem; font-weight: 700; color: var(--text); display: block; font-family: var(--font-display); letter-spacing: 0.01em; margin-top: 5px; }
+.shape-opt.active .sh-name { color: var(--accent-dk); }
 
-        /* SIZE SLIDER */
-  .size-slider-wrap {
-    display: none;
-    margin-top: 10px;
-    background: var(--cream);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px 13px;
-    box-shadow: var(--shadow-sm);
+/* ================= SIZE SLIDER ================= */
+.size-slider-wrap {
+    display: none; margin-top: 12px;
+    background: var(--cream); border: none; border-radius: 14px;
+    padding: 15px 16px 14px; box-shadow: none;
 }
 .size-slider-wrap.visible { display: block; }
-        .size-slider-wrap.visible { display:block; }
-        .size-slider-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-   .size-slider-label { font-size:.72rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; font-family:var(--font-display); }
-        .size-slider-val { font-family: var(--font-display); font-size:1.1rem; font-weight:700; color:var(--accent); }
-        input[type=range].size-range { -webkit-appearance:none; appearance:none; width:100%; height:4px; background:var(--border); border-radius:2px; outline:none; cursor:pointer; }
-        input[type=range].size-range::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--accent); border:2.5px solid #fff; box-shadow:0 1px 6px rgba(184,92,56,.35); cursor:pointer; transition:transform var(--transition); }
-        input[type=range].size-range::-webkit-slider-thumb:hover { transform:scale(1.15); }
-        .size-ticks { display:flex; justify-content:space-between; margin-top:5px; }
-        .size-tick { font-size:.61rem; color:var(--text-muted); font-family: var(--font-display); }
+.size-slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.size-slider-label { font-size: .68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; font-family: var(--font-mono); }
+.size-slider-val { font-family: var(--font-mono); font-size: 1.20rem; font-weight: 700; color: var(--accent-dk); }
+input[type=range].size-range { -webkit-appearance: none; appearance: none; width: 100%; height: 5px; background: var(--border-dk); border-radius: 3px; outline: none; cursor: pointer; }
+input[type=range].size-range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--caramel); border: 4px solid #fff; box-shadow: 0 3px 10px rgba(160,80,30,.42); cursor: pointer; transition: transform var(--transition); }
+input[type=range].size-range::-webkit-slider-thumb:hover { transform: scale(1.12); }
+.size-ticks { display: flex; justify-content: space-between; margin-top: 6px; }
+.size-tick { font-size: .60rem; color: var(--text-muted); font-family: var(--font-mono); }
 
-        /* NUMBER PICKER */
-    .number-picker-wrap {
-    display: none;
-    margin-top: 10px;
-    background: var(--cream);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px 13px;
-    box-shadow: var(--shadow-sm);
-}
+/* ================= NUMBER PICKER ================= */
+.number-picker-wrap { display: none; margin-top: 12px; background: var(--cream); border: none; border-radius: 14px; padding: 15px 16px 14px; }
 .number-picker-wrap.visible { display: block; }
- 
-    .number-picker-label { font-size:.72rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; font-family:var(--font-display); margin-bottom:10px; }
-        .digit-mode-toggle { display:flex; gap:0; border:1.5px solid var(--border-dk); border-radius:8px; overflow:hidden; margin-bottom:12px; }
-        .digit-mode-btn { flex:1; padding:6px 10px; font-size:.76rem; font-weight:600; font-family:var(--font-display); color:var(--text-muted); background:var(--surface); border:none; cursor:pointer; transition:all var(--transition); text-align:center; }
-        .digit-mode-btn + .digit-mode-btn { border-left:1.5px solid var(--border-dk); }
-        .digit-mode-btn.active { background:var(--accent); color:#fff; }
-        .digit-mode-btn:hover:not(.active) { background:var(--accent-lt); color:var(--accent); }
-        .number-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
-        .num-opt { border:1.5px solid var(--border); border-radius:8px; padding:7px 4px; cursor:pointer; text-align:center; font-family:var(--font-display); font-size:1.1rem; font-weight:700; color:var(--text-muted); background:var(--surface); transition:all var(--transition); }
-        .num-opt:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-lt); }
-        .num-opt.active { border-color:var(--accent); background:var(--accent); color:#fff; }
-        .dual-digit-wrap { display:none; flex-direction:column; gap:10px; }
-        .dual-digit-wrap.visible { display:flex; }
-        .dual-digit-preview { text-align:center; font-family:var(--font-display); font-size:2.4rem; font-weight:700; color:var(--accent); letter-spacing:.04em; line-height:1; padding:6px 0 2px; }
-        .dual-digit-preview span { font-size:.65rem; font-family:var(--font-body); font-weight:500; color:var(--text-muted); display:block; margin-top:2px; text-transform:uppercase; letter-spacing:.1em; }
-        .dual-col-label { font-size:.63rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--text-muted); margin-bottom:5px; font-family:var(--font-body); }
-        .dual-cols { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-        .num-grid-sm { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
-        .num-opt-sm { border:1.5px solid var(--border); border-radius:7px; padding:5px 2px; cursor:pointer; text-align:center; font-family:var(--font-display); font-size:.95rem; font-weight:700; color:var(--text-muted); background:var(--surface); transition:all var(--transition); }
-        .num-opt-sm:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-lt); }
-        .num-opt-sm.active { border-color:var(--accent); background:var(--accent); color:#fff; }
+.number-picker-label { font-size: .68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; font-family: var(--font-mono); margin-bottom: 12px; }
+.digit-mode-toggle { display: flex; gap: 0; border: 1.5px solid var(--border-dk); border-radius: var(--radius-pill); overflow: hidden; margin-bottom: 12px; }
+.digit-mode-btn { flex: 1; padding: 9px 10px; font-size: .76rem; font-weight: 600; font-family: var(--font-display); color: var(--text-muted); background: var(--surface); border: none; cursor: pointer; transition: all var(--transition); text-align: center; min-height: 40px; }
+.digit-mode-btn + .digit-mode-btn { border-left: 1.5px solid var(--border-dk); }
+.digit-mode-btn.active { background: var(--caramel); color: #fff; }
+.digit-mode-btn:hover:not(.active) { background: var(--accent-lt); color: var(--accent); }
+.number-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 7px; }
+.num-opt { border: 1.5px solid var(--border); border-radius: 12px; padding: 9px 4px; cursor: pointer; text-align: center; font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--text-muted); background: var(--surface); transition: all var(--transition); min-height: 40px; display: flex; align-items: center; justify-content: center; }
+.num-opt:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
+.num-opt.active { border-color: var(--accent); background: var(--caramel); color: #fff; }
+.dual-digit-wrap { display: none; flex-direction: column; gap: 12px; }
+.dual-digit-wrap.visible { display: flex; }
+.dual-digit-preview { text-align: center; font-family: var(--font-mono); font-size: 2.5rem; font-weight: 700; color: var(--accent-dk); letter-spacing: .04em; line-height: 1; padding: 6px 0 2px; }
+.dual-digit-preview span { font-size: .64rem; font-family: var(--font-body); font-weight: 500; color: var(--text-muted); display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: .1em; }
+.dual-col-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--text-muted); margin-bottom: 6px; font-family: var(--font-mono); }
+.dual-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.num-grid-sm { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+.num-opt-sm { border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 2px; cursor: pointer; text-align: center; font-family: var(--font-mono); font-size: .95rem; font-weight: 700; color: var(--text-muted); background: var(--surface); transition: all var(--transition); min-height: 34px; display: flex; align-items: center; justify-content: center; }
+.num-opt-sm:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
+.num-opt-sm.active { border-color: var(--accent); background: var(--caramel); color: #fff; }
 
-        /* OPTION PILLS */
-        .opts { display:flex; flex-wrap:wrap; gap:6px; }
+/* ================= OPTION PILLS ================= */
+.opts { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .opt {
-    padding: 7px 14px;
+    padding: 10px 16px;
     border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: .79rem; font-weight: 600;
+    border-radius: 12px;
+    font-size: .78rem; font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
-    transition: all var(--transition);
-    background: var(--warm-white);
-    position: relative; overflow: hidden;
+    transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
+    background: var(--surface);
+    position: relative;
     font-family: var(--font-display);
-    box-shadow: var(--shadow-sm);
+    text-align: center;
+    min-height: 40px;
+    display: inline-flex; align-items: center;
 }
-.opt:hover { border-color: var(--caramel); color: var(--caramel); transform: translateY(-1px); }
-.opt.active { border-color: var(--caramel); color: #fff; background: var(--caramel); box-shadow: 0 3px 10px rgba(200,137,74,0.35); }
+.opt:hover { border-color: var(--caramel); color: var(--accent-dk); background: var(--accent-lt); }
+.opt:active { transform: scale(0.97); }
+.opt.active { border-color: var(--brown-deep); color: #fff; background: var(--brown-deep); padding-right: 30px; box-shadow: var(--shadow-sm); }
 .opt.active span { color: #fff; }
-        .opt.active span { color:#fff; }
-        .flavor-dot { display:inline-block; width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.opt.active::after {
+    content: '✓'; position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+    font-size: .62rem; font-weight: 700; color: var(--caramel-light);
+}
+.flavor-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-        /* ADDON GRID */
-        .addon-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; min-width:0; width:100%; }
-        .a-icon { font-size:1rem; flex-shrink:0; line-height:1; }
-        .a-info { flex:1; min-width:0; overflow:hidden; }
-     .a-name { font-size:.73rem; font-weight:700; color:var(--text); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:var(--font-display); }
-        .addon-opt.active .a-name { color:var(--accent); }
-        .a-price { font-size:.63rem; color:var(--text-muted); display:block; margin-top:1px; font-family:var(--font-display); white-space:nowrap; }
-        .addon-check { width:15px; height:15px; border:1.5px solid var(--border-dk); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all var(--transition); }
-        .addon-check svg { width:8px; height:8px; opacity:0; transition:opacity var(--transition); }
-        .addon-opt.active .addon-check svg { opacity:1; }
+/* ================= ADDON GRID (cards) ================= */
+.addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); min-width: 0; width: 100%; }
+.a-icon { font-size: 1rem; flex-shrink: 0; line-height: 1; color: var(--brown-mid); transition: color var(--transition); }
+.addon-opt.active .a-icon { color: var(--accent-dk); }
+.a-info { flex: 1; min-width: 0; overflow: hidden; }
+.a-name { font-size: .74rem; font-weight: 700; color: var(--text); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); }
+.addon-opt.active .a-name { color: var(--accent-dk); }
+.a-price { font-size: .62rem; color: var(--text-muted); display: block; margin-top: 1px; font-family: var(--font-mono); white-space: nowrap; }
+.addon-check { width: 17px; height: 17px; border: 1.5px solid var(--border-dk); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all var(--transition-md); background: var(--surface); }
+.addon-check svg { width: 9px; height: 9px; opacity: 0; transition: opacity var(--transition); transform: scale(0.6); }
+.addon-opt.active .addon-check svg { opacity: 1; transform: scale(1); }
 .addon-opt {
     border: 1.5px solid var(--border);
     border-radius: 14px;
-    padding: 10px 12px;
+    padding: 12px 13px;
     cursor: pointer;
-    transition: all var(--transition);
-    background: var(--warm-white);
-    display: flex; align-items: center; gap: 7px;
+    transition: transform var(--transition-md), box-shadow var(--transition-md), border-color var(--transition), background var(--transition);
+    background: var(--surface);
+    display: flex; align-items: center; gap: 9px;
     min-width: 0; overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
+    min-height: 44px;
 }
-.addon-opt:hover {
-    border-color: var(--caramel);
-    background: var(--accent-lt);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-.addon-opt.active {
-    border-color: var(--caramel);
-    background: var(--accent-lt);
-    box-shadow: 0 0 0 3px rgba(200,137,74,0.12);
-}
+.addon-opt:hover { border-color: var(--caramel); background: var(--accent-lt); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.addon-opt:active { transform: translateY(0) scale(0.98); }
+.addon-opt.active { border-color: var(--caramel); background: var(--accent-lt); box-shadow: var(--shadow-glow); }
 .addon-opt.active .a-name { color: var(--caramel); }
 .addon-opt.active .addon-check { background: var(--caramel); border-color: var(--caramel); }
-.addon-check { width: 16px; height: 16px; border: 1.5px solid var(--border-dk); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all var(--transition); }
- 
-        /* DRIP FLAVOR SUB-PANEL */
-        .drip-flavor-panel { display:none; margin-top:8px; background:var(--bg); border:1.5px solid rgba(31,122,108,.25); border-radius:10px; padding:10px 12px; }
-        .drip-flavor-panel.visible { display:block; }
-        .drip-flavor-header { font-size:.67rem; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; font-family:var(--font-body); display:flex; align-items:center; gap:6px; }
-        .drip-flavor-header::after { content:''; flex:1; height:1px; background:rgba(31,122,108,.2); }
-        .drip-flavors { display:flex; flex-wrap:wrap; gap:5px; }
-        .drip-flavor-opt { padding:5px 10px; border:1.5px solid var(--border); border-radius:7px; font-size:.74rem; font-weight:500; color:var(--text-muted); cursor:pointer; transition:all var(--transition); background:var(--surface); display:flex; align-items:center; gap:5px; font-family:var(--font-body); }
-        .drip-flavor-opt:hover { border-color:var(--teal); color:var(--teal); background:var(--teal-soft); }
-        .drip-flavor-opt.active { border-color:var(--teal); background:var(--teal); color:#fff; }
-        .drip-color-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; border:1px solid rgba(0,0,0,.12); }
 
-.icing-panel { display:none; margin-top:6px; background:var(--cream); border:1px solid var(--border); border-radius:10px; padding:9px 11px; }
-        .icing-panel.visible { display:block; }
-        .icing-header { font-size:.67rem; font-weight:700; color:#7A5C10; text-transform:uppercase; letter-spacing:.1em; margin-bottom:9px; font-family:var(--font-body); display:flex; align-items:center; gap:6px; }
-        .icing-header::after { content:''; flex:1; height:1px; background:rgba(196,154,60,.25); }
-        .icing-color-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:8px; }
-        .icing-color-opt { width:100%; aspect-ratio:1; border-radius:8px; border:2.5px solid transparent; cursor:pointer; transition:all var(--transition); position:relative; }
-        .icing-color-opt:hover { transform:scale(1.12); }
-        .icing-color-opt.active { border-color:#2C1810; box-shadow:0 0 0 2px rgba(44,24,16,.25); transform:scale(1.08); }
-        .icing-color-opt.active::after { content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.6rem; font-weight:700; color:rgba(255,255,255,.95); text-shadow:0 1px 2px rgba(0,0,0,.6); }
-        .icing-color-opt.light-color.active::after { color:rgba(0,0,0,.5); text-shadow:none; }
-        .icing-color-label { font-size:.66rem; color:#7A5C10; font-family:var(--font-body); text-align:center; margin-top:4px; font-weight:500; }
+/* ================= DRIP FLAVOR SUB-PANEL ================= */
+.drip-flavor-panel { display: none; margin-top: 9px; background: var(--bg); border: 1.5px solid rgba(31,122,108,.22); border-radius: 14px; padding: 11px 12px; }
+.drip-flavor-panel.visible { display: block; }
+.drip-flavor-header { font-size: .65rem; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 9px; font-family: var(--font-mono); display: flex; align-items: center; gap: 6px; }
+.drip-flavor-header::after { content: ''; flex: 1; height: 1px; background: rgba(31,122,108,.18); }
+.drip-flavors { display: flex; flex-wrap: wrap; gap: 6px; }
+.drip-flavor-opt { padding: 6px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-pill); font-size: .74rem; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all var(--transition); background: var(--surface); display: flex; align-items: center; gap: 6px; font-family: var(--font-body); min-height: 32px; }
+.drip-flavor-opt:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-soft); }
+.drip-flavor-opt.active { border-color: var(--teal); background: var(--teal); color: #fff; }
+.drip-color-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,.12); }
 
-        /* Sugar Icing active state */
-        .frosting-opt[data-val="Sugar Icing"].active { border-color: var(--gold) !important; background: var(--gold-lt) !important; }
-        .frosting-opt[data-val="Sugar Icing"].active .a-name { color: #7A5C10 !important; }
-        .frosting-opt[data-val="Sugar Icing"].active .addon-check { background: var(--gold) !important; border-color: var(--gold) !important; }
+.icing-panel { display: none; margin-top: 8px; background: var(--cream); border: none; border-radius: 14px; padding: 11px 12px; }
+.icing-panel.visible { display: block; }
+.icing-header { font-size: .65rem; font-weight: 700; color: #7A5C10; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px; font-family: var(--font-mono); display: flex; align-items: center; gap: 6px; }
+.icing-header::after { content: ''; flex: 1; height: 1px; background: rgba(196,154,60,.22); }
+.icing-color-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 7px; margin-bottom: 9px; }
+.icing-color-opt { width: 100%; aspect-ratio: 1; border-radius: 9px; border: 2.5px solid transparent; cursor: pointer; transition: all var(--transition); position: relative; min-height: 32px; }
+.icing-color-opt:hover { transform: scale(1.10); }
+.icing-color-opt.active { border-color: #2C1810; box-shadow: 0 0 0 2px rgba(44,24,16,.22); transform: scale(1.06); }
+.icing-color-opt.active::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: .62rem; font-weight: 700; color: rgba(255,255,255,.95); text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.icing-color-opt.light-color.active::after { color: rgba(0,0,0,.55); text-shadow: none; }
+.icing-color-label { font-size: .66rem; color: #7A5C10; font-family: var(--font-body); text-align: center; margin-top: 5px; font-weight: 500; }
 
-        /* FROSTING COMBO HINT */
-        .frosting-combo-hint { display:none; margin-top:8px; padding:8px 11px; background:var(--teal-soft); border:1px solid rgba(31,122,108,.22); border-radius:9px; font-size:.71rem; color:var(--teal); font-family:var(--font-body); line-height:1.5; }
-        .frosting-combo-hint.visible { display:flex; align-items:flex-start; gap:7px; }
-        .frosting-combo-hint-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .frosting-combo-label { font-weight:600; display:block; }
-        .frosting-combo-sub { color:rgba(31,122,108,.75); font-size:.67rem; }
+.frosting-opt[data-val="Sugar Icing"].active { border-color: var(--gold) !important; background: var(--gold-lt) !important; }
+.frosting-opt[data-val="Sugar Icing"].active .a-name { color: #7A5C10 !important; }
+.frosting-opt[data-val="Sugar Icing"].active .addon-check { background: var(--gold) !important; border-color: var(--gold) !important; }
 
-        /* FONDANT */
-        .frosting-opt.frosting-locked { opacity:.38; pointer-events:none; filter:grayscale(.6); position:relative; }
-        .frosting-opt.frosting-locked::after { content:'🚫'; position:absolute; top:5px; right:6px; font-size:.6rem; opacity:.75; pointer-events:none; }
-        .frosting-opt.active[data-val="Fondant Smooth"] { border-color:var(--gold) !important; background:var(--gold-lt) !important; box-shadow:0 0 0 3px rgba(196,154,60,.15); }
-        .frosting-opt.active[data-val="Fondant Smooth"] .a-name { color:#7A5C10 !important; }
-        .frosting-opt.active[data-val="Fondant Smooth"] .addon-check { background:var(--gold) !important; border-color:var(--gold) !important; }
-        .fondant-notice { display:none; margin-top:8px; padding:9px 12px; background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%); border:1.5px solid rgba(196,154,60,.35); border-radius:10px; font-size:.71rem; color:#7A5C10; font-family:var(--font-body); line-height:1.55; gap:8px; align-items:flex-start; }
-        .fondant-notice.visible { display:flex; }
-        .fondant-notice-icon { font-size:1rem; flex-shrink:0; margin-top:1px; }
-        .fondant-notice-title { font-weight:700; display:block; margin-bottom:1px; color:#6B4C08; }
-        .fondant-notice-sub { color:rgba(122,92,16,.72); font-size:.66rem; }
+.frosting-combo-hint { display: none; margin-top: 9px; padding: 9px 12px; background: var(--teal-soft); border: 1px solid rgba(31,122,108,.20); border-radius: 14px; font-size: .71rem; color: var(--teal); font-family: var(--font-body); line-height: 1.5; }
+.frosting-combo-hint.visible { display: flex; align-items: flex-start; gap: 7px; }
+.frosting-combo-hint-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.frosting-combo-label { font-weight: 600; display: block; }
+.frosting-combo-sub { color: rgba(31,122,108,.75); font-size: .67rem; }
 
-        /* FROSTING PRICE ROW */
-        .price-row.frosting-extra-row { background:rgba(31,122,108,.04); }
-        .price-row.frosting-extra-row .pr-label { color:var(--teal); }
-        .price-row.frosting-extra-row .pr-val { color:var(--teal); }
+.frosting-opt.frosting-locked { opacity: .38; pointer-events: none; filter: grayscale(.6); position: relative; }
+.frosting-opt.frosting-locked::after { content: '🚫'; position: absolute; top: 5px; right: 6px; font-size: .6rem; opacity: .75; pointer-events: none; }
+.frosting-opt.active[data-val="Fondant Smooth"] { border-color: var(--gold) !important; background: var(--gold-lt) !important; box-shadow: 0 0 0 3px rgba(196,154,60,.14); }
+.frosting-opt.active[data-val="Fondant Smooth"] .a-name { color: #7A5C10 !important; }
+.frosting-opt.active[data-val="Fondant Smooth"] .addon-check { background: var(--gold) !important; border-color: var(--gold) !important; }
+.fondant-notice { display: none; margin-top: 9px; padding: 10px 12px; background: linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%); border: 1.5px solid rgba(196,154,60,.32); border-radius: 14px; font-size: .71rem; color: #7A5C10; font-family: var(--font-body); line-height: 1.55; gap: 8px; align-items: flex-start; }
+.fondant-notice.visible { display: flex; }
+.fondant-notice-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.fondant-notice-title { font-weight: 700; display: block; margin-bottom: 1px; color: #6B4C08; }
+.fondant-notice-sub { color: rgba(122,92,16,.72); font-size: .66rem; }
 
-        /* ── VIEWER ── */
-        .viewer {
-            position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden;
-            background:
-                radial-gradient(ellipse 55% 80% at 82% 0%, rgba(255,210,120,0.72) 0%, rgba(230,170,70,0.30) 35%, transparent 65%),
-                radial-gradient(ellipse 70% 60% at 48% 42%, rgba(240,200,140,0.55) 0%, transparent 65%),
-                radial-gradient(ellipse 60% 40% at 8% 100%, rgba(80,45,20,0.65) 0%, transparent 55%),
-                linear-gradient(168deg, #E8D5B0 0%, #D9C49A 25%, #C8AC7A 55%, #B89560 80%, #A07840 100%);
-        }
-        #model-container { position:absolute; inset:0; }
-        #model-container canvas { width:100% !important; height:100% !important; display:block; }
-        .viewer::before {
-            content:''; position:absolute; bottom:0; left:0; right:0; height:38%;
-            background:linear-gradient(to top, rgba(120,80,30,0.50) 0%, rgba(140,95,40,0.22) 40%, transparent 100%);
-            pointer-events:none; z-index:2;
-        }
-        .viewer::after {
-            content:''; position:absolute; inset:0;
-            background:
-                linear-gradient(135deg, transparent 38%, rgba(255,220,130,0.18) 50%, transparent 62%),
-                radial-gradient(ellipse 30% 90% at 88% 20%, rgba(255,230,150,0.25) 0%, transparent 55%);
-            pointer-events:none; z-index:2;
-        }
+.price-row.frosting-extra-row { background: rgba(31,122,108,.04); }
+.price-row.frosting-extra-row .pr-label { color: var(--teal); }
+.price-row.frosting-extra-row .pr-val { color: var(--teal); }
 
-        /* FRUIT TRAY */
-        .fruit-tray { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:none; align-items:center; gap:6px; z-index:30; background:rgba(58,32,10,0.78); backdrop-filter:blur(16px); border:1px solid rgba(210,165,90,0.32); border-radius:18px; padding:7px 14px; box-shadow:0 4px 20px rgba(60,30,8,0.45); pointer-events:all; }
-        .fruit-tray.visible { display:flex; }
-        .fruit-tray-label { font-size:.6rem; font-weight:700; color:rgba(220,175,100,0.78); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-body); white-space:nowrap; margin-right:2px; }
-        .fruit-draggable { width:38px; height:38px; border-radius:9px; border:1.5px solid rgba(200,150,70,0.32); background:rgba(80,48,16,0.58); cursor:grab; display:flex; align-items:center; justify-content:center; font-size:1.4rem; transition:all var(--transition); user-select:none; -webkit-user-select:none; position:relative; flex-shrink:0; }
-        .fruit-draggable:hover { border-color:rgba(220,175,100,0.65); background:rgba(100,62,20,0.78); transform:scale(1.1); }
-        .fruit-draggable:active { cursor:grabbing; }
-        .fruit-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#3C2010; color:#F0D090; font-size:.58rem; white-space:nowrap; padding:3px 7px; border-radius:5px; pointer-events:none; opacity:0; transition:opacity .15s; font-family:var(--font-body); }
-        .fruit-draggable:hover .fruit-tip { opacity:1; }
-        .fruit-tray-sep { width:1px; height:24px; background:rgba(200,150,70,0.24); margin:0 2px; }
-        .fruit-clear-btn { padding:5px 10px; border:1.5px solid rgba(180,80,55,0.38); border-radius:8px; background:transparent; color:rgba(220,110,85,0.82); font-size:.68rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all var(--transition); white-space:nowrap; }
-        .fruit-clear-btn:hover { border-color:rgba(220,70,50,0.65); color:#E05535; }
-
-        /* FERRERO TRAY */
-        .ferrero-tray { position:absolute; bottom:58px; left:50%; transform:translateX(-50%); display:none; align-items:center; gap:6px; z-index:31; background:rgba(38,18,6,0.88); backdrop-filter:blur(16px); border:1px solid rgba(196,154,60,0.40); border-radius:18px; padding:7px 14px; box-shadow:0 4px 20px rgba(30,12,2,0.55); pointer-events:all; }
-        .ferrero-tray.visible { display:flex; }
-        .ferrero-tray-label { font-size:.6rem; font-weight:700; color:rgba(196,154,60,0.90); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-body); white-space:nowrap; margin-right:2px; }
-        .ferrero-draggable { width:38px; height:38px; border-radius:9px; border:1.5px solid rgba(196,154,60,0.40); background:rgba(60,30,8,0.70); cursor:grab; display:flex; align-items:center; justify-content:center; font-size:1.4rem; transition:all var(--transition); user-select:none; -webkit-user-select:none; position:relative; flex-shrink:0; }
-        .ferrero-draggable:hover { border-color:rgba(196,154,60,0.80); background:rgba(80,42,10,0.88); transform:scale(1.1); }
-        .ferrero-draggable:active { cursor:grabbing; }
-        .ferrero-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#2A1006; color:#F0D090; font-size:.58rem; white-space:nowrap; padding:3px 7px; border-radius:5px; pointer-events:none; opacity:0; transition:opacity .15s; font-family:var(--font-body); }
-        .ferrero-draggable:hover .ferrero-tip { opacity:1; }
-        .ferrero-tray-sep { width:1px; height:24px; background:rgba(196,154,60,0.24); margin:0 2px; }
-        .ferrero-clear-btn { padding:5px 10px; border:1.5px solid rgba(180,80,55,0.38); border-radius:8px; background:transparent; color:rgba(220,110,85,0.82); font-size:.68rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all var(--transition); white-space:nowrap; }
-        .ferrero-clear-btn:hover { border-color:rgba(220,70,50,0.65); color:#E05535; }
-
-        /* KITKAT TRAY — red chocolate */
-        .kitkat-tray { position:absolute; bottom:58px; left:50%; transform:translateX(-50%); display:none; align-items:center; gap:6px; z-index:32; background:rgba(80,10,10,0.88); backdrop-filter:blur(16px); border:1px solid rgba(200,50,50,0.40); border-radius:18px; padding:7px 14px; box-shadow:0 4px 20px rgba(50,8,8,0.55); pointer-events:all; }
-        .kitkat-tray.visible { display:flex; }
-        .kitkat-tray-label { font-size:.6rem; font-weight:700; color:rgba(255,130,110,0.90); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-body); white-space:nowrap; margin-right:2px; }
-        .kitkat-draggable { width:38px; height:38px; border-radius:9px; border:1.5px solid rgba(200,60,40,0.50); background:rgba(100,20,10,0.70); cursor:grab; display:flex; align-items:center; justify-content:center; font-size:1.4rem; transition:all var(--transition); user-select:none; -webkit-user-select:none; position:relative; flex-shrink:0; }
-        .kitkat-draggable:hover { border-color:rgba(240,80,60,0.80); background:rgba(130,28,14,0.88); transform:scale(1.1); }
-        .kitkat-draggable:active { cursor:grabbing; }
-        .kitkat-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#4A0A08; color:#FFB0A0; font-size:.58rem; white-space:nowrap; padding:3px 7px; border-radius:5px; pointer-events:none; opacity:0; transition:opacity .15s; font-family:var(--font-body); }
-        .kitkat-draggable:hover .kitkat-tip { opacity:1; }
-        .kitkat-tray-sep { width:1px; height:24px; background:rgba(200,60,40,0.24); margin:0 2px; }
-        .kitkat-clear-btn { padding:5px 10px; border:1.5px solid rgba(180,60,40,0.38); border-radius:8px; background:transparent; color:rgba(255,110,90,0.82); font-size:.68rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all var(--transition); white-space:nowrap; }
-        .kitkat-clear-btn:hover { border-color:rgba(220,50,30,0.65); color:#E04030; }
-
-        /* OREO TRAY — dark cream */
-        .oreo-tray { position:absolute; bottom:58px; left:50%; transform:translateX(-50%); display:none; align-items:center; gap:6px; z-index:33; background:rgba(20,18,24,0.92); backdrop-filter:blur(16px); border:1px solid rgba(230,220,210,0.28); border-radius:18px; padding:7px 14px; box-shadow:0 4px 20px rgba(10,8,14,0.60); pointer-events:all; }
-        .oreo-tray.visible { display:flex; }
-        .oreo-tray-label { font-size:.6rem; font-weight:700; color:rgba(230,220,200,0.80); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-body); white-space:nowrap; margin-right:2px; }
-        .oreo-draggable { width:38px; height:38px; border-radius:9px; border:1.5px solid rgba(200,190,175,0.28); background:rgba(40,36,48,0.70); cursor:grab; display:flex; align-items:center; justify-content:center; font-size:1.4rem; transition:all var(--transition); user-select:none; -webkit-user-select:none; position:relative; flex-shrink:0; }
-        .oreo-draggable:hover { border-color:rgba(220,210,195,0.65); background:rgba(58,52,68,0.88); transform:scale(1.1); }
-        .oreo-draggable:active { cursor:grabbing; }
-        .oreo-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#141218; color:#E8E0D0; font-size:.58rem; white-space:nowrap; padding:3px 7px; border-radius:5px; pointer-events:none; opacity:0; transition:opacity .15s; font-family:var(--font-body); }
-        .oreo-draggable:hover .oreo-tip { opacity:1; }
-        .oreo-tray-sep { width:1px; height:24px; background:rgba(200,190,175,0.20); margin:0 2px; }
-        .oreo-clear-btn { padding:5px 10px; border:1.5px solid rgba(180,80,55,0.38); border-radius:8px; background:transparent; color:rgba(220,110,85,0.82); font-size:.68rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all var(--transition); white-space:nowrap; }
-        .oreo-clear-btn:hover { border-color:rgba(220,70,50,0.65); color:#E05535; }
-
-        /* ORIENTATION PANEL — shared */
-        .orient-panel { display:none; margin-top:8px; background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%); border:1.5px solid rgba(196,154,60,.30); border-radius:10px; padding:10px 12px; }
-        .orient-panel.visible { display:block; }
-        .orient-panel-header { font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; font-family:var(--font-body); display:flex; align-items:center; gap:6px; color:#7A5C10; }
-        .orient-panel-header::after { content:''; flex:1; height:1px; background:rgba(196,154,60,.25); }
-        .orient-toggle { display:flex; gap:0; border:1.5px solid rgba(196,154,60,.40); border-radius:8px; overflow:hidden; }
-        .orient-btn { flex:1; padding:7px 6px; font-size:.74rem; font-weight:600; font-family:var(--font-body); color:#7A5C10; background:rgba(255,248,230,.6); border:none; cursor:pointer; transition:all var(--transition); text-align:center; display:flex; align-items:center; justify-content:center; gap:5px; }
-        .orient-btn + .orient-btn { border-left:1.5px solid rgba(196,154,60,.30); }
-        .orient-btn.active { background:var(--gold); color:#fff; }
-        .orient-btn:hover:not(.active) { background:rgba(196,154,60,.18); color:#6B4C08; }
-        .orient-btn-icon { font-size:.9rem; }
-        .orient-hint { margin-top:7px; font-size:.63rem; color:rgba(122,92,16,.72); font-family:var(--font-body); line-height:1.5; }
-
-        /* FRUIT CANVAS */
-        #fruitCanvas { position:absolute; inset:0; z-index:25; pointer-events:none; }
-        .drop-ring { position:absolute; border:2px dashed rgba(180,120,40,0.65); border-radius:50%; pointer-events:none; z-index:26; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
-        @keyframes ringPulse { 0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1);} 50%{opacity:.4;transform:translate(-50%,-50%) scale(1.18);} }
-        .ferrero-drop-ring { position:absolute; border:2px dashed rgba(196,154,60,0.80); border-radius:50%; pointer-events:none; z-index:27; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
-        .kitkat-drop-ring { position:absolute; border:2px dashed rgba(220,60,40,0.80); border-radius:8px; pointer-events:none; z-index:28; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
-        .oreo-drop-ring { position:absolute; border:2px dashed rgba(200,190,175,0.80); border-radius:50%; pointer-events:none; z-index:29; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
-        #dragGhost { display:none !important; }
-        .viewer.fruit-drag-over { outline:3px dashed rgba(180,120,40,0.45); outline-offset:-4px; }
-        .viewer.ferrero-drag-over { outline:3px dashed rgba(196,154,60,0.60); outline-offset:-4px; }
-        .viewer.kitkat-drag-over { outline:3px dashed rgba(220,60,40,0.55); outline-offset:-4px; }
-        .viewer.oreo-drag-over { outline:3px dashed rgba(200,190,175,0.55); outline-offset:-4px; }
-        .viewer.bar-shard-drag-over { outline:3px dashed rgba(160,90,30,0.60); outline-offset:-4px; }
-
-        /* LOADING */
-        .model-loading { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; pointer-events:none; z-index:5; transition:opacity .4s; }
-        .model-loading.hidden { opacity:0; }
-        .loading-spinner { width:40px; height:40px; border:3px solid rgba(160,100,30,0.20); border-top-color:rgba(180,120,40,0.85); border-radius:50%; animation:spin .8s linear infinite; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        .loading-text { font-size:.78rem; color:rgba(120,70,20,0.70); font-family:var(--font-body); }
-
-        /* VIEWER OVERLAYS */
-   .viewer-badge {
-    position: absolute; top: 14px; left: 14px;
-    background: rgba(59,31,14, 0.72);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(232,176,122,0.28);
-    border-radius: 12px;
-    padding: 9px 14px;
-    box-shadow: 0 2px 14px rgba(59,31,14,0.38);
-    z-index: 10;
+.viewer {
+    position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    margin: var(--sp-4) 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+   background:
+        /* warm pendant light glow, softly diffused — dimmed */
+        radial-gradient(ellipse 42% 32% at 50% 4%, rgba(255,236,195,0.30) 0%, rgba(255,224,175,0.12) 42%, transparent 72%),
+        radial-gradient(ellipse 24% 20% at 78% 9%, rgba(255,228,180,0.16) 0%, transparent 68%),
+        radial-gradient(ellipse 24% 20% at 21% 11%, rgba(255,228,180,0.13) 0%, transparent 68%),
+        /* faint blurred greenery in the corners */
+        radial-gradient(ellipse 24% 30% at 3% 20%, rgba(126,156,96,0.28) 0%, rgba(146,170,116,0.12) 45%, transparent 72%),
+        radial-gradient(ellipse 22% 28% at 97% 24%, rgba(116,150,90,0.24) 0%, transparent 70%),
+        /* hazy wooden shelf bands, out of focus */
+        linear-gradient(180deg, transparent 0%, transparent 29%, rgba(122,84,48,0.20) 33%, rgba(142,98,58,0.28) 37%, rgba(122,84,48,0.18) 41%, transparent 46%),
+        linear-gradient(180deg, transparent 0%, transparent 55%, rgba(112,76,42,0.16) 58%, rgba(132,92,52,0.22) 61%, rgba(112,76,42,0.14) 64%, transparent 69%),
+        /* soft indistinct baking props in the far distance */
+        radial-gradient(circle at 11% 61%, rgba(205,166,116,0.22) 0%, transparent 13%),
+        radial-gradient(circle at 89% 57%, rgba(196,156,106,0.20) 0%, transparent 15%),
+        radial-gradient(circle at 16% 39%, rgba(214,180,136,0.16) 0%, transparent 11%),
+        radial-gradient(circle at 83% 40%, rgba(206,170,124,0.16) 0%, transparent 11%),
+        /* cream bakery wall, falling gently into a warm floor tone */
+        linear-gradient(180deg, #F7F0E4 0%, #F2E8D7 22%, #EBDBC1 46%, #DCC49E 68%, #C7A67A 85%, #A88354 100%);
 }
-.badge-flavor { font-size: .7rem; font-weight: 700; color: var(--caramel-light); text-transform: uppercase; letter-spacing: .08em; font-family: var(--font-display); }
-.badge-shape  { font-size: .66rem; color: rgba(232,176,122,0.65); margin-top: 1px; font-family: var(--font-display); }
- 
+#model-container { position: absolute; inset: 0; }
+#model-container canvas { width: 100% !important; height: 100% !important; display: block; }
+.viewer::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 38%;
+    background: linear-gradient(to top, rgba(120,80,30,0.50) 0%, rgba(140,95,40,0.22) 40%, transparent 100%);
+    pointer-events: none; z-index: 2;
+}
+.viewer::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+        linear-gradient(135deg, transparent 38%, rgba(255,220,130,0.09) 50%, transparent 62%),
+        radial-gradient(ellipse 30% 90% at 88% 20%, rgba(255,230,150,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 120% 90% at 50% 100%, rgba(59,31,14,0.16) 0%, transparent 70%);
+    pointer-events: none; z-index: 2;
+    box-shadow: inset 0 0 60px rgba(59,31,14,0.12);
+}
+
+/* Trays (fruit / choco / candle) */
+.fruit-tray, .choco-tray { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 6px; z-index: 30; background: rgba(58,32,10,0.80); backdrop-filter: blur(16px); border: 1px solid rgba(210,165,90,0.30); border-radius: var(--radius-lg); padding: 8px 14px; box-shadow: 0 6px 22px rgba(30,15,4,0.42); pointer-events: all; }
+.fruit-tray.visible, .choco-tray.visible { display: flex; }
+.choco-tray { background: rgba(30,10,4,0.90); border-color: rgba(180,100,40,0.40); z-index: 31; }
+.fruit-tray-label, .choco-tray-label { font-size: .60rem; font-weight: 700; color: rgba(220,175,100,0.82); text-transform: uppercase; letter-spacing: .1em; font-family: var(--font-mono); white-space: nowrap; margin-right: 2px; }
+.fruit-draggable, .ferrero-draggable, .kitkat-draggable, .oreo-draggable, .bar-shard-draggable, .toblerone-draggable {
+    width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid rgba(200,150,70,0.30);
+    background: rgba(80,48,16,0.55); cursor: grab; display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; transition: all var(--transition); user-select: none; -webkit-user-select: none; position: relative; flex-shrink: 0;
+}
+.fruit-draggable:hover, .ferrero-draggable:hover, .kitkat-draggable:hover, .oreo-draggable:hover, .bar-shard-draggable:hover, .toblerone-draggable:hover { border-color: rgba(220,175,100,0.65); background: rgba(100,62,20,0.78); transform: scale(1.08); }
+.fruit-draggable:active, .ferrero-draggable:active, .kitkat-draggable:active, .oreo-draggable:active, .bar-shard-draggable:active, .toblerone-draggable:active { cursor: grabbing; }
+.fruit-tip, .ferrero-tip, .kitkat-tip, .oreo-tip, .bar-shard-tip, .toblerone-tip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #3C2010; color: #F0D090; font-size: .58rem; white-space: nowrap; padding: 3px 8px; border-radius: 6px; pointer-events: none; opacity: 0; transition: opacity .15s; font-family: var(--font-body); }
+.fruit-draggable:hover .fruit-tip, .ferrero-draggable:hover .ferrero-tip, .kitkat-draggable:hover .kitkat-tip, .oreo-draggable:hover .oreo-tip, .bar-shard-draggable:hover .bar-shard-tip, .toblerone-draggable:hover .toblerone-tip { opacity: 1; }
+.fruit-tray-sep, .choco-tray-sep, .ferrero-tray-sep, .kitkat-tray-sep, .oreo-tray-sep, .bar-shard-tray-sep { width: 1px; height: 24px; background: rgba(200,150,70,0.22); margin: 0 2px; }
+.fruit-clear-btn, .choco-clear-btn, .ferrero-clear-btn, .kitkat-clear-btn, .oreo-clear-btn, .bar-shard-clear-btn { padding: 6px 11px; border: 1.5px solid rgba(200,90,60,.40); border-radius: var(--radius-pill); background: transparent; color: rgba(230,130,105,0.88); font-size: .68rem; font-weight: 600; cursor: pointer; font-family: var(--font-body); transition: all var(--transition); white-space: nowrap; }
+.fruit-clear-btn:hover, .choco-clear-btn:hover, .ferrero-clear-btn:hover, .kitkat-clear-btn:hover, .oreo-clear-btn:hover, .bar-shard-clear-btn:hover { border-color: rgba(230,80,55,0.70); color: #FF7550; }
+
+.ferrero-tray, .kitkat-tray, .oreo-tray, .bar-shard-tray { position: absolute; bottom: 58px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 6px; z-index: 31; backdrop-filter: blur(16px); border-radius: var(--radius-lg); padding: 8px 14px; pointer-events: all; }
+.ferrero-tray.visible, .kitkat-tray.visible, .oreo-tray.visible, .bar-shard-tray.visible { display: flex; }
+.ferrero-tray { background: rgba(38,18,6,0.90); border: 1px solid rgba(196,154,60,0.38); box-shadow: 0 6px 22px rgba(20,8,2,0.5); }
+.kitkat-tray { background: rgba(80,10,10,0.90); border: 1px solid rgba(200,50,50,0.38); box-shadow: 0 6px 22px rgba(40,6,6,0.5); }
+.oreo-tray { background: rgba(20,18,24,0.94); border: 1px solid rgba(230,220,210,0.26); box-shadow: 0 6px 22px rgba(8,6,10,0.55); }
+.bar-shard-tray { background: rgba(30,12,4,0.94); border: 1px solid rgba(120,60,20,0.46); box-shadow: 0 6px 22px rgba(16,6,2,0.55); }
+.ferrero-tray-label, .kitkat-tray-label, .oreo-tray-label, .bar-shard-tray-label { font-size: .60rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; font-family: var(--font-mono); white-space: nowrap; margin-right: 2px; }
+.ferrero-tray-label { color: rgba(196,154,60,0.90); } .kitkat-tray-label { color: rgba(255,130,110,0.90); } .oreo-tray-label { color: rgba(230,220,200,0.82); } .bar-shard-tray-label { color: rgba(210,150,90,0.90); }
+
+.rot-panel { display: none; margin-top: 10px; background: var(--warm-white); border: 1.5px solid rgba(200,137,74,.32); border-radius: 14px; padding: 12px 13px; }
+.rot-panel.visible { display: block; }
+.rot-panel-title { font-size: .68rem; font-weight: 700; color: #7A4A1E; margin-bottom: 9px; display: flex; align-items: center; gap: 5px; font-family: var(--font-mono); }
+.rot-panel-title svg { flex-shrink: 0; }
+.rot-preview-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.rot-emoji-preview { font-size: 2rem; line-height: 1; transition: transform .18s; display: block; }
+.rot-slider-col { flex: 1; }
+.rot-slider-ends { display: flex; justify-content: space-between; font-size: .62rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 4px; }
+.rot-deg-display { text-align: center; font-size: .82rem; font-weight: 700; color: var(--caramel); font-family: var(--font-mono); margin-top: 4px; }
+input[type=range].rot-range { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: var(--border); outline: none; cursor: pointer; }
+input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: var(--caramel); border: 3px solid #fff; box-shadow: 0 3px 8px rgba(60,20,5,.30); cursor: pointer; }
+.rot-preset-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 9px; }
+.rot-preset-btn { padding: 8px 4px; border: 1.5px solid rgba(200,137,74,.32); border-radius: 10px; background: rgba(200,137,74,.09); color: #7A4A1E; font-size: .70rem; font-weight: 700; cursor: pointer; text-align: center; font-family: var(--font-display); transition: all .15s; min-height: 36px; }
+.rot-preset-btn:hover { background: rgba(200,137,74,.22); }
+.rot-actions { display: flex; gap: 7px; }
+.rot-apply-btn { flex: 1; padding: 10px; background: var(--caramel); border: none; border-radius: 12px; color: #fff; font-size: .76rem; font-weight: 700; cursor: pointer; font-family: var(--font-display); transition: all .18s; min-height: 40px; }
+.rot-apply-btn:hover { background: var(--caramel-light); }
+.rot-reset-btn { padding: 10px 12px; background: transparent; border: 1.5px solid rgba(200,137,74,.36); border-radius: 12px; color: var(--text-muted); font-size: .72rem; font-weight: 600; cursor: pointer; font-family: var(--font-display); min-height: 40px; }
+.rot-reset-btn:hover { border-color: var(--caramel); color: var(--caramel); }
+.rot-panel.rot-gold { border-color: rgba(196,154,60,.38); }
+.rot-panel.rot-gold .rot-panel-title { color: #6B4C08; }
+.rot-panel.rot-gold input[type=range].rot-range::-webkit-slider-thumb { background: var(--gold); }
+.rot-panel.rot-gold .rot-deg-display { color: var(--gold); }
+.rot-panel.rot-gold .rot-preset-btn { border-color: rgba(196,154,60,.32); background: rgba(196,154,60,.11); color: #6B4C08; }
+.rot-panel.rot-gold .rot-preset-btn:hover { background: rgba(196,154,60,.25); }
+.rot-panel.rot-gold .rot-apply-btn { background: var(--gold); }
+.rot-panel.rot-gold .rot-apply-btn:hover { background: #D4AA4C; }
+.rot-panel.rot-gold .rot-reset-btn { border-color: rgba(196,154,60,.38); }
+.rot-panel.rot-gold .rot-reset-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.orient-panel { display: none; margin-top: 9px; background: linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%); border: 1.5px solid rgba(196,154,60,.28); border-radius: 14px; padding: 11px 12px; }
+.orient-panel.visible { display: block; }
+.orient-panel-header { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 9px; font-family: var(--font-mono); display: flex; align-items: center; gap: 6px; color: #7A5C10; }
+.orient-panel-header::after { content: ''; flex: 1; height: 1px; background: rgba(196,154,60,.22); }
+.orient-toggle { display: flex; gap: 0; border: 1.5px solid rgba(196,154,60,.36); border-radius: 12px; overflow: hidden; }
+.orient-btn { flex: 1; padding: 9px 6px; font-size: .74rem; font-weight: 600; font-family: var(--font-display); color: #7A5C10; background: rgba(255,248,230,.6); border: none; cursor: pointer; transition: all var(--transition); text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; min-height: 40px; }
+.orient-btn + .orient-btn { border-left: 1.5px solid rgba(196,154,60,.28); }
+.orient-btn.active { background: var(--gold); color: #fff; }
+.orient-btn:hover:not(.active) { background: rgba(196,154,60,.16); color: #6B4C08; }
+.orient-btn-icon { font-size: .9rem; }
+.orient-hint { margin-top: 8px; font-size: .63rem; color: rgba(122,92,16,.72); font-family: var(--font-body); line-height: 1.5; }
+
+#fruitCanvas { position: absolute; inset: 0; z-index: 25; pointer-events: none; }
+.drop-ring { position: absolute; border: 2px dashed rgba(180,120,40,0.65); border-radius: 50%; pointer-events: none; z-index: 26; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+@keyframes ringPulse { 0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1);} 50%{opacity:.4;transform:translate(-50%,-50%) scale(1.18);} }
+.ferrero-drop-ring { position: absolute; border: 2px dashed rgba(196,154,60,0.80); border-radius: 50%; pointer-events: none; z-index: 27; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+.kitkat-drop-ring { position: absolute; border: 2px dashed rgba(220,60,40,0.80); border-radius: 8px; pointer-events: none; z-index: 28; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+.oreo-drop-ring { position: absolute; border: 2px dashed rgba(200,190,175,0.80); border-radius: 50%; pointer-events: none; z-index: 29; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+.bar-shard-drop-ring { position: absolute; border: 2px dashed rgba(180,100,30,0.80); border-radius: 6px; pointer-events: none; z-index: 35; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+.toblerone-drop-ring { position: absolute; border: 2px dashed rgba(196,154,60,0.80); border-radius: 8px; pointer-events: none; z-index: 36; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+.candle-drop-ring { position: absolute; border: 2px dashed rgba(196,154,60,0.80); border-radius: 50%; pointer-events: none; z-index: 36; display: none; transform: translate(-50%,-50%); animation: ringPulse .7s ease-in-out infinite; }
+#dragGhost { display: none !important; }
+.viewer.fruit-drag-over { outline: 3px dashed rgba(180,120,40,0.45); outline-offset: -4px; }
+.viewer.ferrero-drag-over { outline: 3px dashed rgba(196,154,60,0.60); outline-offset: -4px; }
+.viewer.kitkat-drag-over { outline: 3px dashed rgba(220,60,40,0.55); outline-offset: -4px; }
+.viewer.oreo-drag-over { outline: 3px dashed rgba(200,190,175,0.55); outline-offset: -4px; }
+.viewer.bar-shard-drag-over { outline: 3px dashed rgba(160,90,30,0.60); outline-offset: -4px; }
+.viewer.toblerone-drag-over { outline: 3px dashed rgba(196,154,60,0.60); outline-offset: -4px; }
+.viewer.candle-drag-over { outline: 3px dashed rgba(196,154,60,0.60); outline-offset: -4px; }
+
+.model-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; pointer-events: none; z-index: 5; transition: opacity .4s var(--ease-out); }
+.model-loading.hidden { opacity: 0; }
+.loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(160,100,30,0.14); border-top-color: rgba(180,120,40,0.92); border-radius: 50%; animation: spin .85s linear infinite; box-shadow: 0 4px 14px rgba(160,100,30,0.14); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: .76rem; color: rgba(120,70,20,0.75); font-family: var(--font-body); font-weight: 600; letter-spacing: 0.01em; }
+
+.viewer-badge {
+    position: absolute; bottom: 16px; left: 16px; top: auto;
+    background: rgba(40,20,8,0.55);
+    backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    border: 1px solid rgba(232,176,122,0.26);
+    border-radius: var(--radius-pill);
+    padding: 10px 18px;
+    box-shadow: 0 6px 20px rgba(30,15,5,0.35);
+    z-index: 10;
+    transition: transform var(--transition-md);
+    display: flex; align-items: center; gap: 10px;
+}
+.viewer-badge:hover { transform: translateY(-1px); }
+.badge-flavor { font-size: .72rem; font-weight: 700; color: var(--caramel-light); text-transform: uppercase; letter-spacing: .06em; font-family: var(--font-display); }
+.badge-shape  { font-size: .66rem; color: rgba(232,176,122,0.68); font-family: var(--font-mono); position: relative; padding-left: 10px; }
+.badge-shape::before { content: '·'; position: absolute; left: 2px; color: rgba(232,176,122,0.5); }
+
 .viewer-hint {
-    position: absolute; bottom: 16px; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(59,31,14,0.65);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(232,176,122,0.22);
-    border-radius: 20px;
-    padding: 6px 18px;
-font-size: .71rem; color: rgba(232,176,122,0.75);
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%); bottom: auto;
+    background: rgba(40,20,8,0.42);
+    backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border: 1px solid rgba(232,176,122,0.18);
+    border-radius: var(--radius-pill);
+    padding: 6px 16px;
+    font-size: .68rem; color: rgba(232,176,122,0.75);
     white-space: nowrap;
-    box-shadow: 0 2px 12px rgba(59,31,14,0.35);
     z-index: 10;
     font-family: var(--font-display);
-    transition: bottom .2s ease, opacity .3s;
+    transition: top .2s ease, opacity .3s;
 }
- .viewer-controls { position:absolute; top:14px; right:14px; display:flex; flex-direction:column; gap:5px; z-index:10; }
-
+.viewer-controls { position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 7px; z-index: 10; }
 .view-btn {
-    width: 32px; height: 32px;
-    background: rgba(59,31,14,0.72);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(232,176,122,0.28);
-    border-radius: 10px;
+    width: 36px; height: 36px;
+    background: rgba(40,20,8,0.55);
+    backdrop-filter: blur(18px) saturate(1.5); -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    border: 1px solid rgba(232,176,122,0.26);
+    border-radius: var(--radius-pill);
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: rgba(232,176,122,0.70);
-    transition: all var(--transition);
-    box-shadow: 0 2px 8px rgba(59,31,14,0.35);
+    cursor: pointer; color: rgba(232,176,122,0.75);
+    transition: all var(--transition-md);
+    box-shadow: 0 3px 10px rgba(30,15,5,0.32);
 }
-.view-btn:hover { background: rgba(107,58,31,0.88); color: var(--caramel-light); border-color: rgba(232,176,122,0.55); }
- 
+.view-btn:hover { background: rgba(90,48,22,0.85); color: var(--caramel-light); border-color: rgba(232,176,122,0.50); transform: translateY(-1px) rotate(-8deg); }
+.view-btn:active { transform: translateY(0) rotate(0deg); }
 .model-status {
-    position: absolute; bottom: 50px; left: 50%;
-    transform: translateX(-50%);
-    background: rgba(59,31,14,0.62);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(232,176,122,0.20);
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: .66rem; color: rgba(232,176,122,0.70);
-    white-space: nowrap; z-index: 10;
-    font-family: var(--font-body);
-    transition: opacity .3s; pointer-events: none;
+    position: absolute; bottom: 66px; left: 50%; transform: translateX(-50%);
+    background: rgba(40,20,8,0.50); backdrop-filter: blur(10px);
+    border: 1px solid rgba(232,176,122,0.18);
+    border-radius: var(--radius-pill); padding: 4px 14px;
+    font-size: .64rem; color: rgba(232,176,122,0.72); white-space: nowrap; z-index: 10;
+    font-family: var(--font-mono); transition: opacity .3s; pointer-events: none;
 }
 .model-status.hidden { opacity: 0; }
-      
-        /* RIGHT PANEL */
-    .config-card {
-    background: var(--warm-white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-}
-.config-card-header {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: .65rem;
-    text-transform: uppercase; letter-spacing: .14em;
-    font-weight: 700; color: var(--brown-mid);
-    font-family: var(--font-display);
-    display: flex; align-items: center; gap: 6px;
-    background: var(--cream);
-}
- 
-.price-block {
-    background: var(--warm-white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-}
-.price-block-header {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: .65rem;
-    text-transform: uppercase; letter-spacing: .14em;
-    font-weight: 700; color: var(--brown-mid);
-    font-family: var(--font-display);
-    background: var(--cream);
-}
- 
+
+/* ================= RIGHT PANEL: "ORDER TICKET" ================= */
+.config-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: none; transition: box-shadow var(--transition-md); }
+.config-card:hover { box-shadow: var(--shadow-sm); }
+.config-card-header { padding: 12px 18px; border-bottom: 1px dashed var(--border-dk); font-size: .64rem; text-transform: uppercase; letter-spacing: .10em; font-weight: 700; color: var(--brown-mid); font-family: var(--font-mono); display: flex; align-items: center; gap: 7px; background: transparent; }
+.price-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: none; }
+.price-block-header { padding: 12px 18px; border-bottom: 1px dashed var(--border-dk); font-size: .64rem; text-transform: uppercase; letter-spacing: .10em; font-weight: 700; color: var(--brown-mid); font-family: var(--font-mono); background: transparent; }
+
 .price-total-block {
     background: linear-gradient(135deg, var(--brown-deep) 0%, var(--brown-mid) 100%);
-    border: none;
-    border-radius: 16px;
-    padding: 16px 18px;
+    border-radius: var(--radius-lg);
+    padding: 24px 26px;
     display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 4px 16px rgba(59,31,14,0.28);
+    box-shadow: 0 16px 34px rgba(59,31,14,0.32), 0 2px 8px rgba(59,31,14,0.18);
+    position: relative; overflow: hidden;
 }
-.pt-label { font-size: .65rem; text-transform: uppercase; letter-spacing: .14em; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-display); margin-bottom: 2px; }
-.pt-currency { font-size: 1.1rem; font-family: var(--font-display); font-weight: 700; color: var(--caramel-light); }
-.pt-number { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; line-height: 1; }
-.pt-note { font-size: .62rem; color: rgba(255,255,255,0.45); font-family: var(--font-display); margin-top: 3px; }
- 
-  
-    .cfg-row { display:flex; justify-content:space-between; align-items:flex-start; padding:9px 14px; font-size:.80rem; font-family:var(--font-display); gap:8px; }
-        .cfg-row + .cfg-row { border-top:1px solid var(--border); }
-        .cfg-key { color:var(--text-muted); font-weight:600; font-size:.72rem; flex-shrink:0; padding-top:1px; font-family:var(--font-display); }
-        .cfg-val { font-weight:700; color:var(--text); text-align:right; line-height:1.45; font-size:.78rem; font-family:var(--font-display); }
-        .cfg-val.muted { color:var(--border-dk); font-weight:400; font-style:italic; }
-        .cfg-chips { display:flex; flex-wrap:wrap; gap:4px; justify-content:flex-end; }
-.cfg-chip { padding:2px 8px; border-radius:20px; font-size:.65rem; font-weight:700; font-family:var(--font-display); }.cfg-chip.chip-accent { background: var(--accent-lt); color: var(--caramel); border: 1px solid rgba(200,137,74,.22); }
-.cfg-chip.chip-gold   { background: var(--gold-lt); color: #7A5C10; border: 1px solid rgba(196,154,60,.3); }
-.cfg-chip.chip-teal   { background: var(--teal-soft); color: var(--teal); border: 1px solid rgba(31,122,108,.22); }
-     
-     
-        .price-rows { padding:2px 0; }
-        .price-row { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; font-size:.8rem; font-family:var(--font-body); }
-        .price-row + .price-row { border-top:1px solid var(--border); }
-        .pr-label { color:var(--text-muted); }
-        .pr-val { font-weight:600; color:var(--text); font-family:var(--font-display); font-variant-numeric:tabular-nums; }
-        .pr-val.zero { color:var(--border-dk); }.price-row { display:flex; justify-content:space-between; align-items:center; padding:8px 14px; font-size:.8rem; font-family:var(--font-display); }
-        .price-row + .price-row { border-top:1px solid var(--border); }
-        .pr-label { color:var(--text-muted); font-family:var(--font-display); }
-        .pr-val { font-weight:700; color:var(--text); font-family:var(--font-display); font-variant-numeric:tabular-nums; }
-        .pr-val.zero { color:var(--border-dk); }
-        .price-row.frosting-extra-row { background:rgba(31,122,108,.04); }
-        .price-row.frosting-extra-row .pr-label { color:var(--teal); }
-        .price-row.frosting-extra-row .pr-val { color:var(--teal); }
+.price-total-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 100% at 100% 0%, rgba(232,176,122,0.22) 0%, transparent 60%); pointer-events: none; }
+.price-total-block::after {
+    content: '';
+    position: absolute; left: -10px; top: 50%; width: 20px; height: 20px;
+    background: var(--bg); border-radius: 50%; transform: translateY(-50%);
+}
+.pt-label { font-size: .64rem; text-transform: uppercase; letter-spacing: .16em; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-mono); margin-bottom: 5px; }
+.pt-currency { font-size: 1.15rem; font-family: var(--font-mono); font-weight: 700; color: var(--caramel-light); }
+.pt-number { font-family: var(--font-mono); font-size: 2.35rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -0.01em; }
+.pt-note { font-size: .63rem; color: rgba(255,255,255,0.48); font-family: var(--font-display); margin-top: 6px; }
+
+.cfg-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 11px 18px; font-size: .80rem; font-family: var(--font-display); gap: 8px; transition: background var(--transition); }
+.cfg-row:hover { background: rgba(200,137,74,0.04); }
+.cfg-row + .cfg-row { border-top: 1px dashed var(--border); }
+.cfg-key { color: var(--text-muted); font-weight: 600; font-size: .66rem; flex-shrink: 0; padding-top: 1px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .04em; }
+.cfg-val { font-weight: 700; color: var(--text); text-align: right; line-height: 1.45; font-size: .78rem; font-family: var(--font-display); }
+.cfg-val.muted { color: var(--border-dk); font-weight: 400; font-style: italic; }
+.cfg-chips { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.cfg-chip { padding: 3px 9px; border-radius: var(--radius-pill); font-size: .64rem; font-weight: 700; font-family: var(--font-display); }
+.cfg-chip.chip-accent { background: var(--accent-lt); color: var(--caramel); }
+.cfg-chip.chip-gold   { background: var(--gold-lt); color: #7A5C10; }
+.cfg-chip.chip-teal   { background: var(--teal-soft); color: var(--teal); }
+
+.price-rows { padding: 2px 0; }
+.price-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 18px; font-size: .8rem; font-family: var(--font-display); }
+.price-row + .price-row { border-top: 1px dashed var(--border); }
+.pr-label { color: var(--text-muted); font-family: var(--font-display); }
+.pr-val { font-weight: 700; color: var(--text); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.pr-val.zero { color: var(--border-dk); }
+
 .btn-proceed-lg {
-    width: 100%;
-    padding: 13px;
-    background: linear-gradient(135deg, var(--caramel) 0%, var(--caramel-light) 100%);
-    color: #fff;
-    border: none; border-radius: 12px;
-    font-family: var(--font-display); font-size: .9rem; font-weight: 700;
+    width: 100%; padding: 17px;
+    background: var(--brown-deep);
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    font-family: var(--font-display); font-size: .92rem; font-weight: 700;
     cursor: pointer;
-    transition: all var(--transition);
-    box-shadow: 0 4px 16px rgba(200,137,74,0.40);
+    transition: transform var(--transition-md), box-shadow var(--transition-md), background var(--transition);
+    box-shadow: 0 10px 24px rgba(59,31,14,0.30);
     display: flex; align-items: center; justify-content: center; gap: 9px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.02em; position: relative; overflow: hidden; min-height: 54px;
 }
-.btn-proceed-lg:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(200,137,74,0.50); }
- 
+.btn-proceed-lg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.14) 50%, transparent 70%); transform: translateX(-100%); transition: transform 0.6s var(--ease-out); }
+.btn-proceed-lg:hover { background: var(--brown-mid); transform: translateY(-2px); box-shadow: 0 14px 30px rgba(59,31,14,0.36); }
+.btn-proceed-lg:hover::after { transform: translateX(100%); }
+.btn-proceed-lg:active { transform: translateY(0); }
+
 .btn-load-draft {
-    width: 100%; padding: 10px;
-    background: transparent;
-    color: var(--text-muted);
-    border: 1.5px solid var(--border-dk);
-    border-radius: 12px;
+    width: 100%; padding: 12px;
+    background: transparent; color: var(--text-muted);
+    border: 1.5px dashed var(--border-dk); border-radius: var(--radius-sm);
     font-family: var(--font-display); font-size: .82rem; font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition);
+    cursor: pointer; transition: all var(--transition);
     display: flex; align-items: center; justify-content: center; gap: 7px;
+    min-height: 46px;
 }
 .btn-load-draft:hover { border-color: var(--caramel); color: var(--caramel); background: var(--accent-lt); }
-     
-        /* UNIFIED CHOCO TRAY */
-        .choco-tray { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:none; align-items:center; gap:6px; z-index:31; background:rgba(30,10,4,0.88); backdrop-filter:blur(16px); border:1px solid rgba(180,100,40,0.42); border-radius:18px; padding:7px 14px; box-shadow:0 4px 20px rgba(20,6,2,0.55); pointer-events:all; }
-        .choco-tray.visible { display:flex; }
-        .choco-tray-label { font-size:.6rem; font-weight:700; color:rgba(210,160,80,0.90); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-body); white-space:nowrap; margin-right:2px; }
-        .choco-tray-sep { width:1px; height:24px; background:rgba(180,100,40,0.28); margin:0 2px; }
-        .choco-clear-btn { padding:5px 10px; border:1.5px solid rgba(180,80,55,0.38); border-radius:8px; background:transparent; color:rgba(220,110,85,0.82); font-size:.68rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all var(--transition); white-space:nowrap; }
-        .choco-clear-btn:hover { border-color:rgba(220,70,50,0.65); color:#E05535; }
-        /* TOAST */
- .toast {
-    position: fixed;
-    bottom: 26px; left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: linear-gradient(135deg, var(--brown-deep) 0%, var(--brown-mid) 100%);
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 20px;
-font-size: .8rem; font-weight: 600;
+
+/* ================= TOAST ================= */
+.toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--brown-deep);
+    color: #fff; padding: 12px 24px; border-radius: var(--radius-pill);
+    font-size: .8rem; font-weight: 600;
     opacity: 0; pointer-events: none;
-    transition: all .28s cubic-bezier(.4,0,.2,1);
+    transition: all .32s var(--ease-out);
     z-index: 9999;
-    box-shadow: 0 4px 20px rgba(59,31,14,0.40);
-    white-space: nowrap;
-    font-family: var(--font-display);
+    box-shadow: 0 10px 28px rgba(59,31,14,0.40), 0 2px 8px rgba(59,31,14,0.22);
+    white-space: nowrap; font-family: var(--font-display);
     border: 1px solid rgba(255,255,255,0.10);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
 .addon-section-lbl {
-    font-size: .62rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: .14em;
-    color: var(--brown-mid);
-    padding: .4rem 0 .25rem;
-    display: flex; align-items: center; gap: 6px;
-    font-family: var(--font-display);
+    font-size: .64rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--brown-mid);
+    padding: .4rem 0 .25rem; display: flex; align-items: center; gap: 6px; font-family: var(--font-display);
 }
 .addon-section-lbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        /* FRUITS DRAG NOTICE */
-        .fruits-drag-notice { margin-top:8px; padding:8px 11px; background:linear-gradient(135deg,#E4F2EF 0%,#D4EAE6 100%); border:1px solid rgba(31,122,108,.2); border-radius:9px; font-size:.70rem; color:var(--teal); font-family:var(--font-body); line-height:1.55; align-items:flex-start; gap:7px; }
-        .fruits-drag-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .fruits-drag-label { font-weight:700; display:block; margin-bottom:1px; }
-        .fruits-drag-sub { color:rgba(31,122,108,.72); font-size:.65rem; }
+.fruits-drag-notice { margin-top: 9px; padding: 10px 12px; background: var(--accent-lt); border: 1.5px dashed var(--caramel); border-radius: 12px; font-size: .74rem; color: var(--accent-dk); font-weight: 600; font-family: var(--font-body); line-height: 1.55; align-items: center; gap: 8px; }
+.fruits-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.fruits-drag-label { font-weight: 700; display: block; margin-bottom: 1px; }
+.fruits-drag-sub { color: rgba(31,122,108,.72); font-size: .65rem; }
+.ferrero-drag-notice { margin-top: 9px; padding: 9px 12px; background: linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%); border: 1px solid rgba(196,154,60,.26); border-radius: 12px; font-size: .70rem; color: #7A5C10; font-family: var(--font-body); line-height: 1.55; align-items: flex-start; gap: 7px; }
+.ferrero-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.ferrero-drag-label { font-weight: 700; display: block; margin-bottom: 1px; color: #6B4C08; }
+.ferrero-drag-sub { color: rgba(122,92,16,.72); font-size: .65rem; }
+.kitkat-drag-notice { margin-top: 9px; padding: 9px 12px; background: linear-gradient(135deg,#FFF0EE 0%,#FFE0DC 100%); border: 1px solid rgba(200,60,40,.20); border-radius: 12px; font-size: .70rem; color: #8C2010; font-family: var(--font-body); line-height: 1.55; align-items: flex-start; gap: 7px; }
+.kitkat-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.kitkat-drag-label { font-weight: 700; display: block; margin-bottom: 1px; color: #7A1A08; }
+.kitkat-drag-sub { color: rgba(140,32,16,.70); font-size: .65rem; }
+.oreo-drag-notice { margin-top: 9px; padding: 9px 12px; background: linear-gradient(135deg,#F4F2F8 0%,#E8E4F0 100%); border: 1px solid rgba(80,70,100,.16); border-radius: 12px; font-size: .70rem; color: #3A3048; font-family: var(--font-body); line-height: 1.55; align-items: flex-start; gap: 7px; }
+.oreo-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.oreo-drag-label { font-weight: 700; display: block; margin-bottom: 1px; color: #2C2438; }
+.oreo-drag-sub { color: rgba(58,48,72,.68); font-size: .65rem; }
+.bar-shard-drag-notice { margin-top: 9px; padding: 9px 12px; background: linear-gradient(135deg,#FBF0E6 0%,#F5E0C8 100%); border: 1px solid rgba(140,70,20,.20); border-radius: 12px; font-size: .70rem; color: #5C2808; font-family: var(--font-body); line-height: 1.55; align-items: flex-start; gap: 7px; }
+.bar-shard-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.bar-shard-drag-label { font-weight: 700; display: block; margin-bottom: 1px; color: #4A1E04; }
+.bar-shard-drag-sub { color: rgba(92,40,8,.68); font-size: .65rem; }
+.candle-drag-notice { margin-top: 9px; padding: 9px 12px; background: linear-gradient(135deg,#FFF8E8 0%,#FFF0CC 100%); border: 1px solid rgba(196,154,60,.26); border-radius: 12px; font-size: .70rem; color: #7A5C10; font-family: var(--font-body); line-height: 1.55; align-items: flex-start; gap: 7px; }
+.candle-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
+.candle-drag-label { font-weight: 700; display: block; margin-bottom: 1px; color: #6B4C08; }
+.candle-drag-sub { color: rgba(122,92,16,.72); font-size: .65rem; }
 
-        /* FERRERO DRAG NOTICE */
-        .ferrero-drag-notice { margin-top:8px; padding:8px 11px; background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%); border:1px solid rgba(196,154,60,.28); border-radius:9px; font-size:.70rem; color:#7A5C10; font-family:var(--font-body); line-height:1.55; align-items:flex-start; gap:7px; }
-        .ferrero-drag-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .ferrero-drag-label { font-weight:700; display:block; margin-bottom:1px; color:#6B4C08; }
-        .ferrero-drag-sub { color:rgba(122,92,16,.72); font-size:.65rem; }
+.candle-picker-panel { display: none; margin-top: 9px; background: linear-gradient(135deg,#FFF8E8 0%,#FFF0CC 100%); border: 1.5px solid rgba(196,154,60,.32); border-radius: 14px; padding: 11px 12px; }
+.candle-picker-panel.visible { display: block; }
+.candle-picker-header { font-size: .65rem; font-weight: 700; color: #7A5C10; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 9px; font-family: var(--font-mono); display: flex; align-items: center; gap: 6px; }
+.candle-picker-header::after { content: ''; flex: 1; height: 1px; background: rgba(196,154,60,.22); }
+.candle-num-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-bottom: 9px; }
+.candle-num-opt { border: 1.5px solid var(--border); border-radius: 10px; padding: 7px 4px; cursor: pointer; text-align: center; font-family: var(--font-mono); font-size: 1rem; font-weight: 700; color: var(--text-muted); background: var(--surface); transition: all var(--transition); min-height: 36px; display: flex; align-items: center; justify-content: center; }
+.candle-num-opt:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-lt); }
+.candle-num-opt.active { border-color: var(--gold); background: var(--gold); color: #fff; }
+.candle-active-badge { font-size: .68rem; color: #7A5C10; font-family: var(--font-body); text-align: center; font-weight: 500; }
 
-        /* KITKAT DRAG NOTICE */
-        .kitkat-drag-notice { margin-top:8px; padding:8px 11px; background:linear-gradient(135deg,#FFF0EE 0%,#FFE0DC 100%); border:1px solid rgba(200,60,40,.22); border-radius:9px; font-size:.70rem; color:#8C2010; font-family:var(--font-body); line-height:1.55; align-items:flex-start; gap:7px; }
-        .kitkat-drag-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .kitkat-drag-label { font-weight:700; display:block; margin-bottom:1px; color:#7A1A08; }
-        .kitkat-drag-sub { color:rgba(140,32,16,.70); font-size:.65rem; }
+.char-cat-group { border: 1.5px solid rgba(200,137,74,.22); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.55); margin-bottom: 6px; }
+.char-cat-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 9px 11px; background: transparent; border: none; cursor: pointer; font-family: var(--font-display); font-size: .74rem; font-weight: 700; color: var(--brown-mid); text-align: left; min-height: 38px; }
+.char-cat-toggle:hover { background: rgba(200,137,74,.08); }
+.char-cat-toggle-name { flex: 1; }
+.char-cat-toggle-count { font-size: .60rem; font-weight: 600; color: var(--caramel); margin-right: 6px; font-family: var(--font-mono); }
+.char-cat-arrow { font-size: .68rem; color: var(--caramel); transition: transform .18s; flex-shrink: 0; }
+.char-cat-group.open .char-cat-arrow { transform: rotate(90deg); }
+.char-cat-options { display: none; grid-template-columns: repeat(3,1fr); gap: 6px; padding: 0 10px 10px; }
+.char-cat-group.open .char-cat-options { display: grid; }
+.char-cat-options .candle-num-opt { font-size: .58rem; padding: 7px 3px; flex-direction:column; display:flex; align-items:center; justify-content:center; gap:2px; line-height:1.25; }
+.char-price { font-size: .52rem; font-weight: 700; opacity: .70; }
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1300px) { :root { --studio-w: 380px; --ticket-w: 340px; } }
 
-        /* OREO DRAG NOTICE */
-        .oreo-drag-notice { margin-top:8px; padding:8px 11px; background:linear-gradient(135deg,#F4F2F8 0%,#E8E4F0 100%); border:1px solid rgba(80,70,100,.18); border-radius:9px; font-size:.70rem; color:#3A3048; font-family:var(--font-body); line-height:1.55; align-items:flex-start; gap:7px; }
-        .oreo-drag-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .oreo-drag-label { font-weight:700; display:block; margin-bottom:1px; color:#2C2438; }
-        .oreo-drag-sub { color:rgba(58,48,72,.68); font-size:.65rem; }
-
-        /* BAR SHARD TRAY — dark chocolate */
-        .bar-shard-tray { position:absolute; left:50%; transform:translateX(-50%); display:none; align-items:center; gap:6px; z-index:34; background:rgba(30,12,4,0.92); backdrop-filter:blur(16px); border:1px solid rgba(120,60,20,0.50); border-radius:18px; padding:7px 14px; box-shadow:0 4px 20px rgba(20,8,2,0.60); pointer-events:all; }
-        .bar-shard-tray.visible { display:flex; }
-        .bar-shard-tray-label { font-size:.6rem; font-weight:700; color:rgba(210,150,90,0.90); text-transform:uppercase; letter-spacing:.1em; font-family:var(--font-body); white-space:nowrap; margin-right:2px; }
-        .bar-shard-draggable { width:38px; height:38px; border-radius:9px; border:1.5px solid rgba(160,90,30,0.50); background:rgba(60,20,6,0.70); cursor:grab; display:flex; align-items:center; justify-content:center; font-size:1.4rem; transition:all var(--transition); user-select:none; -webkit-user-select:none; position:relative; flex-shrink:0; }
-        .bar-shard-draggable:hover { border-color:rgba(200,120,50,0.80); background:rgba(80,28,8,0.88); transform:scale(1.1); }
-        .bar-shard-draggable:active { cursor:grabbing; }
-        .bar-shard-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#1E0C04; color:#F0C890; font-size:.58rem; white-space:nowrap; padding:3px 7px; border-radius:5px; pointer-events:none; opacity:0; transition:opacity .15s; font-family:var(--font-body); }
-        .bar-shard-draggable:hover .bar-shard-tip { opacity:1; }
-        .bar-shard-tray-sep { width:1px; height:24px; background:rgba(160,90,30,0.30); margin:0 2px; }
-        .bar-shard-clear-btn { padding:5px 10px; border:1.5px solid rgba(180,60,30,0.38); border-radius:8px; background:transparent; color:rgba(220,110,80,0.82); font-size:.68rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all var(--transition); white-space:nowrap; }
-        .bar-shard-clear-btn:hover { border-color:rgba(220,60,30,0.65); color:#E04020; }
-
-/* CANDLE PICKER PANEL */
-        .candle-picker-panel { display:none; margin-top:8px; background:linear-gradient(135deg,#FFF8E8 0%,#FFF0CC 100%); border:1.5px solid rgba(196,154,60,.35); border-radius:10px; padding:10px 12px; }
-        .candle-picker-panel.visible { display:block; }
-        .candle-picker-header { font-size:.67rem; font-weight:700; color:#7A5C10; text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; font-family:var(--font-body); display:flex; align-items:center; gap:6px; }
-        .candle-picker-header::after { content:''; flex:1; height:1px; background:rgba(196,154,60,.25); }
-        .candle-num-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-bottom:8px; }
-        .candle-num-opt { border:1.5px solid var(--border); border-radius:8px; padding:6px 4px; cursor:pointer; text-align:center; font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--text-muted); background:var(--surface); transition:all var(--transition); }
-        .candle-num-opt:hover { border-color:var(--gold); color:var(--gold); background:var(--gold-lt); }
-        .candle-num-opt.active { border-color:var(--gold); background:var(--gold); color:#fff; }
-        .candle-active-badge { font-size:.68rem; color:#7A5C10; font-family:var(--font-body); text-align:center; font-weight:500; }
-        .candle-drop-ring { position:absolute; border:2px dashed rgba(196,154,60,0.80); border-radius:50%; pointer-events:none; z-index:36; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
-        .viewer.candle-drag-over { outline:3px dashed rgba(196,154,60,0.60); outline-offset:-4px; }
-        /* CANDLE DRAG NOTICE */
-        .candle-drag-notice { margin-top:8px; padding:8px 11px; background:linear-gradient(135deg,#FFF8E8 0%,#FFF0CC 100%); border:1px solid rgba(196,154,60,.28); border-radius:9px; font-size:.70rem; color:#7A5C10; font-family:var(--font-body); line-height:1.55; align-items:flex-start; gap:7px; }
-        .candle-drag-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .candle-drag-label { font-weight:700; display:block; margin-bottom:1px; color:#6B4C08; }
-        .candle-drag-sub { color:rgba(122,92,16,.72); font-size:.65rem; }
-
-        /* BAR SHARD DRAG NOTICE */
-        .bar-shard-drag-notice { margin-top:8px; padding:8px 11px; background:linear-gradient(135deg,#FBF0E6 0%,#F5E0C8 100%); border:1px solid rgba(140,70,20,.22); border-radius:9px; font-size:.70rem; color:#5C2808; font-family:var(--font-body); line-height:1.55; align-items:flex-start; gap:7px; }
-        .bar-shard-drag-icon { font-size:.9rem; flex-shrink:0; margin-top:1px; }
-        .bar-shard-drag-label { font-weight:700; display:block; margin-bottom:1px; color:#4A1E04; }
-        .bar-shard-drag-sub { color:rgba(92,40,8,.68); font-size:.65rem; }
-.bar-shard-drop-ring { position:absolute; border:2px dashed rgba(180,100,30,0.80); border-radius:6px; pointer-events:none; z-index:35; display:none; transform:translate(-50%,-50%); animation:ringPulse .7s ease-in-out infinite; }
- /* ── RESPONSIVE ── */
-
-/* Tablet landscape */
-@media (max-width: 1200px) {
-    :root { --panel-w: 280px; }
-}
-
-/* Tablet portrait — drop to 2 columns, hide summary */
-@media (max-width: 900px) {
-    :root { --panel-w: 240px; }
+@media (max-width: 980px) {
+    :root { --studio-w: 320px; }
     .panel:last-child { display: none; }
-    .builder { grid-template-columns: var(--panel-w) 1fr; }
+    .builder { grid-template-columns: var(--studio-w) 1fr; }
     body { overflow: auto; }
 }
 
-/* Mobile — full single column stack */
 @media (max-width: 768px) {
-    :root { --panel-w: 100%; --nav-h: 50px; }
-
+    :root { --studio-w: 100%; --nav-h: 54px; }
     body { overflow: auto; height: auto; min-height: 100vh; }
-
-    /* Nav */
-    nav { padding: 0 12px; gap: 8px; }
+    nav { padding: 0 14px; gap: 8px; }
     .nav-center { display: none; }
-    .btn-save-draft { display: none; }
-    .btn-back { padding: 6px 10px; }
-    .nav-brand { font-size: 1.1rem; }
-    .btn-proceed { padding: 7px 12px; font-size: .8rem; }
-
-    /* Builder: flex column */
-    .builder {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        overflow: visible;
+    .btn-back span { display: none; }
+    .nav-brand { font-size: 1.10rem; }
+    .builder { display: flex; flex-direction: column; height: auto; overflow: visible; padding: 12px 12px 90px; }
+    .viewer {
+        order: -1; width: 100%; height: 68vw;
+        min-height: 300px; max-height: 460px; flex-shrink: 0;
+        margin: 0 0 12px;
     }
-
-  .viewer {
-        order: -1;
-        width: 100%;
-        height: 70vw;        /* taller on mobile */
-        min-height: 300px;   /* raised floor */
-        max-height: 480px;   /* raised ceiling */
-        flex-shrink: 0;
-    }
-
-    /* Left panel: full width BELOW viewer */
-    .panel:first-child {
-        order: 1;
-        width: 100%;
-        max-height: none;
-        overflow-y: visible;
-        border-right: none;
-        border-top: 2px solid var(--border);
-    }
-
-    /* Right panel: hidden (accessible via bottom sheet button) */
+    .panel:first-child { order: 1; width: 100%; max-height: none; overflow-y: visible; }
     .panel:last-child { display: none !important; }
-
-    /* Viewer overlays: compact */
-    .viewer-badge { top: 8px; left: 8px; padding: 5px 9px; }
-    .badge-flavor { font-size: .6rem; }
-    .badge-shape  { font-size: .56rem; }
-    .viewer-controls { top: 8px; right: 8px; }
-    .view-btn { width: 28px; height: 28px; }
-
-    #brightnessControl {
-        top: 8px !important;
-        right: 44px !important;
-        padding: 5px 10px !important;
-        gap: 6px !important;
-    }
+    .viewer-badge { bottom: 10px; left: 10px; padding: 6px 12px; }
+    .badge-flavor { font-size: .62rem; } .badge-shape { font-size: .58rem; }
+    .viewer-controls { top: 10px; right: 10px; }
+    .view-btn { width: 32px; height: 32px; }
+    #brightnessControl { top: 10px !important; right: 46px !important; padding: 5px 10px !important; gap: 6px !important; }
     #spotBrightnessSlider { width: 55px !important; }
     #spotBrightnessVal { min-width: 24px; font-size: .6rem !important; }
-
-    .viewer-hint {
-        font-size: .6rem;
-        padding: 5px 10px;
-        bottom: 8px;
-        max-width: 90%;
-        white-space: normal;
-        text-align: center;
-    }
-
-    /* Panel content */
-    .panel-body  { padding: 12px 14px 100px; gap: 14px; }
-    .panel-header { padding: 12px 14px 10px; }
-
-    /* Grids */
-    .shape-grid  { grid-template-columns: repeat(3, 1fr); gap: 5px; }
-    .addon-grid  { grid-template-columns: 1fr 1fr; gap: 5px; }
-
-    /* Trays: wrap on mobile */
-    .fruit-tray,
-    .choco-tray {
-        max-width: calc(100% - 20px);
-        flex-wrap: wrap;
-        gap: 5px;
-        padding: 6px 10px;
-    }
-
-    /* Model status */
+    .viewer-hint { font-size: .6rem; padding: 6px 12px; top: 10px; max-width: 90%; white-space: normal; text-align: center; }
+    .panel-body { padding: 0 0 110px; gap: 12px; }
+    .panel-header { padding: 6px 2px 8px; }
+    .shape-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .addon-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .opt, .addon-opt, .shape-opt, .num-opt, .digit-mode-btn, .orient-btn { min-height: 44px; }
+    .fruit-tray, .choco-tray { max-width: calc(100% - 20px); flex-wrap: wrap; gap: 6px; padding: 7px 11px; }
     .model-status { bottom: 12px; }
 }
 
-/* Very small phones */
 @media (max-width: 400px) {
-    .addon-grid  { grid-template-columns: 1fr; }
-    .shape-grid  { grid-template-columns: repeat(2, 1fr); }
-      .viewer { min-height: 260px; height: 75vw; }
-
-    .btn-proceed span { display: none; } /* hide "Request Cake" text on tiny screens */
-}
-/* ── ROTATION PANEL ── */
-.rot-panel { display:none; margin-top:10px; background:var(--warm-white); border:1.5px solid rgba(200,137,74,.35); border-radius:12px; padding:11px 13px; }
-.rot-panel.visible { display:block; }
-.rot-panel-title { font-size:.68rem; font-weight:700; color:#7A4A1E; margin-bottom:8px; display:flex; align-items:center; gap:5px; font-family:var(--font-display); }
-.rot-panel-title svg { flex-shrink:0; }
-.rot-preview-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-.rot-emoji-preview { font-size:2rem; line-height:1; transition:transform .18s; display:block; }
-.rot-slider-col { flex:1; }
-.rot-slider-ends { display:flex; justify-content:space-between; font-size:.63rem; color:var(--text-muted); font-family:var(--font-display); margin-bottom:3px; }
-.rot-deg-display { text-align:center; font-size:.82rem; font-weight:700; color:var(--caramel); font-family:var(--font-display); margin-top:3px; }
-input[type=range].rot-range { -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:3px; background:var(--border); outline:none; cursor:pointer; }
-input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance:none; width:24px; height:24px; border-radius:50%; background:var(--caramel); border:3px solid #fff; box-shadow:0 2px 6px rgba(60,20,5,.28); cursor:pointer; }
-.rot-preset-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-bottom:8px; }
-.rot-preset-btn { padding:7px 4px; border:1.5px solid rgba(200,137,74,.35); border-radius:9px; background:rgba(200,137,74,.10); color:#7A4A1E; font-size:.70rem; font-weight:700; cursor:pointer; text-align:center; font-family:var(--font-display); transition:all .15s; }
-.rot-preset-btn:hover { background:rgba(200,137,74,.25); }
-.rot-actions { display:flex; gap:6px; }
-.rot-apply-btn { flex:1; padding:9px; background:var(--caramel); border:none; border-radius:10px; color:#fff; font-size:.76rem; font-weight:700; cursor:pointer; font-family:var(--font-display); transition:all .18s; }
-.rot-apply-btn:hover { background:var(--caramel-light); }
-.rot-reset-btn { padding:9px 11px; background:transparent; border:1.5px solid rgba(200,137,74,.40); border-radius:10px; color:var(--text-muted); font-size:.72rem; font-weight:600; cursor:pointer; font-family:var(--font-display); }
-.rot-reset-btn:hover { border-color:var(--caramel); color:var(--caramel); }
-/* Gold tint for choco rotation panel */
-.rot-panel.rot-gold { border-color:rgba(196,154,60,.40); }
-.rot-panel.rot-gold .rot-panel-title { color:#6B4C08; }
-.rot-panel.rot-gold input[type=range].rot-range::-webkit-slider-thumb { background:var(--gold); }
-.rot-panel.rot-gold .rot-deg-display { color:var(--gold); }
-.rot-panel.rot-gold .rot-preset-btn { border-color:rgba(196,154,60,.35); background:rgba(196,154,60,.12); color:#6B4C08; }
-.rot-panel.rot-gold .rot-preset-btn:hover { background:rgba(196,154,60,.28); }
-.rot-panel.rot-gold .rot-apply-btn { background:var(--gold); }
-.rot-panel.rot-gold .rot-apply-btn:hover { background:#D4AA4C; }
-.rot-panel.rot-gold .rot-reset-btn { border-color:rgba(196,154,60,.40); }
-.rot-panel.rot-gold .rot-reset-btn:hover { border-color:var(--gold); color:var(--gold); }
-/* ── PAGE LOAD ANIMATION ── */
-@keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-28px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes slideInRight {
-    from { opacity: 0; transform: translateX(28px); }
-    to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes navReveal {
-    from { opacity: 0; transform: translateY(-16px); }
-    to   { opacity: 1; transform: translateY(0); }
+    .addon-grid { grid-template-columns: 1fr; }
+    .shape-grid { grid-template-columns: repeat(2, 1fr); }
+    .viewer { min-height: 260px; height: 75vw; }
 }
 
-nav {
-    animation: navReveal 0.45s cubic-bezier(0.4,0,0.2,1) both;
-}
-.panel:first-child {
-    animation: slideInLeft 0.55s 0.12s cubic-bezier(0.4,0,0.2,1) both;
-}
-.panel:last-child {
-    animation: slideInRight 0.55s 0.18s cubic-bezier(0.4,0,0.2,1) both;
-}
-.viewer {
-    animation: fadeInUp 0.60s 0.08s cubic-bezier(0.4,0,0.2,1) both;
-}
-.btn-save-draft,
-.btn-proceed {
-    display: none !important;
-}
+/* ================= PAGE LOAD ANIMATION ================= */
+@keyframes slideInLeft { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes navReveal { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+nav { animation: navReveal 0.4s cubic-bezier(0.4,0,0.2,1) both; }
+.panel:first-child { animation: slideInLeft 0.5s 0.10s cubic-bezier(0.4,0,0.2,1) both; }
+.panel:last-child { animation: slideInRight 0.5s 0.16s cubic-bezier(0.4,0,0.2,1) both; }
+.viewer { animation: fadeInUp 0.55s 0.06s cubic-bezier(0.4,0,0.2,1) both; }
+.btn-save-draft, .btn-proceed { display: none !important; }
     </style>
 </head>
 <body>
@@ -1002,7 +842,18 @@ nav {
         </div>
         <div class="panel-body">
 
-       {{-- SHAPE --}}
+    {{-- CAKE TYPE --}}
+            <div>
+                <div class="section-label">Cake Type <span class="section-req">required</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose your cake base or specialty cake.</p>
+     <div class="opts" id="opts-cake-type" style="margin-bottom:2px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px;">
+                    <div class="opt active" data-cake-type="Sponge Cake">Sponge Cake</div>
+                    <div class="opt" data-cake-type="Chiffon Cake">Chiffon Cake</div>
+                    <div class="opt" data-cake-type="Cheesecake">Cheesecake</div>
+                </div>
+            </div>
+
+            {{-- SHAPE --}}
             <div>
         <div class="section-label">Cake Shape <span class="section-req">required</span></div>
                 <div class="shape-grid" id="opts-shape">
@@ -1010,7 +861,7 @@ nav {
                   <div class="shape-opt" data-val="Square"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="13" width="18" height="6" rx="1"/><rect x="3" y="8" width="18" height="5" rx="1"/><rect x="5" y="4" width="14" height="4" rx="1"/></svg><span class="sh-name">Square</span></div>
                     <div class="shape-opt" data-val="Heart"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21C12 21 3 15 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12z"/><path d="M3 13h18"/></svg><span class="sh-name">Heart</span></div>
                   <div class="shape-opt" data-val="Number"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><text x="4" y="18" font-size="14" font-weight="700" fill="currentColor" stroke="none" font-family="sans-serif">18</text></svg><span class="sh-name">Number</span></div>
-                <div class="shape-opt" data-val="Bundt">
+            <div class="shape-opt" data-val="Bundt">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <ellipse cx="12" cy="14" rx="9" ry="4.5"/>
                         <ellipse cx="12" cy="14" rx="4" ry="2"/>
@@ -1020,25 +871,14 @@ nav {
                     <span class="sh-name">Bundt</span>
                 </div>
                 </div>
+             <div id="cakeTierSection">
               <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round only</span></div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Only applies to <strong>Round</strong> as of now.</p>
                 <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
                     <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
                     <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
-                  <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
-                <div class="shape-opt" data-tier="Four-tier">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <ellipse cx="12" cy="22" rx="8" ry="1.5"/>
-                        <rect x="4" y="18.5" width="16" height="3.5" rx="1"/>
-                        <ellipse cx="12" cy="17.5" rx="5.5" ry="1.2"/>
-                        <rect x="6.5" y="14.5" width="11" height="3" rx="1"/>
-                        <ellipse cx="12" cy="13.5" rx="3.5" ry="1"/>
-                        <rect x="8.5" y="11" width="7" height="2.5" rx="1"/>
-                        <ellipse cx="12" cy="10" rx="2" ry=".8"/>
-                        <rect x="10" y="8" width="4" height="2" rx="1"/>
-                        <path d="M11 8c0-1 .5-2 1-2s1 1 1 2"/>
-                    </svg>
-                    <span class="sh-name">Four-tier</span>
+                 <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
+        
                 </div>
                 </div>
                 <div class="size-slider-wrap visible" id="sizeSliderWrap">
@@ -1109,24 +949,42 @@ nav {
                 </div>
             </div>
 {{-- FLAVOUR --}}
-            <div>
-                <div class="section-label">Cake Flavour <span class="section-req">required</span></div>
-               <div class="opts" id="opts-flavor" style="margin-bottom:2px;">
+            <div id="flavourSection">
+                <div class="section-label">Flavor <span class="section-req">required</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose a flavor for your selected cake type.</p>
+           <div class="opts" id="opts-flavor" style="margin-bottom:2px;">
                     <div class="opt active" data-val="Vanilla"    data-price="0">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F2C96A;border:1px solid #E0B040;"></span>Vanilla</span></div>
                     <div class="opt"        data-val="Chocolate"  data-price="80">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#5C2D0E;"></span>Chocolate</span></div>
                     <div class="opt"        data-val="Red Velvet" data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#8B1111;"></span>Red Velvet</span></div>
                     <div class="opt"        data-val="Strawberry" data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#D94070;"></span>Strawberry</span></div>
+                    <div class="opt"        data-val="Blueberry"  data-price="110"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#3A4A8A;"></span>Blueberry</span></div>
                     <div class="opt"        data-val="Ube"        data-price="130"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#6B3FA0;"></span>Ube</span></div>
                     <div class="opt"        data-val="Mocha"      data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#4A2810;"></span>Mocha</span></div>
                     <div class="opt"        data-val="Mango"      data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F5A623;border:1px solid #E09010;"></span>Mango</span></div>
                     <div class="opt"        data-val="Biscoff"    data-price="140"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#C8752A;border:1px solid #A85A18;"></span>Biscoff</span></div>
+                    <div class="opt"        data-val="Carrot"     data-price="80"> <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#E8791E;"></span>Carrot</span></div>
+                    <div class="opt"        data-val="Banana"     data-price="60"> <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F0DE7A;border:1px solid #D8C450;"></span>Banana</span></div>
+                </div>
+            </div>
+{{-- FILLING --}}
+            <div>
+                <div class="section-label">Filling <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose what goes between the cake layers.</p>
+                <div class="opts" id="opts-filling" style="margin-bottom:2px;">
+                    <div class="opt active" data-filling="No Filling">No Filling</div>
+                    <div class="opt" data-filling="Vanilla Cream">Vanilla Cream</div>
+                    <div class="opt" data-filling="Chocolate Ganache">Chocolate Ganache</div>
+                    <div class="opt" data-filling="Cream Cheese">Cream Cheese</div>
+                    <div class="opt" data-filling="Strawberry">Strawberry</div>
+                    <div class="opt" data-filling="Blueberry">Blueberry</div>
+                    <div class="opt" data-filling="Biscoff">Biscoff</div>
                 </div>
             </div>
 
             {{-- CAKE STYLE --}}
             <div>
                 <div class="section-label">Cake Style <span class="section-req">required</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose <strong>one</strong> base style for your cake. Only one can be active at a time.</p>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose the<strong> overall finish</strong> or look of your cake.</p>
                 <div class="addon-grid" id="opts-cake-style">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="style">
                       <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/></svg></div>
@@ -1143,41 +1001,62 @@ nav {
                         <div class="a-info"><span class="a-name">Fondant</span><span class="a-price">+₱350</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
-                    <div class="addon-opt frosting-opt" data-val="Naked Style" data-price="150" data-group="style">
-                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/><line x1="3" y1="14" x2="5" y2="14"/><line x1="19" y1="14" x2="21" y2="14"/></svg></div>
-                        <div class="a-info"><span class="a-name">Naked</span><span class="a-price">+₱150</span></div>
-                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                    </div>
+                   
                     <div class="addon-opt frosting-opt" data-val="Ombre Style" data-price="250" data-group="style">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/><line x1="3" y1="11" x2="21" y2="11"/><line x1="3" y1="13" x2="21" y2="13"/><line x1="3" y1="15" x2="21" y2="15"/></svg></div>
                         <div class="a-info"><span class="a-name">Ombre</span><span class="a-price">+₱250</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                 </div>
-                <div class="fondant-notice" id="fondantNotice">
+          <div class="fondant-notice" id="fondantNotice">
                     <span class="fondant-notice-icon">⬜</span>
                     <div>
                         <span class="fondant-notice-title">Fondant selected — solo only</span>
                         <span class="fondant-notice-sub">Fondant replaces all frosting/icing options. Tap Fondant again to deselect.</span>
                     </div>
                 </div>
+          <div class="icing-panel" id="ombreColorPanel" style="background:linear-gradient(135deg,#FDF0F5 0%,#F2ECFB 100%);border-color:rgba(179,157,219,.35);">
+    <div class="icing-header" style="color:#6B4A8A;">🎨 Choose your ombre colors</div>
+   <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#8A6AA8;margin-bottom:6px;font-family:var(--font-body);">Top color</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="ombre-custom-swatch" id="ombreTopCustomSwatch" title="Pick any color" style="position:relative;width:48px;height:48px;border-radius:10px;flex-shrink:0;background:conic-gradient(from 0deg,#FF0000,#FFFF00,#00FF00,#00FFFF,#0000FF,#FF00FF,#FF0000);overflow:hidden;border:2px solid rgba(0,0,0,.08);box-shadow:0 0 0 3px rgba(179,157,219,.20);">
+            <input type="color" id="ombreTopCustomInput" value="#F7A8C4" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;">
+        </div>
+        <span style="font-size:.68rem;color:#8A6AA8;font-family:var(--font-body);">Tap the wheel to pick any top color</span>
+    </div>
+    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#8A6AA8;margin:10px 0 6px;font-family:var(--font-body);">Bottom color</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="ombre-custom-swatch" id="ombreBottomCustomSwatch" title="Pick any color" style="position:relative;width:48px;height:48px;border-radius:10px;flex-shrink:0;background:conic-gradient(from 0deg,#FF0000,#FFFF00,#00FF00,#00FFFF,#0000FF,#FF00FF,#FF0000);overflow:hidden;border:2px solid rgba(0,0,0,.08);box-shadow:0 0 0 3px rgba(179,157,219,.20);">
+            <input type="color" id="ombreBottomCustomInput" value="#8A6AC8" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;">
+        </div>
+        <span style="font-size:.68rem;color:#8A6AA8;font-family:var(--font-body);">Tap the wheel to pick any bottom color</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px 10px;background:rgba(255,255,255,.5);border-radius:9px;">
+        <div style="width:34px;height:34px;border-radius:8px;flex-shrink:0;background:linear-gradient(to bottom, var(--ombre-preview-top,#F7A8C4) 0%, var(--ombre-preview-bottom,#8A6AC8) 100%);border:1.5px solid rgba(0,0,0,.08);" id="ombrePreviewSwatch"></div>
+        <span style="font-size:.66rem;color:#6B4A8A;font-family:var(--font-body);line-height:1.5;">Baker will blend these two shades top-to-bottom on your cake.</span>
+    </div>
+</div>
             </div>
-
             {{-- FROSTING / ICING --}}
             <div>
                 <div class="section-label">Frosting / Icing <span class="section-req">required</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Pick one base icing. <strong>Textured</strong> can be added on top of either. <strong>Smooth BC</strong> and <strong>Sugar Icing</strong> cannot be combined.</p>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose the <strong>icing</strong>used underneath or alongside <strong>your</strong> selected <strong>cake </strong> style.</p>
 
                 <div class="frosting-section-label">🎨 Base Icing <span class="section-req">required</span></div>
                 <div class="addon-grid" id="opts-frosting-base">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="base">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2c0 0 4 4 4 10s-4 10-4 10"/><path d="M2 12h20"/></svg></div>
-                        <div class="a-info"><span class="a-name">Shell Border</span><span class="a-price">Default · Included</span></div>
+                      <div class="a-info"><span class="a-name">Shell Border</span><span class="a-price">Default · Included · choose color</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
-                    <div class="addon-opt frosting-opt" data-val="Sugar Icing" data-price="150" data-group="base">
+                              <div class="addon-opt frosting-opt" data-val="Sugar Icing" data-price="150" data-group="base">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8h10l-2 13H9L7 8z"/><path d="M5 8c0-4 3-6 7-6s7 2 7 6"/></svg></div>
                         <div class="a-info"><span class="a-name">Sugar Icing</span><span class="a-price">+₱150 · choose color</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                    </div>
+                    <div class="addon-opt frosting-opt" data-val="Rosettes" data-price="100" data-group="base">
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2c0 4-3 7-3 10s3 6 3 10"/><path d="M2 12c4 0 7 3 10 3s6-3 10-3"/><path d="M5 5c3 3 3 6 7 7s6-1 9-4"/><path d="M5 19c3-3 3-6 7-7s6 1 9 4"/></svg></div>
+                        <div class="a-info"><span class="a-name">Rosettes</span><span class="a-price">+₱100 · add-on</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                 </div>
@@ -1195,13 +1074,43 @@ nav {
                     <div class="icing-color-label" id="icingColorLabel">White</div>
                 </div>
 
-               <div class="frosting-section-label" style="margin-top:10px;">🖌️ Texture <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;white-space:nowrap;">(optional · Not available for Semi-naked)</span></div>
+             <div class="frosting-section-label" style="margin-top:10px;">🖌️ Texture <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;white-space:nowrap;">(OPTIONAL)</span></div>
                 <div class="addon-grid" id="opts-frosting-special">
-                    <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
+                           <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-4 3 3 5-6 6 7H3z"/><path d="M3 7h18"/><path d="M3 12h18"/></svg></div>
                         <div class="a-info"><span class="a-name">Textured</span><span class="a-price">+₱150 · add-on</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
+                </div>
+         <div class="candle-picker-panel" id="rosettePlacementPanel" style="background:linear-gradient(135deg,#FDF0F5 0%,#FBEAF0 100%);border-color:rgba(216,120,150,.32);">
+       <div class="candle-picker-header">🌹 Rosette placement <span id="rosetteNumberDigitNotice" style="display:none;font-size:.58rem;font-weight:400;margin-left:6px;color:#B02040;">(rosettes only available for single-digit Number cakes)</span></div>
+                                   <div class="candle-num-grid" id="opts-rosette-placement" style="grid-template-columns:repeat(3,1fr);">
+                        <div class="candle-num-opt active" data-rosette-placement="Border" style="font-size:.58rem;">Border</div>
+                        <div class="candle-num-opt" data-rosette-placement="Full Top" style="font-size:.58rem;">Full</div>
+                        <div class="candle-num-opt" data-rosette-placement="Sides" style="font-size:.58rem;">Sides</div>
+                        <div class="candle-num-opt" data-rosette-placement="Cluster Right" style="font-size:.54rem;">Cluster R</div>
+                        <div class="candle-num-opt" data-rosette-placement="Cluster Left" style="font-size:.54rem;">Cluster L</div>
+                    </div>
+            <div class="candle-active-badge" id="rosettePlacementBadge">Selected: Border</div>
+
+                    <div class="frosting-section-label" style="margin-top:10px;">✨ Combo placements <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(pick one, optional)</span></div>
+                    <div class="candle-num-grid" id="opts-rosette-combo" style="grid-template-columns:1fr;gap:6px;">
+                        <div class="candle-num-opt" data-rosette-placement="Border+Sides" style="font-size:.68rem;text-align:left;padding:8px 10px;">Border + Sides</div>
+                        <div class="candle-num-opt" data-rosette-placement="Sides+Full Top" style="font-size:.68rem;text-align:left;padding:8px 10px;">Sides + Full Top</div>
+                        <div class="candle-num-opt" data-rosette-placement="Sides+Cluster Right" style="font-size:.68rem;text-align:left;padding:8px 10px;">Sides + Cluster Right</div>
+                        <div class="candle-num-opt" data-rosette-placement="Sides+Cluster Left" style="font-size:.68rem;text-align:left;padding:8px 10px;">Sides + Cluster Left</div>
+                    </div>
+
+                    <div class="icing-header" style="margin-top:10px;">🎨 Rosette color</div>
+                    <div class="icing-color-grid" id="rosetteColorGrid" style="grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;">
+                        <div class="icing-color-opt light-color active" data-rosette-color="#FFFFFF" data-rosette-color-name="White"    style="background:#FFFFFF;border-color:#D5C8B8;"></div>
+                        <div class="icing-color-opt light-color"        data-rosette-color="#FFCCE0" data-rosette-color-name="Pink"     style="background:#FFCCE0;"></div>
+                        <div class="icing-color-opt light-color"        data-rosette-color="#C8E6FF" data-rosette-color-name="Sky Blue" style="background:#C8E6FF;"></div>
+                        <div class="icing-color-opt light-color"        data-rosette-color="#D4C8FF" data-rosette-color-name="Lavender" style="background:#D4C8FF;"></div>
+                        <div class="icing-color-opt"                    data-rosette-color="#F5C842" data-rosette-color-name="Gold"     style="background:#F5C842;"></div>
+                        <div class="icing-color-opt"                    data-rosette-color="#2C1810" data-rosette-color-name="Chocolate" style="background:#2C1810;"></div>
+                    </div>
+                    <div class="icing-color-label" id="rosetteColorLabel">White</div>
                 </div>
 
                 <div class="frosting-combo-hint" id="frostingComboHint">
@@ -1243,8 +1152,8 @@ nav {
                     </div>
                 </div>
 <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/></svg> Fruits</div>
-                <div style="background:var(--accent-lt);border:1px solid rgba(200,137,74,.25);border-radius:12px;padding:10px 12px;">
-                    <p style="font-size:.72rem;font-weight:700;color:#7A4A1E;margin:0 0 10px;font-family:var(--font-display);">Tap a fruit to add it — then tap the cake preview to place it</p>
+              <div style="background:var(--accent-lt);border:1px solid rgba(200,137,74,.25);border-radius:12px;padding:10px 12px;">
+                    <p style="font-size:.72rem;font-weight:700;color:#7A4A1E;margin:0 0 10px;font-family:var(--font-display);">🖱️ Drag a fruit straight onto the cake below</p>
                     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="opts-fruits">
                 <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/><circle cx="10" cy="10" r=".5" fill="currentColor"/><circle cx="14" cy="8" r=".5" fill="currentColor"/><circle cx="11" cy="14" r=".5" fill="currentColor"/></svg>
@@ -1272,12 +1181,29 @@ nav {
                         </div>
                         <div class="addon-opt fruit-tile" data-group="fruits" data-val="Mango Slice" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 18 Q5 6 12 4 Q19 6 19 18 Q15 21 12 21 Q9 21 5 18z"/><path d="M12 4 Q12 12 12 21"/><path d="M5 18 Q12 15 19 18"/><path d="M6 13 Q12 11 18 13"/></svg>
-                            <span class="a-name" style="font-size:.68rem;text-align:center;">Mango Slice</span>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Mango Cube</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                         <div class="addon-opt fruit-tile" data-group="fruits" data-val="Kiwi Slice" data-price="30" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8.5" y2="8.5"/><line x1="15.5" y1="15.5" x2="18.4" y2="18.4"/><line
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8.5" y2="8.5"/><line x1="15.5" y1="15.5" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="15.5" y2="8.5"/><line x1="8.5" y1="15.5" x2="5.6" y2="18.4"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Kiwi Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30/pc</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                   <div class="addon-opt fruit-tile" data-group="fruits" data-val="Peach Slice" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 Q18 3 20 9 Q22 15 18 19 Q15 22 12 22 Q9 22 6 19 Q2 15 4 9 Q6 3 12 3z"/><path d="M12 3 Q12 8 11 13 Q10 18 12 22"/><path d="M12 3 Q13 6 12 9"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Peach Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Banana Slice" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4c-1 5-1 10 2 14 3 3 8 3 11-1 1-1.5 1.5-3 1-4-1 2-3 3-5 3-4 0-7-3-8-8-.3-1.5-.5-3-1-4z"/><circle cx="18" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Banana Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                    </div>
                     <div id="fruitsDragNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
                         <span style="font-size:1.1rem;">👆</span>
                         <span><strong>Now tap the cake preview</strong> to place your fruit. Tap a placed fruit to move it.</span>
@@ -1319,12 +1245,53 @@ nav {
                       <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="80" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                  <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="80" id="plaqueToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="9" y1="6" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="18"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Plaque</span>
                        <span class="a-price" style="font-size:.60rem;text-align:center;">+₱80</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
+                       <div class="addon-opt" data-group="choco" data-val="Toblerone Triangle" data-price="50" id="tobleroneToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 L22 20 L2 20 Z"/><path d="M12 3 L17 20"/><path d="M12 3 L7 20"/><line x1="5" y1="14" x2="19" y2="14"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Toblerone</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱50/pc</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                                           <div class="addon-opt" data-group="choco" data-val="Chocolate Sprinkles" data-price="30" id="chocoSprinkleToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="1.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Sprinkles</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                                        <div class="addon-opt" data-group="choco" data-val="Crushed Peanuts" data-price="35" id="peanutsToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="2.4"/><circle cx="15" cy="8" r="2"/><circle cx="17" cy="14" r="1.8"/><circle cx="10" cy="15" r="2.2"/><circle cx="6" cy="16" r="1.6"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Crushed Peanuts</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35</span>
+                            <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                    </div>
+                <div class="candle-picker-panel" id="plaqueShapePanel" style="background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%);border-color:rgba(196,154,60,.32);">
+                        <div class="candle-picker-header">🍫 Choose plaque shape</div>
+                        <div class="candle-num-grid" id="opts-plaque-shape" style="grid-template-columns:repeat(5,1fr);">
+                            <div class="candle-num-opt active" data-plaque-shape="Square" style="font-size:.60rem;">Square</div>
+                            <div class="candle-num-opt" data-plaque-shape="Rectangle" style="font-size:.60rem;">Rect.</div>
+                            <div class="candle-num-opt" data-plaque-shape="Circle" style="font-size:.60rem;">Circle</div>
+                            <div class="candle-num-opt" data-plaque-shape="Heart" style="font-size:.60rem;">Heart</div>
+                            <div class="candle-num-opt" data-plaque-shape="Oval" style="font-size:.60rem;">Oval</div>
+                        </div>
+                 <div class="candle-active-badge" id="plaqueShapeBadge">Selected: Square plaque</div>
+                       <div style="margin-top:10px;">
+                            <label style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--brown-mid);font-family:var(--font-mono);display:block;margin-bottom:6px;">Message: <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);">(up to 3 lines — press Enter for a new line)</span></label>
+                            <textarea id="plaqueMessageInput" maxlength="60" rows="3" placeholder="e.g. Happy&#10;Birthday!" style="width:100%;padding:9px 12px;border:1.5px solid var(--border-dk);border-radius:10px;font-family:var(--font-display);font-size:.80rem;color:var(--text);background:var(--surface);outline:none;resize:none;line-height:1.4;"></textarea>
+                        </div>
+                    </div>
+                    <div class="candle-picker-panel" id="tobleroneFlavorPanel" style="background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%);border-color:rgba(196,154,60,.32);">
+                        <div class="candle-picker-header">🔺 Choose Toblerone flavor</div>
+                        <div class="candle-num-grid" id="opts-toblerone-flavor" style="grid-template-columns:repeat(2,1fr);">
+                            <div class="candle-num-opt active" data-toblerone-flavor="Chocolate" style="font-size:.62rem;">🍫 Chocolate</div>
+                            <div class="candle-num-opt" data-toblerone-flavor="White" style="font-size:.62rem;">🤍 White</div>
+                        </div>
+                        <div class="candle-active-badge" id="tobleroneFlavorBadge">Selected: Chocolate · with hazelnut bits</div>
                     </div>
                     <div id="chocoPlaceNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(196,154,60,.18);border-radius:8px;font-size:.70rem;color:#6B4C08;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
                         <span style="font-size:1.1rem;">👆</span>
@@ -1350,10 +1317,19 @@ nav {
                             <button class="rot-preset-btn" data-choco-rot="180">↓ Down</button>
                             <button class="rot-preset-btn" data-choco-rot="270">← Left</button>
                         </div>
-                        <div class="rot-actions">
+                    <div class="rot-actions">
                             <button class="rot-apply-btn" id="chocoRotApply">✓ Apply to cake</button>
                             <button class="rot-reset-btn" id="chocoRotReset">Reset</button>
                        </div>
+                </div>
+
+                <div id="chocoCurlsPlacementPanel" style="display:none;margin-top:9px;background:var(--gold-lt);border:1.5px solid rgba(196,154,60,.32);border-radius:12px;padding:9px 11px;">
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#6B4C08;margin-bottom:8px;font-family:var(--font-display);">🍫 Choco Curls placement</div>
+                    <div style="display:flex;gap:0;border:1.5px solid rgba(196,154,60,.36);border-radius:9px;overflow:hidden;">
+                        <button class="choco-curls-place-btn active" data-placement="middle" style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--gold);color:#fff;transition:all .15s;">Middle</button>
+                        <button class="choco-curls-place-btn"        data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides</button>
+                        <button class="choco-curls-place-btn"        data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
+                    </div>
                 </div>
                 </div>
 
@@ -1420,9 +1396,9 @@ nav {
                 </div>
 
                 <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg> Sprinkles</div>
-            <div class="addon-grid" id="opts-sprinkles" style="margin-bottom:10px;">
+          <div class="addon-grid" id="opts-sprinkles" style="margin-bottom:10px;">
                     <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg></div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+               <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg></div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
                 <!-- Cylinder placement panel -->
@@ -1434,7 +1410,6 @@ nav {
                         <button class="sprinkle-place-btn"        data-type="cylinder" data-placement="both"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
                     </div>
                 </div>
-
                 <!-- Pearl placement panel -->
                 <div id="pearlPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
                     <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">🔮 Pearl placement</div>
@@ -1444,14 +1419,35 @@ nav {
                         <button class="sprinkle-place-btn"        data-type="pearl" data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
                     </div>
                 </div>
-                <div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="8" width="6" height="14" rx="1"/><path d="M12 8V4"/><path d="M10 4c0-1.5 1-3 2-3s2 1.5 2 3"/></svg> Candles &amp; Toppers</div>
-                <div class="addon-grid" id="opts-candles" style="margin-bottom:10px;">
-                    <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="20"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="4" height="13" rx="1"/><path d="M10 8V5"/><path d="M9 5c0-1.5.5-3 1-3s1 1.5 1 3"/><rect x="14" y="8" width="4" height="13" rx="1"/><path d="M16 8V5"/><path d="M15 5c0-1.5.5-3 1-3s1 1.5 1 3"/></svg></div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱20/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Happy Birthday Topper" data-price="60"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2 5h5l-4 3 1.5 5L12 12l-4.5 3L9 10 5 7h5z"/></svg></div><div class="a-info"><span class="a-name">HBD Topper</span>  <span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Name Plaque"            data-price="100"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="6" y1="9" x2="12" y2="9"/></svg></div><div class="a-info"><span class="a-name">Name Plaque</span> <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Crown Topper"           data-price="80"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 18l3-9 4 5 3-9 3 9 4-5 3 9H2z"/><line x1="2" y1="18" x2="22" y2="18"/></svg></div><div class="a-info"><span class="a-name">Crown Topper</span><span class="a-price">+₱80</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="candles" data-val="Heart Topper"           data-price="70"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 3 14 3 8a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 13-9 13z"/></svg></div><div class="a-info"><span class="a-name">Heart Topper</span><span class="a-price">+₱70</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+
+                <!-- Chocolate Sprinkles placement panel -->
+                <div id="chocoSprinklePlacementPanel" style="display:none;margin-top:6px;background:var(--gold-lt);border:1.5px solid rgba(196,154,60,.30);border-radius:12px;padding:9px 11px;">
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#6B4C08;margin-bottom:8px;font-family:var(--font-display);">🍫 Choco Sprinkles placement</div>
+                    <div style="display:flex;gap:0;border:1.5px solid rgba(196,154,60,.36);border-radius:9px;overflow:hidden;">
+                        <button class="sprinkle-place-btn active" data-type="chocoSprinkle" data-placement="top"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--gold);color:#fff;transition:all .15s;">Top only</button>
+                        <button class="sprinkle-place-btn"        data-type="chocoSprinkle" data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
+                        <button class="sprinkle-place-btn"        data-type="chocoSprinkle" data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
+                    </div>
                 </div>
+
+                <!-- Crushed Peanuts placement panel -->
+                <div id="peanutsPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">🥜 Crushed Peanuts placement</div>
+                    <div style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                        <button class="sprinkle-place-btn active" data-type="peanuts" data-placement="top"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;transition:all .15s;">Top only</button>
+                        <button class="sprinkle-place-btn"        data-type="peanuts" data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
+                        <button class="sprinkle-place-btn"        data-type="peanuts" data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
+                    </div>
+                </div>
+                <div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="8" width="6" height="14" rx="1"/><path d="M12 8V4"/><path d="M10 4c0-1.5 1-3 2-3s2 1.5 2 3"/></svg> Candles &amp; Toppers</div>
+          <div class="addon-grid" id="opts-candles" style="margin-bottom:10px;">
+                    <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="20"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="4" height="13" rx="1"/><path d="M10 8V5"/><path d="M9 5c0-1.5.5-3 1-3s1 1.5 1 3"/><rect x="14" y="8" width="4" height="13" rx="1"/><path d="M16 8V5"/><path d="M15 5c0-1.5.5-3 1-3s1 1.5 1 3"/></svg></div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱20/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+               <div class="addon-opt" data-group="candles" data-val="Character Topper" data-price="150" id="characterToggleBtn">
+    <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
+    <div class="a-info"><span class="a-name">Character Topper</span> <span class="a-price">+₱150 · pick character</span></div>
+    <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+</div>
+              </div>
 
            <div class="candle-picker-panel" id="candlePickerPanel">
                     <div class="candle-picker-header">🕯️ Select candle number to place</div>
@@ -1469,7 +1465,7 @@ nav {
                     </div>
                     <div class="candle-active-badge" id="candleActiveBadge">Selected: Candle #1 — drag to place</div>
                 </div>
-          <div class="candle-drag-notice" id="candleDragNotice" style="display:none;flex-direction:row;">
+    <div class="candle-drag-notice" id="candleDragNotice" style="display:none;flex-direction:row;">
                     <span class="candle-drag-icon">🕯️</span>
                     <div>
                         <span class="candle-drag-label">Drag candles onto your cake!</span>
@@ -1477,52 +1473,116 @@ nav {
                     </div>
                 </div>
 
-                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6"/><path d="M8 10c1-3 2-5 4-6 2 1 3 3 4 6"/></svg> Cupcakes</div>
-                <div class="addon-grid" style="margin-bottom:6px;">
-                    <div class="addon-opt" data-group="deco" data-val="Cupcake" data-price="85" id="cupcakeToggleBtn"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14h12l-2 7H8l-2-7z"/><path d="M4 10c0-3 3-6 8-6s8 3 8 6H4z"/><path d="M12 4v-2M9 5l-1-2M15 5l1-2"/></svg></div><div class="a-info"><span class="a-name">Cupcake</span><span class="a-price">+₱85/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                </div>
-                <div class="cupcake-qty-panel" id="cupcakeQtyPanel" style="display:none;margin-top:8px;background:var(--accent-lt);border:1.5px solid rgba(200,137,74,.30);border-radius:10px;padding:10px 12px;">
-                    <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🧁 How many cupcakes?<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
-                    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--warm-white);border:1.5px solid rgba(200,137,74,.25);border-radius:10px;padding:8px 14px;margin-bottom:8px;">
-                        <button id="cupcakeQtyMinus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(200,137,74,.45);background:transparent;color:var(--accent-dk);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font-display);">−</button>
-                        <div style="text-align:center;">
-                            <div id="cupcakeQtyDisplay" style="font-size:2rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);line-height:1;">1</div>
-                            <div style="font-size:.60rem;color:var(--text-muted);font-family:var(--font-display);margin-top:2px;">cupcake(s) · <strong style="color:var(--caramel);">₱<span id="cupcakeLiveTotal">85</span></strong></div>
-                        </div>
-                        <button id="cupcakeQtyPlus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(200,137,74,.45);background:var(--caramel);color:#fff;font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:var(--font-display);">+</button>
-                    </div>
-                    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px;" id="cupcakeQtyPresets">
-                        <button class="cupcake-preset-btn" data-qty="1"  style="padding:6px 2px;border:1.5px solid var(--caramel);border-radius:8px;background:var(--caramel);color:#fff;font-size:.78rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;">1</button>
-                        <button class="cupcake-preset-btn" data-qty="3"  style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">3</button>
-                        <button class="cupcake-preset-btn" data-qty="6"  style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">6</button>
-                        <button class="cupcake-preset-btn" data-qty="12" style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">12</button>
-                        <button class="cupcake-preset-btn" data-qty="24" style="padding:6px 2px;border:1.5px solid rgba(200,137,74,.30);border-radius:8px;background:var(--accent-lt);color:var(--accent-dk);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font-display);transition:all .15s;">24</button>
-                    </div>
-                    <div style="font-size:.67rem;font-weight:700;color:var(--brown-mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;margin-top:4px;font-family:var(--font-display);display:flex;align-items:center;gap:6px;">🎨 Cupcake Flavour<span style="flex:1;height:1px;background:rgba(200,137,74,.25);display:block;"></span></div>
-                    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;" id="opts-cupcake-flavor">
-                        <div class="cupcake-flavor-opt active" data-cupcake-flavor="Vanilla"    data-cupcake-color="#C8882A" style="padding:6px 12px;border:1.5px solid var(--caramel);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--caramel);color:#fff;display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#F2C96A;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Vanilla</div>
-                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Chocolate"  data-cupcake-color="#3A1206" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#5C2D0E;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Chocolate</div>
-                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Red Velvet" data-cupcake-color="#8B1111" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#8B1111;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Red Velvet</div>
-                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Strawberry" data-cupcake-color="#D94070" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#D94070;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Strawberry</div>
-                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Ube"        data-cupcake-color="#6B3FA0" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#6B3FA0;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Ube</div>
-                        <div class="cupcake-flavor-opt" data-cupcake-flavor="Mocha"      data-cupcake-color="#4A2810" style="padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.76rem;font-weight:600;cursor:pointer;transition:all var(--transition);background:var(--warm-white);color:var(--text-muted);display:flex;align-items:center;gap:6px;font-family:var(--font-display);"><span style="width:8px;height:8px;border-radius:50%;background:#4A2810;border:1px solid rgba(0,0,0,.15);flex-shrink:0;display:inline-block;"></span>Mocha</div>
-                    </div>
-                    <div style="font-size:.63rem;color:var(--brown-mid);font-family:var(--font-display);line-height:1.5;padding:6px 8px;background:rgba(200,137,74,.10);border:1px solid rgba(200,137,74,.20);border-radius:7px;">
-                        🧁 Each cupcake is placed on its own plate beside the main cake in the preview. <strong>₱85/pc</strong>.
-                    </div>
-                </div>
-<div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 1 0 6M12 16a3 3 0 0 1 0 6M2 12a3 3 0 0 1 6 0M16 12a3 3 0 0 1 6 0"/></svg> Decorative Elements</div>
-                <div class="addon-grid" id="opts-deco">
-                    <div class="addon-opt" data-group="deco" data-val="Buttercream Swirls" data-price="75"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c0-3 2-5 4-4s3 4 1 6-6 3-8 1-2-6 1-8 8-2 9 2-1 8-5 9-9-2-9-6 3-8 7-8"/></svg></div><div class="a-info"><span class="a-name">BC Swirls</span>    <span class="a-price">+₱75</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Rosettes"           data-price="100"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2c0 4-3 7-3 10s3 6 3 10"/><path d="M2 12c4 0 7 3 10 3s6-3 10-3"/><path d="M5 5c3 3 3 6 7 7s6-1 9-4"/><path d="M5 19c3-3 3-6 7-7s6 1 9 4"/></svg></div><div class="a-info"><span class="a-name">Rosettes</span>     <span class="a-price">+₱100</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Ribbon Wrap"        data-price="50"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12l-6-5a3 3 0 0 1 4-4l2 3 2-3a3 3 0 0 1 4 4l-6 5z"/><path d="M12 12v9"/><path d="M8 17h8"/></svg></div><div class="a-info"><span class="a-name">Ribbon Wrap</span>  <span class="a-price">+₱50</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                    <div class="addon-opt" data-group="deco" data-val="Edible Pearls"      data-price="60"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><circle cx="12" cy="12" r="2"/></svg></div><div class="a-info"><span class="a-name">Edible Pearls</span><span class="a-price">+₱60</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
-                </div>
+       <div class="candle-picker-panel" id="characterPickerPanel">
+                    <div class="candle-picker-header"> Choose your character topper</div>
+                        <div id="characterCategoryList" style="display:flex;flex-direction:column;">
 
-                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="9" rx="8" ry="4"/><ellipse cx="12" cy="15" rx="8" ry="4"/><line x1="4" y1="9" x2="4" y2="15"/><line x1="20" y1="9" x2="20" y2="15"/></svg> Macarons</div>
-                <div class="addon-grid" style="margin-bottom:6px;">
-                    <div class="addon-opt" data-group="deco" data-val="Macarons" data-price="48"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="9" rx="7" ry="4"/><ellipse cx="12" cy="15" rx="7" ry="4"/><line x1="5" y1="9" x2="5" y2="15"/><line x1="19" y1="9" x2="19" y2="15"/></svg></div><div class="a-info"><span class="a-name">Macarons</span><span class="a-price">+₱48/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                  <div class="char-cat-group" data-cat-group="spongebob">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">SpongeBob SquarePants</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                                <div class="candle-num-opt" data-character="SpongeBob">SpongeBob<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Squidward">Squidward<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Patrick Star">Patrick Star<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Gary">Gary<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Squidward's House">Squidward's House<span class="char-price">₱500</span></div>
+                                <div class="candle-num-opt" data-character="SpongeBob's House">SpongeBob's House<span class="char-price">₱500</span></div>
+                                <div class="candle-num-opt" data-character="Patrick's House">Patrick's House<span class="char-price">₱500</span></div>
+                            </div>
+                        </div>
+
+                        <div class="char-cat-group" data-cat-group="ben10">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">Ben 10</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                                <div class="candle-num-opt" data-character="Ben 10">Ben 10<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Ben 10 RV">Ben 10 RV<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Gwen">Gwen<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Lolo Max">Lolo Max<span class="char-price">₱350</span></div>
+                            </div>
+                        </div>
+
+                        <div class="char-cat-group" data-cat-group="powerpuff">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">Powerpuff Girls</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                                <div class="candle-num-opt" data-character="Buttercup">Buttercup<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Blossom">Blossom<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Bubbles">Bubbles<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Powerpuff House">Powerpuff House<span class="char-price">₱500</span></div>
+                            </div>
+                        </div>
+
+                        <div class="char-cat-group" data-cat-group="dora">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">Dora the Explorer</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                                <div class="candle-num-opt" data-character="Dora">Dora<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Boots">Boots<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Dora's House">Dora's House<span class="char-price">₱500</span></div>
+                            </div>
+                        </div>
+
+                    <div class="char-cat-group" data-cat-group="sanrio">
+    <button type="button" class="char-cat-toggle">
+        <span class="char-cat-toggle-name">Sanrio</span>
+        <span class="char-cat-arrow">▸</span>
+    </button>
+    <div class="char-cat-options">
+        <div class="candle-num-opt" data-character="Kuromi">Kuromi<span class="char-price">₱350</span></div>
+        <div class="candle-num-opt" data-character="My Melody">Melody<span class="char-price">₱350</span></div>
+        <div class="candle-num-opt" data-character="Cinnamoroll">Cinnamoroll<span class="char-price">₱350</span></div>
+        <div class="candle-num-opt" data-character="Hello Kitty">Hello Kitty<span class="char-price">₱350</span></div>
+    </div>
+</div>
+
+                        <div class="char-cat-group" data-cat-group="cars">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">Cars</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                                <div class="candle-num-opt" data-character="Lightning McQueen">Lightning McQueen<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Sally">Sally<span class="char-price">₱350</span></div>
+                            </div>
+                        </div>
+
+                        <div class="char-cat-group" data-cat-group="mickey">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">MickeyMouse Clubhouse</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                             <div class="candle-num-opt" data-character="Mickey Mouse">Mickey Mouse<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Minnie Mouse">Minnie Mouse<span class="char-price">₱350</span></div>
+                                <div class="candle-num-opt" data-character="Mickey Mouse Clubhouse">Mickey Clubhouse<span class="char-price">₱500</span></div>
+                            </div>
+                        </div>
+
+                        <div class="char-cat-group" data-cat-group="cocomelon">
+                            <button type="button" class="char-cat-toggle">
+                                <span class="char-cat-toggle-name">Cocomelon</span>
+                                <span class="char-cat-arrow">▸</span>
+                            </button>
+                            <div class="char-cat-options">
+                                <div class="candle-num-opt" data-character="Cocomelon">Cocomelon<span class="char-price">₱350</span></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+           <div class="candle-active-badge" id="characterActiveBadge" style="margin-top:8px;">None placed yet — tap a character to add</div>
+                  <button id="btnClearCharacters" style="margin-top:6px;width:100%;padding:7px;background:transparent;border:1.5px dashed rgba(200,137,74,.40);border-radius:9px;color:var(--brown-mid);font-size:.70rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">Clear all placed characters</button>
                 </div>
+       
 
               </div>
         </div>
@@ -1549,13 +1609,17 @@ nav {
         <div class="viewer-hint" id="viewerHint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom</div>
         <div class="model-status hidden" id="modelStatus">Ready</div>
 
-        {{-- FRUIT TRAY --}}
+      {{-- FRUIT TRAY --}}
         <div class="fruit-tray" id="fruitTray">
             <span class="fruit-tray-label">Drag:</span>
             <div class="fruit-draggable" data-fruit="Strawberry" data-emoji="🍓" draggable="true" id="trayStrawberry">🍓<span class="fruit-tip">Strawberry</span></div>
             <div class="fruit-draggable" data-fruit="Blueberry"  data-emoji="🫐" draggable="true" id="trayBlueberry">🫐<span class="fruit-tip">Blueberry</span></div>
             <div class="fruit-draggable" data-fruit="Raspberry"  data-emoji="🍇" draggable="true" id="trayRaspberry">🍇<span class="fruit-tip">Raspberry</span></div>
             <div class="fruit-draggable" data-fruit="Cherry"     data-emoji="🍒" draggable="true" id="trayCherry">🍒<span class="fruit-tip">Cherry</span></div>
+            <div class="fruit-draggable" data-fruit="Mango Slice" data-emoji="🥭" draggable="true" id="trayMango">🥭<span class="fruit-tip">Mango</span></div>
+            <div class="fruit-draggable" data-fruit="Kiwi Slice"  data-emoji="🥝" draggable="true" id="trayKiwi">🥝<span class="fruit-tip">Kiwi</span></div>
+           <div class="fruit-draggable" data-fruit="Peach Slice" data-emoji="🍑" draggable="true" id="trayPeach">🍑<span class="fruit-tip">Peach</span></div>
+            <div class="fruit-draggable" data-fruit="Banana Slice" data-emoji="🍌" draggable="true" id="trayBanana">🍌<span class="fruit-tip">Banana</span></div>
             <div class="fruit-tray-sep"></div>
             <button class="fruit-clear-btn" id="btnClearFruits">Clear all</button>
         </div>
@@ -1566,7 +1630,8 @@ nav {
             <div class="ferrero-draggable" data-ferrero="Ferrero-style Ball" data-emoji="🟤" draggable="true" id="trayFerrero" style="display:none;">🟤<span class="ferrero-tip">Ferrero</span></div>
             <div class="kitkat-draggable" data-kitkat="Kitkat Sticks" data-emoji="🍬" draggable="true" id="trayKitkat" style="display:none;">🍬<span class="kitkat-tip">KitKat</span></div>
             <div class="oreo-draggable" data-oreo="Oreo Cookie" data-emoji="⚫" draggable="true" id="trayOreo" style="display:none;">⚫<span class="oreo-tip">Oreo</span></div>
-            <div class="bar-shard-draggable" data-bar-shard="Chocolate Bar Shard" data-emoji="🍫" draggable="true" id="trayBarShard" style="display:none;">🍫<span class="bar-shard-tip">Bar Shard</span></div>
+           <div class="bar-shard-draggable" data-bar-shard="Chocolate Bar Shard" data-emoji="🍫" draggable="true" id="trayBarShard" style="display:none;">🍫<span class="bar-shard-tip">Bar Shard</span></div>
+            <div class="toblerone-draggable" data-toblerone="Toblerone Triangle" data-emoji="🔺" draggable="true" id="trayToblerone" style="display:none;">🔺<span class="toblerone-tip">Toblerone</span></div>
             <div class="choco-tray-sep" id="chocoTraySep" style="display:none;"></div>
             <span style="font-size:.6rem;color:rgba(255,130,110,.7);font-family:var(--font-body);display:none;" id="kitkatOrientBadge">📏 Standing</span>
             <span style="font-size:.6rem;color:rgba(230,220,200,.7);font-family:var(--font-body);display:none;" id="oreoOrientBadge">⚫ Lying Flat</span>
@@ -1588,6 +1653,7 @@ nav {
         <div class="kitkat-drop-ring" id="kitkatDropRing" style="width:48px;height:24px;"></div>
         <div class="oreo-drop-ring" id="oreoDropRing" style="width:42px;height:42px;"></div>
 <div class="bar-shard-drop-ring" id="barShardDropRing" style="width:48px;height:36px;"></div>
+        <div class="toblerone-drop-ring" id="tobleroneDropRing" style="width:44px;height:44px;"></div>
         <div class="candle-drop-ring" id="candleDropRing" style="width:38px;height:38px;"></div>
     </div>
 
@@ -1606,8 +1672,10 @@ nav {
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4"/></svg>
                     Selections
                 </div>
+             <div class="cfg-row"><span class="cfg-key">Cake Type</span><span class="cfg-val" id="selCakeType">Sponge Cake</span></div>
                 <div class="cfg-row"><span class="cfg-key">Shape</span><span class="cfg-val" id="selShape">Round 6"</span></div>
-                <div class="cfg-row"><span class="cfg-key">Flavour</span><span class="cfg-val" id="selFlavor">Vanilla</span></div>
+                <div class="cfg-row" id="selFlavorRow"><span class="cfg-key">Flavour</span><span class="cfg-val" id="selFlavor">Vanilla</span></div>
+                <div class="cfg-row" id="selFillingRow" style="display:none;"><span class="cfg-key">Filling</span><span class="cfg-val" id="selFilling">—</span></div>
                 <div class="cfg-row"><span class="cfg-key">Frosting</span><span class="cfg-val" id="selFrosting">Smooth Buttercream</span></div>
                 <div class="cfg-row" id="selIcingRow" style="display:none;"><span class="cfg-key">Icing Color</span><span class="cfg-val" id="selIcingColor">White</span></div>
                 <div class="cfg-row" id="selDripRow" style="display:none;"><span class="cfg-key">Drip</span><span class="cfg-val" id="selDrip">—</span></div>
@@ -1616,7 +1684,7 @@ nav {
                 <div class="cfg-row" id="selKitkatRow" style="display:none;"><span class="cfg-key">KitKat</span><span class="cfg-val" id="selKitkat">—</span></div>
                 <div class="cfg-row" id="selOreoRow" style="display:none;"><span class="cfg-key">Oreo</span><span class="cfg-val" id="selOreo">—</span></div>
               <div class="cfg-row" id="selBarShardRow" style="display:none;"><span class="cfg-key">Bar Shard</span><span class="cfg-val" id="selBarShard">—</span></div>
-                <div class="cfg-row" id="selCupcakeRow" style="display:none;"><span class="cfg-key">Cupcakes</span><span class="cfg-val" id="selCupcake">—</span></div>
+           
             </div>
             <div class="config-card">
                 <div class="config-card-header">
@@ -1641,7 +1709,7 @@ nav {
                 <div>
                     <div class="pt-label">Estimated Total</div>
                     <div class="pt-amount"><span class="pt-currency">₱</span><span class="pt-number" id="priceTotal">350</span></div>
-                    <div class="pt-note">Final price confirmed by baker</div>
+                   
                 </div>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#B85C38" stroke-width="1.5" opacity="0.35"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
             </div>
@@ -1676,8 +1744,8 @@ const loadingEl = document.getElementById('modelLoading');
 const loadingTx = document.getElementById('loadingText');
 const statusEl  = document.getElementById('modelStatus');
 
-const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ antialias:false, alpha:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.outputEncoding      = THREE.sRGBEncoding;
 renderer.toneMapping         = THREE.ACESFilmicToneMapping;
@@ -1733,7 +1801,7 @@ spot.penumbra   = 0.75;
 spot.decay      = 3.2;
     spot.castShadow = (i === 1); // only center casts shadow
     if(i === 1){
-        spot.shadow.mapSize.set(2048, 2048);
+       spot.shadow.mapSize.set(1024, 1024);
         spot.shadow.camera.near = 0.5;
         spot.shadow.camera.far  = 18;
         spot.shadow.bias        = -0.0003;
@@ -1833,7 +1901,7 @@ shadowCatcher.receiveShadow=true; scene.add(shadowCatcher);
         [ 3.5, 5.5, 2.0],
     ];
     // ── Build geometry arrays for the light cone FIRST ──
-    const coneH = 4.8, coneR = 1.35, coneSegs = 48, coneRings = 28;
+const coneH = 4.8, coneR = 1.35, coneSegs = 16, coneRings = 10;
     const positions = [], colors = [], indices = [];
 
     positions.push(0, 0, 0);
@@ -1926,7 +1994,7 @@ FIXTURE_POSITIONS.forEach(([fx, fy, fz]) => {
 
         const coneGeo = new THREE.BufferGeometry();
         const cp = [], cc = [], ci = [];
-        const cSegs = 32, cRings = 20;
+      const cSegs = 14, cRings = 8;
       const cRadius = coneLength * Math.tan(0.14); // tighter cone, no floor splash
 
         cp.push(0, 0, 0);
@@ -1958,9 +2026,8 @@ FIXTURE_POSITIONS.forEach(([fx, fy, fz]) => {
         coneGeo.setIndex(ci);
         coneGeo.computeVertexNormals();
 
-        const coneMesh = new THREE.Mesh(coneGeo, coneMat);
+const coneMesh = new THREE.Mesh(coneGeo, coneMat);
         coneMesh.position.set(fx, fy, fz);
-        // Orient cone to point from fixture toward cake
         const quaternion = new THREE.Quaternion();
         quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir);
         coneMesh.setRotationFromQuaternion(quaternion);
@@ -1990,6 +2057,8 @@ controls.saveState();
 controls.update();
 const clock = new THREE.Clock();
 const mixers = [];
+const characterModels = [];
+let _draggingCharacterIdx = -1;
 // ── Procedural Fire Texture ──
 function makeFlameSpriteTex(size = 128) {
     const canvas = document.createElement('canvas');
@@ -2099,19 +2168,93 @@ scene.traverse(node => {
         }
     });
 
+// Smoothly ease any dragged character topper(s) toward their target spot
+    // instead of snapping to the cursor's raycast hit every frame.
+    if(typeof characterModels !== 'undefined'){
+        const _easeFactor = Math.min(1, delta * 10);
+        characterModels.forEach(m=>{
+            if(m.group._targetPos) m.group.position.lerp(m.group._targetPos, _easeFactor);
+        });
+    }
 controls.update(delta);
     renderer.render(scene, camera);
 }
 animate();
-
-// ── Shape slug map — must match GLB filenames exactly ──
 const SHAPE_SLUG = {
-    'Round':         'round',
-    'Square':        'square',
-    'Heart':         'heart',
-    'Two-tier Round':'two-tier',
+    'Round':          'round',
+    'Square':         'square',
+    'Heart':          'heart',
+    'Bundt':          'bundt',
+    'Sponge Cake':    'sponge',
+    'Chiffon':        'chiffon',
+    'Two-tier Round': 'two-tier',
     'Three-tier Round':'three-tier',
+    'Four-tier Round':'four-tier',
 };
+function getRosetteFileMap(slug){
+    if(slug === 'square'){
+        return {
+            'Border':        'rosette_square',
+            'Full Top':      'rosette_top_square',
+            'Sides':         'rosette_sides_square',
+            'Cluster Right': 'rosette_cluster_right_square',
+            'Cluster Left':  'rosette_cluster_left_square',
+        };
+    }
+    if(slug === 'heart'){
+        return {
+            'Border':        'rosette_heart',
+            'Full Top':      'rosette_top_heart',
+            'Sides':         'rosette_sides_heart',
+            'Cluster Right': 'rosette_cluster_right_heart',
+            'Cluster Left':  'rosette_cluster_left_heart',
+        };
+    }
+    if(slug === 'two-tier'){
+        return {
+            'Border':        'rosette_two-tier',
+            'Full Top':      'rosette_top_two-tier',
+            'Sides':         'rosette_sides_two-tier',
+            'Cluster Right': 'rosette_cluster_right_two-tier',
+            'Cluster Left':  'rosette_cluster_left_two-tier',
+        };
+    }
+    if(slug === 'three-tier'){
+        return {
+            'Border':        'rosette_three-tier',
+            'Full Top':      'rosette_top_three-tier',
+            'Sides':         'rosette_sides_three-tier',
+            'Cluster Right': 'rosette_cluster_right_three-tier',
+            'Cluster Left':  'rosette_cluster_left_three-tier',
+        };
+    }
+  return {
+        'Border':        `rosette_${slug}`,
+        'Full Top':      'rosette_top',
+        'Sides':         'rosette_sides',
+        'Cluster Right': 'rosette_cluster_right',
+        'Cluster Left':  'rosette_cluster_left',
+    };
+}
+// Number-shape rosette pieces are per-digit exports: rosette_{digit}_middle.glb,
+// rosette_{digit}_border.glb, rosette_{digit}_full.glb, rosette_{digit}_sides.glb.
+// Only these four placements are supported for Number cakes.
+function getNumberRosetteFileMap(digit){
+    return {
+        'Middle':   `rosette_${digit}_middle`,
+        'Border':   `rosette_${digit}_border`,
+        'Full Top': `rosette_${digit}_full`,
+        'Sides':    `rosette_${digit}_sides`,
+    };
+}
+// Digits 0, 4, 6, 8, 9 have a dedicated "middle" export; digits 1, 2, 3, 5, 7
+// only have Border/Full/Sides (no Middle piece exists for those numeral shapes).
+const NUMBER_ROSETTE_DIGITS_WITH_MIDDLE = new Set([0,4,6,8,9]);
+function getAvailableNumberRosettePlacements(digit){
+    const base = ['Border','Full Top','Sides'];
+    if(NUMBER_ROSETTE_DIGITS_WITH_MIDDLE.has(digit)) base.unshift('Middle');
+    return base;
+}
 function getFrostingFileSuffix(arr){
     if(arr.includes('Fondant Smooth'))  return 'fondant';
     if(arr.includes('Semi-naked Style')) return 'seminaked';
@@ -2120,31 +2263,64 @@ function getFrostingFileSuffix(arr){
     if(t)    return 'textured';
     return 'smooth';
 }
+function getNumberBaseFileName(digit, frostingsArr){
+    // Base sponge/shape file. Loads the semi-naked variant when Semi-naked Style
+    // is the active cake style — mirrors base_seminaked_{shape}.glb for other shapes.
+    if(frostingsArr && frostingsArr.includes('Semi-naked Style')) return `seminaked_${digit}`;
+    return `number_${digit}`;
+}
+function getNumberFrostFileName(digit, frostingsArr){
+    // Shell Border (Smooth Buttercream) overlay, layered ON TOP of the base —
+    // the number-shape equivalent of frosting_round_smooth.glb.
+    // Only Smooth Buttercream has a dedicated per-digit export so far.
+    if(frostingsArr.includes('Smooth Buttercream')) return `number${digit}_smoothbc`;
+    return null;
+}
+function getNumberTextureFileName(digit, frostingsArr){
+    // Textured Buttercream overlay — layered ON TOP of the base (and on top of the
+    // Shell Border overlay if that's also active), never replaces the base model.
+    if(frostingsArr.includes('Textured Buttercream')) return `number${digit}textured`;
+    return null;
+}
+function getNumberDripFileName(digit){
+    // Drip overlay — dedicated per-digit export (e.g. drip0.glb), layered ON TOP of the base.
+    return `drip${digit}`;
+}
 function shouldLoadFrostingGLB(arr){
     return arr.some(f=>f!=='Sugar Icing'&&f!=='Drip');
 }
 function isFondantOnly(arr){ return arr.includes('Fondant Smooth'); }
 
 const FLAVORS={
-    'Vanilla':   {sponge:{hex:'#C8822A',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#9A5A14',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#EEC840',roughness:.46,metalness:.02,envMapIntensity:.65},top:{hex:'#F8D450',roughness:.36,metalness:.03,envMapIntensity:.72},drip:{hex:'#ECBC28',roughness:.14,metalness:.04}},
+  'Vanilla':   {sponge:{hex:'#C8822A',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#9A5A14',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F5E6B8',roughness:.46,metalness:.02,envMapIntensity:.65},top:{hex:'#FBF0CE',roughness:.36,metalness:.03,envMapIntensity:.72},drip:{hex:'#E8D9A0',roughness:.14,metalness:.04}},
     'Chocolate': {sponge:{hex:'#361004',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#200802',roughness:.92,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#5A1E0E',roughness:.38,metalness:.06,envMapIntensity:.70},top:{hex:'#6C2610',roughness:.30,metalness:.08,envMapIntensity:.78},drip:{hex:'#320E06',roughness:.10,metalness:.10}},
-    'Red Velvet':{sponge:{hex:'#880E0E',roughness:.84,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#680606',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F6EEEA',roughness:.36,metalness:.01,envMapIntensity:.70},top:{hex:'#FFF6F2',roughness:.28,metalness:.01,envMapIntensity:.78},drip:{hex:'#BE0E0E',roughness:.14,metalness:.02}},
+   'Red Velvet':{sponge:{hex:'#880E0E',roughness:.84,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#680606',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F7DCE0',roughness:.36,metalness:.01,envMapIntensity:.70},top:{hex:'#FFF6F2',roughness:.28,metalness:.01,envMapIntensity:.78},drip:{hex:'#BE0E0E',roughness:.14,metalness:.02}},
     'Strawberry':{sponge:{hex:'#CC2454',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#A4163C',roughness:.86,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FF4474',roughness:.40,metalness:.01,envMapIntensity:.62},top:{hex:'#FF5680',roughness:.32,metalness:.01,envMapIntensity:.70},drip:{hex:'#DE2454',roughness:.12,metalness:.02}},
     'Ube':       {sponge:{hex:'#481C7C',roughness:.84,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#301260',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#8638C8',roughness:.38,metalness:.04,envMapIntensity:.68},top:{hex:'#9644D6',roughness:.30,metalness:.05,envMapIntensity:.76},drip:{hex:'#5E24AC',roughness:.12,metalness:.05}},
-    'Mocha':     {sponge:{hex:'#220E00',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#140600',roughness:.92,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#7A451E',roughness:.38,metalness:.06,envMapIntensity:.66},top:{hex:'#8A4F24',roughness:.30,metalness:.07,envMapIntensity:.74},drip:{hex:'#582C0E',roughness:.12,metalness:.07}},
+   'Mocha':     {sponge:{hex:'#220E00',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#140600',roughness:.92,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#7A451E',roughness:.38,metalness:.06,envMapIntensity:.66},top:{hex:'#8A4F24',roughness:.30,metalness:.07,envMapIntensity:.74},drip:{hex:'#582C0E',roughness:.12,metalness:.07}},
+ 'Mango':     {sponge:{hex:'#F5B818',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#D4900C',roughness:.86,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FFC01E',roughness:.40,metalness:.01,envMapIntensity:.68},top:{hex:'#FFD24C',roughness:.32,metalness:.01,envMapIntensity:.76},drip:{hex:'#F0A008',roughness:.12,metalness:.02}},
+  'Biscoff':   {sponge:{hex:'#C8682A',roughness:.86,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#A04E18',roughness:.90,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#D4844A',roughness:.42,metalness:.03,envMapIntensity:.64},top:{hex:'#E09060',roughness:.34,metalness:.03,envMapIntensity:.72},drip:{hex:'#8A3A10',roughness:.14,metalness:.04}},
+    'Blueberry': {sponge:{hex:'#2E3E7A',roughness:.83,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#20295E',roughness:.87,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#B8C4E8',roughness:.40,metalness:.02,envMapIntensity:.66},top:{hex:'#C8D2F0',roughness:.32,metalness:.02,envMapIntensity:.74},drip:{hex:'#3A1878',roughness:.12,metalness:.04}},
+    'Carrot':    {sponge:{hex:'#B8631E',roughness:.85,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#8E4A12',roughness:.89,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F5EAD0',roughness:.40,metalness:.01,envMapIntensity:.66},top:{hex:'#FBF4E2',roughness:.32,metalness:.01,envMapIntensity:.74},drip:{hex:'#A0611C',roughness:.13,metalness:.03}},
+    'Banana':    {sponge:{hex:'#E8D078',roughness:.83,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#C8A84C',roughness:.87,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F7EEC8',roughness:.42,metalness:.01,envMapIntensity:.64},top:{hex:'#FDF8E4',roughness:.34,metalness:.01,envMapIntensity:.72},drip:{hex:'#D8B858',roughness:.14,metalness:.03}},
+   'Blueberry Cheesecake': {sponge:{hex:'#F0EAD8',roughness:.70,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#C8B888',roughness:.80,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#E8E0F0',roughness:.36,metalness:.02,envMapIntensity:.68},top:{hex:'#F4EEFA',roughness:.28,metalness:.02,envMapIntensity:.76},drip:{hex:'#4A2E78',roughness:.12,metalness:.04}},
+    'Strawberry Cheesecake': {sponge:{hex:'#F0E4D0',roughness:.68,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#D8B888',roughness:.78,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FCDCE4',roughness:.36,metalness:.01,envMapIntensity:.68},top:{hex:'#FFEAF0',roughness:.28,metalness:.01,envMapIntensity:.76},drip:{hex:'#D8395E',roughness:.12,metalness:.02}},
+    'Mango Cheesecake':      {sponge:{hex:'#F0E4C8',roughness:.68,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#D8B868',roughness:.78,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FCE8B8',roughness:.36,metalness:.01,envMapIntensity:.68},top:{hex:'#FFF2D0',roughness:.28,metalness:.01,envMapIntensity:.76},drip:{hex:'#F0A020',roughness:.12,metalness:.02}},
 };
 const DRIP_FLAVOR_COLORS={
     'Vanilla':'#ECBC28','Chocolate':'#320E06','Red Velvet':'#BE0E0E',
     'Strawberry':'#DE2454','Ube':'#5E24AC','Mocha':'#582C0E',
     'Caramel':'#D08010','White Chocolate':'#F8EED8',
+    'Mango':'#F5A020','Salted Caramel':'#A0620A',
+    'Blueberry':'#3A1878','Raspberry':'#C01858',
 };
 const FONDANT_FLAVOR_COLORS={
-    'Vanilla':   '#C8892A',
-    'Chocolate': '#3A1206',
-    'Red Velvet':'#8B1111',
-    'Strawberry':'#D94070',
-    'Ube':       '#6B3FA0',
-    'Mocha':     '#4A2810',
+    'Vanilla':   '#F5EFDC',
+    'Chocolate': '#6B4226',
+    'Red Velvet':'#F6EEEA',
+    'Strawberry':'#FADDE1',
+    'Ube':       '#C9A6E8',
+    'Mocha':     '#D8C3A5',
 };
 // Sugar icing colors — richer mid-tone versions
 const SUGAR_ICING_COLORS={
@@ -2162,10 +2338,10 @@ const FROSTING_STYLES={
     'Textured Buttercream':{roughness:.70,metalness:.00,envBoost:-.04},
     'Fondant Smooth':      {roughness:.18,metalness:.02,envBoost:.28},
     'Chocolate Ganache':   {roughness:.05,metalness:.10,envBoost:.42},
-  'Semi-naked Style':    {roughness:.85,metalness:.00,envBoost:-.08,opacity:1.0},
+'Semi-naked Style':    {roughness:.85,metalness:.00,envBoost:-.08,opacity:1.0},
+    'Ombre Style':         {roughness:.44,metalness:.01,envBoost:.10},
     'Sugar Icing':         {roughness:.14,metalness:.02,envBoost:.34},
 };
-
 function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapIntensity,emissiveHex='#000'){
     group.traverse(child=>{
         if(!child.isMesh) return;
@@ -2177,7 +2353,105 @@ function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapInten
         child.castShadow=child.receiveShadow=true;
     });
 }
-function recolorGLB(flavorName,frostingsArr,dripFlavor,icingColorHex){
+// Same as applyGLBMaterial but preserves any texture maps already baked into the GLB
+// (map / normalMap / roughnessMap / aoMap) — needed for models like Bundt whose
+// rippled surface detail comes from a normal map, not just geometry.
+function applyGLBMaterialKeepMaps(group,colorHex,roughness,metalness,opacity,envMapIntensity,emissiveHex='#000'){
+    group.traverse(child=>{
+        if(!child.isMesh) return;
+        const old = child.material;
+        // Deliberately NOT keeping the baked diffuse "map" — it carries its own base
+        // tone which was multiplying against colorHex and washing the Bundt out paler
+        // than every other cake shape. Keeping only normalMap/roughnessMap preserves
+        // the rippled bump detail while letting colorHex land exactly like it does
+        // for every other frosting layer.
+        const oldNormalMap    = old && old.normalMap    ? old.normalMap    : null;
+        const oldRoughnessMap = old && old.roughnessMap ? old.roughnessMap : null;
+        const oldNormalScale  = old && old.normalScale  ? old.normalScale.clone() : null;
+        child.material=new THREE.MeshStandardMaterial({
+            color:new THREE.Color(colorHex), roughness, metalness,
+            transparent:opacity<1.0, opacity, envMapIntensity:envMapIntensity??0.6,
+            emissive:new THREE.Color(emissiveHex), emissiveIntensity:.05,
+            normalMap: oldNormalMap, roughnessMap: oldRoughnessMap,
+        });
+        if(oldNormalScale) child.material.normalScale.copy(oldNormalScale);
+        child.material.needsUpdate = true;
+        child.castShadow=child.receiveShadow=true;
+    });
+}
+// Paints a real two-color vertical gradient onto a mesh using per-vertex colors,
+// computed from each vertex's WORLD-space height — not UVs. This means it works
+// Boosts saturation on a picked color and caps its lightness so it reads
+// as a vivid, recognizable color under the warm stage lighting instead of
+// washing out pale. Leaves white/near-neutral colors (like the default
+// White rosette) untouched so they don't pick up an unwanted tint.
+function boostRosetteColor(hexColor){
+    const c = new THREE.Color(hexColor);
+    const hsl = {h:0,s:0,l:0};
+    c.getHSL(hsl);
+    if(hsl.s < 0.04) return hexColor;
+    const boostedS = Math.min(1, hsl.s * 1.35 + 0.08);
+    const cappedL  = Math.min(hsl.l, 0.58);
+    c.setHSL(hsl.h, boostedS, cappedL);
+    return '#' + c.getHexString();
+}
+function applyOmbreGradient(group, topHex, bottomHex, roughness, metalness, opacity, envMapIntensity){
+    group.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(group);
+    const minY = box.min.y, maxY = box.max.y;
+    const spanY = Math.max(0.0001, maxY - minY);
+    const cTop = new THREE.Color(topHex);
+    const cBottom = new THREE.Color(bottomHex);
+    const worldPos = new THREE.Vector3();
+    const hsl = {h:0,s:0,l:0};
+    group.traverse(child=>{
+        if(!child.isMesh) return;
+        const geo = child.geometry;
+        const posAttr = geo.attributes.position;
+        const count = posAttr.count;
+        const colors = new Float32Array(count*3);
+        for(let i=0;i<count;i++){
+            worldPos.set(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i));
+            child.localToWorld(worldPos);
+            let t = (worldPos.y - minY) / spanY;
+            t = Math.max(0, Math.min(1, t));
+            // Dip-dye look like a bench-scraper ombre: solid bottom color for the
+            // lower ~40% of the cake, solid top color for the upper ~40%, with a
+            // soft smoothstep blend across the middle band — not a full-height
+            // gradient, which reads as muddy/flat when colors are close in tone.
+        let tCurve;
+            if(t <= 0.62){
+                tCurve = 0;
+            } else if(t >= 0.70){
+                tCurve = 1;
+            } else {
+                const localT = (t - 0.62) / 0.08;
+                tCurve = localT*localT*(3-2*localT);
+            }
+            const c = cBottom.clone().lerp(cTop, tCurve);
+            // Boost saturation and cap lightness — the scene's warm spotlights wash
+            // pastel/cool tones toward beige-white on rough diffuse surfaces, so
+            // raw picked colors read as barely-there. Punching saturation up and
+            // pulling lightness down slightly keeps the chosen color recognizable.
+            c.getHSL(hsl);
+            const boostedS = Math.min(1, hsl.s * 1.55 + 0.10);
+            const cappedL  = Math.min(hsl.l, 0.62);
+            c.setHSL(hsl.h, boostedS, cappedL);
+            colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
+        }
+        geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+        child.material = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            vertexColors: true,
+            roughness, metalness,
+            transparent: opacity<1.0, opacity,
+            envMapIntensity: envMapIntensity??0.6,
+        });
+        child.material.needsUpdate = true;
+        child.castShadow = child.receiveShadow = true;
+    });
+}
+function recolorGLB(flavorName,frostingsArr,dripFlavor,icingColorHex,ombreTopColor,ombreBottomColor){
     flavorName = flavorName || 'Vanilla'; // safety fallback
     const pal=FLAVORS[flavorName]||FLAVORS['Vanilla'];
     const hasTextured  =frostingsArr.includes('Textured Buttercream');
@@ -2186,7 +2460,31 @@ function recolorGLB(flavorName,frostingsArr,dripFlavor,icingColorHex){
     const styleName    =hasSemiNakedR?'Semi-naked Style':hasTextured?'Textured Buttercream':hasSmooth?'Smooth Buttercream':(frostingsArr.filter(f=>f!=='Sugar Icing')[0]||'Smooth Buttercream');
     const style      =FROSTING_STYLES[styleName]||FROSTING_STYLES['Smooth Buttercream'];
     const frostEnv   =Math.max(.20,(pal.top.envMapIntensity??0.6)+style.envBoost);
-if(currentBase && !hasSemiNakedR && !frostingsArr.includes('Fondant Smooth'))  applyGLBMaterial(currentBase,  pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
+if(currentBase && !hasSemiNakedR && !frostingsArr.includes('Fondant Smooth')){
+    const isOmbreActive = frostingsArr.includes('Ombre Style');
+    if(_isBundtActive){
+        // Bundt has no separate frosting-layer GLB — currentBase IS the whole visible
+        // cake, so it must use the same crust/sponge color every other shape's base
+        // uses (pal.crust.hex), not the pale frosting tint (pal.frosting.hex), or it
+        // reads as a completely different color from the rest of the cakes.
+      if(isOmbreActive){
+            applyOmbreGradient(currentBase, ombreTopColor||'#F7A8C4', ombreBottomColor||'#8A6AC8', style.roughness, style.metalness, 1.0, frostEnv);
+        } else {
+            applyGLBMaterialKeepMaps(currentBase, pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
+        }
+  } else if(isOmbreActive){
+        // The round/square/heart frosting GLB is only a piped BORDER ring — the
+        // visible body of the cake is actually currentBase (crust). So for Ombre to
+        // cover the whole cake (not just the top ring), the body must also be
+        // painted with the same gradient, not the flat crust color.
+        // Uses 'style'/'frostEnv' (the Ombre Style profile) instead of the very
+        // matte pal.crust values — matte roughness (.88) was scattering light hard
+        // under the warm stage lighting and washing the picked colors out to pale.
+        applyOmbreGradient(currentBase, ombreTopColor||'#F7A8C4', ombreBottomColor||'#8A6AC8', style.roughness, style.metalness, 1.0, frostEnv);
+    } else {
+        applyGLBMaterial(currentBase,  pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
+    }
+}
 if(currentBase && hasSemiNakedR && !frostingsArr.includes('Fondant Smooth')){
     const SEMI_NAKED_SPONGE={
         'Vanilla':   '#D4956A',
@@ -2241,7 +2539,7 @@ if(currentFrost && hasSemiNakedR){
 if(currentFrost && hasSemiNakedR && currentFrost.userData.keepOriginalTexture) { /* keep baked texture as-is */ }
 else if(currentFrost && !hasSemiNakedR){
   if(frostingsArr.includes('Fondant Smooth')){
-    const fondantHex = FONDANT_FLAVOR_COLORS[flavorName] || '#F5F0DC';
+const fondantHex = pal.crust.hex;
   // ── Kill ALL spotlight shadows when fondant is active ──
     spotLights.forEach(s => { s.castShadow = false; });
     currentFrost.traverse(child => {
@@ -2309,8 +2607,7 @@ else if(currentFrost && !hasSemiNakedR){
 
         const profile = FONDANT_PROFILES[flavorName] || FONDANT_PROFILES['Vanilla'];
 
-        // ── Generate procedural normal map on canvas ──
-        function makeFondantNormalMap(pattern, size = 256) {
+function makeFondantNormalMap(pattern, size = 128) {
             const canvas = document.createElement('canvas');
             canvas.width = canvas.height = size;
             const ctx = canvas.getContext('2d');
@@ -2397,8 +2694,7 @@ else if(currentFrost && !hasSemiNakedR){
             return tex;
         }
 
-        // ── Generate roughness variation map ──
-        function makeFondantRoughnessMap(variance, size = 256) {
+     function makeFondantRoughnessMap(variance, size = 128) {
             const canvas = document.createElement('canvas');
             canvas.width = canvas.height = size;
             const ctx = canvas.getContext('2d');
@@ -2426,14 +2722,21 @@ else if(currentFrost && !hasSemiNakedR){
             return tex;
         }
 
-        const normalMap    = makeFondantNormalMap(profile.pattern);
-        const roughnessMap = makeFondantRoughnessMap(profile.roughnessVariance);
-
+    window._fondantTexCache = window._fondantTexCache || {};
+const _fCacheKey = flavorName + '_' + profile.pattern;
+if(!window._fondantTexCache[_fCacheKey]){
+    window._fondantTexCache[_fCacheKey] = {
+        normal: makeFondantNormalMap(profile.pattern),
+        rough:  makeFondantRoughnessMap(profile.roughnessVariance),
+    };
+}
+const normalMap    = window._fondantTexCache[_fCacheKey].normal;
+const roughnessMap = window._fondantTexCache[_fCacheKey].rough;
 child.material = new THREE.MeshStandardMaterial({
             color:             new THREE.Color(fondantHex),
-            roughness:         1.0,
+            roughness:         0.35,
             metalness:         0.00,
-            envMapIntensity:   0.0,
+            envMapIntensity:   0.55,
             normalMap:         normalMap,
             normalScale:       new THREE.Vector2(profile.normalStrength * 2.5, profile.normalStrength * 2.5),
             roughnessMap:      roughnessMap,
@@ -2444,11 +2747,18 @@ child.material = new THREE.MeshStandardMaterial({
         child.material.needsUpdate = true;
         child.castShadow    = true;
         child.receiveShadow = true;
-        return; // ← STOP HERE, skip all code below
+       return; // ← STOP HERE, skip all code below
 
 });
 } else {
-            applyGLBMaterial(currentFrost, pal.frosting.hex, style.roughness, style.metalness, style.opacity??1.0, frostEnv);
+          // Shell Border (Smooth Buttercream base icing) now supports a user-picked
+            // color, same as Sugar Icing. Falls back to the flavor-based tone when no
+            // custom color has been chosen, or when Naked/Ombre styles are active
+            // (those keep their own dedicated coloring untouched).
+       const isNakedOrOmbre = frostingsArr.includes('Ombre Style');
+            const useShellColor  = hasSmooth && !isNakedOrOmbre && icingColorHex;
+            const frostColorHex  = useShellColor ? (SUGAR_ICING_COLORS[icingColorHex] || icingColorHex) : pal.frosting.hex;
+            applyGLBMaterial(currentFrost, frostColorHex, style.roughness, style.metalness, style.opacity??1.0, frostEnv);
         }
     }
  if(currentIcing){
@@ -2456,7 +2766,7 @@ child.material = new THREE.MeshStandardMaterial({
         // Always apply the selected icing color to ALL meshes — never tint with sponge/frosting colors
         applyGLBMaterial(currentIcing, icingRich, 0.12, 0.02, 1.0, 0.88);
     }
-    if(currentDrip)  applyGLBMaterial(currentDrip,  dripFlavor?(DRIP_FLAVOR_COLORS[dripFlavor]||pal.drip.hex):pal.drip.hex, pal.drip.roughness??0.10, pal.drip.metalness??0.05, 1.0, .80);
+   if(currentDrip)  applyGLBMaterial(currentDrip,  dripFlavor?(DRIP_FLAVOR_COLORS[dripFlavor]||pal.drip.hex):pal.drip.hex, pal.drip.roughness??0.10, pal.drip.metalness??0.05, 1.0, .80);
 }
 
 function buildCakePlateStand(cakeRadius){
@@ -2502,18 +2812,77 @@ function showStatus(msg){statusEl.textContent=msg;statusEl.classList.remove('hid
 const glbCache={};
 const sceneRoot=new THREE.Group();
 scene.add(sceneRoot);
-let loadedKey='', currentBase=null, currentFrost=null, currentDrip=null, currentIcing=null;
+let loadedKey='', currentBase=null, currentFrost=null, currentDrip=null, currentIcing=null, currentTexture=null, currentRosette=null, currentCheesecakeCrust=null, currentChocoCurls=[], currentChocoCurlsPlacement=null, currentChocoCurlsTier='Single', currentChocoCurlsShape='Round';
+let _isBundtActive=false;
 let isLoading=false, pendingState=null;
 const fruitModels=[];
 const ferreroModels=[];
 const kitkatModels=[];
 const oreoModels=[];
 const candleModels=[];
+function deepCloneObject3D(obj){
+    const clone = obj.clone(true);
+    // Object3D.clone() shares geometry/material BY REFERENCE across every clone of a
+    // cached GLB. Mutating one clone's geometry (e.g. writing vertex colors for an
+    // Ombre gradient) silently mutates every other instance ever cloned from that
+    // same cached source. Deep-cloning geometry + material per instance here stops
+    // that cross-contamination.
+    clone.traverse(node=>{
+        if(node.isMesh){
+            node.geometry = node.geometry.clone();
+            if(Array.isArray(node.material)) node.material = node.material.map(m=>m.clone());
+            else if(node.material) node.material = node.material.clone();
+        }
+    });
+    return clone;
+}
+function stripOutlierMeshes(group, label){
+    const meshes = [];
+    group.traverse(c => { if(c.isMesh) meshes.push(c); });
+    if(meshes.length <= 1) return;
 
+    group.updateMatrixWorld(true);
+    const infos = meshes.map(m => {
+        const box = new THREE.Box3().setFromObject(m);
+        const size = box.getSize(new THREE.Vector3());
+        return { mesh: m, size };
+    });
+
+    const horiz = infos.map(i => Math.max(i.size.x, i.size.z)).sort((a,b)=>a-b);
+    const medianHoriz = horiz[Math.floor(horiz.length/2)] || 1;
+
+    infos.forEach(info => {
+        const tallRatio = info.size.y / Math.max(medianHoriz, 0.0001);
+        const tinyFootprint = Math.max(info.size.x, info.size.z) < medianHoriz * 0.4;
+        if(tallRatio > 4 || (info.size.y > medianHoriz * 3 && tinyFootprint)){
+            console.warn(`[GLB cleanup] Removing outlier mesh "${info.mesh.name}" in ${label} — size:`, info.size);
+            if(info.mesh.parent) info.mesh.parent.remove(info.mesh);
+        }
+    });
+}
+// ── Warm the GLB cache for rosette pieces in the background, before the user
+// actually selects one. Fires and forgets — doesn't block anything, just
+// makes the eventual real load feel instant since it'll already be cached.
+function prefetchRosetteModels(shape){
+    const slug = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : (SHAPE_SLUG[shape]||'round');
+    if(slug === 'bundt' || shape === 'Number') return; // no rosettes for these
+    const fileMap = getRosetteFileMap(slug);
+    Object.values(fileMap).forEach(file=>{
+        const url = `/models/${file}.glb`;
+        if(!glbCache[url]){
+            loadGLB(url).catch(()=>{}); // silent — real load will retry/log if it actually fails
+        }
+    });
+}
+window._prefetchRosetteModels = prefetchRosetteModels;
 function loadGLB(url){
     return new Promise((resolve,reject)=>{
-        if(glbCache[url]){resolve(glbCache[url].clone(true));return;}
-        new GLTFLoader().load(url, gltf=>{glbCache[url]=gltf.scene;resolve(gltf.scene.clone(true));},
+        if(glbCache[url]){resolve(deepCloneObject3D(glbCache[url]));return;}
+        new GLTFLoader().load(url, gltf=>{
+            stripOutlierMeshes(gltf.scene, url);
+            glbCache[url]=gltf.scene;
+            resolve(deepCloneObject3D(gltf.scene));
+        },
             xhr=>{if(xhr.total>0)loadingTx.textContent=`Loading… ${Math.round(xhr.loaded/xhr.total*100)}%`;}, reject);
     });
 }
@@ -2558,13 +2927,18 @@ function alignDualDigits(gT,gU,wrapper){
     gT.position.y=-bT.min.y; gU.position.y=-bU.min.y;
     gT.position.z=-(bT.min.z+(bT.max.z-bT.min.z)/2);
     gU.position.z=-(bU.min.z+(bU.max.z-bU.min.z)/2);
-    wrapper.add(gT); wrapper.add(gU); wrapper.updateMatrixWorld(true);
-positionGroup(wrapper, 4.5, 0.75);
+  wrapper.add(gT); wrapper.add(gU); wrapper.updateMatrixWorld(true);
+positionGroup(wrapper, 4.5, 1.0);
+    // Store the exact local placement used for the base digits so the icing digits
+    // (loaded separately below) can reuse it instead of computing their own —
+    // their bounding boxes can differ slightly from the base meshes, which was
+    // pushing the icing out of alignment and making it appear to vanish.
+    wrapper.userData.digitLocalPos = { T: gT.position.clone(), U: gU.position.clone() };
 }
 
 function clearScene(keepDecorations=false){
     while(sceneRoot.children.length) sceneRoot.remove(sceneRoot.children[0]);
-    currentBase=currentFrost=currentDrip=currentIcing=null;
+   currentBase=currentFrost=currentDrip=currentIcing=currentTexture=currentRosette=currentCheesecakeCrust=null;
     if(!keepDecorations){
         fruitModels.forEach(m=>scene.remove(m.group));
         fruitModels.length=0;
@@ -2574,16 +2948,19 @@ function clearScene(keepDecorations=false){
         kitkatModels.length=0;
         oreoModels.forEach(m=>scene.remove(m.group));
         oreoModels.length=0;
-        if(typeof barShardModels!=='undefined'){
+      if(typeof barShardModels!=='undefined'){
             barShardModels.forEach(m=>scene.remove(m.group));
             barShardModels.length=0;
+        }
+        if(typeof tobleroneModels!=='undefined'){
+            tobleroneModels.forEach(m=>scene.remove(m.group));
+            tobleroneModels.length=0;
         }
         candleModels.forEach(m=>{scene.remove(m.group);if(m.mixer){const mi=mixers.indexOf(m.mixer);if(mi>=0)mixers.splice(mi,1);}});
         candleModels.length=0;
     }
 }
-
-function addStandToScene(cakeGroup){
+function addStandToScene(cakeGroup, extraSink=0){
     const TABLE_Y       = -1.18;
     const STAND_BOTTOM  =  0.255;
     const PLATE_TOP_LOCAL = 0.018;
@@ -2601,7 +2978,7 @@ function addStandToScene(cakeGroup){
     const cz = (box.min.z + box.max.z) * 0.5;
     stand.position.set(cx, standOriginY, cz);
     sceneRoot.add(stand);
-    const lift = plateTopWorldY - cakeBottomY + 0.004;
+    const lift = plateTopWorldY - cakeBottomY + 0.004 - extraSink;
     cakeGroup.position.y += lift;
     cakeGroup.updateMatrixWorld(true);
     return stand;
@@ -2620,28 +2997,91 @@ function showNoPreview(shapeName){
     setTimeout(()=>{loadingEl.style.display='none';},400);
 }
 
+// Builds a thin graham-cracker-style crust layer that hugs the cake's own
+// footprint, so it automatically matches Round, Square, Heart, or tiered
+// shapes without needing separate crust models per shape. Removes any
+function updateCheesecakeCrust(cakeType){
+    if(currentCheesecakeCrust){ sceneRoot.remove(currentCheesecakeCrust); currentCheesecakeCrust=null; }
+    if(cakeType !== 'Cheesecake') return;
+    const cakeRef = currentBase || currentFrost;
+    if(!cakeRef || !glbHasMesh(cakeRef)) return;
+    cakeRef.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(cakeRef);
+    const fullHeight = box.max.y - box.min.y;
+    if(fullHeight < 0.01) return;
+
+    const crust = deepCloneObject3D(cakeRef);
+    const CRUST_COLOR = '#7A4A22'; // richer, clearly-visible graham-cracker brown
+    crust.traverse(c=>{
+        if(!c.isMesh) return;
+        c.material = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(CRUST_COLOR),
+            roughness: 0.90, metalness: 0.0, envMapIntensity: 0.30,
+            // Stops the flicker/glitch: the crust's side wall previously sat at
+            // the exact same radius as the cake's own side wall, so the GPU
+            // couldn't decide which surface was in front (z-fighting). Nudging
+            // the crust's depth value fixes that without moving it visually.
+            polygonOffset: true,
+            polygonOffsetFactor: -4,
+            polygonOffsetUnits: -4,
+        });
+        c.castShadow = c.receiveShadow = true;
+    });
+
+// Thin slice — ~10% of the cake's height, clamped to a sensible range so
+    // it reads as a crust layer rather than a second tier.
+    const desiredThickness = Math.max(0.05, Math.min(0.14, fullHeight * 0.10));
+    const sY = desiredThickness / fullHeight;
+    // Only a hair wider than the cake — just enough to avoid sitting exactly
+    // on the same surface as the cake wall (which caused the flicker). Keep
+    // this small or the crust reads as an oversized skirt around the base.
+    const sXZ = 1.006;
+    crust.scale.set(crust.scale.x * sXZ, crust.scale.y * sY, crust.scale.z * sXZ);
+    crust.updateMatrixWorld(true);
+
+    // Re-align: bottom flush with the cake's own bottom, re-centered on X/Z
+    // (widening the XZ scale above shifts the bounding box off-center).
+    const newBox = new THREE.Box3().setFromObject(crust);
+    const cakeCenter = box.getCenter(new THREE.Vector3());
+    const crustCenter = newBox.getCenter(new THREE.Vector3());
+    crust.position.y += (box.min.y - newBox.min.y) + 0.002;
+    crust.position.x += cakeCenter.x - crustCenter.x;
+    crust.position.z += cakeCenter.z - crustCenter.z;
+    crust.updateMatrixWorld(true);
+
+    sceneRoot.add(crust);
+    currentCheesecakeCrust = crust;
+}
+
 async function updateScene(state){
-    const {shape,flavor,frostings,hasDrip,dripFlavor,icingColor}=state;
+const {shape,flavor,frostings,hasDrip,dripFlavor,icingColor,ombreTopColor,ombreBottomColor,rosettePlacement,rosetteColor}=state;
     const frostingsArr=(frostings&&frostings.length>0)?frostings:['Smooth Buttercream'];
     const isNumber   =(shape==='Number');
     const isSugarIcing=frostingsArr.includes('Sugar Icing');
     const frostSuffix =getFrostingFileSuffix(frostingsArr);
     const needFrostGLB=shouldLoadFrostingGLB(frostingsArr);
 
-    let newKey;
-    if(isNumber){
-        const numStr=state.numberDigits===2?`${state.numberTens??1}_${state.numberUnits??0}`:`${state.numberChoice??0}`;
-        newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}`;
+  let newKey;
+if(isNumber){
+    const numStr=state.numberDigits===2?`${state.numberTens??1}_${state.numberUnits??0}`:`${state.numberChoice??0}`;
+        const numStyleKey=frostingsArr.includes('Semi-naked Style')?'seminaked':(frostingsArr.includes('Smooth Buttercream')?'smoothbc':'plain');
+        const numTexKey=frostingsArr.includes('Textured Buttercream')?'_tx':'_ntx';
+            const numRosetteOnKey = frostingsArr.includes('Rosettes') && !frostingsArr.includes('Fondant Smooth');
+        const numRosetteKey = numRosetteOnKey ? `_rosette_${(rosettePlacement||'Border').replace(/\s+/g,'')}_${rosetteColor||'ni'}` : '_norosette';
+        newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}_${numStyleKey}${numTexKey}${numRosetteKey}`;
 } else {
         const slug=SHAPE_SLUG[shape]||'round';
       const sizeKey=(shape==='Round')?`_${state.roundSize||6}in`:'';
 const shellBorderKey = (frostingsArr.includes('Semi-naked Style') && frostingsArr.includes('Smooth Buttercream')) ? '_withshell' : '_noshell';
 const _cakeStyleKey = frostingsArr.includes('Semi-naked Style') ? 'sn' : frostingsArr.includes('Fondant Smooth') ? 'fn' : 'bc';
 const _texturedKey = frostingsArr.includes('Textured Buttercream') ? '_tx' : '_ntx';
-newKey=`${slug}${sizeKey}_${flavor}_${_cakeStyleKey}_${needFrostGLB?frostSuffix:'nobc'}${shellBorderKey}${_texturedKey}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}`;
+const _rosetteOn  = frostingsArr.includes('Rosettes') && !frostingsArr.includes('Fondant Smooth');
+const _rosetteKey = _rosetteOn ? `_rosette_${(rosettePlacement||'Border').replace(/\s+/g,'')}_${rosetteColor||'ni'}` : '_norosette';
+newKey=`${slug}${sizeKey}_${flavor}_${_cakeStyleKey}_${needFrostGLB?frostSuffix:'nobc'}${shellBorderKey}${_texturedKey}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}${_rosetteKey}`;
     }
 if(loadedKey===newKey&&sceneRoot.children.length>0){
-    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor);
+recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
+    updateCheesecakeCrust(state.cakeType);
     return;
 }
 // Force recolor even if key differs only by flavor for semi-naked
@@ -2649,7 +3089,8 @@ const prevKeyNoFlavor = loadedKey.replace(/_(Vanilla|Chocolate|Red Velvet|Strawb
 const newKeyNoFlavor  = newKey.replace(/_(Vanilla|Chocolate|Red Velvet|Strawberry|Ube|Mocha)_/, '_FLAVOR_');
 if(prevKeyNoFlavor===newKeyNoFlavor&&sceneRoot.children.length>0){
     loadedKey=newKey;
-    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor);
+   recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
+    updateCheesecakeCrust(state.cakeType);
     return;
 }
     if(isLoading){pendingState=state;return;}
@@ -2662,31 +3103,116 @@ let usedGLB=false;
     if(isNumber){
         clearScene(true);
         try{
-            if(state.numberDigits===2){
+     if(state.numberDigits===2){
                 const T=state.numberTens??1, U=state.numberUnits??0;
-                const [rT,rU]=await Promise.allSettled([loadGLB(`/models/number_${T}.glb`),loadGLB(`/models/number_${U}.glb`)]);
+             const [rT,rU]=await Promise.allSettled([loadGLB(`/models/${getNumberBaseFileName(T, frostingsArr)}.glb`),loadGLB(`/models/${getNumberBaseFileName(U, frostingsArr)}.glb`)]);
                 const gT=rT.status==='fulfilled'&&glbHasMesh(rT.value)?rT.value:null;
                 const gU=rU.status==='fulfilled'&&glbHasMesh(rU.value)?rU.value:null;
                 if(gT||gU){
                     const baseWrapper=new THREE.Group();
-        if(gT&&gU) alignDualDigits(gT,gU,baseWrapper);
-        else { baseWrapper.add(gT||gU); positionGroup(baseWrapper, 4.5, 0.75); }
-                    sceneRoot.add(baseWrapper); currentBase=baseWrapper;
+      if(gT&&gU) alignDualDigits(gT,gU,baseWrapper);
+        else { baseWrapper.add(gT||gU); positionGroup(baseWrapper, 4.5, 1.0); }
+sceneRoot.add(baseWrapper);
+                    if(frostingsArr.includes('Fondant Smooth')){ currentFrost=baseWrapper; } else { currentBase=baseWrapper; }
+
+                  // ── Shell Border (Smooth Buttercream) frost overlay ──
+                    // Normalized independently via its own alignDualDigits/positionGroup
+                    // pass (not copied from baseWrapper's transform) — the _smoothbc
+                    // export may not share number_{N}.glb's native scale, and copying
+                    // the base's scale factor directly risked blowing the frost mesh up
+                    // to camera-swallowing size.
+                  const frostNameT = getNumberFrostFileName(T, frostingsArr);
+                    const frostNameU = getNumberFrostFileName(U, frostingsArr);
+                    if(frostNameT || frostNameU){
+                        const [frT,frU]=await Promise.allSettled([
+                            frostNameT?loadGLB(`/models/${frostNameT}.glb`):Promise.resolve(null),
+                            frostNameU?loadGLB(`/models/${frostNameU}.glb`):Promise.resolve(null),
+                        ]);
+                        const fgT=frT.status==='fulfilled'&&frT.value&&glbHasMesh(frT.value)?frT.value:null;
+                        const fgU=frU.status==='fulfilled'&&frU.value&&glbHasMesh(frU.value)?frU.value:null;
+                        if(fgT||fgU){
+                            const frostWrapper=new THREE.Group();
+                            if(fgT&&fgU){
+                                [fgT,fgU].forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
+                                const dp = baseWrapper.userData.digitLocalPos;
+                                if(dp){
+                                    fgT.position.copy(dp.T);
+                                    fgU.position.copy(dp.U);
+                                } else {
+                                    const bT2=new THREE.Box3().setFromObject(fgT),bU2=new THREE.Box3().setFromObject(fgU);
+                                    const wT2=bT2.max.x-bT2.min.x,wU2=bU2.max.x-bU2.min.x;
+                                    const gap2=(wT2+wU2)*0.08,totalW2=wT2+gap2+wU2,startX2=-totalW2/2;
+                                    fgT.position.x=startX2-bT2.min.x; fgU.position.x=startX2+wT2+gap2-bU2.min.x;
+                                    fgT.position.y=-bT2.min.y; fgU.position.y=-bU2.min.y;
+                                    fgT.position.z=-(bT2.min.z+(bT2.max.z-bT2.min.z)/2);
+                                    fgU.position.z=-(bU2.min.z+(bU2.max.z-bU2.min.z)/2);
+                                }
+                                frostWrapper.add(fgT); frostWrapper.add(fgU);
+                            } else { frostWrapper.add(fgT||fgU); }
+                            frostWrapper.scale.copy(baseWrapper.scale);
+                            frostWrapper.position.copy(baseWrapper.position);
+                            sceneRoot.add(frostWrapper); currentFrost=frostWrapper;
+                        }
+                    }
+             // ── Textured Buttercream overlay — ADD-on, never replaces base ──
+                    const texNameT = getNumberTextureFileName(T, frostingsArr);
+                    const texNameU = getNumberTextureFileName(U, frostingsArr);
+                    if(texNameT || texNameU){
+                        const [txT,txU]=await Promise.allSettled([
+                            texNameT?loadGLB(`/models/${texNameT}.glb`):Promise.resolve(null),
+                            texNameU?loadGLB(`/models/${texNameU}.glb`):Promise.resolve(null),
+                        ]);
+                        const tgT=txT.status==='fulfilled'&&txT.value&&glbHasMesh(txT.value)?txT.value:null;
+                        const tgU=txU.status==='fulfilled'&&txU.value&&glbHasMesh(txU.value)?txU.value:null;
+                        if(tgT||tgU){
+                            const texWrapper=new THREE.Group();
+                            if(tgT&&tgU){
+                                [tgT,tgU].forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
+                                const dp = baseWrapper.userData.digitLocalPos;
+                                if(dp){
+                                    tgT.position.copy(dp.T);
+                                    tgU.position.copy(dp.U);
+                                } else {
+                                    const bT3=new THREE.Box3().setFromObject(tgT),bU3=new THREE.Box3().setFromObject(tgU);
+                                    const wT3=bT3.max.x-bT3.min.x,wU3=bU3.max.x-bU3.min.x;
+                                    const gap3=(wT3+wU3)*0.08,totalW3=wT3+gap3+wU3,startX3=-totalW3/2;
+                                    tgT.position.x=startX3-bT3.min.x; tgU.position.x=startX3+wT3+gap3-bU3.min.x;
+                                    tgT.position.y=-bT3.min.y; tgU.position.y=-bU3.min.y;
+                                    tgT.position.z=-(bT3.min.z+(bT3.max.z-bT3.min.z)/2);
+                                    tgU.position.z=-(bU3.min.z+(bU3.max.z-bU3.min.z)/2);
+                                }
+                                texWrapper.add(tgT); texWrapper.add(tgU);
+                            } else { texWrapper.add(tgT||tgU); }
+                            texWrapper.scale.copy(baseWrapper.scale);
+                            texWrapper.position.copy(baseWrapper.position);
+                            sceneRoot.add(texWrapper); currentTexture=texWrapper;
+                        }
+                    }
                     if(isSugarIcing){
                         const [irT,irU]=await Promise.allSettled([loadGLB(`/models/icing_${T}.glb`),loadGLB(`/models/icing_${U}.glb`)]);
                         const igT=irT.status==='fulfilled'&&glbHasMesh(irT.value)?irT.value:null;
                         const igU=irU.status==='fulfilled'&&glbHasMesh(irU.value)?irU.value:null;
-                        if(igT||igU){
+                  if(igT||igU){
                             const icingWrapper=new THREE.Group();
                             if(igT&&igU){
                                 [igT,igU].forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
-                                const bT2=new THREE.Box3().setFromObject(igT),bU2=new THREE.Box3().setFromObject(igU);
-                                const wT2=bT2.max.x-bT2.min.x,wU2=bU2.max.x-bU2.min.x;
-                                const gap2=(wT2+wU2)*0.08,totalW2=wT2+gap2+wU2,startX2=-totalW2/2;
-                                igT.position.x=startX2-bT2.min.x; igU.position.x=startX2+wT2+gap2-bU2.min.x;
-                                igT.position.y=-bT2.min.y; igU.position.y=-bU2.min.y;
-                                igT.position.z=-(bT2.min.z+(bT2.max.z-bT2.min.z)/2);
-                                igU.position.z=-(bU2.min.z+(bU2.max.z-bU2.min.z)/2);
+                                // Reuse the base digits' exact local positions instead of
+                                // recomputing from the icing meshes' own bounding boxes —
+                                // icing_N.glb shares the same per-digit local origin as
+                                // number_N.glb, so this keeps the icing lined up with the cake.
+                                const dp = baseWrapper.userData.digitLocalPos;
+                                if(dp){
+                                    igT.position.copy(dp.T);
+                                    igU.position.copy(dp.U);
+                                } else {
+                                    const bT2=new THREE.Box3().setFromObject(igT),bU2=new THREE.Box3().setFromObject(igU);
+                                    const wT2=bT2.max.x-bT2.min.x,wU2=bU2.max.x-bU2.min.x;
+                                    const gap2=(wT2+wU2)*0.08,totalW2=wT2+gap2+wU2,startX2=-totalW2/2;
+                                    igT.position.x=startX2-bT2.min.x; igU.position.x=startX2+wT2+gap2-bU2.min.x;
+                                    igT.position.y=-bT2.min.y; igU.position.y=-bU2.min.y;
+                                    igT.position.z=-(bT2.min.z+(bT2.max.z-bT2.min.z)/2);
+                                    igU.position.z=-(bU2.min.z+(bU2.max.z-bU2.min.z)/2);
+                                }
                                 icingWrapper.add(igT); icingWrapper.add(igU);
                             } else { icingWrapper.add(igT||igU); }
                             icingWrapper.scale.copy(baseWrapper.scale);
@@ -2694,20 +3220,55 @@ let usedGLB=false;
                             sceneRoot.add(icingWrapper); currentIcing=icingWrapper;
                         }
                     }
-                    const yBefore2=baseWrapper.position.y;
+              const yBefore2=baseWrapper.position.y;
                     addStandToScene(baseWrapper);
                     const yDelta2=baseWrapper.position.y-yBefore2;
-                    if(yDelta2!==0&&currentIcing){currentIcing.position.y+=yDelta2;currentIcing.updateMatrixWorld(true);}
-                    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor);
+                 if(yDelta2!==0){
+                        if(currentIcing){currentIcing.position.y+=yDelta2;currentIcing.updateMatrixWorld(true);}
+                        if(currentFrost && currentFrost!==baseWrapper){currentFrost.position.y+=yDelta2;currentFrost.updateMatrixWorld(true);}
+                        if(currentTexture){currentTexture.position.y+=yDelta2;currentTexture.updateMatrixWorld(true);}
+                    }
+                 recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
                     usedGLB=true; showStatus('Loaded ✓');
                 }
-            } else {
-                const N=state.numberChoice??0;
-                const baseGLB=await loadGLB(`/models/number_${N}.glb`).catch(()=>null);
+   } else {
+               const N=state.numberChoice??0;
+              const baseGLB=await loadGLB(`/models/${getNumberBaseFileName(N, frostingsArr)}.glb`).catch(()=>null);
      if(baseGLB&&glbHasMesh(baseGLB)){
-            positionGroup(baseGLB, 4.5, 0.75);
-                    sceneRoot.add(baseGLB); currentBase=baseGLB;
-                    if(isSugarIcing){
+            positionGroup(baseGLB, 4.5, 1.0);
+                  sceneRoot.add(baseGLB);
+                    if(frostingsArr.includes('Fondant Smooth')){ currentFrost=baseGLB; } else { currentBase=baseGLB; }
+
+               // ── Shell Border (Smooth Buttercream) frost overlay ──
+                    // NOTE: normalized independently with positionGroup (not copied from
+                    // baseGLB's transform) because the _smoothbc export may not share the
+                    // same native scale as number_{N}.glb — copying the base's scale
+                    // factor directly risked blowing the frost mesh up to camera-swallowing
+                    // size if its native dimensions differ.
+                 const frostNameN = getNumberFrostFileName(N, frostingsArr);
+                    if(frostNameN){
+                        const frostGLB=await loadGLB(`/models/${frostNameN}.glb`).catch(()=>null);
+                    if(frostGLB&&glbHasMesh(frostGLB)){
+                            frostGLB.scale.copy(baseGLB.scale);
+                            frostGLB.position.copy(baseGLB.position);
+                            frostGLB.rotation.copy(baseGLB.rotation);
+                            sceneRoot.add(frostGLB); currentFrost=frostGLB;
+                        }
+                    }
+
+                   // ── Textured Buttercream overlay — ADD-on, never replaces base ──
+                    const texNameN = getNumberTextureFileName(N, frostingsArr);
+                    if(texNameN){
+                        const texGLB=await loadGLB(`/models/${texNameN}.glb`).catch(()=>null);
+                        if(texGLB&&glbHasMesh(texGLB)){
+                            texGLB.scale.copy(baseGLB.scale);
+                            texGLB.position.copy(baseGLB.position);
+                            texGLB.rotation.copy(baseGLB.rotation);
+                            sceneRoot.add(texGLB); currentTexture=texGLB;
+                        }
+                    }
+
+                 if(isSugarIcing){
                         const icingGLB=await loadGLB(`/models/icing_${N}.glb`).catch(()=>null);
                         if(icingGLB&&glbHasMesh(icingGLB)){
                             icingGLB.scale.copy(baseGLB.scale);
@@ -2716,11 +3277,45 @@ let usedGLB=false;
                             sceneRoot.add(icingGLB); currentIcing=icingGLB;
                         }
                     }
-                    const yBefore3=baseGLB.position.y;
+
+          // ── Drip overlay — dedicated per-digit export (drip0.glb, drip1.glb, ...), layered ON TOP of the base ──
+                    if(hasDrip){
+                        const dripNameN = getNumberDripFileName(N);
+                        const dripGLB=await loadGLB(`/models/${dripNameN}.glb`).catch(()=>null);
+                        if(dripGLB&&glbHasMesh(dripGLB)){
+                            dripGLB.scale.copy(baseGLB.scale);
+                            dripGLB.position.copy(baseGLB.position);
+                            dripGLB.rotation.copy(baseGLB.rotation);
+                            sceneRoot.add(dripGLB); currentDrip=dripGLB;
+                        }
+                    }
+
+      // ── Rosette overlay — per-digit export (rosette_{N}_middle/border/full/sides.glb),
+                    // layered ON TOP of the base. Available for every single digit (0–9). ──
+                    const numRosetteOn = frostingsArr.includes('Rosettes') && !frostingsArr.includes('Fondant Smooth') && !frostingsArr.includes('Semi-naked Style');
+                    if(numRosetteOn){
+                        const numRosetteFile = getNumberRosetteFileMap(N)[rosettePlacement] || getNumberRosetteFileMap(N)['Border'];
+                        const rosetteGLB=await loadGLB(`/models/${numRosetteFile}.glb`).catch(()=>null);
+                        if(rosetteGLB&&glbHasMesh(rosetteGLB)){
+                            rosetteGLB.scale.copy(baseGLB.scale);
+                            rosetteGLB.position.copy(baseGLB.position);
+                            rosetteGLB.rotation.copy(baseGLB.rotation);
+                            sceneRoot.add(rosetteGLB); currentRosette=rosetteGLB;
+                            applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
+                        }
+                    }
+
+                   const yBefore3=baseGLB.position.y;
                     addStandToScene(baseGLB);
                     const yDelta3=baseGLB.position.y-yBefore3;
-                    if(yDelta3!==0&&currentIcing){currentIcing.position.y+=yDelta3;currentIcing.updateMatrixWorld(true);}
-                    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor);
+                 if(yDelta3!==0){
+                        if(currentIcing){currentIcing.position.y+=yDelta3;currentIcing.updateMatrixWorld(true);}
+                        if(currentFrost && currentFrost!==baseGLB){currentFrost.position.y+=yDelta3;currentFrost.updateMatrixWorld(true);}
+                        if(currentTexture){currentTexture.position.y+=yDelta3;currentTexture.updateMatrixWorld(true);}
+                        if(currentDrip){currentDrip.position.y+=yDelta3;currentDrip.updateMatrixWorld(true);}
+                        if(currentRosette){currentRosette.position.y+=yDelta3;currentRosette.updateMatrixWorld(true);}
+                    }
+                   recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
                     usedGLB=true; showStatus('Loaded ✓');
                 }
             }
@@ -2729,14 +3324,17 @@ let usedGLB=false;
     } else {
 const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : (SHAPE_SLUG[shape]||'round');
 const originalShape = shape;
+_isBundtActive = (slug === 'bundt');
 const needFrost = shouldLoadFrostingGLB(frostingsArr);
 const hasFondant    = frostingsArr.includes('Fondant Smooth');
 const hasSemiNaked  = frostingsArr.includes('Semi-naked Style');
 const hasSemiNakedR = hasSemiNaked;
 const semiNakedSlug = (shape === 'Two-tier Round') ? 'two-tier' : (shape === 'Three-tier Round') ? 'three-tier' : (shape === 'Heart') ? 'heart' : (shape === 'Square') ? 'square' : 'round';
-const baseURL  = hasSemiNaked
-    ? `/models/base_seminaked_${semiNakedSlug}.glb`
-    : `/models/base_${slug}.glb`;
+const baseURL  = (slug === 'bundt')
+    ? (hasSemiNaked ? `/models/bundt_seminaked.glb` : `/models/bundt.glb`)
+    : hasSemiNaked
+        ? `/models/base_seminaked_${semiNakedSlug}.glb`
+        : `/models/base_${slug}.glb`;
 console.log('[Debug] Loading base:', baseURL);
 const hasShellBorder = frostingsArr.includes('Smooth Buttercream');
 const hasTextured = frostingsArr.includes('Textured Buttercream');
@@ -2744,28 +3342,44 @@ const frostURL = hasFondant
     ? `/models/fondant_${slug}.glb`
   : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart'))
             ? (hasShellBorder ? `/models/frosting_${slug}_seminaked_smooth.glb` : null)
-        : (isSugarIcing && !hasSemiNaked && !hasTextured)
+  : (isSugarIcing && !hasSemiNaked && !hasTextured)
             ? null
-            : (needFrost ? `/models/frosting_${slug}_${frostSuffix}.glb` : null);
+            : (slug === 'bundt')
+                ? (hasShellBorder ? `/models/bundt_smoothbc.glb` : null)
+                // Only load a base-coat overlay when Shell Border or Textured is actually
+                // selected — 'Rosettes' alone (with no base coat underneath) must not
+                // silently fall back to the 'smooth' default.
+                : (needFrost && (hasShellBorder || hasTextured) ? `/models/frosting_${slug}_${frostSuffix}.glb` : null);
 console.log('[SemiNaked Debug] hasShellBorder:', hasShellBorder, '| frostURL:', frostURL);
 console.log('[Fondant Debug] hasFondant:', hasFondant, '| frostURL:', frostURL, '| slug:', slug);
 const activeCakeStyle = frostingsArr.find(f => ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'].includes(f)) || 'Smooth Buttercream';
 const icingURL = isSugarIcing
-    ? (activeCakeStyle === 'Semi-naked Style' && !hasShellBorder
-        ? `/models/icing_${slug}_seminaked.glb`
-        : `/models/icing_${slug}.glb`)
+    ? (slug === 'bundt'
+        ? `/models/bundt_icing.glb`
+        : activeCakeStyle === 'Semi-naked Style' && !hasShellBorder
+            ? `/models/icing_${slug}_seminaked.glb`
+            : `/models/icing_${slug}.glb`)
     : null;
 const dripURL = hasDrip
-    ? (hasFondant
-        ? `/models/fondant_drip_${slug}.glb`
-: hasSemiNaked
-            ? (slug === 'heart' ? `/models/drip_heart_round.glb` : `/models/drip_seminaked_${slug}.glb`)
-            : `/models/drip_${slug}.glb`)
+    ? (slug === 'bundt'
+        ? `/models/bundt_drip.glb`
+        : hasFondant
+            ? `/models/fondant_drip_${slug}.glb`
+            : hasSemiNaked
+                ? (slug === 'heart' ? `/models/drip_heart_round.glb` : `/models/drip_seminaked_${slug}.glb`)
+                : `/models/drip_${slug}.glb`)
     : null;
+const rosetteActive = frostingsArr.includes('Rosettes') && !hasFondant;
+// Combo placements (e.g. "Border+Sides") need TWO rosette pieces instead of
+// one — split on '+' so each half is fetched and positioned independently.
+const rosettePlacementList = rosetteActive ? rosettePlacement.split('+').map(s=>s.trim()) : [];
+const rosetteURLs = rosettePlacementList.map(pl => `/models/${getRosetteFileMap(slug)[pl] || `rosette_${slug}`}.glb`);
 const urlList  = [baseURL];
 const idxFrost = (frostURL) ? (urlList.push(frostURL)-1) : -1;
 const idxIcing = icingURL                 ? (urlList.push(icingURL)-1) : -1;
 const idxDrip  = dripURL                  ? (urlList.push(dripURL) -1) : -1;
+const idxRosetteStart = rosetteURLs.length ? urlList.length : -1;
+rosetteURLs.forEach(u=>urlList.push(u));
 
 const results  = await Promise.allSettled(urlList.map(u=>loadGLB(u)));
 const baseGLB  = results[0]?.status==='fulfilled' ? results[0].value : null;
@@ -2773,6 +3387,16 @@ const frostGLB = idxFrost>=0 && results[idxFrost]?.status==='fulfilled' ? result
 if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${slug}.glb`);
 const icingGLB = idxIcing>=0 && results[idxIcing]?.status==='fulfilled' ? results[idxIcing].value : null;
 const dripGLB  = idxDrip >=0 && results[idxDrip] ?.status==='fulfilled' ? results[idxDrip].value  : null;
+// Each entry: { glb, placement } — one per piece in the combo (or a single entry for non-combos)
+const rosettePieces = [];
+if(idxRosetteStart >= 0){
+    rosettePlacementList.forEach((pl, i)=>{
+        const r = results[idxRosetteStart + i];
+        const g = r?.status==='fulfilled' ? r.value : null;
+        if(g && glbHasMesh(g)) rosettePieces.push({ glb:g, placement:pl });
+        else console.error(`[Rosette] Missing: ${rosetteURLs[i]}`);
+    });
+}
 
 clearScene(true);
 
@@ -2781,8 +3405,122 @@ if(baseGLB  && glbHasMesh(baseGLB) && (!hasFondant || hasSemiNaked)) { currentBa
 if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
 if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
 if(dripGLB  && glbHasMesh(dripGLB))  { currentDrip  = dripGLB;  sceneRoot.add(currentDrip);  toPos.push(currentDrip);  }
+const rosetteIsCombo = rosettePieces.length > 1;
+if(rosettePieces.length === 1) {
+    // Single placement (no combo) — keep this EXACTLY like before: the raw
+    // loaded piece goes straight into the scene with no wrapper group, so
+    // all the sizing/position math below behaves identically to the
+    // pre-combo version (this is what "Sides" etc. depend on).
+    currentRosette = rosettePieces[0].glb;
+    sceneRoot.add(currentRosette);
+    applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
+} else if(rosettePieces.length > 1) {
+    // Combo placement (e.g. Border+Sides) — needs two independent pieces,
+    // so only THIS case gets wrapped in a group.
+    currentRosette = new THREE.Group();
+    rosettePieces.forEach(p => currentRosette.add(p.glb));
+    sceneRoot.add(currentRosette);
+    applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
+}
 // Only frost gets texture preservation skipped — base always recolors
 if(hasSemiNaked && currentFrost) currentFrost.userData.keepOriginalTexture = true;
+
+// Fits the loaded rosette (single piece or combo group) to the ACTUAL final
+// diameter/position of whichever cake mesh is passed in — used for the normal
+// path AND reused for semi-naked cakes so Rosettes behave identically no
+// matter which cake style is active.
+function fitRosetteToCake(cakeRef){
+    if(!currentRosette || !cakeRef) return;
+    const rosetteUnits = rosetteIsCombo
+        ? currentRosette.children.map((c,i)=>({ obj:c, placement: rosettePieces[i].placement }))
+        : [{ obj: currentRosette, placement: rosettePieces[0].placement }];
+    rosetteUnits.forEach(({obj: child, placement}) => {
+        child.position.set(0,0,0);
+        child.rotation.set(0,0,0);
+        child.scale.set(1,1,1);
+        child.updateMatrixWorld(true);
+        const rawRoseBox  = new THREE.Box3().setFromObject(child);
+        const rawRoseDiam = Math.max(rawRoseBox.max.x-rawRoseBox.min.x, rawRoseBox.max.z-rawRoseBox.min.z);
+        const cakeBoxNow  = new THREE.Box3().setFromObject(cakeRef);
+        const cakeDiamNow = Math.max(cakeBoxNow.max.x-cakeBoxNow.min.x, cakeBoxNow.max.z-cakeBoxNow.min.z);
+        const ROSETTE_SIDES_ADJUST = {
+            'round':      { diamMult: 1.08, yNudge: 0 },
+            'square':     { diamMult: 1.1, yNudge: 0 },
+            'heart':      { diamMult: 1.05, yNudge: 0 },
+            'two-tier':   { diamMult: 1.14, yNudge: 0.05 },
+            'three-tier': { diamMult: 1.10, yNudge: 0.07 },
+        };
+        const ROSETTE_FULLTOP_ADJUST = {
+            heart:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            round:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            'two-tier': { diamMult: 0.8, xNudge: 0, zNudge: 0 },
+            'three-tier': { diamMult: 0.53, xNudge: 0, zNudge: 0 },
+        };
+        const ROSETTE_CLUSTER_RIGHT_ADJUST = {
+            heart:  { diamMult: 0.8, xNudge: 0, zNudge: 0 },
+            round:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            'two-tier': { diamMult: 0.8, xNudge: -0.05, zNudge: 0 },
+            'three-tier': { diamMult: 0.5, xNudge: -0.1, zNudge: 0 },
+        };
+        const ROSETTE_CLUSTER_LEFT_ADJUST = {
+            heart:  { diamMult: 0.8, xNudge: 0, zNudge: 0 },
+            round:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+            'two-tier': { diamMult: 0.8, xNudge: 0.05, zNudge: 0 },
+            'three-tier': { diamMult: 0.5, xNudge: 0.1, zNudge: 0 },
+        };
+      const ROSETTE_BORDER_ADJUST = {
+    'two-tier':   { diamMult: 1.05, yNudge: 0.24 },
+    'three-tier': { diamMult: 1.05, yNudge: 0.38 },
+};
+        const roseDiamMult = (placement === 'Sides')
+            ? (ROSETTE_SIDES_ADJUST[slug]?.diamMult ?? 1.14)
+            : (placement === 'Full Top')
+                ? (ROSETTE_FULLTOP_ADJUST[slug]?.diamMult ?? 1.0)
+                : (placement === 'Cluster Right')
+                    ? (ROSETTE_CLUSTER_RIGHT_ADJUST[slug]?.diamMult ?? 1.0)
+                    : (placement === 'Cluster Left')
+                        ? (ROSETTE_CLUSTER_LEFT_ADJUST[slug]?.diamMult ?? 1.0)
+                        : (placement === 'Border')
+                            ? (ROSETTE_BORDER_ADJUST[slug]?.diamMult ?? 1.0)
+                            : 1.0;
+        const roseScale = rawRoseDiam > 0.0001 ? (cakeDiamNow*roseDiamMult)/rawRoseDiam : 1.0;
+        child.scale.setScalar(roseScale);
+        child.updateMatrixWorld(true);
+        const scaledRoseBox  = new THREE.Box3().setFromObject(child);
+        const scaledRoseSize = scaledRoseBox.getSize(new THREE.Vector3());
+        const roseCenter     = scaledRoseBox.getCenter(new THREE.Vector3());
+        const cakeCenterNow  = cakeBoxNow.getCenter(new THREE.Vector3());
+        const cakeRadiusNow  = cakeDiamNow * 0.5;
+
+        let targetX = cakeCenterNow.x - roseCenter.x;
+        let targetZ = cakeCenterNow.z - roseCenter.z;
+        let targetY;
+        const roseSink = scaledRoseSize.y * 0.12;
+
+        if(placement === 'Cluster Right' || placement === 'Cluster Left'){
+            const clusterOffset = cakeRadiusNow * 0.42;
+            targetX += (placement === 'Cluster Right' ? clusterOffset : -clusterOffset);
+            const clusterAdjust = (placement === 'Cluster Right' ? ROSETTE_CLUSTER_RIGHT_ADJUST : ROSETTE_CLUSTER_LEFT_ADJUST)[slug] || { xNudge:0, zNudge:0 };
+            targetX += cakeDiamNow * clusterAdjust.xNudge;
+            targetZ += cakeDiamNow * clusterAdjust.zNudge;
+            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
+        } else if(placement === 'Sides'){
+            const sidesSink = scaledRoseSize.y * 0.90;
+            const sidesYNudge = ROSETTE_SIDES_ADJUST[slug]?.yNudge ?? 0;
+            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - sidesSink - (cakeDiamNow * sidesYNudge);
+        } else if(placement === 'Border' && ROSETTE_BORDER_ADJUST[slug]){
+            const bAdjust = ROSETTE_BORDER_ADJUST[slug];
+            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink - (cakeDiamNow * bAdjust.yNudge);
+        } else {
+            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
+        }
+        child.position.set(targetX, targetY, targetZ);
+        child.updateMatrixWorld(true);
+    });
+}
 
 if(toPos.length > 0 || hasFondant){
             sceneRoot.updateMatrixWorld(true);
@@ -2808,7 +3546,8 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
         currentFrost.updateMatrixWorld(true);
         addStandToScene(currentFrost);
         currentFrost.updateMatrixWorld(true);
-        recolorGLB(flavor, frostingsArr, dripFlavor, icingColor);
+    fitRosetteToCake(currentFrost);
+    recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
         usedGLB = true; showStatus('Loaded ✓');
     } else if(hasSemiNakedR && currentBase){
                     // Collect all overlay GLBs (frost, icing, drip)
@@ -2861,53 +3600,90 @@ overlays.forEach(g => {
                     const midY = (combined.min.y+combined.max.y)*0.5;
                     [currentBase, ...overlays].forEach(g => { g.position.y -= midY; g.updateMatrixWorld(true); });
 
-                    // Add stand and shift all overlays by same delta
+                 // Add stand and shift all overlays by same delta
                     const yBefore = currentBase.position.y;
-                    addStandToScene(currentBase);
-                    const yDelta = currentBase.position.y - yBefore;
+                    // Bundt sits high due to stray geometry — same sink applied to the
+                    // regular (non-semi-naked) bundt path below, so semi-naked matches it.
+                    const _bundtSinkSN = _isBundtActive ? 0.16 : 0;
+                    addStandToScene(currentBase, _bundtSinkSN);
+                                    const yDelta = currentBase.position.y - yBefore;
                     if(yDelta !== 0){
                         overlays.forEach(g => { g.position.y += yDelta; g.updateMatrixWorld(true); });
                     }
-
                     [currentBase, ...overlays].forEach(g => { g.visible = true; });
+                    fitRosetteToCake(currentBase);
                 }else {
-           if(!hasFondant){
-                    if(toPos.length >= 2) positionMultiGroup(_inches, ...toPos);
-                    else if(toPos.length === 1) positionGroup(toPos[0], _inches);
-                    if(toPos.length > 0){
+       if(!hasFondant){
+                    if(slug === 'bundt' && toPos.length >= 2){
+                        // Bundt overlays (Shell Border / Sugar Icing / Drip) must reuse the
+                        // whole-cake bundt mesh's own transform instead of being folded into
+                        // a combined bounding box — bundt.glb + bundt_smoothbc.glb together
+                        // have a very different footprint than bundt.glb alone, and sizing
+                        // off the combined box was shrinking the visible cake and leaving
+                        // overlay decorations (like Choco Curls) floating above it.
+                        positionGroup(currentBase, _inches);
+                        toPos.slice(1).forEach(g=>{
+                            g.scale.copy(currentBase.scale);
+                            g.position.copy(currentBase.position);
+                            g.rotation.copy(currentBase.rotation);
+                            g.updateMatrixWorld(true);
+                        });
+                    } else if(toPos.length >= 2){
+                        positionMultiGroup(_inches, ...toPos);
+                    } else if(toPos.length === 1){
+                        positionGroup(toPos[0], _inches);
+                    }
+               if(toPos.length > 0){
                         const yBefore = toPos[0].position.y;
-                        addStandToScene(toPos[0]);
+                        // Bundt sits a bit high due to stray geometry in the current bundt.glb —
+                        // nudge it down. Increase this number for more sink, decrease for less.
+                        const _bundtSink = (shape==='Bundt') ? 0.16 : 0;
+                        addStandToScene(toPos[0], _bundtSink);
                         const yDelta = toPos[0].position.y - yBefore;
                         if(yDelta !== 0) toPos.slice(1).forEach(g=>{ g.position.y+=yDelta; g.updateMatrixWorld(true); });
+fitRosetteToCake(toPos[0]);
                     }
                 }
                 }
             }
-          recolorGLB(flavor, frostingsArr, dripFlavor, icingColor);
+     recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
             usedGLB = true; showStatus('Loaded ✓');
         } else if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
-            recolorGLB(flavor, frostingsArr, dripFlavor, icingColor);
+       recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
             usedGLB = true; showStatus('Loaded ✓');
         }
-  if(!usedGLB){ showNoPreview(shape); }   
+  if(!usedGLB){ showNoPreview(shape); }
+        updateCheesecakeCrust(state.cakeType);
     }
-
 loadedKey=newKey; sceneRoot.visible=true;
 isLoading=false;
     loadingEl.style.opacity='0'; setTimeout(()=>{loadingEl.style.display='none';},400);
     isLoading=false;
     if(pendingState){const n=pendingState;pendingState=null;updateScene(n);}
- requestAnimationFrame(()=>{
+requestAnimationFrame(()=>{
         if(typeof window._reprojectAllToppings==='function') window._reprojectAllToppings();
         if(typeof window._reapplySprinkles==='function') window._reapplySprinkles();
+        if(typeof window._reapplyChocoCurls==='function') window._reapplyChocoCurls(state.tier, state.shape);
+        if(typeof window._reapplyPlaque==='function') window._reapplyPlaque();
+        if(typeof window._reapplyCharacterTopper==='function') window._reapplyCharacterTopper();
+        // Re-fit the rosette one more time after everything (stand, matrices) has
+        // fully settled — fixes cases where Rosettes is the ONLY base icing (no
+        // Shell Border/Sugar Icing layer loaded alongside it), which changes
+        // which code path positions the cake and can leave the rosette's scale
+        // stale from before the stand/offset was applied.
+        if(typeof currentRosette !== 'undefined' && currentRosette && typeof fitRosetteToCake === 'function'){
+            const cakeRefNow = (typeof currentBase !== 'undefined' && currentBase) ? currentBase
+                              : (typeof currentFrost !== 'undefined' && currentFrost) ? currentFrost
+                              : null;
+            if(cakeRefNow) fitRosetteToCake(cakeRefNow);
+        }
     });
 if(pendingState){const n=pendingState;pendingState=null;updateScene(n);}
     } catch(e) { console.error('[updateScene crash]', e); isLoading=false; loadingEl.style.opacity='0'; setTimeout(()=>{loadingEl.style.display='none';},400); sceneRoot.visible=true; }
 }
-
-// ── SPRINKLES SYSTEM ──
-const sprinklesMeshes = { cylinder: null, pearl: null };
-const sprinklePlacement = { cylinder: 'top', pearl: 'top' };
+const sprinklesMeshes = { cylinder: null, pearl: null, chocoSprinkle: null, peanuts: null };
+const sprinklePlacement = { cylinder: 'top', pearl: 'top', chocoSprinkle: 'top', peanuts: 'top' };
+window._sprinklePlacement = sprinklePlacement;
 // ── shared helper: raycast straight down onto cake surface ──
 // Returns the hit point or null if nothing hit (so we can SKIP placement)
 function _snapToSurface(x, z) {
@@ -2915,7 +3691,7 @@ function _snapToSurface(x, z) {
         new THREE.Vector3(x, 20, z),
         new THREE.Vector3(0, -1, 0)
     );
-    const meshes = getCakeMeshes();
+    const meshes = getSprinkleTargetMeshes();
     const hits = ray.intersectObjects(meshes, false);
     if (hits.length === 0) return null; // nothing hit — don't place here
     hits.sort((a, b) => b.point.y - a.point.y);
@@ -2934,7 +3710,7 @@ function _snapToSide(cx, cz, angle, y) {
     const dir = new THREE.Vector3(-Math.cos(angle), 0, -Math.sin(angle));
     const ray = new THREE.Raycaster(origin, dir);
     ray.far   = FAR * 2;
-    const meshes = getCakeMeshes();
+    const meshes = getSprinkleTargetMeshes();
     const hits   = ray.intersectObjects(meshes, false);
     if (hits.length === 0) return null;
     hits.sort((a, b) => a.distance - b.distance);
@@ -3007,7 +3783,7 @@ function buildCylinderSprinkles() {
     }
 if (sprinklePlacement.cylinder === 'sides' || sprinklePlacement.cylinder === 'both') {
         sceneRoot.updateMatrixWorld(true);
-        const cakeMeshesForBox = getCakeMeshes();
+        const cakeMeshesForBox = getSprinkleTargetMeshes();
         const cakeBox = new THREE.Box3();
         cakeMeshesForBox.forEach(m => cakeBox.expandByObject(m));
         if (cakeBox.isEmpty()) cakeBox.setFromObject(sceneRoot);
@@ -3028,17 +3804,20 @@ if (sprinklePlacement.cylinder === 'sides' || sprinklePlacement.cylinder === 'bo
                 const y = cakeBox.min.y + heightFrac * cakeH;
                 const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
                 if (!hit) continue;
-                const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+                 const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
                 const mat = new THREE.MeshStandardMaterial({
                     color: COLORS[Math.floor(Math.random() * COLORS.length)],
                     roughness: 0.28, metalness: 0.08, envMapIntensity: 1.0,
                 });
                 const mesh = new THREE.Mesh(geo, mat);
-                const tangentAngle = angle + Math.PI / 2 + (Math.random() - 0.5) * 0.4;
-                mesh.rotation.x = (Math.random() - 0.5) * 0.30;
-                mesh.rotation.y = tangentAngle;
-                mesh.rotation.z = Math.PI / 2 + (Math.random() - 0.5) * 0.20;
-                const cylOut = ROD_R * 0.5;
+                // Lay the rod on its SIDE (tip the cylinder axis 90° off vertical),
+                // then spin it randomly in the plane of the wall so each piece points
+                // a different horizontal-ish direction — like a sprinkle stuck flat
+                // against frosting, never poking straight out like a quill.
+                mesh.rotation.z = Math.PI / 2;
+                mesh.rotation.y = Math.random() * Math.PI * 2;
+                mesh.rotation.x = (Math.random() - 0.5) * 0.5;
+                const cylOut = ROD_R * 0.9; // sits mostly embedded, just barely proud of the wall
                 mesh.position.set(
                     hit.x + Math.cos(angle) * cylOut,
                     hit.y + (Math.random() - 0.5) * 0.012,
@@ -3053,7 +3832,6 @@ if (sprinklePlacement.cylinder === 'sides' || sprinklePlacement.cylinder === 'bo
     scene.add(group);
     sprinklesMeshes.cylinder = group;
 }
-
 function buildPearlSprinkles() {
     if (sprinklesMeshes.pearl) {
         scene.remove(sprinklesMeshes.pearl);
@@ -3101,7 +3879,7 @@ mesh.position.set(x, y + size * 0.5, z);
 
 if (sprinklePlacement.pearl === 'sides' || sprinklePlacement.pearl === 'both') {
         sceneRoot.updateMatrixWorld(true);
-        const cakeMeshesForBox2 = getCakeMeshes();
+        const cakeMeshesForBox2 = getSprinkleTargetMeshes();
         const cakeBox = new THREE.Box3();
         cakeMeshesForBox2.forEach(m => cakeBox.expandByObject(m));
         if (cakeBox.isEmpty()) cakeBox.setFromObject(sceneRoot);
@@ -3148,6 +3926,184 @@ if (sprinklePlacement.pearl === 'sides' || sprinklePlacement.pearl === 'both') {
     scene.add(group);
     sprinklesMeshes.pearl = group;
 }
+
+// ── Chocolate Sprinkles — same rod style as Cylinder Sprinkles, single dark choco tone ──
+function buildChocoSprinkles() {
+    if (sprinklesMeshes.chocoSprinkle) {
+        scene.remove(sprinklesMeshes.chocoSprinkle);
+        sprinklesMeshes.chocoSprinkle = null;
+    }
+    const CHOCO_COLOR = 0x2A1206;
+    const group = new THREE.Group();
+    const ROD_R = 0.010;
+    const ROD_L = 0.050;
+
+    if (sprinklePlacement.chocoSprinkle === 'top' || sprinklePlacement.chocoSprinkle === 'both') {
+        const topPoints = _buildSurfacePoints(0.095);
+        for (let i = topPoints.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [topPoints[i], topPoints[j]] = [topPoints[j], topPoints[i]];
+        }
+        const topCount = Math.min(220, topPoints.length);
+        for (let i = 0; i < topCount; i++) {
+            const { x, y, z } = topPoints[i];
+            const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+            const mat = new THREE.MeshStandardMaterial({ color: CHOCO_COLOR, roughness: 0.32, metalness: 0.06, envMapIntensity: 0.85 });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.rotation.z = Math.PI / 2;
+            mesh.rotation.y = Math.random() * Math.PI * 2;
+            mesh.rotation.x = (Math.random() - 0.5) * 0.12;
+            mesh.position.set(x, y + ROD_R * 0.5, z);
+            mesh.castShadow = true;
+            group.add(mesh);
+        }
+    }
+    if (sprinklePlacement.chocoSprinkle === 'sides' || sprinklePlacement.chocoSprinkle === 'both') {
+        sceneRoot.updateMatrixWorld(true);
+        const cakeMeshesForBox = getSprinkleTargetMeshes();
+        const cakeBox = new THREE.Box3();
+        cakeMeshesForBox.forEach(m => cakeBox.expandByObject(m));
+        if (cakeBox.isEmpty()) cakeBox.setFromObject(sceneRoot);
+        const cakeCX = (cakeBox.min.x + cakeBox.max.x) * 0.5;
+        const cakeCZ = (cakeBox.min.z + cakeBox.max.z) * 0.5;
+        const cakeH  = cakeBox.max.y - cakeBox.min.y;
+        const ANGLE_SEGS = 32, HEIGHT_SEGS = 7;
+        for (let ai = 0; ai < ANGLE_SEGS; ai++) {
+            for (let hi = 0; hi < HEIGHT_SEGS; hi++) {
+                const angleBase = (ai / ANGLE_SEGS) * Math.PI * 2;
+                const angle = angleBase + (Math.random() - 0.5) * (Math.PI * 2 / ANGLE_SEGS) * 0.85;
+                const heightBase = 0.04 + (hi / HEIGHT_SEGS) * 0.88;
+                const heightFrac = heightBase + Math.random() * (0.88 / HEIGHT_SEGS) * 0.85;
+                const y = cakeBox.min.y + heightFrac * cakeH;
+                const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
+                if (!hit) continue;
+                 const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+                const mat = new THREE.MeshStandardMaterial({ color: CHOCO_COLOR, roughness: 0.32, metalness: 0.06, envMapIntensity: 0.85 });
+                const mesh = new THREE.Mesh(geo, mat);
+                // Lay the rod on its side and spin it randomly in the wall's plane —
+                // flush against the frosting, random horizontal-ish orientation,
+                // never poking straight outward.
+                mesh.rotation.z = Math.PI / 2;
+                mesh.rotation.y = Math.random() * Math.PI * 2;
+                mesh.rotation.x = (Math.random() - 0.5) * 0.5;
+                const cylOut = ROD_R * 0.9;
+                mesh.position.set(hit.x + Math.cos(angle) * cylOut, hit.y + (Math.random() - 0.5) * 0.012, hit.z + Math.sin(angle) * cylOut);
+                mesh.castShadow = true;
+                group.add(mesh);
+            }
+        }
+    }
+    scene.add(group);
+    sprinklesMeshes.chocoSprinkle = group;
+}
+// ── Crushed Peanuts — dense-looking crushed topping built cheaply via
+// InstancedMesh. Raycasting stays at the same coarse density as the other
+// decorations (fruits/sprinkles); we get the "extra dense" look by spawning a
+// small cluster of jittered chunks per sampled point, then batching ALL chunks
+// into one InstancedMesh per color (4 draw calls total) instead of thousands
+// of individual Mesh/geometry/material objects — that per-object overhead
+// (plus the old ultra-fine raycast grid) is what was freezing the page. ──
+function buildCrushedPeanuts() {
+    if (sprinklesMeshes.peanuts) {
+        scene.remove(sprinklesMeshes.peanuts);
+        sprinklesMeshes.peanuts = null;
+    }
+    const PEANUT_COLORS = [0xC89860, 0xB8804A, 0xD4A66E, 0xA06E3C];
+    const group = new THREE.Group();
+    const CHUNK_MIN = 0.008;
+    const CHUNK_MAX = 0.016;
+    const CLUSTER_PER_POINT = 15; // same cluster count for top AND sides so density matches on both
+
+    // One shared unit geometry, reused (scaled per-instance) across every peanut —
+    // avoids allocating thousands of separate BufferGeometries.
+    if (!window._peanutBaseGeo) window._peanutBaseGeo = new THREE.DodecahedronGeometry(1, 0);
+    const baseGeo = window._peanutBaseGeo;
+    const mats = PEANUT_COLORS.map(c => new THREE.MeshStandardMaterial({
+        color: c, roughness: 0.62, metalness: 0.01, envMapIntensity: 0.55,
+    }));
+
+    // Gather placement transforms first (cheap raycasts), batch into InstancedMesh after.
+    const byColor = [[], [], [], []];
+    const dummy = new THREE.Object3D();
+
+    if (sprinklePlacement.peanuts === 'top' || sprinklePlacement.peanuts === 'both') {
+        const topPoints = _buildSurfacePoints(0.095); // identical raycast cost to Cylinder Sprinkles
+        for (let i = topPoints.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [topPoints[i], topPoints[j]] = [topPoints[j], topPoints[i]];
+        }
+        const topCount = Math.min(220, topPoints.length); // same cap as Cylinder Sprinkles
+        for (let i = 0; i < topCount; i++) {
+            const { x, y, z } = topPoints[i];
+            for (let c = 0; c < CLUSTER_PER_POINT; c++) {
+                const size = CHUNK_MIN + Math.random() * (CHUNK_MAX - CHUNK_MIN);
+                const jx = (Math.random() - 0.5) * 0.06;
+                const jz = (Math.random() - 0.5) * 0.06;
+                const colorIdx = Math.floor(Math.random() * PEANUT_COLORS.length);
+                dummy.position.set(x + jx, y + size * 0.28, z + jz);
+                dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                dummy.scale.set(size, size * 0.62, size);
+                dummy.updateMatrix();
+                byColor[colorIdx].push(dummy.matrix.clone());
+            }
+        }
+    }
+
+    if (sprinklePlacement.peanuts === 'sides' || sprinklePlacement.peanuts === 'both') {
+        sceneRoot.updateMatrixWorld(true);
+        const cakeMeshesForBox = getSprinkleTargetMeshes();
+        const cakeBox = new THREE.Box3();
+        cakeMeshesForBox.forEach(m => cakeBox.expandByObject(m));
+        if (cakeBox.isEmpty()) cakeBox.setFromObject(sceneRoot);
+        const cakeCX = (cakeBox.min.x + cakeBox.max.x) * 0.5;
+        const cakeCZ = (cakeBox.min.z + cakeBox.max.z) * 0.5;
+        const cakeH  = cakeBox.max.y - cakeBox.min.y;
+        const ANGLE_SEGS = 40, HEIGHT_SEGS = 11; // close to Cylinder Sprinkles' side cost, slightly denser grid
+        for (let ai = 0; ai < ANGLE_SEGS; ai++) {
+            for (let hi = 0; hi < HEIGHT_SEGS; hi++) {
+                const angleBase = (ai / ANGLE_SEGS) * Math.PI * 2;
+                const angle = angleBase + (Math.random() - 0.5) * (Math.PI * 2 / ANGLE_SEGS) * 0.85;
+                const heightBase = 0.04 + (hi / HEIGHT_SEGS) * 0.88;
+                const heightFrac = heightBase + Math.random() * (0.88 / HEIGHT_SEGS) * 0.85;
+                const y = cakeBox.min.y + heightFrac * cakeH;
+                const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
+                if (!hit) continue;
+                // Wide jitter per cluster point — wider than the grid spacing itself —
+                // so neighboring clusters overlap and blend into a continuous random
+                // scatter (matching the top's organic look) instead of visible dotted
+                // rows/columns tracing the raycast grid.
+                const angleStep = (Math.PI * 2 / ANGLE_SEGS);
+                const heightStep = (0.88 / HEIGHT_SEGS) * cakeH;
+                for (let c = 0; c < CLUSTER_PER_POINT; c++) {
+                    const size = CHUNK_MIN + Math.random() * (CHUNK_MAX - CHUNK_MIN);
+                    const chunkOut = size * 0.5;
+                    const jAngle = angle + (Math.random() - 0.5) * angleStep * 1.3;
+                    const jY = (Math.random() - 0.5) * heightStep * 1.3;
+                    const colorIdx = Math.floor(Math.random() * PEANUT_COLORS.length);
+                    dummy.position.set(hit.x + Math.cos(jAngle) * chunkOut, hit.y + jY, hit.z + Math.sin(jAngle) * chunkOut);
+                    dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+                    dummy.scale.set(size, size, size);
+                    dummy.updateMatrix();
+                    byColor[colorIdx].push(dummy.matrix.clone());
+                }
+            }
+        }
+    }
+
+    // Batch each color into a single InstancedMesh — 4 draw calls total, however
+    // many thousand peanuts are placed.
+    byColor.forEach((matrices, idx) => {
+        if (matrices.length === 0) return;
+        const inst = new THREE.InstancedMesh(baseGeo, mats[idx], matrices.length);
+        inst.castShadow = true;
+        matrices.forEach((m, i) => inst.setMatrixAt(i, m));
+        inst.instanceMatrix.needsUpdate = true;
+        group.add(inst);
+    });
+
+    scene.add(group);
+    sprinklesMeshes.peanuts = group;
+}
 function clearSprinkles(type) {
     if (type === 'cylinder' && sprinklesMeshes.cylinder) {
         scene.remove(sprinklesMeshes.cylinder);
@@ -3157,17 +4113,32 @@ function clearSprinkles(type) {
         scene.remove(sprinklesMeshes.pearl);
         sprinklesMeshes.pearl = null;
     }
+    if (type === 'chocoSprinkle' && sprinklesMeshes.chocoSprinkle) {
+        scene.remove(sprinklesMeshes.chocoSprinkle);
+        sprinklesMeshes.chocoSprinkle = null;
+    }
+    if (type === 'peanuts' && sprinklesMeshes.peanuts) {
+        scene.remove(sprinklesMeshes.peanuts);
+        sprinklesMeshes.peanuts = null;
+    }
 }
 
 window.buildCylinderSprinkles = buildCylinderSprinkles;
 window.buildPearlSprinkles    = buildPearlSprinkles;
+window.buildChocoSprinkles    = buildChocoSprinkles;
+window.buildCrushedPeanuts    = buildCrushedPeanuts;
 window.clearSprinkles         = clearSprinkles;
 
-// ── Sprinkle placement toggle handlers ──
 document.querySelectorAll('.sprinkle-place-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const type      = btn.dataset.type;      // 'cylinder' or 'pearl'
         const placement = btn.dataset.placement; // 'top','sides','both'
+
+        // Rosette placement can lock out certain sprinkle placements.
+        if(typeof rosetteBlocksAddon === 'function'){
+            const _rReason = rosetteBlocksAddon('sprinkle', placement);
+            if(_rReason){ if(typeof showToast === 'function') showToast('⚠ '+_rReason, 2600); return; }
+        }
 
         // Update state
         sprinklePlacement[type] = placement;
@@ -3191,19 +4162,668 @@ document.querySelectorAll('.sprinkle-place-btn').forEach(btn => {
             sprinklesMeshes.pearl = null;
             buildPearlSprinkles();
         }
+        if (type === 'chocoSprinkle' && sprinklesMeshes.chocoSprinkle) {
+            scene.remove(sprinklesMeshes.chocoSprinkle);
+            sprinklesMeshes.chocoSprinkle = null;
+            buildChocoSprinkles();
+        }
+        if (type === 'peanuts' && sprinklesMeshes.peanuts) {
+            scene.remove(sprinklesMeshes.peanuts);
+            sprinklesMeshes.peanuts = null;
+            buildCrushedPeanuts();
+        }
     });
 });
-
 // Re-apply active sprinkles after cake model reloads
 const _origUpdateScene = window.updateModel;
 window._reapplySprinkles = function() {
-    if (sprinklesMeshes.cylinder) { scene.remove(sprinklesMeshes.cylinder); sprinklesMeshes.cylinder = null; buildCylinderSprinkles(); }
-    if (sprinklesMeshes.pearl)    { scene.remove(sprinklesMeshes.pearl);    sprinklesMeshes.pearl    = null; buildPearlSprinkles(); }
+    if (sprinklesMeshes.cylinder)     { scene.remove(sprinklesMeshes.cylinder);     sprinklesMeshes.cylinder     = null; buildCylinderSprinkles(); }
+    if (sprinklesMeshes.pearl)        { scene.remove(sprinklesMeshes.pearl);        sprinklesMeshes.pearl        = null; buildPearlSprinkles(); }
+    if (sprinklesMeshes.chocoSprinkle){ scene.remove(sprinklesMeshes.chocoSprinkle);sprinklesMeshes.chocoSprinkle= null; buildChocoSprinkles(); }
+    if (sprinklesMeshes.peanuts)      { scene.remove(sprinklesMeshes.peanuts);      sprinklesMeshes.peanuts      = null; buildCrushedPeanuts(); }
 };
-
-// ── Shared GLB loader for placed decorations ──
 const decoGLBCache={};
 function loadDecoGLB(url){return new Promise((resolve,reject)=>{if(decoGLBCache[url]){const c=decoGLBCache[url].clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});resolve(c);return;}new GLTFLoader().load(url,gltf=>{decoGLBCache[url]=gltf.scene;const c=gltf.scene.clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});resolve(c);},undefined,err=>{console.error('[Deco]',url,err);reject(err);});});}
+// yNudge = extra downward push, as a fraction of cake diameter, applied on
+// top of the normal sink calc. Increase it to pull a floating piece DOWN;
+// decrease (or make negative) to lift it back UP if it sinks too far.
+const CHOCO_CURLS_CONFIG = {
+    middle: [ { file:'chococurls_center',       diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
+    sides:  [ { file:'chococurls_circle_around', diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.15 } ],
+    both:   [
+        { file:'chococurls_center',       diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_circle_around', diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.15 },
+    ],
+};
+// Two-tier variant — a single combined mesh with rings sized for BOTH tier
+// edges already built at the correct relative offset (per the Blender
+// reference), so it's positioned as one group instead of stacking two rings.
+const CHOCO_CURLS_CONFIG_TWO_TIER = {
+    middle:[ { file:'chococurls_center',           diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
+    sides: [ { file:'chococurls_two-tier_around', diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.40 } ],
+    both:  [
+        { file:'chococurls_center',           diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_two-tier_around',  diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.40 },
+    ],
+};
+// Three-tier variant — same idea as two-tier: one combined mesh covering all
+// three tier edges at once, built at the correct relative offsets in Blender.
+// Starting values copied from the two-tier config — tune diamMult (width)
+// and yNudge (height) the same way once you see it in the preview.
+const CHOCO_CURLS_CONFIG_THREE_TIER = {
+    middle:[ { file:'chococurls_center',             diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
+    sides: [ { file:'chococurls_three-tier_around', diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.54 } ],
+    both:  [
+        { file:'chococurls_center',             diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_three-tier_around',  diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.54 },
+    ],
+};
+// Square variant — a single mesh built to trace a square cake's edge instead
+// of a circular one. Starting values copied from the round "sides" config —
+// tune diamMult (width) / sinkFrac / yNudge once you see it against the cake.
+const CHOCO_CURLS_CONFIG_SQUARE = {
+    middle: [ { file:'chococurls_center',        diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
+    sides:  [ { file:'chococurls_square_around', diamMult:1.62, sitOnTop:true, sinkFrac:0.15, yNudge:0.52 } ],
+    both:   [
+        { file:'chococurls_center',        diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_square_around', diamMult:1.62, sitOnTop:true, sinkFrac:0.15, yNudge:0.52 },
+    ],
+};
+const CHOCO_CURLS_CONFIG_HEART = {
+    middle: [ { file:'chococurls_center',       diamMult:1.50, sitOnTop:true, sinkFrac:1.55, yNudge:0.45 } ],
+    sides:  [ { file:'chococurls_heart_around', diamMult:0.90, sitOnTop:true, sinkFrac:0.15, yNudge:0.01 } ],
+    both:   [
+        { file:'chococurls_center',       diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_heart_around', diamMult:0.90, sitOnTop:true, sinkFrac:0.15, yNudge:0.01 },
+    ]
+};
+const CHOCO_CURLS_CONFIG_BUNDT = {
+    middle: [ { file:'chococurls_bundt_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.57, yNudge:-0.01 } ],
+    sides:  [ { file:'chococurls_bundt_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 } ],
+    both:   [
+        { file:'chococurls_bundt_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.57, yNudge:-0.01 },
+        { file:'chococurls_bundt_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 },
+    ]
+};
+// Digits with no dedicated "center" (middle) model — Middle and Both get hidden
+// for these, leaving Sides as the only placement option.
+const CHOCO_CURLS_NO_MIDDLE_DIGITS = [1,2,3,5,7];
+function updateChocoCurlsPlacementAvailability(){
+    if(typeof state === 'undefined') return;
+    const middleBtn = document.querySelector('.choco-curls-place-btn[data-placement="middle"]');
+    const sidesBtn  = document.querySelector('.choco-curls-place-btn[data-placement="sides"]');
+    const bothBtn   = document.querySelector('.choco-curls-place-btn[data-placement="both"]');
+    if(!middleBtn || !sidesBtn || !bothBtn) return;
+    const isRestricted = state.shape === 'Number' && state.numberDigits === 1 && CHOCO_CURLS_NO_MIDDLE_DIGITS.includes(state.numberChoice);
+    middleBtn.style.display = isRestricted ? 'none' : '';
+    bothBtn.style.display   = isRestricted ? 'none' : '';
+    if(isRestricted && state.chocoCurlsPlacement !== 'sides'){
+        state.chocoCurlsPlacement = 'sides';
+        [middleBtn, sidesBtn, bothBtn].forEach(b=>b.classList.remove('active'));
+        sidesBtn.classList.add('active');
+        sidesBtn.style.background = 'var(--gold)'; sidesBtn.style.color = '#fff';
+        middleBtn.style.background = 'var(--surface)'; middleBtn.style.color = 'var(--text-muted)';
+        bothBtn.style.background = 'var(--surface)'; bothBtn.style.color = 'var(--text-muted)';
+        if(state.addons && state.addons.has('Chocolate Curls') && typeof window.placeChocoCurls==='function'){
+            window.placeChocoCurls('sides', state.tier, state.shape);
+        }
+    }
+}
+window._updateChocoCurlsPlacementAvailability = updateChocoCurlsPlacementAvailability;
+window.placeChocoCurls = async function(placement, tier, shape){
+    currentChocoCurlsTier  = tier  || 'Single';
+    currentChocoCurlsShape = shape || 'Round';
+ const configSet = currentChocoCurlsShape === 'Bundt'  ? CHOCO_CURLS_CONFIG_BUNDT
+                     : currentChocoCurlsShape === 'Square' ? CHOCO_CURLS_CONFIG_SQUARE
+                     : currentChocoCurlsShape === 'Heart'  ? CHOCO_CURLS_CONFIG_HEART
+                     : currentChocoCurlsTier === 'Two-tier'   ? CHOCO_CURLS_CONFIG_TWO_TIER
+                     : currentChocoCurlsTier === 'Three-tier' ? CHOCO_CURLS_CONFIG_THREE_TIER
+                     : CHOCO_CURLS_CONFIG;
+// Fall back through middle → sides → both → first available key, so an
+// unconfigured placement for a given shape/tier never leaves `parts`
+// undefined and silently crashing the whole function.
+let parts = configSet[placement] || configSet.middle || configSet.sides || configSet.both || Object.values(configSet)[0];
+if(!parts){
+    console.error('[ChocoCurls] No config available at all for', currentChocoCurlsShape, currentChocoCurlsTier, placement);
+    return false;
+}
+    // Number-shape digit-specific pieces — e.g. chococurls_0_center.glb (middle) and
+    // chococurls_0_around.glb (sides) for digit 0. Add an entry per digit here to
+    // tune each piece's own size/position independently — any field you omit falls
+    // back to the generic chococurls_center / chococurls_circle_around values above.
+   const CHOCO_CURLS_NUMBER_OVERRIDES = {
+        0: {
+            center: { diamMult:0.70, sinkFrac:0.50, yNudge:0 },
+           around: { diamMult:1.08, sinkFrac:0.21, yNudge:0.10 },
+        },
+        1: {
+          around: { diamMult:0.9, sinkFrac:0.25, yNudge:0.10 },
+        },
+       2: {
+    around: { diamMult:1.20, sinkFrac:0.30, yNudge:0.14, xNudge:0.04, zNudge:0.06 },
+},
+3: {
+          around: { diamMult:1.10, sinkFrac:0.18, yNudge:0.10 },
+        },
+         4: {
+            center: { diamMult:0.20, sinkFrac:0.57, yNudge:0, xNudge:-0.04, zNudge:0.01 },
+           around: { diamMult:0.95, sinkFrac:0.38, yNudge:0.10 },
+        },
+        5: {
+          around: { diamMult:1.28, sinkFrac:0.33, yNudge:0.10, xNudge:0.03, zNudge:-0.05 },
+        },
+       6: {
+        center: { diamMult:0.40, sinkFrac:0.52, yNudge:-0.02, xNudge:0.02, zNudge:0.16 },
+        around: { diamMult:1.2, sinkFrac:0.33, yNudge:0.1, xNudge:0.01, zNudge:0.02 },
+    },
+    7: {
+          around: { diamMult:1.25, sinkFrac:0.35, yNudge:0.10, xNudge:-0.10, zNudge:-0.07 },
+        },
+         8: {
+        center: { diamMult:0.68, sinkFrac:0.55, yNudge:-0.02, xNudge:0.01, zNudge:-0.01 },
+        around: { diamMult:1.03, sinkFrac:0.30, yNudge:0.1, xNudge:-0.01, zNudge:0.00 },
+    }, 
+    9: {
+        center: { diamMult:0.38, sinkFrac:0.55, yNudge:-0.02, xNudge:-0.02, zNudge:-0.16 },
+        around: { diamMult:1.18, sinkFrac:0.33, yNudge:0.1, xNudge:-0.01, zNudge:0.011 },
+    },
+    };
+    if(currentChocoCurlsShape === 'Number' && typeof state !== 'undefined' && state.numberDigits === 1){
+        const _digit = state.numberChoice;
+        const _ov = CHOCO_CURLS_NUMBER_OVERRIDES[_digit] || {};
+        parts = parts.map(p => {
+            if(p.file === 'chococurls_center'){
+                const { file:_centerFile, ..._centerRest } = _ov.center || {};
+                return { ...p, ..._centerRest, file: _centerFile || `chococurls_${_digit}_center` };
+            }
+            if(p.file === 'chococurls_circle_around'){
+                const { file:_aroundFile, ..._aroundRest } = _ov.around || {};
+                return { ...p, ..._aroundRest, file: _aroundFile || `chococurls_${_digit}_around` };
+            }
+            return p;
+        });
+    }
+    try{
+        const cakeRef = currentBase || currentFrost;
+        if(!cakeRef) return false;
+        cakeRef.updateMatrixWorld(true);
+        const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+        const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+        const cakeDiameter = Math.max(cakeBox.max.x - cakeBox.min.x, cakeBox.max.z - cakeBox.min.z);
+
+        // Clear any previously placed curl piece(s) before loading the new set
+        if(currentChocoCurls && currentChocoCurls.length){
+            currentChocoCurls.forEach(obj=>scene.remove(obj));
+        }
+        currentChocoCurls = [];
+
+      // ── Realistic dark chocolate curl color — override whatever material the GLB came with ──
+        const CURL_BASE   = new THREE.Color('#22100A');
+        const CURL_HILITE = new THREE.Color('#3D2416');
+
+        for(const part of parts){
+            const url = `/models/${part.file}.glb`;
+            const fg = await loadDecoGLB(url);
+            fg.traverse(c=>{ if(c.isMesh){ c.castShadow=true; c.receiveShadow=true; } });
+            fg.position.set(0,0,0); fg.rotation.set(0,0,0); fg.scale.set(1,1,1);
+            fg.updateMatrixWorld(true);
+
+            const rawBox  = new THREE.Box3().setFromObject(fg);
+            const rawSize = rawBox.getSize(new THREE.Vector3());
+            const rawDiam = Math.max(rawSize.x, rawSize.z);
+
+            const targetDiam = cakeDiameter * part.diamMult;
+            const targetY    = part.sitOnTop ? cakeBox.max.y : cakeCenter.y;
+
+            const scale = rawDiam > 0.0001 ? targetDiam / rawDiam : 1.0;
+            fg.scale.setScalar(scale);
+            fg.updateMatrixWorld(true);
+
+           const scaledBox    = new THREE.Box3().setFromObject(fg);
+            const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+            const scaledSize   = scaledBox.getSize(new THREE.Vector3());
+            // Sink the piece into the frosting relative to ITS OWN height.
+            const sinkAmount = part.sitOnTop ? scaledSize.y * (part.sinkFrac ?? 0.48) : 0;
+            const yNudgeAmount = cakeDiameter * (part.yNudge || 0);
+            // xNudge/zNudge — horizontal offsets, same fraction-of-diameter convention
+            // as yNudge. diamMult only changes SIZE (the piece is always re-centered on
+            // the cake's X/Z center afterward), so these are the only way to shift it
+            // sideways to line up with an off-center numeral shape like "2".
+            const xNudgeAmount = cakeDiameter * (part.xNudge || 0);
+            const zNudgeAmount = cakeDiameter * (part.zNudge || 0);
+            const offsetY = (part.sitOnTop ? (targetY - scaledBox.min.y - sinkAmount) : (targetY - scaledCenter.y)) - yNudgeAmount;
+
+            fg.position.set(
+                cakeCenter.x - scaledCenter.x + xNudgeAmount,
+                offsetY,
+                cakeCenter.z - scaledCenter.z + zNudgeAmount
+            );
+            fg.updateMatrixWorld(true);
+
+            fg.traverse(c=>{
+                if(!c.isMesh) return;
+                if(c.material){ if(c.material.map) c.material.map.dispose(); c.material.dispose(); }
+          c.material = new THREE.MeshStandardMaterial({
+                    color: CURL_BASE,
+                    roughness: 0.52,
+                    metalness: 0.02,
+                    envMapIntensity: 0.75,
+                    emissive: CURL_HILITE,
+                    emissiveIntensity: 0.02,
+                });
+                c.castShadow = true;
+                c.receiveShadow = true;
+            });
+
+            scene.add(fg);
+            currentChocoCurls.push(fg);
+        }
+
+        currentChocoCurlsPlacement = placement;
+        return true;
+    }catch(err){
+        console.error('[ChocoCurls]', placement, err);
+        if(typeof showToast === 'function') showToast('⚠ Choco Curls model failed to load — check /models/ path', 3000);
+        return false;
+    }
+};
+window.clearChocoCurls = function(){
+    if(currentChocoCurls && currentChocoCurls.length){
+        currentChocoCurls.forEach(obj=>scene.remove(obj));
+    }
+    currentChocoCurls = [];
+    currentChocoCurlsPlacement = null;
+};
+window._reapplyChocoCurls = function(tier, shape){
+    if(tier !== undefined) currentChocoCurlsTier = tier;
+    if(shape !== undefined) currentChocoCurlsShape = shape;
+    if(currentChocoCurls && currentChocoCurls.length){
+        const placement = currentChocoCurlsPlacement || 'middle';
+        // Retry a few times in case this fires before the newly-reloaded cake
+        // mesh (currentBase/currentFrost) is fully in place.
+        const _tryReapply=(attempts)=>{
+            window.placeChocoCurls(placement, currentChocoCurlsTier, currentChocoCurlsShape).then(ok=>{
+                if(!ok && attempts>0) setTimeout(()=>_tryReapply(attempts-1),200);
+            }).catch(()=>{
+                if(attempts>0) setTimeout(()=>_tryReapply(attempts-1),200);
+            });
+        };
+        _tryReapply(15);
+    }
+};
+
+// ── CHOCOLATE PLAQUE — single flat piece, auto-centered on top of the cake ──
+let currentPlaque = null;
+const PLAQUE_SHAPE_FILE_MAP = {
+    'Square':'plaque_square','Rectangle':'plaque_rectangle','Circle':'plaque_circle',
+    'Heart':'plaque_heart','Oval':'plaque_oval',
+};
+window.placePlaqueOnCake = async function(shapeKey){
+    const file = PLAQUE_SHAPE_FILE_MAP[shapeKey] || 'plaque_square';
+    try{
+        const cakeRef = currentBase || currentFrost;
+        if(!cakeRef) return false;
+        cakeRef.updateMatrixWorld(true);
+        const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+        const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+        const cakeDiameter = Math.max(cakeBox.max.x - cakeBox.min.x, cakeBox.max.z - cakeBox.min.z);
+
+        if(currentPlaque){ scene.remove(currentPlaque); currentPlaque = null; }
+
+   const fg = await loadDecoGLB(`/models/${file}.glb`);
+        const PLAQUE_BASE   = new THREE.Color('#22100A');
+        const PLAQUE_HILITE = new THREE.Color('#3D2416');
+        fg.traverse(c=>{
+            if(!c.isMesh) return;
+            if(c.material){ if(c.material.map) c.material.map.dispose(); c.material.dispose(); }
+            c.material = new THREE.MeshStandardMaterial({
+                color: PLAQUE_BASE,
+                roughness: 0.52,
+                metalness: 0.02,
+                envMapIntensity: 0.75,
+                emissive: PLAQUE_HILITE,
+                emissiveIntensity: 0.02,
+            });
+            c.castShadow = true;
+            c.receiveShadow = true;
+        });
+        fg.position.set(0,0,0); fg.rotation.set(0,0,0); fg.scale.set(1,1,1);
+        fg.updateMatrixWorld(true);
+
+        const rawBox  = new THREE.Box3().setFromObject(fg);
+        const rawSize = rawBox.getSize(new THREE.Vector3());
+        const rawDiam = Math.max(rawSize.x, rawSize.z);
+        const targetDiam = cakeDiameter * 0.42;
+        const scale = rawDiam > 0.0001 ? targetDiam / rawDiam : 1.0;
+        fg.scale.setScalar(scale);
+        fg.updateMatrixWorld(true);
+
+        const scaledBox    = new THREE.Box3().setFromObject(fg);
+        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+        const scaledSize   = scaledBox.getSize(new THREE.Vector3());
+        const sinkAmount   = scaledSize.y * 0.15;
+        const offsetY = cakeBox.max.y - scaledBox.min.y - sinkAmount;
+
+        fg.position.set(
+            cakeCenter.x - scaledCenter.x,
+            offsetY,
+            cakeCenter.z - scaledCenter.z
+        );
+        fg.updateMatrixWorld(true);
+
+        scene.add(fg);
+        currentPlaque = fg;
+        return true;
+    }catch(err){
+        console.error('[Plaque]', shapeKey, err);
+        if(typeof showToast === 'function') showToast('⚠ Plaque model failed to load — check /models/ path', 3000);
+        return false;
+    }
+};
+window.clearPlaque = function(){
+    if(currentPlaque){ scene.remove(currentPlaque); currentPlaque = null; }
+    if(typeof window.clearPlaqueMessage === 'function') window.clearPlaqueMessage();
+};
+let currentPlaqueText = null;
+function buildPlaqueTextTexture(text){
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const lines = (text || '').split('\n').slice(0,3).map(l=>l.trim());
+    const hasText = lines.some(l=>l.length>0);
+    if(hasText){
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+     const lineCount = lines.length;
+        let fontSize = lineCount===1 ? 130 : lineCount===2 ? 100 : 78;
+        const fitFont = size => `700 ${size}px "Dancing Script", cursive`;
+        ctx.font = fitFont(fontSize);
+        let maxWidth = Math.max(...lines.map(l=>ctx.measureText(l).width));
+        while(maxWidth > canvas.width*0.94 && fontSize > 16){
+            fontSize -= 2;
+            ctx.font = fitFont(fontSize);
+            maxWidth = Math.max(...lines.map(l=>ctx.measureText(l).width));
+        }
+        const maxTotalHeight = canvas.height*0.90;
+        while(fontSize*1.08*lineCount > maxTotalHeight && fontSize > 16){
+            fontSize -= 2;
+            ctx.font = fitFont(fontSize);
+        }
+        const lineHeight = fontSize * 1.08;
+        const totalHeight = lineHeight * lineCount;
+        const startY = (canvas.height - totalHeight)/2 + lineHeight/2;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.shadowColor = 'rgba(0,0,0,0.35)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetY = 1;
+        lines.forEach((line, i)=>{
+            ctx.fillText(line, canvas.width/2, startY + i*lineHeight);
+        });
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.needsUpdate = true;
+    return tex;
+}
+window.setPlaqueMessage = function(text){
+    if(currentPlaqueText){
+        scene.remove(currentPlaqueText);
+        currentPlaqueText.geometry.dispose();
+        if(currentPlaqueText.material.map) currentPlaqueText.material.map.dispose();
+        currentPlaqueText.material.dispose();
+        currentPlaqueText = null;
+    }
+    if(!currentPlaque || !text || !text.trim()) return;
+    currentPlaque.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(currentPlaque);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const planeW = Math.max(size.x, 0.01) * 0.82;
+    const planeH = Math.max(size.z, 0.01) * 0.82;
+    const tex = buildPlaqueTextTexture(text);
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
+    const geo = new THREE.PlaneGeometry(planeW, planeH);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.set(center.x, box.max.y + 0.002, center.z);
+    mesh.renderOrder = 10;
+    scene.add(mesh);
+    currentPlaqueText = mesh;
+};
+// ── CHARACTER TOPPERS — file-name lookup by character name ──
+const CHARACTER_FILE_MAP = {
+    'Mickey Mouse':      'mickeymouse',
+    'Minnie Mouse':      'minniemouse',
+    'Lightning McQueen': 'lightningmcqueen',
+    'Sally':             'sally',
+    'Kuromi':            'kuromi',
+    'Hello Kitty':       'hellokitty',
+    'Cinnamoroll':       'cinnamoroll',
+    'My Melody':         'melody',
+    'Cocomelon':         'cocomelon',
+    'Squidward':         'squidward',
+    'Patrick Star':      'patrickstar',
+    'Gary':               'gary',
+    'SpongeBob':          'spongebob',
+    'Dora':               'dora',
+    'Boots':              'boots',
+    'Ben 10':             'ben10',
+   'Buttercup':          'buttercup',
+    'Blossom':            'blossom',
+    'Bubbles':            'bubbles',
+    "Squidward's House":      'squidwards_house',
+    "SpongeBob's House":      'spongebob_house',
+    "Patrick's House":        'patrickhouse',
+    "Dora's House":           'dora_house',
+    'Powerpuff House':        'powerpuff_house',
+    'Mickey Mouse Clubhouse': 'mickey_mouse_clubhouse',
+    'Ben 10 RV':              'rvben10',
+    'Gwen':                   'gwen',
+    'Lolo Max':               'lolomax',
+};
+let currentCharacterTopper = null;
+// Per-character size correction, calibrated against Cinnamoroll (1.0 = baseline).
+// Raw GLB exports rarely share the same real-world scale, so matching bounding-box
+// diameter alone still looks inconsistent — bump a character's number up if it
+// renders smaller than Cinnamoroll on the cake, or down if it renders bigger.
+const CHARACTER_SIZE_MULT = {
+    'Mickey Mouse':      0.5,
+    'Minnie Mouse':      0.45,
+    'Lightning McQueen': 0.9,
+    'Sally':             0.8,
+    'Kuromi':            0.6,
+    'Hello Kitty':       0.6,
+    'Cinnamoroll':       0.9, // ← baseline
+    'My Melody':         0.6,
+    'Cocomelon':         0.5,
+    // SpongeBob / Squidward / Patrick sized up to match the SpongeBob's House scale
+    'Squidward':         0.6,
+    'Patrick Star':      0.5,
+    'SpongeBob':          0.5,
+    // Gary stays a small sidekick — smaller than SpongeBob
+    'Gary':               0.35,
+    'Dora':               0.6,
+    'Boots':              0.4,
+    'Ben 10':             0.45,
+    'Buttercup':          0.5,
+    'Blossom':            0.5,
+    'Bubbles':            0.5,
+    // Houses are normalized by HEIGHT (see CHARACTER_SIZE_MODE) so they land at
+    // the same height Gary used to render at (his old baseline mult of 1.0)
+    "Squidward's House":      1.0,
+    "SpongeBob's House":      0.9,
+    "Patrick's House":        0.8,
+    "Dora's House":           1.0,
+    'Powerpuff House':        1.0,
+    'Mickey Mouse Clubhouse': 0.8,
+    'Ben 10 RV':              2.0,
+    'Gwen':                   0.4,
+    'Lolo Max':               0.6,
+};
+// Houses are wide/squat, so sizing them off their largest single axis (width)
+// makes them come out too short. These get normalized by HEIGHT instead, so
+// their vertical size lines up with the standing character figures.
+const CHARACTER_SIZE_MODE = {
+    "Squidward's House": 'height',
+    "SpongeBob's House": 'height',
+    "Patrick's House":   'height',
+    "Dora's House":      'height',
+    'Powerpuff House':        'height',
+    'Mickey Mouse Clubhouse': 'height',
+};
+// Per-character starting yaw (Y-axis rotation, radians) so every model faces
+const CHARACTER_ROTATION_Y = {
+    'Kuromi':    Math.PI,
+    'My Melody': Math.PI,
+    'Gary':      Math.PI,
+};
+
+window.placeCharacterOnCake = async function(characterKey, cx, cy){
+    const file = CHARACTER_FILE_MAP[characterKey] || 'mickeymouse';
+    try{
+        const cakeRef = currentBase || currentFrost;
+        if(!cakeRef) return -1;
+        cakeRef.updateMatrixWorld(true);
+        const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+        const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+        const cakeDiameter = Math.max(cakeBox.max.x - cakeBox.min.x, cakeBox.max.z - cakeBox.min.z);
+
+        const fg = await loadDecoGLB(`/models/${file}.glb`);
+        fg.traverse(c=>{ if(c.isMesh){ c.castShadow = true; c.receiveShadow = true; } });
+        fg.position.set(0,0,0); fg.rotation.set(0,0,0); fg.scale.set(1,1,1);
+        fg.updateMatrixWorld(true);
+
+        const rawBox  = new THREE.Box3().setFromObject(fg);
+        const rawSize = rawBox.getSize(new THREE.Vector3());
+        const sizeMode = CHARACTER_SIZE_MODE[characterKey] || 'maxAxis';
+        // Use the largest SINGLE axis by default — a stray/degenerate vertex far
+        // from the model can blow the scale factor up. Wide "house"-style models
+        // are normalized off their HEIGHT instead (see CHARACTER_SIZE_MODE), so
+        // their vertical size lines up with the standing character figures.
+        const rawDiam = sizeMode === 'height' ? rawSize.y : Math.max(rawSize.x, rawSize.y, rawSize.z);
+        const sizeMult = CHARACTER_SIZE_MULT[characterKey] ?? 1.0;
+        const targetDiam = cakeDiameter * 0.30 * sizeMult;
+        const MIN_SAFE_DIM = 0.01;
+        const MAX_SAFE_DIM = 500.0;
+        let scale = 1.0;
+        if(isFinite(rawDiam) && rawDiam > MIN_SAFE_DIM && rawDiam < MAX_SAFE_DIM){
+            scale = targetDiam / rawDiam;
+        } else {
+            console.warn('[CharacterTopper] Degenerate bounding box for', characterKey, '- raw size:', rawSize, '- using fallback scale');
+        }
+        fg.scale.setScalar(scale);
+        fg.updateMatrixWorld(true);
+
+        const checkBox = new THREE.Box3().setFromObject(fg);
+        const checkSize = checkBox.getSize(new THREE.Vector3());
+        const checkMax = sizeMode === 'height' ? checkSize.y : Math.max(checkSize.x, checkSize.y, checkSize.z);
+        if(!isFinite(checkMax) || checkMax > targetDiam * 2.5){
+            const fixScale = checkMax > 0.0001 ? (targetDiam / checkMax) * scale : scale;
+            fg.scale.setScalar(fixScale);
+            fg.updateMatrixWorld(true);
+        }
+
+        fg.rotation.y = CHARACTER_ROTATION_Y[characterKey] || 0;
+        fg.updateMatrixWorld(true);
+
+        const scaledBox  = new THREE.Box3().setFromObject(fg);
+        const scaledSize = scaledBox.getSize(new THREE.Vector3());
+        const bottomOffset = -scaledBox.min.y - scaledSize.y * 0.06;
+
+        characterModels.forEach(m=>m.group.visible=false);
+        let sp = null;
+        if(cx !== undefined && cy !== undefined && typeof raycastCakeTop === 'function'){
+            sp = raycastCakeTop(cx, cy);
+        }
+        characterModels.forEach(m=>m.group.visible=true);
+        if(!sp){ sp = new THREE.Vector3(cakeCenter.x, cakeBox.max.y, cakeCenter.z); }
+
+        fg.position.set(sp.x, sp.y + bottomOffset, sp.z);
+        // Smoothing target starts equal to the drop position so it doesn't
+        // animate in from the origin on first placement.
+        fg._targetPos = fg.position.clone();
+        fg.updateMatrixWorld(true);
+
+        scene.add(fg);
+        const idx = characterModels.length;
+        characterModels.push({ group: fg, key: characterKey, bottomOffset });
+        return idx;
+    }catch(err){
+        console.error('[CharacterTopper]', characterKey, err);
+        if(typeof showToast === 'function') showToast('⚠ Character model failed to load — check /models/ path', 3000);
+        return -1;
+    }
+};
+window.clearCharacterModels = function(){
+    characterModels.forEach(m=>scene.remove(m.group));
+    characterModels.length = 0;
+    _draggingCharacterIdx = -1;
+};
+window.removeCharacterModel = function(idx){
+    if(idx<0||idx>=characterModels.length) return false;
+    scene.remove(characterModels[idx].group);
+    characterModels.splice(idx,1);
+    return true;
+};
+window.getCharacterModels = function(){ return characterModels; };
+window.getCharacterIndexAtScreen = function(cx, cy){
+    const rect = document.getElementById('viewerEl').getBoundingClientRect();
+    const ndc = new THREE.Vector2(((cx-rect.left)/rect.width)*2-1, -((cy-rect.top)/rect.height)*2+1);
+    const rc = new THREE.Raycaster(); rc.setFromCamera(ndc, camera);
+    for(let i=characterModels.length-1;i>=0;i--){
+        const t=[]; characterModels[i].group.traverse(c=>{ if(c.isMesh) t.push(c); });
+        if(rc.intersectObjects(t,false).length>0) return i;
+    }
+    return -1;
+};
+window.moveDraggingCharacter = function(cx, cy){
+    if(_draggingCharacterIdx<0 || !characterModels[_draggingCharacterIdx]) return;
+    const e = characterModels[_draggingCharacterIdx];
+    characterModels.forEach(m=>m.group.visible=false);
+    const h = raycastCakeTop(cx, cy);
+    characterModels.forEach(m=>m.group.visible=true);
+    if(h){
+        // Set a smoothing TARGET instead of snapping directly to the raycast
+        // hit — the animate() loop eases the visible position toward this
+        // each frame, so dragging feels smooth instead of jumpy.
+        if(!e.group._targetPos) e.group._targetPos = e.group.position.clone();
+        e.group._targetPos.set(h.x, h.y + e.bottomOffset, h.z);
+    }
+};
+window.setDraggingCharacterIdx = function(idx){ _draggingCharacterIdx = idx; };
+window.getDraggingCharacterIdx = function(){ return _draggingCharacterIdx; };
+window.setCharacterYRotation = function(idx, deg){
+    if(idx<0 || !characterModels[idx]) return;
+    characterModels[idx].group.rotation.y = deg * Math.PI / 180;
+};
+window.getCharacterYRotationDeg = function(idx){
+    if(idx<0 || !characterModels[idx]) return 0;
+    return Math.round((characterModels[idx].group.rotation.y * 180 / Math.PI + 360) % 360);
+};
+window._reapplyCharacterTopper = function(){
+    // Repositioning after a cake reload is handled by the shared topping
+    // reprojection system (_reprojectAllToppings), which now covers
+    // characterModels too — nothing extra needed here.
+};
+window.clearPlaqueMessage = function(){
+    if(currentPlaqueText){
+        scene.remove(currentPlaqueText);
+        currentPlaqueText.geometry.dispose();
+        if(currentPlaqueText.material.map) currentPlaqueText.material.map.dispose();
+        currentPlaqueText.material.dispose();
+        currentPlaqueText = null;
+    }
+};
+window._reapplyPlaque = function(){
+    if(currentPlaque && typeof state !== 'undefined' && state.addons && state.addons.has('Chocolate Plaque')){
+        window.placePlaqueOnCake(state.plaqueShape).then(ok=>{
+            if(ok && typeof state.plaqueMessage === 'string') window.setPlaqueMessage(state.plaqueMessage);
+        });
+    }
+};
 function getCakeMeshes(){
     const m=[];
     sceneRoot.traverse(c=>{
@@ -3211,6 +4831,28 @@ function getCakeMeshes(){
         let node=c,isStand=false;
         while(node){if(node.userData&&node.userData.isStand){isStand=true;break;}node=node.parent;}
         if(!isStand) m.push(c);
+    });
+    return m;
+}
+// Sprinkles / crushed peanuts should only land on the plain cake or base
+// frosting surface — never on top of rosettes or other piped 3D decorations,
+// which already have their own texture and get visually cluttered when
+// sprinkles pile on top of them.
+function getSprinkleTargetMeshes(){
+    const m=[];
+    sceneRoot.traverse(c=>{
+        if(!c.isMesh) return;
+        let node=c,isExcluded=false;
+        while(node){
+            if(node.userData && node.userData.isStand){isExcluded=true;break;}
+            if(currentRosette && node===currentRosette){isExcluded=true;break;}
+            // Exclude the piped Shell Border / Sugar Icing overlay — sprinkles and
+            // crushed peanuts should only land on the plain cake body/frosting,
+            // not on top of the decorative piping.
+            if(currentIcing && node===currentIcing){isExcluded=true;break;}
+            node=node.parent;
+        }
+        if(!isExcluded) m.push(c);
     });
     return m;
 }
@@ -3226,18 +4868,188 @@ function raycastCakeTop(cx,cy){
     return camHits[0].point.clone();
 }
 function _positionDecoGroup(fg,sp,fh){fg.position.set(sp.x,sp.y,sp.z);}
-
 // ── Fruit system ──
 const fruitGLBCache={};
 function loadFruitGLB(url){return new Promise((resolve,reject)=>{if(fruitGLBCache[url]){const c=fruitGLBCache[url].clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});resolve(c);return;}new GLTFLoader().load(url,gltf=>{fruitGLBCache[url]=gltf.scene;const c=gltf.scene.clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});resolve(c);},undefined,err=>{console.error('[Fruit]',url,err);reject(err);});});}
 let _draggingFruitIdx=-1;
-window.placeFruitOnCake=async function(fruitName,cx,cy,ei){const map={'Strawberry':'/models/Strawberry.glb','Blueberry':'/models/Blueberry.glb','Raspberry':'/models/Raspberry.glb','Cherry':'/models/Cherry.glb'};const url=map[fruitName];if(!url)return -1;try{let fg,fh;if(ei!==undefined&&ei>=0&&fruitModels[ei]){fg=fruitModels[ei].group;const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;}else{fg=await loadFruitGLB(url);fg.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});fg.updateMatrixWorld(true);const rb=new THREE.Box3().setFromObject(fg),maxD=rb.getSize(new THREE.Vector3()).length();
-                const fruitSizes={'Strawberry':0.22,'Blueberry':0.12,'Raspberry':0.16,'Cherry':0.20};
+
+// Procedural mango — a small shiny yellow/orange cube (no GLB needed)
+function buildMangoCubeMesh(){
+    const g=new THREE.Group();
+    const size=0.10;
+    const mat=new THREE.MeshStandardMaterial({
+        color:new THREE.Color('#F7A927'),
+        roughness:0.10, metalness:0.30, envMapIntensity:1.5,
+    });
+    const geo=new THREE.BoxGeometry(size,size,size);
+    const mesh=new THREE.Mesh(geo,mat);
+    mesh.castShadow=mesh.receiveShadow=true;
+    g.add(mesh);
+    g.rotation.y=Math.random()*Math.PI*2;
+    g.rotation.x=(Math.random()-0.5)*0.3;
+    g.updateMatrixWorld(true);
+    return g;
+}
+// Procedural peach slice — a rounded, curved lens/crescent segment with a soft
+// radial flesh gradient and a warm skin-colored rim along the outer curve,
+// closer to a real peach slice than the old flat pizza-wedge shape.
+function buildPeachSliceMesh(){
+    const g=new THREE.Group();
+    const a=0.135;        // half-length of the slice, tip to tip
+    const hTop=0.058;     // bulge of the outer/skin curve
+    const hBottom=0.026;  // bulge of the inner/cut curve (gentler)
+    const thickness=0.030;
+
+    // ── Lens/crescent profile ──
+    const shape=new THREE.Shape();
+    shape.moveTo(-a,0);
+    shape.quadraticCurveTo(0,hTop,a,0);
+    shape.quadraticCurveTo(0,-hBottom,-a,0);
+
+    const extrudeSettings={
+        depth:thickness, bevelEnabled:true, bevelThickness:0.010,
+        bevelSize:0.010, bevelSegments:4, curveSegments:20,
+    };
+    const geo=new THREE.ExtrudeGeometry(shape,extrudeSettings);
+    geo.center();
+
+    // ── Radial flesh gradient: pale gold center → warm orange edges ──
+    const posAttr=geo.attributes.position;
+    const count=posAttr.count;
+    const colors=new Float32Array(count*3);
+const cCenter=new THREE.Color('#FFCB6B');
+    const cEdge=new THREE.Color('#F2661E');
+    for(let i=0;i<count;i++){
+        const x=posAttr.getX(i), y=posAttr.getY(i);
+        const t=Math.min(1, Math.sqrt(x*x+y*y*2.4)/a);
+        const c=cCenter.clone().lerp(cEdge,t);
+        colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
+    }
+    geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+    geo.rotateX(-Math.PI/2); // lay the slice flat, cut-face up
+    geo.computeVertexNormals();
+
+  const fleshMat=new THREE.MeshStandardMaterial({
+        vertexColors:true, roughness:0.24, metalness:0.03, envMapIntensity:1.05,
+    });
+    const flesh=new THREE.Mesh(geo,fleshMat);
+    flesh.castShadow=flesh.receiveShadow=true;
+    g.add(flesh);
+
+    // ── Warm skin-colored rim tracing just the outer (top) curve ──
+    const rimCurve=new THREE.QuadraticBezierCurve3(
+        new THREE.Vector3(-a,0,0),
+        new THREE.Vector3(0,hTop,0),
+        new THREE.Vector3(a,0,0),
+    );
+    const rimGeo=new THREE.TubeGeometry(rimCurve,20,0.012,8,false);
+    rimGeo.rotateX(-Math.PI/2);
+   const skinMat=new THREE.MeshStandardMaterial({
+        color:new THREE.Color('#C8391A'),
+        roughness:0.36, metalness:0.0, envMapIntensity:0.85,
+    });
+    const rim=new THREE.Mesh(rimGeo,skinMat);
+    rim.position.y=thickness*0.5;
+    rim.castShadow=true;
+    g.add(rim);
+
+    g.rotation.y=Math.random()*Math.PI*2;
+    g.updateMatrixWorld(true);
+    return g;
+}
+window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
+    const map={'Strawberry':'/models/Strawberry.glb','Blueberry':'/models/Blueberry.glb','Raspberry':'/models/Raspberry.glb','Cherry':'/models/Cherry.glb','Kiwi Slice':'/models/kiwi.glb','Banana Slice':'/models/banana.glb'};
+    const proceduralFruits=['Mango Slice','Peach Slice'];
+    const isProcedural=proceduralFruits.includes(fruitName);
+    const url=map[fruitName];
+    if(!url && !isProcedural) return -1;
+    try{
+        let fg,fh;
+        if(ei!==undefined&&ei>=0&&fruitModels[ei]){
+            fg=fruitModels[ei].group;
+            const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;
+        }else{
+            if(isProcedural){
+                fg = fruitName==='Mango Slice' ? buildMangoCubeMesh() : buildPeachSliceMesh();
+                fg.updateMatrixWorld(true);
+            } else {
+                fg=await loadFruitGLB(url);
+                fg.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});
+                fg.updateMatrixWorld(true);
+       const rb=new THREE.Box3().setFromObject(fg);
+                const rbSize=rb.getSize(new THREE.Vector3());
+                console.log('[Fruit DEBUG]', fruitName, 'raw bbox size:', rbSize.x.toFixed(4), rbSize.y.toFixed(4), rbSize.z.toFixed(4));
+                // Use the LARGEST SINGLE AXIS, not the diagonal — a mesh that's
+                // tiny on X/Z but huge/degenerate on Y can still have a
+                // deceptively "normal" diagonal length, letting a stretched
+                // capsule shape slip past a diagonal-only check.
+                const maxAxis = Math.max(rbSize.x, rbSize.y, rbSize.z);
+          const fruitSizes={'Strawberry':0.22,'Blueberry':0.12,'Raspberry':0.16,'Cherry':0.20,'Kiwi Slice':0.20,'Banana Slice':0.13};
                 const T=fruitSizes[fruitName]||0.18;
-                fg.scale.setScalar(maxD>0.0001?T/maxD:1.0);
-              if(fruitName==='Strawberry'||fruitName==='Raspberry'){fg.rotation.x=0;fg.rotation.y=0;}fg.updateMatrixWorld(true);const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;}fruitModels.forEach(m=>m.group.visible=false);const hp=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);let sp;if(hp){sp=hp;}else{sceneRoot.updateMatrixWorld(true);const cb=new THREE.Box3().setFromObject(sceneRoot),cc=cb.getCenter(new THREE.Vector3());sp=new THREE.Vector3(cc.x,cb.max.y,cc.z);}fg.updateMatrixWorld(true);const _fBox=new THREE.Box3().setFromObject(fg);const _fHeight=_fBox.max.y-_fBox.min.y;const _fOffset=-_fBox.min.y-(_fHeight*0.25);
-fg.position.set(sp.x,sp.y+_fOffset,sp.z);if(ei!==undefined&&ei>=0&&fruitModels[ei])return ei;scene.add(fg);const idx=fruitModels.length;fruitModels.push({group:fg,fruit:fruitName,halfH:fh,bottomOffset:_fOffset});
-return idx;}catch(err){console.error('[Fruit]',fruitName,err);return -1;}};
+        const MIN_SAFE_DIM = 0.005;
+                const MAX_SAFE_DIM = 200.0; // raised to accommodate GLBs exported at a larger scale (e.g. Blueberry.glb)d this
+                let useFallback = !isFinite(maxAxis) || maxAxis < MIN_SAFE_DIM || maxAxis > MAX_SAFE_DIM;
+                if(!useFallback){
+                    const scale = T / maxAxis;
+                    fg.scale.setScalar(scale);
+                    fg.updateMatrixWorld(true);
+                    // Hard backstop: verify the SCALED result actually landed in a
+                    // sane world-space size. If not (e.g. non-uniform mesh where
+                    // one axis still dominates after scaling), fall back rather
+                    // than show a giant shape.
+                    const checkBox = new THREE.Box3().setFromObject(fg);
+                    const checkSize = checkBox.getSize(new THREE.Vector3());
+                    const checkMax = Math.max(checkSize.x, checkSize.y, checkSize.z);
+                    if(!isFinite(checkMax) || checkMax > T * 3){
+                        useFallback = true;
+                    }
+                }
+                if(useFallback){
+                    console.warn('[Fruit] Degenerate/oversized bounds for', fruitName, '- using fallback sphere');
+                    fg = new THREE.Group();
+                    const fallbackMat = new THREE.MeshStandardMaterial({ color: 0xD94070, roughness: 0.4, metalness: 0.0 });
+                    const fallbackMesh = new THREE.Mesh(new THREE.SphereGeometry(T*0.5, 16, 16), fallbackMat);
+                    fallbackMesh.castShadow = fallbackMesh.receiveShadow = true;
+                    fg.add(fallbackMesh);
+                }
+              if(fruitName==='Strawberry'||fruitName==='Raspberry'){fg.rotation.x=0;fg.rotation.y=0;}
+                fg.updateMatrixWorld(true);
+                // Re-center horizontally so the mesh's visual center (not its raw
+                // GLB pivot) lands under the cursor. Some exports — e.g. banana.glb —
+                // don't have their origin at the geometric center in X/Z, which made
+                // the visible fruit appear offset from the actual drop point.
+                const _centerBox = new THREE.Box3().setFromObject(fg);
+                const _centerXZ = _centerBox.getCenter(new THREE.Vector3());
+                const _wrapped = new THREE.Group();
+                fg.position.x -= _centerXZ.x;
+                fg.position.z -= _centerXZ.z;
+                _wrapped.add(fg);
+                fg = _wrapped;
+                fg.updateMatrixWorld(true);
+            }
+            const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;
+        }
+        fruitModels.forEach(m=>m.group.visible=false);
+        const hp=raycastCakeTop(cx,cy);
+        fruitModels.forEach(m=>m.group.visible=true);
+        let sp;
+        if(hp){sp=hp;}else{
+            sceneRoot.updateMatrixWorld(true);
+            const cb=new THREE.Box3().setFromObject(sceneRoot),cc=cb.getCenter(new THREE.Vector3());
+            sp=new THREE.Vector3(cc.x,cb.max.y,cc.z);
+        }
+        fg.updateMatrixWorld(true);
+        const _fBox=new THREE.Box3().setFromObject(fg);
+        const _fHeight=_fBox.max.y-_fBox.min.y;
+        const _fOffset=-_fBox.min.y-(_fHeight*0.25);
+        fg.position.set(sp.x,sp.y+_fOffset,sp.z);
+        if(ei!==undefined&&ei>=0&&fruitModels[ei])return ei;
+        scene.add(fg);
+        const idx=fruitModels.length;
+        fruitModels.push({group:fg,fruit:fruitName,halfH:fh,bottomOffset:_fOffset});
+        return idx;
+    }catch(err){console.error('[Fruit]',fruitName,err);return -1;}
+};
 window.clearFruitModels=function(){fruitModels.forEach(m=>scene.remove(m.group));fruitModels.length=0;_draggingFruitIdx=-1;};
 window.removeFruitModel=function(idx){if(idx<0||idx>=fruitModels.length)return false;scene.remove(fruitModels[idx].group);fruitModels.splice(idx,1);if(window._placedFruitRecord)window._placedFruitRecord.splice(idx,1);return true;};
 window.getFruitIndexAtScreen=function(cx,cy){const rect=document.getElementById('viewerEl').getBoundingClientRect(),ndc=new THREE.Vector2(((cx-rect.left)/rect.width)*2-1,-((cy-rect.top)/rect.height)*2+1),rc=new THREE.Raycaster();rc.setFromCamera(ndc,camera);for(let i=fruitModels.length-1;i>=0;i--){const t=[];fruitModels[i].group.traverse(c=>{if(c.isMesh)t.push(c);});if(rc.intersectObjects(t,false).length>0)return i;}return -1;};
@@ -3486,175 +5298,236 @@ window.updateOreoOrientations = function(orientation) {
 const barShardModels = [];
 let _draggingBarShardIdx = -1;
 
-// ── Cupcake system ──
-const cupcakeModels = [];
-window.placeCupcakesOnScene = async function(count) {
-    cupcakeModels.forEach(m => scene.remove(m.group));
-    cupcakeModels.length = 0;
-    if (count <= 0) return;
-    try {
-        const url = '/models/cupcake.glb';
-        // Load a fresh copy for each cupcake so materials/geometry are independent
-        const loadFresh = () => new Promise((resolve, reject) => {
-            new GLTFLoader().load(url, gltf => {
-                const s = gltf.scene;
-                s.traverse(c => {
-                    if (c.isMesh) {
-                        c.material = c.material.clone();
-                        c.castShadow = true;
-                        c.receiveShadow = true;
-                    }
-                });
-                resolve(s);
-            }, undefined, reject);
+const tobleroneModels = [];
+let _draggingTobleroneIdx = -1;
+// ── Toblerone flavor styling — recolors the bar and scatters real nut-bump
+// geometry across its faces so White vs Chocolate visibly differ, not just
+// by base color but by having actual nut studs like a real Toblerone bar. ──
+function recolorTobleroneBar(fg, flavor){
+    const barColor  = flavor === 'White' ? '#F5EFDC' : '#3A1206';
+    const roughness = flavor === 'White' ? 0.26 : 0.32;
+    fg.traverse(c=>{
+        if(!c.isMesh || c.userData.isTobleroneNut) return;
+        if(c.material){ if(c.material.map) c.material.map.dispose(); c.material.dispose(); }
+        c.material = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(barColor),
+            roughness: roughness,
+            metalness: 0.03,
+            envMapIntensity: 0.78,
         });
+        c.castShadow = true;
+        c.receiveShadow = true;
+    });
+}
+function clearTobleroneNuts(fg){
+    fg.traverse(c=>{
+        if(!c.isMesh) return;
+        const toRemove = c.children.filter(ch => ch.userData && ch.userData.isTobleroneNut);
+        toRemove.forEach(n=>{ c.remove(n); if(n.geometry) n.geometry.dispose(); });
+    });
+}
+// ── Area-weighted surface sampling — picks random points ON the actual
+// mesh faces (not the bounding box, which includes empty air around a
+// triangular prism), so nuts always sit flush on a real surface. Bigger
+// faces get proportionally more samples than tiny ones. ──
+function _buildTriAreaCDF(geometry){
+    const pos = geometry.attributes.position;
+    const index = geometry.index;
+    const triCount = index ? Math.floor(index.count/3) : Math.floor(pos.count/3);
+    if(triCount === 0) return null;
+    const areas = new Float32Array(triCount);
+    const vA=new THREE.Vector3(), vB=new THREE.Vector3(), vC=new THREE.Vector3();
+    const eAB=new THREE.Vector3(), eAC=new THREE.Vector3(), crossV=new THREE.Vector3();
+    let total = 0;
+    for(let t=0;t<triCount;t++){
+        let ia, ib, ic;
+        if(index){ ia=index.getX(t*3); ib=index.getX(t*3+1); ic=index.getX(t*3+2); }
+        else { ia=t*3; ib=t*3+1; ic=t*3+2; }
+        vA.fromBufferAttribute(pos, ia);
+        vB.fromBufferAttribute(pos, ib);
+        vC.fromBufferAttribute(pos, ic);
+        eAB.subVectors(vB, vA); eAC.subVectors(vC, vA);
+        crossV.crossVectors(eAB, eAC);
+        total += crossV.length() * 0.5;
+        areas[t] = total;
+    }
+    if(total < 0.000001) return null;
+    return { areas, total, triCount, index };
+}
+function _sampleSurfacePoint(geometry, cdf){
+    const pos = geometry.attributes.position;
+    // Binary search into the area-weighted cumulative distribution
+    const r = Math.random() * cdf.total;
+    let lo = 0, hi = cdf.triCount - 1;
+    while(lo < hi){
+        const mid = (lo + hi) >> 1;
+        if(cdf.areas[mid] < r) lo = mid + 1; else hi = mid;
+    }
+    const t = lo;
+    let ia, ib, ic;
+    if(cdf.index){ ia=cdf.index.getX(t*3); ib=cdf.index.getX(t*3+1); ic=cdf.index.getX(t*3+2); }
+    else { ia=t*3; ib=t*3+1; ic=t*3+2; }
+    const vA = new THREE.Vector3().fromBufferAttribute(pos, ia);
+    const vB = new THREE.Vector3().fromBufferAttribute(pos, ib);
+    const vC = new THREE.Vector3().fromBufferAttribute(pos, ic);
+    let r1 = Math.random(), r2 = Math.random();
+    if(r1 + r2 > 1){ r1 = 1 - r1; r2 = 1 - r2; }
+    const point = new THREE.Vector3()
+        .addScaledVector(vA, 1 - r1 - r2)
+        .addScaledVector(vB, r1)
+        .addScaledVector(vC, r2);
+    const normal = new THREE.Vector3()
+        .subVectors(vB, vA)
+        .cross(new THREE.Vector3().subVectors(vC, vA))
+        .normalize();
+    return { point, normal };
+}
+function addNutsToToblerone(fg, flavor){
+    // Peanuts are brown regardless of bar flavor — a real peanut doesn't change
+    // color based on what chocolate it's embedded in. White bars get a slightly
+    // richer/darker brown so the nuts read clearly against the pale background.
+    const NUT_COLOR = flavor === 'White' ? '#B8804A' : '#C89860';
+    const NUT_DARK  = flavor === 'White' ? '#7A4E1E' : '#6B4820';
+    const nutMat     = new THREE.MeshStandardMaterial({ color:new THREE.Color(NUT_COLOR), roughness:0.58, metalness:0.02, envMapIntensity:0.70 });
+    const nutDarkMat = new THREE.MeshStandardMaterial({ color:new THREE.Color(NUT_DARK),  roughness:0.62, metalness:0.00 });
+    const meshes = [];
+    fg.traverse(c=>{ if(c.isMesh && !c.userData.isTobleroneNut) meshes.push(c); });
+    if(meshes.length === 0) return;
 
-// Cupcake flavor color palette — sponge body tint
-        const CUPCAKE_FLAVOR_COLORS = {
-            'Vanilla':    { body: '#F5DFA0', frosting: '#FDF6E3', wrapper: '#E8C86A' },
-            'Chocolate':  { body: '#3A1206', frosting: '#5A2010', wrapper: '#2A0E04' },
-            'Red Velvet': { body: '#8B1111', frosting: '#F6EEEA', wrapper: '#6A0A0A' },
-            'Strawberry': { body: '#E8607A', frosting: '#FFB8C8', wrapper: '#C8405A' },
-            'Ube':        { body: '#7A3FAA', frosting: '#C8A8E8', wrapper: '#5A2A88' },
-            'Mocha':      { body: '#6B3A1E', frosting: '#A87850', wrapper: '#4A2210' },
-        };
+    // ── Pass 1: measure each mesh's real surface area so nut count scales
+    // with face size — the thin side-edge strips of the prism are tiny
+    // compared to the big front/back sloped faces, and should barely get
+    // any nuts instead of an equal share. ──
+    const meshInfo = meshes.map(mesh=>{
+        const geo = mesh.geometry;
+        if(!geo || !geo.attributes || !geo.attributes.position) return { mesh, geo:null, cdf:null, area:0 };
+        const cdf = _buildTriAreaCDF(geo);
+        return { mesh, geo, cdf, area: cdf ? cdf.total : 0 };
+    });
+    const totalArea = meshInfo.reduce((s,m)=>s+m.area, 0);
+    if(totalArea < 0.000001) return;
 
-        function recolorCupcake(glbScene, flavorName) {
-            const pal = CUPCAKE_FLAVOR_COLORS[flavorName] || CUPCAKE_FLAVOR_COLORS['Vanilla'];
-            const meshes = [];
-            glbScene.traverse(c => { if (c.isMesh) meshes.push(c); });
-            // Heuristic: sort meshes by bounding box Y — bottom=wrapper, mid=body, top=frosting
-            meshes.sort((a, b) => {
-                const ba = new THREE.Box3().setFromObject(a);
-                const bb = new THREE.Box3().setFromObject(b);
-                return ba.getCenter(new THREE.Vector3()).y - bb.getCenter(new THREE.Vector3()).y;
-            });
-            meshes.forEach((mesh, idx) => {
-                const isTop    = idx === meshes.length - 1;
-                const isBottom = idx === 0;
-                let col;
-                if (isTop)    col = pal.frosting;
-                else if (isBottom) col = pal.wrapper;
-                else          col = pal.body;
-                mesh.material = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color(col),
-                    roughness: isTop ? 0.55 : 0.72,
-                    metalness: 0.0,
-                    envMapIntensity: isTop ? 0.80 : 0.55,
-                });
-                mesh.castShadow = mesh.receiveShadow = true;
-            });
+    const NUT_TOTAL = 22; // total peanuts across the whole bar
+    const MIN_FACE_SHARE = 0.12; // faces smaller than this share of total area (thin side edges) get skipped entirely
+
+    meshInfo.forEach(({mesh, geo, cdf, area})=>{
+        if(!cdf || area <= 0) return;
+        const share = area / totalArea;
+        if(share < MIN_FACE_SHARE) return; // skip thin side-edge strips — front/back only
+        const nutCount = Math.max(3, Math.round(share * NUT_TOTAL));
+
+        if(!geo.boundingBox) geo.computeBoundingBox();
+        const bbSize = new THREE.Vector3(); geo.boundingBox.getSize(bbSize);
+        const maxDim = Math.max(bbSize.x, bbSize.y, bbSize.z);
+        if(maxDim < 0.0001) return;
+
+        for(let i=0;i<nutCount;i++){
+            const { point, normal } = _sampleSurfacePoint(geo, cdf);
+            if(normal.lengthSq() < 0.0001) continue; // skip degenerate triangle
+            const peanutLen = maxDim * (0.020 + Math.random()*0.008); // small, peanut-sized
+            const nutGeo = new THREE.SphereGeometry(peanutLen, 6, 5);
+            // Local X = length (long axis), Local Y = width, Local Z = thickness (flat)
+            nutGeo.scale(1.0, 0.55, 0.22); // flattened peanut — thin along Z
+            const mat = Math.random() > 0.45 ? nutMat : nutDarkMat;
+            const nut = new THREE.Mesh(nutGeo, mat);
+
+            // Align the FLAT axis (local Z, the thin dimension) to the surface
+            // normal so the peanut lies flush against the face — length and
+            // width stay tangent to the surface — then spin randomly around
+            // the normal so peanuts don't all point the same way.
+            const flatAxis = new THREE.Vector3(0,0,1);
+            const alignQ = new THREE.Quaternion().setFromUnitVectors(flatAxis, normal);
+            const twistQ = new THREE.Quaternion().setFromAxisAngle(normal, Math.random()*Math.PI*2);
+            nut.quaternion.copy(twistQ.multiply(alignQ));
+
+            const embed = peanutLen * 0.10; // sit almost flush, barely embedded
+            nut.position.copy(point).addScaledVector(normal, embed);
+
+            nut.userData.isTobleroneNut = true;
+            nut.castShadow = true;
+            nut.receiveShadow = true;
+            mesh.add(nut);
         }
-
-        // Measure size from first load
-        const sampleGLB = await loadFresh();
-        sampleGLB.updateMatrixWorld(true);
-        const rb = new THREE.Box3().setFromObject(sampleGLB);
-        const sz = rb.getSize(new THREE.Vector3());
-        const maxD = Math.max(sz.x, sz.y, sz.z);
-        const targetSize = 0.36;
-
-        // Pre-load all instances in parallel
-        const allLoaded = [sampleGLB];
-        if (count > 1) {
-            const rest = await Promise.all(Array.from({length: count - 1}, () => loadFresh()));
-            allLoaded.push(...rest);
-        }
-
-        sceneRoot.updateMatrixWorld(true);
-        const cakeBox = new THREE.Box3().setFromObject(sceneRoot);
-        const cakeRadius = (cakeBox.max.x - cakeBox.min.x) * 0.5;
-        const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
-        const cakeFloorY = cakeBox.min.y;
-
- // Build one procedural plate mesh
-        function makeCupcakePlate() {
-            const plateGroup = new THREE.Group();
-            const SEGS = 64;
-            const plateMat = new THREE.MeshStandardMaterial({ color: 0xF5EEE0, roughness: 0.24, metalness: 0.01, envMapIntensity: 0.70 });
-            const rimMat  = new THREE.MeshStandardMaterial({ color: 0xEDE4D0, roughness: 0.30, metalness: 0.01, envMapIntensity: 0.60 });
-            const pR = targetSize * 0.72;
-            const pts = [];
-            for (let i = 0; i <= 12; i++) {
-                const t = i / 12;
-                pts.push(new THREE.Vector2(pR * t, -0.012 * Math.sin(t * Math.PI * 0.5)));
-            }
-            pts.push(new THREE.Vector2(0, 0));
-            const plateMesh = new THREE.Mesh(new THREE.LatheGeometry(pts, SEGS), plateMat);
-            plateMesh.castShadow = plateMesh.receiveShadow = true;
-            plateGroup.add(plateMesh);
-            const rimMesh = new THREE.Mesh(new THREE.TorusGeometry(pR * 0.96, 0.016, 8, SEGS), rimMat);
-            rimMesh.rotation.x = Math.PI / 2; rimMesh.position.y = 0.002; rimMesh.castShadow = true;
-            plateGroup.add(rimMesh);
-            return plateGroup;
-        }
-
-        // Arc layout: cupcakes fan out in a semicircle behind/beside the cake
-        // For large counts, use a second outer ring
-        const RING_CAPACITY = [0, 8, 16, 30, 48]; // max cupcakes per cumulative ring
-        const RING_RADIUS_MULT = [0, 1.55, 2.20, 2.85]; // orbit radius multiplier from cake edge
-
-       // Rings: inner ring 8, subsequent rings +4 each, up to 48 total
-        let rings = [];
-        let remaining = count;
-        let ringIdx = 0;
-        const ringCaps = [8, 12, 16, 12]; // inner → outer ring capacities
-        while (remaining > 0 && ringIdx < ringCaps.length) {
-            const cap = ringCaps[ringIdx];
-            const inRing = Math.min(remaining, cap);
-            rings.push(inRing);
-            remaining -= inRing;
-            ringIdx++;
-        }
-        // Safety: if still remaining (>48), add to last ring
-        if (remaining > 0) rings[rings.length - 1] += remaining;
-
-   let placed = 0;
-        for (let r = 0; r < rings.length; r++) {
-            const inRing = rings[r];
-            // Each ring sits slightly further from the cake
-            const orbitR = cakeRadius + targetSize * (1.20 + r * 1.10);
-            // Full 360° circle — every cupcake visible at any camera angle
-            const FULL_CIRCLE = Math.PI * 2;
-
-            for (let i = 0; i < inRing; i++) {
-                const angle = (i / inRing) * FULL_CIRCLE - Math.PI / 2;
-
-                const wrapper = new THREE.Group();
-
-                // Plate
-                const plate = makeCupcakePlate();
-                wrapper.add(plate);
-
-       // Fresh loaded GLB — recolor per flavor
-                const fg = allLoaded[placed];
-                recolorCupcake(fg, state.cupcakeFlavor || 'Vanilla');
-                const scale = maxD > 0.0001 ? targetSize / maxD : 1.0;
-                fg.scale.setScalar(scale);
-                fg.updateMatrixWorld(true);
-                const fb = new THREE.Box3().setFromObject(fg);
-                fg.position.y = -fb.min.y + 0.006;
-                // Face each cupcake outward from cake center
-                fg.rotation.y = angle;
-                wrapper.add(fg);
-
-                // Position on circle
-                const wx = cakeCenter.x + Math.cos(angle) * orbitR;
-                const wz = cakeCenter.z + Math.sin(angle) * orbitR;
-                wrapper.position.set(wx, cakeFloorY, wz);
-
-                scene.add(wrapper);
-                cupcakeModels.push({ group: wrapper });
-                placed++;
-            }
-        }
-    } catch(err) { console.error('[Cupcake]', err); }
+    });
+}
+window.reflavorToblerone = function(flavor){
+    tobleroneModels.forEach(m=>{
+        clearTobleroneNuts(m.group);
+        recolorTobleroneBar(m.group, flavor);
+        addNutsToToblerone(m.group, flavor);
+        m.flavor = flavor;
+    });
 };
-window.clearCupcakeModels = function() {
-    cupcakeModels.forEach(m => scene.remove(m.group));
-    cupcakeModels.length = 0;
+
+window.placeTobleroneOnCake = async function(cx, cy, ei) {
+    const url = '/models/Toblerone.glb';
+    const flavor = (typeof state !== 'undefined' && state.tobleroneFlavor) ? state.tobleroneFlavor : 'Chocolate';
+    try {
+        let fg, fh;
+        if (ei !== undefined && ei >= 0 && tobleroneModels[ei]) {
+            fg = tobleroneModels[ei].group;
+            const sb = new THREE.Box3().setFromObject(fg);
+            fh = (sb.max.y - sb.min.y) * 0.5;
+        } else {
+            fg = await loadFruitGLB(url);
+            fg.traverse(c => { if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; } });
+            fg.updateMatrixWorld(true);
+            const rb = new THREE.Box3().setFromObject(fg);
+            const sz = rb.getSize(new THREE.Vector3());
+            const maxD = Math.max(sz.x, sz.y, sz.z);
+            fg.scale.setScalar(maxD > 0.0001 ? 0.26 / maxD : 1.0);
+            fg.rotation.y = Math.random() * Math.PI * 2;
+            fg.updateMatrixWorld(true);
+            recolorTobleroneBar(fg, flavor);
+            addNutsToToblerone(fg, flavor);
+            const sb = new THREE.Box3().setFromObject(fg);
+            fh = (sb.max.y - sb.min.y) * 0.5;
+        }
+        tobleroneModels.forEach(m => m.group.visible = false);
+        const hp = raycastCakeTop(cx, cy);
+        tobleroneModels.forEach(m => m.group.visible = true);
+        let sp;
+        if (hp) { sp = hp; } else {
+            sceneRoot.updateMatrixWorld(true);
+            const cb = new THREE.Box3().setFromObject(sceneRoot);
+            const cc = cb.getCenter(new THREE.Vector3());
+            sp = new THREE.Vector3(cc.x, cb.max.y, cc.z);
+        }
+        fg.updateMatrixWorld(true);
+        const _tbBox = new THREE.Box3().setFromObject(fg);
+        const _tbOffset = -_tbBox.min.y;
+        fg.position.set(sp.x, sp.y + _tbOffset, sp.z);
+        if (ei !== undefined && ei >= 0 && tobleroneModels[ei]) return ei;
+        scene.add(fg);
+        const idx = tobleroneModels.length;
+        tobleroneModels.push({ group: fg, halfH: fh, bottomOffset: _tbOffset, flavor });
+        return idx;
+    } catch (err) { console.error('[Toblerone]', err); return -1; }
 };
-window.getCupcakeModels = function() { return cupcakeModels; };
+window.clearTobleroneModels = function() { tobleroneModels.forEach(m => scene.remove(m.group)); tobleroneModels.length = 0; _draggingTobleroneIdx = -1; };
+window.removeTobleroneModel = function(idx) { if(idx<0||idx>=tobleroneModels.length)return false; scene.remove(tobleroneModels[idx].group); tobleroneModels.splice(idx,1); if(window._placedTobleroneRecord)window._placedTobleroneRecord.splice(idx,1); return true; };
+window.getTobleroneIndexAtScreen = function(cx, cy) {
+    const rect = document.getElementById('viewerEl').getBoundingClientRect();
+    const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
+    const rc = new THREE.Raycaster(); rc.setFromCamera(ndc, camera);
+    for (let i = tobleroneModels.length - 1; i >= 0; i--) {
+        const t = []; tobleroneModels[i].group.traverse(c => { if (c.isMesh) t.push(c); });
+        if (rc.intersectObjects(t, false).length > 0) return i;
+    }
+    return -1;
+};
+window.moveDraggingToblerone = function(cx, cy) {
+    if (_draggingTobleroneIdx < 0 || !tobleroneModels[_draggingTobleroneIdx]) return;
+    const e = tobleroneModels[_draggingTobleroneIdx];
+    tobleroneModels.forEach(m => m.group.visible = false);
+    const h = raycastCakeTop(cx, cy);
+    tobleroneModels.forEach(m => m.group.visible = true);
+    if (h) { e.group.position.set(h.x, h.y + e.bottomOffset, h.z); }
+};
+window.setDraggingTobleroneIdx = function(idx) { _draggingTobleroneIdx = idx; };
+window.getDraggingTobleroneIdx = function() { return _draggingTobleroneIdx; };
+window.getTobleroneModels = function() { return tobleroneModels; };
+
 
 function buildBarShardMesh() {
     const g = new THREE.Group();
@@ -3921,20 +5794,22 @@ function reprojectModels(models){
 window._saveAllToppingNormals=function(){
     saveNormalized(fruitModels);saveNormalized(ferreroModels);
     saveNormalized(kitkatModels);saveNormalized(oreoModels);saveNormalized(barShardModels);
-    saveNormalized(candleModels);
+    saveNormalized(tobleroneModels);saveNormalized(candleModels);
+    if(typeof characterModels!=='undefined')saveNormalized(characterModels);
 };
 window._reprojectAllToppings=function(){
     reprojectModels(fruitModels);reprojectModels(ferreroModels);
     reprojectModels(kitkatModels);reprojectModels(oreoModels);reprojectModels(barShardModels);
-    reprojectModels(candleModels);
+    reprojectModels(tobleroneModels);reprojectModels(candleModels);
+    if(typeof characterModels!=='undefined')reprojectModels(characterModels);
 };
-
 // Expose Three.js internals for beauty-shot capture
 window._threeCamera   = camera;
 window._threeControls = controls;
 window._threeRenderer = renderer;
 window._threeScene    = scene;
 
+window.isCakeSceneReady=function(){ return !!(currentBase || currentFrost); };
 window.updateModel=(state)=>updateScene(state);
 window.resetCamera=()=>{
     // Scale back based on tier — taller cakes need more distance
@@ -3947,13 +5822,11 @@ window.resetCamera=()=>{
     controls.update();
 };
 window._viewerReady=true;
-// ── FRUIT ROTATE INLINE PANEL ──
 (function(){
     let activeFruitPanelIdx = -1;
-    const FRUIT_EMOJI = { Strawberry:'🍓', Blueberry:'🫐', Raspberry:'🍇', Cherry:'🍒' };
+   const FRUIT_EMOJI = { Strawberry:'🍓', Blueberry:'🫐', Raspberry:'🍇', Cherry:'🍒', 'Mango Slice':'🥭', 'Kiwi Slice':'🥝', 'Peach Slice':'🍑', 'Banana Slice':'🍌' };
     // Rotation axis per fruit — Strawberry/Raspberry use X for placement so we rotate Y instead
-  const FRUIT_ROT_AXIS = { Strawberry:'z', Raspberry:'z', Blueberry:'z', Cherry:'z' };
-
+  const FRUIT_ROT_AXIS = { Strawberry:'z', Raspberry:'z', Blueberry:'z', Cherry:'z', 'Mango Slice':'z', 'Kiwi Slice':'z', 'Peach Slice':'z', 'Banana Slice':'z' };
     const panel    = document.getElementById('fruitRotPanel');
     const range    = document.getElementById('fruitRotPanelRange');
     const degLabel = document.getElementById('fruitRotPanelDeg');
@@ -4071,9 +5944,8 @@ document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
     let activeChocoPanelIdx = -1;
     let activeChocoType = null; // 'ferrero','kitkat','oreo','barshard'
 
-    const CHOCO_EMOJI = { ferrero:'🟤', kitkat:'🍬', oreo:'⚫', barshard:'🍫' };
-    const CHOCO_NAME  = { ferrero:'Ferrero', kitkat:'KitKat', oreo:'Oreo', barshard:'Bar Shard' };
-
+    const CHOCO_EMOJI = { ferrero:'🟤', kitkat:'🍬', oreo:'⚫', barshard:'🍫', toblerone:'🔺' };
+    const CHOCO_NAME  = { ferrero:'Ferrero', kitkat:'KitKat', oreo:'Oreo', barshard:'Bar Shard', toblerone:'Toblerone' };
     const panel    = document.getElementById('chocoRotInlinePanel');
     const range    = document.getElementById('chocoRotInlineRange');
     const degLabel = document.getElementById('chocoRotInlineDeg');
@@ -4085,14 +5957,14 @@ document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
     if(viewer) viewer.appendChild(panel);
     panel.style.cssText = 'display:none;position:absolute;top:58px;left:14px;z-index:50;width:260px;border-radius:14px;overflow:hidden;border:1.5px solid rgba(196,154,60,.30);box-shadow:0 4px 20px rgba(59,31,14,0.35);';
 
-    function getModels(type){
+  function getModels(type){
         if(type==='ferrero') return typeof window.getFerreroModels==='function'?window.getFerreroModels():[];
         if(type==='kitkat')  return typeof window.getKitkatModels ==='function'?window.getKitkatModels() :[];
         if(type==='oreo')    return typeof window.getOreoModels   ==='function'?window.getOreoModels()   :[];
         if(type==='barshard')return typeof window.getBarShardModels==='function'?window.getBarShardModels():[];
+        if(type==='toblerone')return typeof window.getTobleroneModels==='function'?window.getTobleroneModels():[];
         return [];
     }
-
 function getDeg(m){
         return Math.round((m.group.rotation.z * 180 / Math.PI + 360) % 360);
     }
@@ -4168,11 +6040,12 @@ document.getElementById('chocoRotInlineApply').addEventListener('click', () => {
         const idx  = activeChocoPanelIdx;
         const em   = CHOCO_EMOJI[type]  || '🍫';
         const name = CHOCO_NAME[type]   || type;
-        const removeFnMap = {
-            ferrero:  window.removeFerreroModel,
-            kitkat:   window.removeKitkatModel,
-            oreo:     window.removeOreoModel,
-            barshard: window.removeBarShardModel,
+     const removeFnMap = {
+            ferrero:   window.removeFerreroModel,
+            kitkat:    window.removeKitkatModel,
+            oreo:      window.removeOreoModel,
+            barshard:  window.removeBarShardModel,
+            toblerone: window.removeTobleroneModel,
         };
         const removeFn = removeFnMap[type];
         if (typeof removeFn === 'function') removeFn(idx);
@@ -4191,10 +6064,75 @@ document.getElementById('chocoRotInlineReset').addEventListener('click', () => {
     document.getElementById('chocoRotInlineClose').addEventListener('click', hideChocoPanel);
     document.addEventListener('keydown', e => { if(e.key === 'Escape') hideChocoPanel(); });
 
-    window._showChocoRotatePanel = showChocoPanel;
+window._showChocoRotatePanel = showChocoPanel;
     window._hideChocoRotatePanel = hideChocoPanel;
 })();
+// ── CHARACTER TOPPER MOVE/ROTATE PANEL (works per placed instance) ──
+(function(){
+    const panel    = document.getElementById('characterMovePanel');
+    const range    = document.getElementById('characterMovePanelRange');
+    const degLabel = document.getElementById('characterMovePanelDeg');
+    const nameEl   = document.getElementById('characterMovePanelName');
+    let activeIdx  = -1;
 
+    const viewer = document.getElementById('viewerEl');
+    if(viewer) viewer.appendChild(panel);
+    panel.style.cssText = 'display:none;position:absolute;top:58px;left:14px;z-index:50;width:260px;border-radius:14px;overflow:hidden;border:1.5px solid rgba(90,110,196,.35);box-shadow:0 4px 20px rgba(30,15,5,0.35);';
+
+    function refreshDeg(){
+        const d = typeof window.getCharacterYRotationDeg==='function' ? window.getCharacterYRotationDeg(activeIdx) : 0;
+        range.value = d;
+        degLabel.textContent = d + '°';
+    }
+    function showPanel(idx){
+        activeIdx = idx;
+        const models = typeof window.getCharacterModels==='function' ? window.getCharacterModels() : [];
+        const m = models[idx];
+        nameEl.textContent = m ? m.key : 'character';
+        refreshDeg();
+        panel.style.display = 'block';
+    }
+    function hidePanel(){ panel.style.display = 'none'; activeIdx = -1; }
+
+    range.addEventListener('input', function(){
+        const d = parseInt(this.value);
+        degLabel.textContent = d + '°';
+        if(typeof window.setCharacterYRotation==='function') window.setCharacterYRotation(activeIdx, d);
+    });
+    document.querySelectorAll('.character-move-preset').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const d = parseInt(btn.dataset.deg);
+            range.value = d; degLabel.textContent = d + '°';
+            if(typeof window.setCharacterYRotation==='function') window.setCharacterYRotation(activeIdx, d);
+        });
+    });
+    document.getElementById('characterMovePanelReset').addEventListener('click', ()=>{
+        range.value = 0; degLabel.textContent = '0°';
+        if(typeof window.setCharacterYRotation==='function') window.setCharacterYRotation(activeIdx, 0);
+    });
+    document.getElementById('characterMovePanelDelete').addEventListener('click', ()=>{
+        if(activeIdx>=0 && typeof window.removeCharacterModel==='function') window.removeCharacterModel(activeIdx);
+        hidePanel();
+        if(typeof window.getCharacterModels==='function'){
+            const remaining = window.getCharacterModels().length;
+            const badge = document.getElementById('characterActiveBadge');
+            if(remaining===0 && typeof state !== 'undefined'){
+                state.addons.delete('Character Topper');
+                const btn = document.getElementById('characterToggleBtn');
+                if(btn) btn.classList.remove('active');
+                if(badge) badge.textContent = 'None placed yet — tap a character to add';
+            } else if(badge){
+                badge.textContent = `${remaining} placed — tap any character again to add more`;
+            }
+        }
+        if(typeof window._updateAll === 'function') window._updateAll();
+        showToast('🎭 Character topper removed', 1800);
+    });
+    document.getElementById('characterMovePanelClose').addEventListener('click', hidePanel);
+
+    window._showCharacterMovePanel = showPanel;
+    window._hideCharacterMovePanel = hidePanel;
+})();
 window.addEventListener('resize', () => {
     const w = container.clientWidth, h = container.clientHeight;
     renderer.setSize(w, h);
@@ -4209,38 +6147,173 @@ requestAnimationFrame(() => requestAnimationFrame(() => {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
 }));
+
+window._dumpScene = function(){
+    console.log('=== FULL SCENE DUMP ===');
+    scene.updateMatrixWorld(true);
+    scene.traverse(obj=>{
+        if(!obj.isMesh && !obj.isGroup) return;
+        const box = new THREE.Box3().setFromObject(obj);
+        const size = box.getSize(new THREE.Vector3());
+        if(size.y > 1.0 || Math.max(size.x,size.z) > 1.0){
+            console.log(obj.isMesh ? 'MESH' : 'GROUP', `"${obj.name || '(unnamed)'}"`,
+                'size:', {x:+size.x.toFixed(3), y:+size.y.toFixed(3), z:+size.z.toFixed(3)},
+                'parent:', obj.parent ? (obj.parent.name || obj.parent.type) : 'none',
+                obj);
+        }
+    });
+    console.log('=== END DUMP ===');
+};
 </script>
 
 <script>
-const FROSTING_PRICES={'Smooth Buttercream':0,'Textured Buttercream':80,'Fondant Smooth':200,'Chocolate Ganache':150,'Semi-naked Style':100,'Sugar Icing':80};
+const TIER_INDEX = {'Single':0,'Two-tier':1,'Three-tier':2};
+function getTierIdx(){ return TIER_INDEX[state.tier] ?? 0; }
+
+// Cake Style — priced against whichever style is currently ACTIVE
+const CAKE_STYLE_TIER_PRICES = {
+    'Smooth Buttercream': [0,250,450],
+    'Semi-naked Style':   [200,400,600],
+    'Fondant Smooth':     [350,750,1100],
+    'Ombre Style':        [250,500,750],
+};
+// Frosting section — Shell Border only charges this when it's layered as an
+// EXTRA overlay on top of Semi-naked/Ombre (when it IS the cake style itself,
+// it's already covered by CAKE_STYLE_TIER_PRICES above).
+const FROSTING_SHELL_TIER_PRICES   = [0,100,180];
+const FROSTING_SUGAR_TIER_PRICES   = [150,300,450];
+const FROSTING_TEXTURE_TIER_PRICES = [150,300,450];
+const FROSTING_ROSETTE_TIER_PRICES = [100,300,500];
+const ADDON_TIER_PRICES = {
+    'Drip':                [180,300,450],
+    'Cylinder Sprinkles':  [30,50,70],
+    'Sphere Sprinkles':    [30,50,70],
+    'Chocolate Curls':     [45,80,120],
+    'Chocolate Sprinkles': [30,50,75],
+    'Crushed Peanuts':     [35,60,90],
+};
+
+// Keeps every priced button's visible text AND data-price in sync with the
+// currently selected tier, so click handlers that read dataset.price always
+// pick up the right tier-adjusted amount.
+function refreshTierPriceLabels(){
+    const ti = getTierIdx();
+    function setLabel(selector, price, opts){
+        const el = document.querySelector(selector);
+        if(!el) return;
+        const span = el.classList.contains('a-price') ? el : el.querySelector('.a-price');
+        if(!span) return;
+        const suffix = opts && opts.suffix ? ' · '+opts.suffix : '';
+        span.textContent = price===0 ? `Default · Included${suffix}` : `+₱${price.toLocaleString()}${suffix}`;
+        if(el.dataset) el.dataset.price = price;
+    }
+
+    setLabel('#opts-cake-style [data-val="Smooth Buttercream"]', CAKE_STYLE_TIER_PRICES['Smooth Buttercream'][ti]);
+    setLabel('#opts-cake-style [data-val="Semi-naked Style"]',   CAKE_STYLE_TIER_PRICES['Semi-naked Style'][ti]);
+    setLabel('#opts-cake-style [data-val="Fondant Smooth"]',     CAKE_STYLE_TIER_PRICES['Fondant Smooth'][ti]);
+    setLabel('#opts-cake-style [data-val="Ombre Style"]',        CAKE_STYLE_TIER_PRICES['Ombre Style'][ti]);
+
+    setLabel('#opts-frosting-base [data-val="Smooth Buttercream"]', FROSTING_SHELL_TIER_PRICES[ti], {suffix:'choose color'});
+    setLabel('#opts-frosting-base [data-val="Sugar Icing"]',        FROSTING_SUGAR_TIER_PRICES[ti], {suffix:'choose color'});
+
+    setLabel('#opts-frosting-special [data-val="Textured Buttercream"]', FROSTING_TEXTURE_TIER_PRICES[ti], {suffix:'add-on'});
+    setLabel('#opts-frosting-special [data-val="Rosettes"]',             FROSTING_ROSETTE_TIER_PRICES[ti], {suffix:'add-on'});
+
+    setLabel('#dripToggleBtn', ADDON_TIER_PRICES['Drip'][ti], {suffix:'pick flavor'});
+
+    setLabel('#opts-sprinkles [data-val="Cylinder Sprinkles"]', ADDON_TIER_PRICES['Cylinder Sprinkles'][ti]);
+    setLabel('#opts-sprinkles [data-val="Sphere Sprinkles"]',   ADDON_TIER_PRICES['Sphere Sprinkles'][ti]);
+
+    setLabel('#opts-choco [data-val="Chocolate Curls"]',     ADDON_TIER_PRICES['Chocolate Curls'][ti],     {suffix:'add-on'});
+    setLabel('#opts-choco [data-val="Chocolate Sprinkles"]', ADDON_TIER_PRICES['Chocolate Sprinkles'][ti]);
+    setLabel('#opts-choco [data-val="Crushed Peanuts"]',     ADDON_TIER_PRICES['Crushed Peanuts'][ti]);
+
+    // Any of these add-ons already active on the cake get their stored price
+    // bumped/dropped immediately too, so the total reflects the new tier
+    // even without the customer re-clicking the button.
+    Object.keys(ADDON_TIER_PRICES).forEach(k=>{
+        if(state.addons.has(k)) state.addons.set(k, ADDON_TIER_PRICES[k][ti]);
+    });
+}
+const CHARACTER_PRICES = {
+    'SpongeBob':350,'Squidward':350,'Patrick Star':350,'Gary':350,
+    "Squidward's House":500,"SpongeBob's House":500,"Patrick's House":500,
+    'Ben 10':350,'Ben 10 RV':350,'Gwen':350,'Lolo Max':350,
+    'Buttercup':350,'Blossom':350,'Bubbles':350,'Powerpuff House':500,
+    'Dora':350,'Boots':350,"Dora's House":500,
+    'Kuromi':350,'My Melody':350,'Cinnamoroll':350,'Hello Kitty':350,
+    'Lightning McQueen':350,'Sally':350,
+    'Mickey Mouse':350,'Minnie Mouse':350,'Mickey Mouse Clubhouse':500,
+    'Cocomelon':350,
+};
+// Final Cake Type list: Sponge Cake, Chiffon Cake, Cheesecake — Butter Cake removed completely.
+const CAKE_TYPE_GENERIC   = ['Sponge Cake','Chiffon Cake','Cheesecake'];
+// No Cake Type auto-defines its own flavor anymore — Flavor is always a separate pick,
+// including for Cheesecake (Blueberry Cheesecake, Strawberry Cheesecake, etc. are now
+// Cake Type "Cheesecake" + Flavor, not standalone Cake Types). Left empty and referenced
+// below so existing conditional logic keeps working unmodified.
+const CAKE_TYPE_SPECIALTY = [];
+const CAKE_TYPE_TO_FLAVOR = {};
+// Maps Cake Type "Cheesecake" + a given Flavor to the existing FLAVORS palette key that
+// already has dedicated cheesecake-style coloring — preserves the original 3D look for
+// Blueberry/Strawberry/Mango Cheesecake without inventing new visual configs.
+const CHEESECAKE_FLAVOR_MAP = {
+    'Blueberry':  'Blueberry Cheesecake',
+    'Strawberry': 'Strawberry Cheesecake',
+    'Mango':      'Mango Cheesecake',
+};
+// Optional per-type upcharge — defaults to 0 so existing pricing is unaffected
+// unless a type is explicitly priced here. Tune freely.
+const CAKE_TYPE_PRICES = {
+    'Sponge Cake':0,'Chiffon Cake':0,'Cheesecake':150,
+};
+const CAKE_TYPE_SHAPE_RESTRICTIONS = {
+    'Cheesecake': ['Number','Bundt'],
+};
+
+// ── FILLING (between the cake layers — separate from Cake Type/Flavor) ──
+const FILLING_PRICES = {
+    'No Filling':0,'Vanilla Cream':40,'Chocolate Ganache':60,'Cream Cheese':60,
+    'Strawberry':50,'Blueberry':50,'Biscoff':70,
+};
 const FONDANT_VAL    ='Fondant Smooth';
 const SUGAR_ICING_VAL='Sugar Icing';
 const BASE_COAT_VALS =['Smooth Buttercream','Sugar Icing'];
-const SHAPE_PRICES   ={'Round':350,'Square':500,'Heart':520,'Two-tier Round':950,'Three-tier Round':1400,'Number':600};
+const SHAPE_PRICES   ={'Round':350,'Square':500,'Heart':520,'Bundt':480,'Sponge Cake':300,'Chiffon':320,'Two-tier Round':950,'Three-tier Round':1400,'Number':600};
 const ROUND_SIZE_PRICES={4:180,5:220,6:280,7:350,8:420,9:500,10:600};
-const FRUIT_KEYS=['Strawberry','Blueberry','Raspberry','Cherry'];
+const FRUIT_KEYS=['Strawberry','Blueberry','Raspberry','Cherry','Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
+const PLAQUE_SHAPE_FILES = {
+    'Square':'plaque_square','Rectangle':'plaque_rectangle','Circle':'plaque_circle',
+    'Heart':'plaque_heart','Oval':'plaque_oval',
+};
 const CAKE_STYLE_VALS_INIT = ['Smooth Buttercream','Semi-naked Style','Fondant Smooth'];
 const state={
     shape:'Round', tier:'Single', roundSize:6,
     numberDigits:1, numberChoice:0, numberTens:1, numberUnits:0,
+    cakeType:'Sponge Cake',
     flavor:'Vanilla',
+    filling:'No Filling',
     frostings:new Set(['Smooth Buttercream']),
     addons:new Map(),
     hasDrip:false, dripFlavor:'Vanilla',
-    icingColor:'#FFFFFF', icingColorName:'White',
+icingColor:'#FFFFFF', icingColorName:'White', hasCustomIcingColor:false,
+    rosettePlacement:'Border', rosetteColor:'#FFFFFF', rosetteColorName:'White',
+    ombreTopColor:'#F7A8C4', ombreBottomColor:'#8A6AC8',
     placedFruits:[],
     placedFerrero:[],
     kitkatOrientation:'standing',
     placedKitkat:[],
     oreoOrientation:'lying',
     placedOreo:[],
-    placedBarShard:[],
+placedBarShard:[],
+    placedToblerone:[],
+    tobleroneFlavor:'Chocolate',
   placedCandles:[],
-  cupcakeQty: 0,
-    cupcakeFlavor: 'Vanilla',
-    cupcakeFlavorColor: '#C8882A',
+  chocoCurlsPlacement:'middle',
+plaqueShape: 'Square',
+    plaqueMessage: '',
+    characterTopper: 'Mickey Mouse',
 };
-
 function showToast(msg,duration=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration);}
 function allFrostingOpts(){return document.querySelectorAll('.frosting-opt');}
 
@@ -4251,20 +6324,30 @@ document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(el=
         const newShape  = el.dataset.val;
         if(newShape === prevShape) return;
         const shapeChanged = newShape !== prevShape;
-        document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));
+      document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
-  state.shape = newShape;
-        // Reset tier to Single for non-Round shapes
+state.shape = newShape;
+        if(state.shape === 'Bundt'){
+            state.frostings.delete('Textured Buttercream');
+            if(state.frostings.has(FONDANT_VAL)){
+                state.frostings.delete(FONDANT_VAL);
+                state.frostings.add('Semi-naked Style');
+            }
+        }
+        syncFrostingUI(); // refresh Shell Border lock state (restricted for Bundt)
+             // Reset tier to Single for non-Round shapes
         if(state.shape !== 'Round'){
             state.tier = 'Single';
             document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.toggle('active', x.dataset.tier==='Single'));
+            refreshTierPriceLabels();
         }
-        // Disable Two/Three-tier buttons when shape is not Round
+       // Disable Two/Three-tier buttons when shape is not Round
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>{
             const isTiered = x.dataset.tier !== 'Single';
             x.style.opacity = (state.shape !== 'Round' && isTiered) ? '0.35' : '';
             x.style.pointerEvents = (state.shape !== 'Round' && isTiered) ? 'none' : '';
         });
+        document.getElementById('cakeTierSection').style.display = (state.shape === 'Round') ? '' : 'none';
         // Dynamic size label
         const lblMap = {'Round':'Round Size','Square':'Square Size','Heart':'Heart Size','Number':'Number Size'};
         const lbl = document.getElementById('sizeLabelText');
@@ -4296,8 +6379,10 @@ if(typeof window.setDraggingBarShardIdx==='function') window.setDraggingBarShard
             document.getElementById('barShardDropRing').style.display='none';
             showToast('Shape changed — toppings cleared', 2200);
         }
+      if(typeof window._updateChocoCurlsPlacementAvailability==='function') window._updateChocoCurlsPlacementAvailability();
         redrawFruits();
         updateAll();
+        if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape);
     });
 });
 // ── TIER ──
@@ -4307,7 +6392,9 @@ document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
         state.tier = el.dataset.tier;
+        refreshTierPriceLabels();
         updateAll();
+        showToast(`Prices updated for ${state.tier} cake`, 1800);
     });
 });
 
@@ -4318,20 +6405,76 @@ document.getElementById('sizeRange').addEventListener('input',function(){
     updateAll();
 });
 function refreshDualPreview(){document.getElementById('dualPreview').childNodes[0].textContent=`${state.numberTens}${state.numberUnits}`;}
-document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberChoice=parseInt(el.dataset.val);updateAll();});});
+document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberChoice=parseInt(el.dataset.val);if(typeof window._updateChocoCurlsPlacementAvailability==='function')window._updateChocoCurlsPlacementAvailability();updateAll();});});
 document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberTens=parseInt(el.dataset.val);refreshDualPreview();updateAll();});});
 document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberUnits=parseInt(el.dataset.val);refreshDualPreview();updateAll();});});
 document.getElementById('btnSingleDigit').addEventListener('click',()=>{state.numberDigits=1;document.getElementById('btnSingleDigit').classList.add('active');document.getElementById('btnDualDigit').classList.remove('active');document.getElementById('singleDigitSection').style.display='';document.getElementById('dualDigitSection').classList.remove('visible');updateAll();});
 document.getElementById('btnDualDigit').addEventListener('click',()=>{state.numberDigits=2;document.getElementById('btnDualDigit').classList.add('active');document.getElementById('btnSingleDigit').classList.remove('active');document.getElementById('singleDigitSection').style.display='none';document.getElementById('dualDigitSection').classList.add('visible');refreshDualPreview();updateAll();});
 // ── FLAVOUR ──
 document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.flavor=el.dataset.val;updateAll();});});
-const CAKE_STYLE_VALS = ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'];
-const CAKE_STYLE_VALS_ALL = ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'];
+
+// ── CAKE TYPE ──
+function syncCakeTypeUI(){
+    const isSpecialty = CAKE_TYPE_SPECIALTY.includes(state.cakeType);
+    const flavourSection = document.getElementById('flavourSection');
+    if(flavourSection) flavourSection.style.display = isSpecialty ? 'none' : '';
+    if(isSpecialty){
+        // Specialty types already define their flavor — drive the 3D color
+        // palette from the cake type itself instead of a separate pick.
+        state.flavor = CAKE_TYPE_TO_FLAVOR[state.cakeType] || state.flavor;
+    }
+    // Compatibility: some cake types don't fit every shape.
+    const restricted = CAKE_TYPE_SHAPE_RESTRICTIONS[state.cakeType] || [];
+    document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(x=>{
+        const isRestricted = restricted.includes(x.dataset.val);
+        x.style.opacity = isRestricted ? '0.35' : '';
+        x.style.pointerEvents = isRestricted ? 'none' : '';
+    });
+    if(restricted.includes(state.shape)){
+        const roundBtn = document.getElementById('opts-shape').querySelector('[data-val="Round"]');
+        if(roundBtn) roundBtn.click();
+    }
+}
+document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.cakeType = el.dataset.cakeType;
+        if(state.cakeType === 'Cheesecake' && state.frostings.has(FONDANT_VAL)){
+            state.frostings.delete(FONDANT_VAL);
+            state.frostings.add('Smooth Buttercream');
+        }
+        syncCakeTypeUI();
+        syncFrostingUI();
+        updateAll();
+    });
+});
+syncCakeTypeUI();
+
+// ── FILLING ──
+document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.filling = el.dataset.filling;
+        updateAll();
+    });
+});
+const CAKE_STYLE_VALS = ['Semi-naked Style','Ombre Style','Fondant Smooth','Smooth Buttercream'];
+const CAKE_STYLE_VALS_ALL = ['Semi-naked Style','Ombre Style','Fondant Smooth','Smooth Buttercream'];
 document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(el=>{
     el.addEventListener('click',()=>{
         const v = el.dataset.val;
+        if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape);
         if(el.classList.contains('active')) return;
-
+   if(v === FONDANT_VAL && state.cakeType === 'Cheesecake'){
+            showToast('Fondant is not available for Cheesecake');
+            return;
+        }
+        if(v === FONDANT_VAL && state.shape === 'Bundt'){
+            showToast('Fondant is not available for Bundt cakes');
+            return;
+        }
         // Visually uncheck ALL cake style buttons
         document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(x=>{
             x.classList.remove('active');
@@ -4355,31 +6498,50 @@ document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').for
         const nm = el.querySelector('.a-name');
         if(nm) nm.style.color='var(--caramel)';
 
-CAKE_STYLE_VALS_ALL.forEach(s=>state.frostings.delete(s));
-state.frostings.add(v);
+// Only clear the mutually-exclusive STYLE markers — NOT 'Smooth Buttercream',
+// which doubles as the Shell Border toggle. Deleting it on every style switch
+// was wiping out an already-active Shell Border the instant the user picked
+// Semi-naked or Ombre, forcing them to re-click Shell Border to bring it back.
+['Semi-naked Style','Ombre Style','Fondant Smooth'].forEach(s=>state.frostings.delete(s));
+// Don't blindly re-add 'Smooth Buttercream' when Rosettes is the active base icing —
+// Rosettes already occupies that slot, and re-adding it here was silently re-enabling
+// Shell Border underneath Rosettes, producing a "Rosettes + Smooth Buttercream" conflict.
+if(v === 'Smooth Buttercream' && state.frostings.has('Rosettes')){
+    // keep Rosettes as the base icing — just switch off Semi-naked/Ombre/Fondant (done above)
+} else {
+    state.frostings.add(v);
+}
 
 if(v===FONDANT_VAL){
     state.frostings.delete('Textured Buttercream');
     state.frostings.delete(SUGAR_ICING_VAL);
     state.frostings.delete('Smooth Buttercream');
+    state.frostings.delete('Rosettes'); // Fondant replaces all base icing/texture options
 } else if(v==='Smooth Buttercream'){
-    // If Sugar Icing is already the active base icing, don't override it
-    // Just remove the 'Smooth Buttercream' that was blindly added above
-    if(state.frostings.has(SUGAR_ICING_VAL)){
+    // If Sugar Icing or Rosettes is already the active base icing, don't override it —
+    // just remove the 'Smooth Buttercream' that might have been added above
+    if(state.frostings.has(SUGAR_ICING_VAL) || state.frostings.has('Rosettes')){
         state.frostings.delete('Smooth Buttercream');
     }
     // Textured and other add-ons stay as-is
 }
-// Semi-naked and other non-fondant styles: don't auto-add Smooth BC
+// Semi-naked / Ombre: leave any existing Shell Border ('Smooth Buttercream') or Rosettes state untouched
         syncFrostingUI(); updateAll();
     });
 });
-// ── FROSTING / ICING (base icing + texture) ──
 allFrostingOpts().forEach(el=>{
     if(el.closest('#opts-cake-style')) return;
     el.addEventListener('click',()=>{
         if(state.frostings.has(FONDANT_VAL)){showToast('Fondant is selected — deselect it first from Cake Style');return;}
-        const v = el.dataset.val;
+    const v = el.dataset.val;
+        if(state.frostings.has('Rosettes') && (v === 'Smooth Buttercream' || v === SUGAR_ICING_VAL)){
+            showToast('Rosettes is selected — deselect it first from Base Icing to change');
+            return;
+        }
+        if(state.shape === 'Bundt' && v === 'Textured Buttercream'){
+            showToast(v + ' is not available for Bundt cakes');
+            return;
+        }
 if(v === 'Smooth Buttercream'){
             if(activeCakeStyleFn() === 'Semi-naked Style'){
                 // In semi-naked: toggle Shell Border on/off independently
@@ -4408,25 +6570,62 @@ if(v === 'Smooth Buttercream'){
                 state.frostings.delete('Smooth Buttercream');
                 state.frostings.add(SUGAR_ICING_VAL);
             }
+    } else if(v === 'Rosettes'){
+            // Rosettes replace the base icing entirely — no Shell Border / Sugar Icing underneath
+            if(state.frostings.has(v)){
+                state.frostings.delete(v);
+            } else {
+                state.frostings.add(v);
+                state.frostings.delete('Smooth Buttercream');
+                state.frostings.delete(SUGAR_ICING_VAL);
+                // If the stored placement collides with a decoration already on the
+                // cake, auto-switch to the first free placement instead of rendering
+                // a broken combo.
+                if(rosetteComboBlockedReason(state.rosettePlacement)){
+                    const ROSETTE_ORDER = ['Border','Full Top','Sides','Cluster Right','Cluster Left'];
+                    const free = ROSETTE_ORDER.find(pl => !addonBlocksRosettePlacement(pl));
+                    if(free){
+                        state.rosettePlacement = free;
+                        document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement===free));
+                        const badge = document.getElementById('rosettePlacementBadge');
+                        if(badge) badge.textContent = 'Selected: ' + free;
+                        showToast('⚠ Switched Rosette placement to '+free+' — the previous spot was taken by another decoration.', 3200);
+                    }
+                }
+            }
         } else {
             // Textured — toggle
-            if(state.frostings.has(v)) state.frostings.delete(v);
-            else state.frostings.add(v);
+            if(state.frostings.has(v)){
+                state.frostings.delete(v);
+            } else {
+                const _tReason = rosetteBlocksAddon('textured');
+                if(_tReason){ showToast('⚠ '+_tReason, 2600); return; }
+                state.frostings.add(v);
+            }
         }
         syncFrostingUI(); updateAll();
     });
 });
-
 function activeCakeStyleFn(){
     return CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
 }
 function syncFrostingUI(){
+    if(state.shape === 'Bundt'){
+        state.frostings.delete('Textured Buttercream');
+    }
+  if(state.cakeType === 'Cheesecake' && state.frostings.has(FONDANT_VAL)){
+        state.frostings.delete(FONDANT_VAL);
+        if(![...state.frostings].some(f=>CAKE_STYLE_VALS.includes(f))) state.frostings.add('Smooth Buttercream');
+    }
+    if(state.shape === 'Bundt' && state.frostings.has(FONDANT_VAL)){
+        state.frostings.delete(FONDANT_VAL);
+        if(![...state.frostings].some(f=>CAKE_STYLE_VALS.includes(f))) state.frostings.add('Semi-naked Style');
+    }
     const fondantActive   = state.frostings.has(FONDANT_VAL);
     const isSugarIcing    = state.frostings.has(SUGAR_ICING_VAL);
     const isTextured      = state.frostings.has('Textured Buttercream');
     const activeCakeStyle = CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
-
-    // ── Cake Style buttons (radio-style) ──
+  // ── Cake Style buttons (radio-style) ──
     document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(el=>{
         const isActive = el.dataset.val === activeCakeStyle;
         el.classList.toggle('active', isActive);
@@ -4439,33 +6638,52 @@ function syncFrostingUI(){
         el.style.borderColor  = isActive ? 'var(--caramel)' : '';
         el.style.background   = isActive ? 'var(--accent-lt)' : '';
         el.style.boxShadow    = isActive ? '0 0 0 3px rgba(200,137,74,0.15)' : '';
+    if(el.dataset.val === FONDANT_VAL){
+            const lockFondant = state.cakeType === 'Cheesecake' || state.shape === 'Bundt';
+            el.style.opacity = lockFondant ? '0.38' : '';
+            el.style.pointerEvents = lockFondant ? 'none' : '';
+        }
     });
-
-    // ── Frosting/Icing section: fully lock when Fondant active ──
+// ── Frosting/Icing section: fully lock when Fondant active ──
     const frostingBase    = document.getElementById('opts-frosting-base');
     const frostingSpecial = document.getElementById('opts-frosting-special');
     const icingLockOverlay = document.getElementById('frostingIcingLock');
+    const rosetteActiveState = state.frostings.has('Rosettes');
 
-    if(fondantActive){
+     if(fondantActive){
         if(frostingBase)    { frostingBase.style.opacity='0.38'; frostingBase.style.pointerEvents='none'; }
         if(frostingSpecial) { frostingSpecial.style.opacity='0.38'; frostingSpecial.style.pointerEvents='none'; }
         if(icingLockOverlay) icingLockOverlay.style.display='flex';
+    } else if(rosetteActiveState){
+        // Rosettes now lives inside the Base Icing container alongside Shell Border /
+        // Sugar Icing — lock those two individually instead of the whole container,
+        // so the Rosettes button itself stays clickable to deselect.
+        if(frostingBase)    { frostingBase.style.opacity=''; frostingBase.style.pointerEvents=''; }
+        if(frostingSpecial) { frostingSpecial.style.opacity=''; frostingSpecial.style.pointerEvents=''; }
+        if(icingLockOverlay) icingLockOverlay.style.display='none';
+        if(frostingBase){
+            frostingBase.querySelectorAll('.frosting-opt').forEach(el=>{
+                const lock = el.dataset.val !== 'Rosettes';
+                el.style.opacity = lock ? '0.38' : '';
+                el.style.pointerEvents = lock ? 'none' : '';
+            });
+        }
     } else {
         if(frostingBase)    { frostingBase.style.opacity=''; frostingBase.style.pointerEvents=''; }
         if(frostingSpecial) { frostingSpecial.style.opacity=''; frostingSpecial.style.pointerEvents=''; }
         if(icingLockOverlay) icingLockOverlay.style.display='none';
+        if(frostingBase){
+            frostingBase.querySelectorAll('.frosting-opt').forEach(el=>{ el.style.opacity=''; el.style.pointerEvents=''; });
+        }
     }
 document.getElementById('opts-frosting-base').querySelectorAll('.frosting-opt').forEach(el=>{
         let isActive = false;
-        if(el.dataset.val === 'Smooth Buttercream'){
-            // Active if Smooth BC cake style selected OR if semi-naked and shell border toggled on
-            if(activeCakeStyle === 'Semi-naked Style'){
-                isActive = state.frostings.has('Smooth Buttercream') && !fondantActive;
-            } else {
-                isActive = (activeCakeStyle === 'Smooth Buttercream')
-                        && !isSugarIcing
-                        && !fondantActive;
-            }
+    if(el.dataset.val === 'Smooth Buttercream'){
+            // Active whenever Shell Border ('Smooth Buttercream') is present in state —
+            // it doubles as the default base coat AND an optional overlay for
+            // Semi-naked / Ombre styles, so it must not depend on which cake style
+            // is currently active or it'll wrongly show unchecked after a style switch.
+            isActive = state.frostings.has('Smooth Buttercream') && !fondantActive;
         } else if(el.dataset.val === SUGAR_ICING_VAL){
             isActive = isSugarIcing && !fondantActive;
         } else {
@@ -4478,15 +6696,16 @@ document.getElementById('opts-frosting-base').querySelectorAll('.frosting-opt').
         if(svg) svg.style.opacity = isActive ? '1' : '0';
         const nm = el.querySelector('.a-name');
         if(nm) nm.style.color = isActive ? 'var(--caramel)' : '';
-        el.style.borderColor = isActive ? 'var(--caramel)' : '';
+      el.style.borderColor = isActive ? 'var(--caramel)' : '';
         el.style.background  = isActive ? 'var(--accent-lt)' : '';
         el.style.boxShadow   = isActive ? '0 0 0 3px rgba(200,137,74,0.12)' : '';
     });
 
-   // ── Texture button ──
+ // ── Texture button ──
     const isSemiNaked = activeCakeStyle === 'Semi-naked Style';
+    const isBundtShapeTex = state.shape === 'Bundt';
     document.getElementById('opts-frosting-special').querySelectorAll('.frosting-opt').forEach(el=>{
-        const isActive = isTextured && !fondantActive && !isSemiNaked;
+        const isActive = state.frostings.has(el.dataset.val) && !fondantActive && !isSemiNaked && !isBundtShapeTex;
         el.classList.toggle('active', isActive);
         const chk = el.querySelector('.addon-check');
         if(chk){ chk.style.background = isActive ? 'var(--caramel)' : ''; chk.style.borderColor = isActive ? 'var(--caramel)' : ''; }
@@ -4497,19 +6716,61 @@ document.getElementById('opts-frosting-base').querySelectorAll('.frosting-opt').
         el.style.borderColor = isActive ? 'var(--caramel)' : '';
         el.style.background  = isActive ? 'var(--accent-lt)' : '';
         el.style.boxShadow   = isActive ? '0 0 0 3px rgba(200,137,74,0.12)' : '';
-        // Disable visually when semi-naked is active
-        el.style.opacity = isSemiNaked ? '0.38' : '';
-        el.style.pointerEvents = isSemiNaked ? 'none' : '';
+        // Disable visually when semi-naked or Bundt is active
+        el.style.opacity = (isSemiNaked || isBundtShapeTex) ? '0.38' : '';
+        el.style.pointerEvents = (isSemiNaked || isBundtShapeTex) ? 'none' : '';
     });
-    // Also remove Textured from state when semi-naked is selected
-    if(isSemiNaked) state.frostings.delete('Textured Buttercream');
+    // Also remove Textured from state when semi-naked or Bundt is selected
+    if(isSemiNaked || isBundtShapeTex) state.frostings.delete('Textured Buttercream');
 
-    // ── Icing color panel ──
-    document.getElementById('icingPanel').classList.toggle('visible', isSugarIcing && !fondantActive);
+// ── Icing color panel — also available for Shell Border (Smooth Buttercream) ──
+    const showShellBorderColor = activeCakeStyle === 'Smooth Buttercream' && state.frostings.has('Smooth Buttercream') && !isSugarIcing;
+    document.getElementById('icingPanel').classList.toggle('visible', (isSugarIcing || showShellBorderColor) && !fondantActive);
 
-    // ── Fondant notice ──
-    document.getElementById('fondantNotice').classList.toggle('visible', fondantActive);
+    // ── Ombre color panel ──
+    document.getElementById('ombreColorPanel').classList.toggle('visible', activeCakeStyle === 'Ombre Style' && !fondantActive);
 
+   document.getElementById('fondantNotice').classList.toggle('visible', fondantActive);
+
+const rosettePanelEl = document.getElementById('rosettePlacementPanel');
+    if(rosettePanelEl){
+        const rosetteOn = state.frostings.has('Rosettes') && !fondantActive;
+        rosettePanelEl.classList.toggle('visible', rosetteOn);
+const isNumberShape = state.shape === 'Number';
+        // Only these digits have a dedicated "middle" rosette piece — must match
+        // NUMBER_ROSETTE_DIGITS_WITH_MIDDLE in the module script above.
+        const NUMBER_ROSETTE_MIDDLE_DIGITS = new Set([0,4,6,8,9]);
+        const NUMBER_ROSETTE_OPTS = (isNumberShape && NUMBER_ROSETTE_MIDDLE_DIGITS.has(state.numberChoice))
+            ? ['Middle','Border','Full Top','Sides']
+            : ['Border','Full Top','Sides'];
+        // Rosettes work for any single digit 0–9 — just not dual-digit numbers yet.
+        const numberRosetteReady = isNumberShape && state.numberDigits === 1;
+        document.querySelectorAll('#opts-rosette-placement [data-rosette-placement]').forEach(el=>{
+            const allowed = !isNumberShape || NUMBER_ROSETTE_OPTS.includes(el.dataset.rosettePlacement);
+            el.style.display = allowed ? '' : 'none';
+        });
+        const comboLabels = rosettePanelEl.querySelectorAll('.frosting-section-label');
+        comboLabels.forEach(l=>{ l.style.display = isNumberShape ? 'none' : ''; });
+        const comboGrid = document.getElementById('opts-rosette-combo');
+        if(comboGrid) comboGrid.style.display = isNumberShape ? 'none' : '';
+        if(isNumberShape && !NUMBER_ROSETTE_OPTS.includes(state.rosettePlacement)){
+            state.rosettePlacement = 'Border';
+            document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement==='Border'));
+            const badge = document.getElementById('rosettePlacementBadge');
+            if(badge) badge.textContent = 'Selected: Border';
+        }
+        const rosetteNotice = document.getElementById('rosetteNumberDigitNotice');
+        if(rosetteNotice) rosetteNotice.style.display = (isNumberShape && !numberRosetteReady) ? '' : 'none';
+        if(rosettePanelEl){
+            rosettePanelEl.style.opacity = (isNumberShape && !numberRosetteReady) ? '0.5' : '';
+            rosettePanelEl.style.pointerEvents = (isNumberShape && !numberRosetteReady) ? 'none' : '';
+        }
+        // Force Rosettes off if it's on for a Number cake that isn't digit 0
+        if(isNumberShape && !numberRosetteReady && state.frostings.has('Rosettes')){
+            state.frostings.delete('Rosettes');
+            if(![...state.frostings].some(f=>['Smooth Buttercream','Sugar Icing'].includes(f))) state.frostings.add('Smooth Buttercream');
+        }
+    }
     // ── Combo hint ──
     const hint = document.getElementById('frostingComboHint');
     const allActive = [...state.frostings].filter(f => f !== FONDANT_VAL);
@@ -4524,13 +6785,178 @@ document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').f
     el.addEventListener('click',()=>{
         document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(x=>x.classList.remove('active'));
         el.classList.add('active'); state.icingColor=el.dataset.icingColor; state.icingColorName=el.dataset.icingName;
+        state.hasCustomIcingColor=true;
         document.getElementById('icingColorLabel').textContent=el.dataset.icingName;
         updateAll();
     });
 });
 
-// ── DRIP ──
-document.getElementById('dripToggleBtn').addEventListener('click',()=>{state.hasDrip=!state.hasDrip;document.getElementById('dripToggleBtn').classList.toggle('active',state.hasDrip);document.getElementById('dripFlavorPanel').classList.toggle('visible',state.hasDrip);if(state.hasDrip)state.addons.set('Drip',180);else state.addons.delete('Drip');updateAll();});
+// ── ROSETTE PLACEMENT ↔ OTHER DECORATIONS MUTUAL EXCLUSION ──
+const SPRINKLE_TYPE_ADDON_NAME = {
+    cylinder: 'Cylinder Sprinkles',
+    pearl: 'Sphere Sprinkles',
+    chocoSprinkle: 'Chocolate Sprinkles',
+    peanuts: 'Crushed Peanuts',
+};
+const SPRINKLE_TYPE_LABEL = {
+    cylinder: 'Cylinder Mix',
+    pearl: 'Pearl Mix',
+    chocoSprinkle: 'Choco Sprinkles',
+    peanuts: 'Crushed Peanuts',
+};
+// What each single rosette placement restricts elsewhere.
+const ROSETTE_FORWARD_RESTRICT = {
+    'Sides':         { textured:true, sprinkle:['sides','both'] },
+    'Full Top':      { chocoCurls:['middle','both'], plaque:true, sprinkle:['top'] },
+    'Border':        { chocoCurls:['sides'] },
+    'Cluster Right': { chocoCurls:['middle'], sprinkle:['top'] },
+    'Cluster Left':  { chocoCurls:['middle'], sprinkle:['top'] },
+};
+function activeRosettePlacementList(){
+    if(!state.frostings.has('Rosettes')) return [];
+    return (state.rosettePlacement||'Border').split('+').map(s=>s.trim());
+}
+// Would the CURRENTLY selected rosette placement(s) block turning on/choosing `kind`/`value`?
+function rosetteBlocksAddon(kind, value){
+    const placements = activeRosettePlacementList();
+    for(const pl of placements){
+        const r = ROSETTE_FORWARD_RESTRICT[pl];
+        if(!r) continue;
+        if(kind==='textured' && r.textured) return `Rosette (${pl}) is active — Textured isn't available with it.`;
+        if(kind==='plaque' && r.plaque) return `Rosette (${pl}) is active — Chocolate Plaque isn't available with it.`;
+        if(kind==='chocoCurls' && r.chocoCurls && r.chocoCurls.includes(value)) return `Rosette (${pl}) is active — Choco Curls (${value}) isn't available with it.`;
+        if(kind==='sprinkle' && r.sprinkle && r.sprinkle.includes(value)) return `Rosette (${pl}) is active — that placement isn't available with it.`;
+    }
+    return null;
+}
+// Would any CURRENTLY active other decoration block selecting rosette placement `pl`?
+function addonBlocksRosettePlacement(pl){
+    const r = ROSETTE_FORWARD_RESTRICT[pl];
+    if(!r) return null;
+    if(r.textured && state.frostings.has('Textured Buttercream')) return `Textured is active — remove it first to use Rosette (${pl}).`;
+    if(r.plaque && state.addons.has('Chocolate Plaque')) return `Chocolate Plaque is active — remove it first to use Rosette (${pl}).`;
+    if(r.chocoCurls && state.addons.has('Chocolate Curls') && r.chocoCurls.includes(state.chocoCurlsPlacement)) return `Choco Curls (${state.chocoCurlsPlacement}) is active — change or remove it first to use Rosette (${pl}).`;
+    if(r.sprinkle){
+        for(const type of Object.keys(SPRINKLE_TYPE_ADDON_NAME)){
+            const name = SPRINKLE_TYPE_ADDON_NAME[type];
+            const curP = (window._sprinklePlacement && window._sprinklePlacement[type]) || 'top';
+            if(state.addons.has(name) && r.sprinkle.includes(curP)){
+                return `${SPRINKLE_TYPE_LABEL[type]} (${curP}) is active — change or remove it first to use Rosette (${pl}).`;
+            }
+        }
+    }
+    return null;
+}
+function rosetteComboBlockedReason(comboPlacement){
+    const parts = (comboPlacement||'').split('+').map(s=>s.trim());
+    for(const pl of parts){
+        const reason = addonBlocksRosettePlacement(pl);
+        if(reason) return reason;
+    }
+    return null;
+}
+// Visually locks buttons on both sides so the conflict is obvious before a click.
+function syncRosetteAddonLocks(){
+    const rosetteOn = state.frostings.has('Rosettes') && !state.frostings.has(FONDANT_VAL);
+    const activePl = activeRosettePlacementList();
+    const lockTextured = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].textured);
+    const lockPlaque   = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].plaque);
+    const lockedCurls  = new Set();
+    const lockedSprinkle = new Set();
+    if(rosetteOn){
+        activePl.forEach(pl=>{
+            const r = ROSETTE_FORWARD_RESTRICT[pl];
+            if(!r) return;
+            (r.chocoCurls||[]).forEach(p=>lockedCurls.add(p));
+            (r.sprinkle||[]).forEach(p=>lockedSprinkle.add(p));
+        });
+    }
+    const texturedBtn = document.querySelector('#opts-frosting-special [data-val="Textured Buttercream"]');
+    if(texturedBtn && lockTextured && !texturedBtn.classList.contains('active')){
+        texturedBtn.style.opacity='0.35'; texturedBtn.style.pointerEvents='none';
+    }
+    const plaqueBtn = document.getElementById('plaqueToggleBtn');
+    if(plaqueBtn){
+        if(lockPlaque && !state.addons.has('Chocolate Plaque')){
+            plaqueBtn.style.opacity='0.35'; plaqueBtn.style.pointerEvents='none';
+        } else if(!state.addons.has('Chocolate Plaque')){
+            plaqueBtn.style.opacity=''; plaqueBtn.style.pointerEvents='';
+        }
+    }
+    document.querySelectorAll('.choco-curls-place-btn').forEach(btn=>{
+        const p = btn.dataset.placement;
+        const locked = lockedCurls.has(p) && state.chocoCurlsPlacement!==p;
+        btn.style.opacity = locked ? '0.35' : '';
+        btn.style.pointerEvents = locked ? 'none' : '';
+    });
+    document.querySelectorAll('.sprinkle-place-btn').forEach(btn=>{
+        const p = btn.dataset.placement, type = btn.dataset.type;
+        const isCurrent = window._sprinklePlacement && window._sprinklePlacement[type]===p;
+        const locked = lockedSprinkle.has(p) && !isCurrent;
+        btn.style.opacity = locked ? '0.35' : '';
+        btn.style.pointerEvents = locked ? 'none' : '';
+    });
+    document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(el=>{
+        const target = el.dataset.rosettePlacement;
+        const isCurrent = rosetteOn && state.rosettePlacement===target;
+        const locked = !isCurrent && !!rosetteComboBlockedReason(target);
+        el.style.opacity = locked ? '0.35' : '';
+        el.style.pointerEvents = locked ? 'none' : '';
+    });
+}
+function bindRosettePlacementOpts(containerId){
+    document.getElementById(containerId).querySelectorAll('[data-rosette-placement]').forEach(el=>{
+        el.addEventListener('click',()=>{
+            const target = el.dataset.rosettePlacement;
+            const reason = rosetteComboBlockedReason(target);
+            if(reason){ showToast('⚠ '+reason, 2600); return; }
+            // Only one placement (single OR combo) can be active at a time —
+            // clear both grids, not just the one that was clicked.
+            document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(x=>x.classList.remove('active'));
+            el.classList.add('active');
+            state.rosettePlacement = target;
+            document.getElementById('rosettePlacementBadge').textContent = 'Selected: ' + state.rosettePlacement.replace('+',' + ');
+            updateAll();
+        });
+    });
+}
+bindRosettePlacementOpts('opts-rosette-placement');
+bindRosettePlacementOpts('opts-rosette-combo');
+document.getElementById('rosetteColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('rosetteColorGrid').querySelectorAll('.icing-color-opt').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.rosetteColor = el.dataset.rosetteColor;
+        state.rosetteColorName = el.dataset.rosetteColorName;
+        document.getElementById('rosetteColorLabel').textContent = el.dataset.rosetteColorName;
+        updateAll();
+    });
+});
+
+// ── OMBRE COLOR PICKERS ──
+function updateOmbrePreview(){
+    document.getElementById('ombrePreviewSwatch').style.setProperty('--ombre-preview-top', state.ombreTopColor);
+    document.getElementById('ombrePreviewSwatch').style.setProperty('--ombre-preview-bottom', state.ombreBottomColor);
+}
+// Custom color-wheel swatches — unlimited colors via native picker
+const ombreTopCustomInput  = document.getElementById('ombreTopCustomInput');
+const ombreTopCustomSwatch = document.getElementById('ombreTopCustomSwatch');
+ombreTopCustomInput.addEventListener('input', function(){
+    ombreTopCustomSwatch.style.background = this.value;
+    state.ombreTopColor = this.value;
+    updateOmbrePreview();
+    updateAll();
+});
+
+const ombreBottomCustomInput  = document.getElementById('ombreBottomCustomInput');
+const ombreBottomCustomSwatch = document.getElementById('ombreBottomCustomSwatch');
+ombreBottomCustomInput.addEventListener('input', function(){
+    ombreBottomCustomSwatch.style.background = this.value;
+    state.ombreBottomColor = this.value;
+    updateOmbrePreview();
+    updateAll();
+});
+document.getElementById('dripToggleBtn').addEventListener('click',()=>{state.hasDrip=!state.hasDrip;document.getElementById('dripToggleBtn').classList.toggle('active',state.hasDrip);document.getElementById('dripFlavorPanel').classList.toggle('visible',state.hasDrip);if(state.hasDrip)state.addons.set('Drip',ADDON_TIER_PRICES['Drip'][getTierIdx()]);else state.addons.delete('Drip');updateAll();});
 document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.dripFlavor=el.dataset.dripFlavor;updateAll();});});
 document.getElementById('opts-fruits').querySelectorAll('.addon-opt').forEach(el=>{
     el.addEventListener('click',()=>{const v=el.dataset.val;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');if(typeof window.clearFruitModels==='function')window.clearFruitModels();placedFruitRecord.length=0;state.placedFruits=[];}else{state.addons.set(v,0);}el.classList.toggle('active',state.addons.has(v));updateFruitTray();updateAll();});
@@ -4565,16 +6991,19 @@ const order2=['fruitTray','chocoTray','candleTray'];
                 } else { el.style.bottom=BASE2+'px'; }
             });
             const hint=document.getElementById('viewerHint');
-            if(hint){let maxBottom=16;order2.forEach(id=>{const el=document.getElementById(id);if(el&&el.classList.contains('visible')){const b=parseInt(el.style.bottom)||14;const h=el.getBoundingClientRect().height||54;maxBottom=Math.max(maxBottom,b+h+8);}});hint.style.bottom=maxBottom+'px';}
+if(hint){let maxBottom=16;order2.forEach(id=>{const el=document.getElementById(id);if(el&&el.classList.contains('visible')){const b=parseInt(el.style.bottom)||14;const h=el.getBoundingClientRect().height||54;maxBottom=Math.max(maxBottom,b+h+8);}});
+    hint.style.top = 'auto';
+    hint.style.bottom = maxBottom + 'px';
+}
         });});
     }
 }
-
+const FRUIT_TRAY_ID_MAP={'Strawberry':'trayStrawberry','Blueberry':'trayBlueberry','Raspberry':'trayRaspberry','Cherry':'trayCherry','Mango Slice':'trayMango','Kiwi Slice':'trayKiwi','Peach Slice':'trayPeach','Banana Slice':'trayBanana'};
 function updateFruitTray(){
     const hasFruits=FRUIT_KEYS.some(k=>state.addons.has(k));
     document.getElementById('fruitTray').classList.toggle('visible',hasFruits);
     document.getElementById('fruitsDragNotice').style.display=hasFruits?'flex':'none';
-    FRUIT_KEYS.forEach(k=>{const t=document.getElementById('tray'+k);if(t)t.style.display=state.addons.has(k)?'':'none';});
+    FRUIT_KEYS.forEach(k=>{const t=document.getElementById(FRUIT_TRAY_ID_MAP[k]||('tray'+k));if(t)t.style.display=state.addons.has(k)?'':'none';});
     document.querySelector('.fruit-tray-sep').style.display=hasFruits?'':'none';
     updateViewerHint();repositionTrays();
 }
@@ -4599,7 +7028,6 @@ document.getElementById('kitkatToggleBtn').addEventListener('click',()=>{
 document.getElementById('btnKitkatStanding').addEventListener('click',()=>{state.kitkatOrientation='standing';document.getElementById('btnKitkatStanding').classList.add('active');document.getElementById('btnKitkatLying').classList.remove('active');document.getElementById('kitkatOrientBadge').textContent='📏 Standing';if(typeof window.updateKitkatOrientations==='function')window.updateKitkatOrientations('standing');showToast('🍬 KitKat → Standing mode',1800);});
 document.getElementById('btnKitkatLying').addEventListener('click',()=>{state.kitkatOrientation='lying';document.getElementById('btnKitkatLying').classList.add('active');document.getElementById('btnKitkatStanding').classList.remove('active');document.getElementById('kitkatOrientBadge').textContent='📐 Lying Flat';if(typeof window.updateKitkatOrientations==='function')window.updateKitkatOrientations('lying');showToast('🍬 KitKat → Lying Flat mode',1800);});
 
-// ── BAR SHARD TOGGLE ──
 document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]').addEventListener('click',()=>{
     const v='Chocolate Bar Shard';
     const btn=document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]');
@@ -4607,141 +7035,127 @@ document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]')
     else{state.addons.set(v,0);btn.classList.add('active');}
     updateBarShardTray();updateAll();
 });
-// ── CUPCAKE TOGGLE & QTY ──
-let _cupcakeQty = 1;
-(function(){
-    const btn = document.getElementById('cupcakeToggleBtn');
-    const v = 'Cupcake';
-
-    function setCupcakeActive(active) {
-        if (active) {
-            btn.classList.add('active');
-            btn.style.borderColor = 'var(--caramel)';
-            btn.style.background = 'var(--accent-lt)';
-            btn.style.boxShadow = '0 0 0 3px rgba(200,137,74,0.12)';
-            const chk = btn.querySelector('.addon-check');
-            if (chk) { chk.style.background = 'var(--caramel)'; chk.style.borderColor = 'var(--caramel)'; }
-            const svg = btn.querySelector('.addon-check svg');
-            if (svg) svg.style.opacity = '1';
-            const aName = btn.querySelector('.a-name');
-            if (aName) aName.style.color = 'var(--caramel)';
-        } else {
-            btn.classList.remove('active');
-            btn.style.borderColor = '';
-            btn.style.background = '';
-            btn.style.boxShadow = '';
-            const chk = btn.querySelector('.addon-check');
-            if (chk) { chk.style.background = ''; chk.style.borderColor = ''; }
-            const svg = btn.querySelector('.addon-check svg');
-            if (svg) svg.style.opacity = '0';
-            const aName = btn.querySelector('.a-name');
-            if (aName) aName.style.color = '';
-        }
-    }
-
-    btn.addEventListener('click', () => {
-        if (state.addons.has(v)) {
-            // DESELECT
-            state.addons.delete(v);
-            setCupcakeActive(false);
-            document.getElementById('cupcakeQtyPanel').style.display = 'none';
-            if (typeof window.clearCupcakeModels === 'function') window.clearCupcakeModels();
-            state.cupcakeQty = 0;
-            _cupcakeQty = 1;
-            document.getElementById('cupcakeQtyDisplay').textContent = '1';
-            const lt = document.getElementById('cupcakeLiveTotal');
-            if (lt) lt.textContent = '85';
-            document.querySelectorAll('.cupcake-preset-btn').forEach(b => {
-                const on = parseInt(b.dataset.qty) === 1;
-                b.style.background = on ? 'var(--caramel)' : 'var(--accent-lt)';
-                b.style.color = on ? '#fff' : 'var(--accent-dk)';
-                b.style.borderColor = on ? 'var(--caramel)' : 'rgba(200,137,74,.30)';
-            });
-            document.getElementById('cupcakeQtyMinus').style.opacity = '0.38';
-            document.getElementById('cupcakeQtyPlus').style.opacity = '1';
-        } else {
-            // SELECT
-            state.addons.set(v, 85 * _cupcakeQty);
-            setCupcakeActive(true);
-            document.getElementById('cupcakeQtyPanel').style.display = 'block';
-            state.cupcakeQty = _cupcakeQty;
-            const lt = document.getElementById('cupcakeLiveTotal');
-            if (lt) lt.textContent = (85 * _cupcakeQty).toLocaleString();
-            setTimeout(() => {
-                if (typeof window.placeCupcakesOnScene === 'function') window.placeCupcakesOnScene(_cupcakeQty);
-            }, 200);
-        }
-        updateAll();
-    });
-})();
-
-function updateCupcakeQty(newQty) {
-    newQty = Math.max(1, Math.min(48, newQty));
-    _cupcakeQty = newQty;
-    document.getElementById('cupcakeQtyDisplay').textContent = newQty;
-    document.querySelectorAll('.cupcake-preset-btn').forEach(b => {
-        const active = parseInt(b.dataset.qty) === newQty;
-        b.style.background = active ? 'var(--caramel)' : 'var(--accent-lt)';
-        b.style.color = active ? '#fff' : 'var(--accent-dk)';
-        b.style.borderColor = active ? 'var(--caramel)' : 'rgba(200,137,74,.30)';
-        b.style.fontWeight = active ? '700' : '600';
-    });
-document.getElementById('cupcakeQtyMinus').style.opacity = newQty <= 1 ? '0.38' : '1';
-    document.getElementById('cupcakeQtyPlus').style.opacity = newQty >= 48 ? '0.38' : '1';
-    const liveTotalEl = document.getElementById('cupcakeLiveTotal');
-    if (liveTotalEl) liveTotalEl.textContent = (85 * newQty).toLocaleString();
-// Auto-activate cupcake addon if not already active
-const _cupcakeBtn = document.getElementById('cupcakeToggleBtn');
-    // Auto-activate if not already
-    if (!state.addons.has('Cupcake')) {
-        state.addons.set('Cupcake', 85 * newQty);
-        _cupcakeBtn.classList.add('active');
-        _cupcakeBtn.style.borderColor = 'var(--caramel)';
-        _cupcakeBtn.style.background = 'var(--accent-lt)';
-        _cupcakeBtn.style.boxShadow = '0 0 0 3px rgba(200,137,74,0.12)';
-        document.getElementById('cupcakeQtyPanel').style.display = 'block';
+document.getElementById('tobleroneToggleBtn').addEventListener('click',()=>{
+    const v='Toblerone Triangle';
+    if(state.addons.has(v)){
+        state.addons.delete(v);
+        document.getElementById('tobleroneToggleBtn').classList.remove('active');
+        document.getElementById('tobleroneFlavorPanel').classList.remove('visible');
+        if(typeof window.clearTobleroneModels==='function')window.clearTobleroneModels();
+        state.placedToblerone=[];placedTobleroneRecord.length=0;
     } else {
-        state.addons.set('Cupcake', 85 * newQty);
+        state.addons.set(v,0);
+        document.getElementById('tobleroneToggleBtn').classList.add('active');
+        document.getElementById('tobleroneFlavorPanel').classList.add('visible');
     }
-    state.cupcakeQty = newQty;
-    // Sync checkbox
-    const _chkC = _cupcakeBtn.querySelector('.addon-check');
-    if (_chkC) { _chkC.style.background = 'var(--caramel)'; _chkC.style.borderColor = 'var(--caramel)'; }
-    const _svgC = _cupcakeBtn.querySelector('.addon-check svg');
-    if (_svgC) _svgC.style.opacity = '1';
-    const _nameC = _cupcakeBtn.querySelector('.a-name');
-    if (_nameC) _nameC.style.color = 'var(--caramel)';
-    if (typeof window.placeCupcakesOnScene === 'function') window.placeCupcakesOnScene(newQty);
-    updateAll();
-}
-document.getElementById('cupcakeQtyMinus').addEventListener('click', () => updateCupcakeQty(_cupcakeQty - 1));
-document.getElementById('cupcakeQtyPlus').addEventListener('click', () => updateCupcakeQty(_cupcakeQty + 1));
-
-document.getElementById('opts-cupcake-flavor').querySelectorAll('.cupcake-flavor-opt').forEach(el => {
-    el.addEventListener('click', () => {
-        document.getElementById('opts-cupcake-flavor').querySelectorAll('.cupcake-flavor-opt').forEach(x => {
-            x.style.background = 'var(--warm-white)';
-            x.style.color = 'var(--text-muted)';
-            x.style.borderColor = 'var(--border)';
-        });
-        el.style.background = 'var(--caramel)';
-        el.style.color = '#fff';
-        el.style.borderColor = 'var(--caramel)';
-        state.cupcakeFlavor = el.dataset.cupcakeFlavor;
-        state.cupcakeFlavorColor = el.dataset.cupcakeColor;
-        // Re-render cupcakes with new color if active
-        if (state.addons.has('Cupcake') && typeof window.placeCupcakesOnScene === 'function') {
-            window.placeCupcakesOnScene(_cupcakeQty);
-        }
+    updateTobleroneTray();updateAll();
+});
+document.getElementById('opts-toblerone-flavor').querySelectorAll('[data-toblerone-flavor]').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('opts-toblerone-flavor').querySelectorAll('[data-toblerone-flavor]').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.tobleroneFlavor = el.dataset.tobleroneFlavor;
+        const nutNote = state.tobleroneFlavor === 'White' ? 'with almond-style nuts' : 'with hazelnut nougat bits';
+        document.getElementById('tobleroneFlavorBadge').textContent = `Selected: ${state.tobleroneFlavor} · ${nutNote}`;
+        // NOTE: intentionally NOT calling reflavorToblerone() here — switching
+        // the flavor picker only affects the NEXT piece dropped onto the cake.
+        // Pieces already placed keep whatever flavor they were dropped as, so
+        // a customer can mix Chocolate and White pieces on the same cake.
+        showToast(`🔺 Next Toblerone will be ${state.tobleroneFlavor}`, 1800);
     });
 });
-document.querySelectorAll('.cupcake-preset-btn').forEach(b => {
-    b.addEventListener('click', () => updateCupcakeQty(parseInt(b.dataset.qty)));
+// ── CHOCOLATE CURLS TOGGLE ──
+function _tryPlaceChocoCurls(placement, attempts){
+    if(typeof window.placeChocoCurls==='function' && (typeof window.isCakeSceneReady!=='function' || window.isCakeSceneReady())){
+        window.placeChocoCurls(placement, state.tier, state.shape).then(ok=>{
+            if(ok){
+                showToast('🍫 Choco Curls updated!',1500);
+            } else if(attempts>0){
+                setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),200);
+            } else {
+                showToast('⚠ Could not load Choco Curls for this shape/placement',2400);
+            }
+        }).catch(()=>{
+            if(attempts>0) setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),200);
+            else showToast('⚠ Could not load Choco Curls for this shape/placement',2400);
+        });
+    } else if(attempts>0){
+        setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),200);
+    } else {
+        showToast('⚠ Could not load Choco Curls for this shape/placement',2400);
+    }
+}
+function _setAddonOptChecked(btn, checked){
+    btn.classList.toggle('active', checked);
+    const chk = btn.querySelector('.addon-check');
+    if(chk){ chk.style.background = checked ? 'var(--caramel)' : ''; chk.style.borderColor = checked ? 'var(--caramel)' : ''; }
+    const svg = btn.querySelector('.addon-check svg');
+    if(svg) svg.style.opacity = checked ? '1' : '0';
+    const nm = btn.querySelector('.a-name');
+    if(nm) nm.style.color = checked ? 'var(--caramel)' : '';
+    btn.style.borderColor = checked ? 'var(--caramel)' : '';
+    btn.style.background  = checked ? 'var(--accent-lt)' : '';
+    btn.style.boxShadow   = checked ? 'var(--shadow-glow)' : '';
+}
+document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]').addEventListener('click',()=>{
+    const v='Chocolate Curls';
+    const btn=document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]');
+    if(state.addons.has(v)){
+        state.addons.delete(v);
+        _setAddonOptChecked(btn, false);
+        document.getElementById('chocoCurlsPlacementPanel').style.display='none';
+        if(typeof window.clearChocoCurls==='function') window.clearChocoCurls();
+        // Fully reset the placement selector back to its default ("Middle") so
+        // the next time Chocolate Curls is turned on, it starts clean.
+        state.chocoCurlsPlacement = 'middle';
+        document.querySelectorAll('.choco-curls-place-btn').forEach(b=>{
+            const on = b.dataset.placement === 'middle';
+            b.style.background = on ? 'var(--gold)' : 'var(--surface)';
+            b.style.color      = on ? '#fff'         : 'var(--text-muted)';
+            b.style.fontWeight = on ? '700'          : '600';
+        });
+    } else {
+        const _ccReason = rosetteBlocksAddon('chocoCurls', state.chocoCurlsPlacement || 'middle');
+        if(_ccReason){ showToast('⚠ '+_ccReason, 2600); return; }
+        state.addons.set(v, ADDON_TIER_PRICES['Chocolate Curls'][getTierIdx()]);
+        _setAddonOptChecked(btn, true);
+        document.getElementById('chocoCurlsPlacementPanel').style.display='block';
+        if(typeof window._updateChocoCurlsPlacementAvailability==='function') window._updateChocoCurlsPlacementAvailability();
+        setTimeout(()=>_tryPlaceChocoCurls(state.chocoCurlsPlacement, 25),300);
+    }
+    updateAll();
+});
+document.querySelectorAll('.choco-curls-place-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const placement=btn.dataset.placement;
+        if(state.chocoCurlsPlacement===placement && state.addons.has('Chocolate Curls')) return; // already showing this placement
+        const _cReason = rosetteBlocksAddon('chocoCurls', placement);
+        if(_cReason){ showToast('⚠ '+_cReason, 2600); return; }
+        state.chocoCurlsPlacement=placement;
+        document.querySelectorAll('.choco-curls-place-btn').forEach(b=>{
+            const on=b.dataset.placement===placement;
+            b.style.background=on?'var(--gold)':'var(--surface)';
+            b.style.color=on?'#fff':'var(--text-muted)';
+            b.style.fontWeight=on?'700':'600';
+        });
+        // Auto-activate Chocolate Curls if it isn't already (defensive — the
+        // panel is normally hidden until the addon is on, but this guarantees
+        // real-time behavior regardless of how the click was triggered).
+              if(!state.addons.has('Chocolate Curls')){
+            state.addons.set('Chocolate Curls', ADDON_TIER_PRICES['Chocolate Curls'][getTierIdx()]);
+            const chocoBtn = document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]');
+            if(chocoBtn) _setAddonOptChecked(chocoBtn, true);
+        }
+        // Fire immediately — no waiting on any prior state — so Sides/Both/Middle
+        // render on the very first click, every time.
+        _tryPlaceChocoCurls(placement, 20);
+        updateAll();
+    });
 });
 
 function updateChocoTray(){
-    const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard');
-    const hasAny=hasF||hasK||hasO||hasB;
+    const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard'),hasT=state.addons.has('Toblerone Triangle');
+    const hasAny=hasF||hasK||hasO||hasB||hasT;
     const chocoNotice=document.getElementById('chocoPlaceNotice');
     if(chocoNotice) chocoNotice.style.display=hasAny?'flex':'none';
     document.getElementById('chocoTray').classList.toggle('visible',hasAny);
@@ -4749,6 +7163,7 @@ function updateChocoTray(){
     document.getElementById('trayKitkat').style.display=hasK?'':'none';
     document.getElementById('trayOreo').style.display=hasO?'':'none';
     document.getElementById('trayBarShard').style.display=hasB?'':'none';
+    document.getElementById('trayToblerone').style.display=hasT?'':'none';
     document.getElementById('kitkatOrientBadge').style.display=hasK?'':'none';
     document.getElementById('oreoOrientBadge').style.display=hasO?'':'none';
     const sep1=document.getElementById('chocoTraySep'),sep2=document.getElementById('chocoTraySep2'),clearBtn=document.getElementById('btnClearAllChoco');
@@ -4761,6 +7176,7 @@ function updateFerreroTray(){updateChocoTray();}
 function updateKitkatTray(){updateChocoTray();}
 function updateOreoTray(){updateChocoTray();}
 function updateBarShardTray(){updateChocoTray();}
+function updateTobleroneTray(){updateChocoTray();}
 function updateCandleTray(){
     const hasCandles=state.addons.has('Number Candles');
     document.getElementById('candlePickerPanel').classList.toggle('visible',hasCandles);
@@ -4782,9 +7198,9 @@ document.getElementById('btnOreoStanding').addEventListener('click',()=>{state.o
 
 function updateViewerHint(){
     const hasFruits=FRUIT_KEYS.some(k=>state.addons.has(k));
-    const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard');
+    const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard'),hasT=state.addons.has('Toblerone Triangle');
     const parts=[];
- if(hasFruits)parts.push('🍓 Drag fruits');if(hasF)parts.push('🟤 Ferrero balls');if(hasK)parts.push('🍬 KitKat sticks');if(hasO)parts.push('⚫ Oreo cookies');if(hasB)parts.push('🍫 Bar shards');if(state.addons.has('Number Candles'))parts.push('🕯️ Candles');
+ if(hasFruits)parts.push('🍓 Drag fruits');if(hasF)parts.push('🟤 Ferrero balls');if(hasK)parts.push('🍬 KitKat sticks');if(hasO)parts.push('⚫ Oreo cookies');if(hasB)parts.push('🍫 Bar shards');if(hasT)parts.push('🔺 Toblerone');if(state.addons.has('Number Candles'))parts.push('🕯️ Candles');
     document.getElementById('viewerHint').textContent=parts.length>0?parts.join(' · ')+' — drag to place':'🖱 Drag to rotate · Scroll to zoom';
 }
 
@@ -4800,13 +7216,14 @@ const ferreroDropRing=document.getElementById('ferreroDropRing');
 const kitkatDropRing=document.getElementById('kitkatDropRing');
 const oreoDropRing=document.getElementById('oreoDropRing');
 const barShardDropRing=document.getElementById('barShardDropRing');
-const placedFruitRecord=[],placedFerreroRecord=[],placedKitkatRecord=[],placedOreoRecord=[],placedBarShardRecord=[],placedCandleRecord=[];
-window._placedFruitRecord=placedFruitRecord;window._placedFerreroRecord=placedFerreroRecord;window._placedKitkatRecord=placedKitkatRecord;window._placedOreoRecord=placedOreoRecord;window._placedBarShardRecord=placedBarShardRecord;window._placedCandleRecord=placedCandleRecord;
+const placedFruitRecord=[],placedFerreroRecord=[],placedKitkatRecord=[],placedOreoRecord=[],placedBarShardRecord=[],placedTobleroneRecord=[],placedCandleRecord=[];
+window._placedFruitRecord=placedFruitRecord;window._placedFerreroRecord=placedFerreroRecord;window._placedKitkatRecord=placedKitkatRecord;window._placedOreoRecord=placedOreoRecord;window._placedBarShardRecord=placedBarShardRecord;window._placedTobleroneRecord=placedTobleroneRecord;window._placedCandleRecord=placedCandleRecord;
 let attachedFruitIdx=-1,_pointerDownOnFruit=false;
 let attachedFerreroIdx=-1,_pointerDownOnFerrero=false;
 let attachedKitkatIdx=-1,_pointerDownOnKitkat=false;
 let attachedOreoIdx=-1,_pointerDownOnOreo=false;
 let attachedBarShardIdx=-1,_pointerDownOnBarShard=false;
+let attachedTobleroneIdx=-1,_pointerDownOnToblerone=false;
 let attachedCandleIdx=-1,_pointerDownOnCandle=false;
 
 function setCursorGrab(on){viewerEl.style.cursor=on?'grabbing':'';}
@@ -4821,17 +7238,36 @@ function updateAttachedOreo(cx,cy){if(attachedOreoIdx<0)return;if(typeof window.
 function dropAttachedOreo(cx,cy){if(attachedOreoIdx<0)return;if(typeof window.moveDraggingOreo==='function')window.moveDraggingOreo(cx,cy);if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(-1);showToast('⚫ Oreo moved!',1600);attachedOreoIdx=-1;setCursorGrab(false);oreoDropRing.style.display='none';dragGhost.style.display='none';}
 function updateAttachedBarShard(cx,cy){if(attachedBarShardIdx<0)return;if(typeof window.moveDraggingBarShard==='function')window.moveDraggingBarShard(cx,cy);const rect=viewerEl.getBoundingClientRect();barShardDropRing.style.display='block';barShardDropRing.style.left=(cx-rect.left)+'px';barShardDropRing.style.top=(cy-rect.top)+'px';}
 function dropAttachedBarShard(cx,cy){if(attachedBarShardIdx<0)return;if(typeof window.moveDraggingBarShard==='function')window.moveDraggingBarShard(cx,cy);if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(-1);showToast('🍫 Bar shard moved!',1600);attachedBarShardIdx=-1;setCursorGrab(false);barShardDropRing.style.display='none';dragGhost.style.display='none';}
+const tobleroneDropRing=document.getElementById('tobleroneDropRing');
+function updateAttachedToblerone(cx,cy){if(attachedTobleroneIdx<0)return;if(typeof window.moveDraggingToblerone==='function')window.moveDraggingToblerone(cx,cy);const rect=viewerEl.getBoundingClientRect();tobleroneDropRing.style.display='block';tobleroneDropRing.style.left=(cx-rect.left)+'px';tobleroneDropRing.style.top=(cy-rect.top)+'px';}
+function dropAttachedToblerone(cx,cy){if(attachedTobleroneIdx<0)return;if(typeof window.moveDraggingToblerone==='function')window.moveDraggingToblerone(cx,cy);if(typeof window.setDraggingTobleroneIdx==='function')window.setDraggingTobleroneIdx(-1);showToast('🔺 Toblerone moved!',1600);attachedTobleroneIdx=-1;setCursorGrab(false);tobleroneDropRing.style.display='none';dragGhost.style.display='none';}
 function updateAttachedCandle(cx,cy){if(attachedCandleIdx<0)return;if(typeof window.moveDraggingCandle==='function')window.moveDraggingCandle(cx,cy);const rect=viewerEl.getBoundingClientRect();const cdr=document.getElementById('candleDropRing');cdr.style.display='block';cdr.style.left=(cx-rect.left)+'px';cdr.style.top=(cy-rect.top)+'px';}
 function dropAttachedCandle(cx,cy){if(attachedCandleIdx<0)return;if(typeof window.moveDraggingCandle==='function')window.moveDraggingCandle(cx,cy);if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(-1);const e=placedCandleRecord[attachedCandleIdx];if(e)showToast(`🕯️ Candle #${e.num} moved!`,1600);attachedCandleIdx=-1;setCursorGrab(false);document.getElementById('candleDropRing').style.display='none';dragGhost.style.display='none';}
+let attachedCharacterIdx=-1,_pointerDownOnCharacter=false;
+function updateAttachedCharacter(cx,cy){if(attachedCharacterIdx<0)return;if(typeof window.moveDraggingCharacter==='function')window.moveDraggingCharacter(cx,cy);}
+function dropAttachedCharacter(cx,cy){if(attachedCharacterIdx<0)return;if(typeof window.moveDraggingCharacter==='function')window.moveDraggingCharacter(cx,cy);if(typeof window.setDraggingCharacterIdx==='function')window.setDraggingCharacterIdx(-1);attachedCharacterIdx=-1;setCursorGrab(false);dragGhost.style.display='none';showToast('🎭 Character moved!',1600);}
 function hookCanvasPointerDown(){
     const canvas=document.querySelector('#model-container canvas');
     if(!canvas){setTimeout(hookCanvasPointerDown,100);return;}
     canvas.addEventListener('pointerdown',e=>{
+        if(attachedCharacterIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnCharacter=true;return;}
+        if(typeof window.getCharacterIndexAtScreen==='function'){
+            const cidx=window.getCharacterIndexAtScreen(e.clientX,e.clientY);
+            if(cidx>=0){
+                e.stopPropagation();e.preventDefault();_pointerDownOnCharacter=true;attachedCharacterIdx=cidx;
+                if(typeof window.setDraggingCharacterIdx==='function')window.setDraggingCharacterIdx(cidx);
+                setCursorGrab(true);dragGhost.textContent='🎭';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';
+                window._characterPointerMoved=false;window._characterClickX=e.clientX;window._characterClickY=e.clientY;
+                return;
+            }
+        }
         if(attachedFruitIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnFruit=true;return;}
         if(attachedFerreroIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnFerrero=true;return;}
         if(attachedKitkatIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnKitkat=true;return;}
         if(attachedOreoIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnOreo=true;return;}
-        if(attachedBarShardIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnBarShard=true;return;}
+     if(attachedBarShardIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnBarShard=true;return;}
+        if(attachedTobleroneIdx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnToblerone=true;return;}
+        if(typeof window.getTobleroneIndexAtScreen==='function'){const tidx=window.getTobleroneIndexAtScreen(e.clientX,e.clientY);if(tidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnToblerone=true;attachedTobleroneIdx=tidx;if(typeof window.setDraggingTobleroneIdx==='function')window.setDraggingTobleroneIdx(tidx);setCursorGrab(true);dragGhost.textContent='🔺';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         if(typeof window.getBarShardIndexAtScreen==='function'){const bidx=window.getBarShardIndexAtScreen(e.clientX,e.clientY);if(bidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnBarShard=true;attachedBarShardIdx=bidx;if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(bidx);setCursorGrab(true);dragGhost.textContent='🍫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         if(typeof window.getOreoIndexAtScreen==='function'){const oidx=window.getOreoIndexAtScreen(e.clientX,e.clientY);if(oidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnOreo=true;attachedOreoIdx=oidx;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(oidx);setCursorGrab(true);dragGhost.textContent='⚫';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         if(typeof window.getKitkatIndexAtScreen==='function'){const kidx=window.getKitkatIndexAtScreen(e.clientX,e.clientY);if(kidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnKitkat=true;attachedKitkatIdx=kidx;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(kidx);setCursorGrab(true);dragGhost.textContent='🍬';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
@@ -4850,7 +7286,12 @@ if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIn
         if(typeof window.getCandleIndexAtScreen==='function'){const cidx=window.getCandleIndexAtScreen(e.clientX,e.clientY);if(cidx>=0){e.stopPropagation();e.preventDefault();_pointerDownOnCandle=true;attachedCandleIdx=cidx;if(typeof window.setDraggingCandleIdx==='function')window.setDraggingCandleIdx(cidx);setCursorGrab(true);dragGhost.textContent='🕯️';dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';dragGhost.style.display='block';showToast('Move & click to place',1800);return;}}
         _pointerDownOnFruit=false;_pointerDownOnFerrero=false;_pointerDownOnKitkat=false;_pointerDownOnOreo=false;
     },{capture:true});
-    canvas.addEventListener('pointermove',e=>{
+  canvas.addEventListener('pointermove',e=>{
+    if(attachedCharacterIdx>=0){
+        const dx=e.clientX-(window._characterClickX||e.clientX),dy=e.clientY-(window._characterClickY||e.clientY);
+        if(Math.abs(dx)>4||Math.abs(dy)>4) window._characterPointerMoved=true;
+        updateAttachedCharacter(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';
+    }
     if(attachedFruitIdx>=0){
         const dx=e.clientX-(window._fruitClickX||e.clientX),dy=e.clientY-(window._fruitClickY||e.clientY);
         if(Math.abs(dx)>4||Math.abs(dy)>4) window._fruitPointerMoved=true;
@@ -4859,10 +7300,33 @@ if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIn
     if(attachedFerreroIdx>=0){updateAttachedFerrero(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
     if(attachedKitkatIdx>=0){updateAttachedKitkat(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
     if(attachedOreoIdx>=0){updateAttachedOreo(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
-    if(attachedBarShardIdx>=0){updateAttachedBarShard(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
+   if(attachedBarShardIdx>=0){updateAttachedBarShard(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
+    if(attachedTobleroneIdx>=0){updateAttachedToblerone(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
     if(attachedCandleIdx>=0){updateAttachedCandle(e.clientX,e.clientY);dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';}
 });
-    canvas.addEventListener('pointerup',e=>{
+canvas.addEventListener('pointerup',e=>{
+        if(_pointerDownOnCharacter){_pointerDownOnCharacter=false;
+            if(attachedCharacterIdx>=0){
+                if(!window._characterPointerMoved){
+                    const idx=attachedCharacterIdx;
+                    if(typeof window.setDraggingCharacterIdx==='function')window.setDraggingCharacterIdx(-1);
+                    attachedCharacterIdx=-1;setCursorGrab(false);dragGhost.style.display='none';
+                    if(typeof window._showCharacterMovePanel==='function') window._showCharacterMovePanel(idx);
+                } else {
+                    dropAttachedCharacter(e.clientX,e.clientY);
+                }
+            }
+        }
+        if(_pointerDownOnFruit){_pointerDownOnFruit=false;
+            if(attachedCharacter){
+                if(!window._characterPointerMoved){
+                    attachedCharacter=false;setCursorGrab(false);dragGhost.style.display='none';
+                    if(typeof window._showCharacterMovePanel==='function') window._showCharacterMovePanel();
+                } else {
+                    dropAttachedCharacter(e.clientX,e.clientY);
+                }
+            }
+        }
         if(_pointerDownOnFruit){_pointerDownOnFruit=false;
             if(attachedFruitIdx>=0){
                 if(!window._fruitPointerMoved){
@@ -4879,16 +7343,19 @@ if(typeof window.getFruitIndexAtScreen==='function'){const idx=window.getFruitIn
 if(_pointerDownOnKitkat){_pointerDownOnKitkat=false;if(attachedKitkatIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('kitkat',attachedKitkatIdx);if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(-1);attachedKitkatIdx=-1;setCursorGrab(false);kitkatDropRing.style.display='none';}}
 if(_pointerDownOnOreo){_pointerDownOnOreo=false;if(attachedOreoIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('oreo',attachedOreoIdx);if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(-1);attachedOreoIdx=-1;setCursorGrab(false);oreoDropRing.style.display='none';}}
 if(_pointerDownOnBarShard){_pointerDownOnBarShard=false;if(attachedBarShardIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('barshard',attachedBarShardIdx);if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(-1);attachedBarShardIdx=-1;setCursorGrab(false);barShardDropRing.style.display='none';}}
+if(_pointerDownOnToblerone){_pointerDownOnToblerone=false;if(attachedTobleroneIdx>=0){if(typeof window._showChocoRotatePanel==='function')window._showChocoRotatePanel('toblerone',attachedTobleroneIdx);if(typeof window.setDraggingTobleroneIdx==='function')window.setDraggingTobleroneIdx(-1);attachedTobleroneIdx=-1;setCursorGrab(false);tobleroneDropRing.style.display='none';}}
     });
 }
 hookCanvasPointerDown();
 
 document.addEventListener('mousemove',e=>{
+    if(attachedCharacterIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedCharacter(e.clientX,e.clientY);}
     if(attachedFruitIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedFruit(e.clientX,e.clientY);}
     if(attachedFerreroIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedFerrero(e.clientX,e.clientY);}
     if(attachedKitkatIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedKitkat(e.clientX,e.clientY);}
     if(attachedOreoIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedOreo(e.clientX,e.clientY);}
 if(attachedBarShardIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedBarShard(e.clientX,e.clientY);}
+    if(attachedTobleroneIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedToblerone(e.clientX,e.clientY);}
     if(attachedCandleIdx>=0){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';updateAttachedCandle(e.clientX,e.clientY);}
 });
 viewerEl.addEventListener('click',e=>{
@@ -4897,9 +7364,9 @@ viewerEl.addEventListener('click',e=>{
     if(attachedKitkatIdx>=0){dropAttachedKitkat(e.clientX,e.clientY);return;}
     if(attachedOreoIdx>=0){dropAttachedOreo(e.clientX,e.clientY);return;}
     if(attachedBarShardIdx>=0){dropAttachedBarShard(e.clientX,e.clientY);return;}
+    if(attachedTobleroneIdx>=0){dropAttachedToblerone(e.clientX,e.clientY);return;}
     if(attachedCandleIdx>=0){dropAttachedCandle(e.clientX,e.clientY);}
 },true);
-
 // ── DRAG FROM TRAY ──
 let activeTrayDrag=null,isDraggingFromTray=false;
 let activeFerreroDrag=null,isDraggingFerreroFromTray=false;
@@ -4911,6 +7378,8 @@ document.querySelectorAll('.fruit-draggable').forEach(el=>{el.addEventListener('
 document.querySelectorAll('.ferrero-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedFerreroIdx>=0){attachedFerreroIdx=-1;if(typeof window.setDraggingFerreroIdx==='function')window.setDraggingFerreroIdx(-1);setCursorGrab(false);ferreroDropRing.style.display='none';dragGhost.style.display='none';}activeFerreroDrag={type:'ferrero',emoji:'🟤'};isDraggingFerreroFromTray=true;dragGhost.textContent='🟤';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';ferreroDropRing.style.display='none';viewerEl.classList.remove('ferrero-drag-over');isDraggingFerreroFromTray=false;activeFerreroDrag=null;});});
 document.querySelectorAll('.kitkat-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedKitkatIdx>=0){attachedKitkatIdx=-1;if(typeof window.setDraggingKitkatIdx==='function')window.setDraggingKitkatIdx(-1);setCursorGrab(false);kitkatDropRing.style.display='none';dragGhost.style.display='none';}activeKitkatDrag={type:'kitkat',emoji:'🍬'};isDraggingKitkatFromTray=true;dragGhost.textContent='🍬';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';kitkatDropRing.style.display='none';viewerEl.classList.remove('kitkat-drag-over');isDraggingKitkatFromTray=false;activeKitkatDrag=null;});});
 document.querySelectorAll('.bar-shard-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedBarShardIdx>=0){attachedBarShardIdx=-1;if(typeof window.setDraggingBarShardIdx==='function')window.setDraggingBarShardIdx(-1);setCursorGrab(false);barShardDropRing.style.display='none';dragGhost.style.display='none';}activeBarShardDrag={type:'barShard',emoji:'🍫'};isDraggingBarShardFromTray=true;dragGhost.textContent='🍫';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';barShardDropRing.style.display='none';viewerEl.classList.remove('bar-shard-drag-over');isDraggingBarShardFromTray=false;activeBarShardDrag=null;});});
+let activeTobleroneDrag=null,isDraggingTobleroneFromTray=false;
+document.querySelectorAll('.toblerone-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedTobleroneIdx>=0){attachedTobleroneIdx=-1;if(typeof window.setDraggingTobleroneIdx==='function')window.setDraggingTobleroneIdx(-1);setCursorGrab(false);tobleroneDropRing.style.display='none';dragGhost.style.display='none';}activeTobleroneDrag={type:'toblerone',emoji:'🔺'};isDraggingTobleroneFromTray=true;dragGhost.textContent='🔺';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';tobleroneDropRing.style.display='none';viewerEl.classList.remove('toblerone-drag-over');isDraggingTobleroneFromTray=false;activeTobleroneDrag=null;});});
 document.querySelectorAll('.oreo-draggable').forEach(el=>{el.addEventListener('dragstart',e=>{if(attachedOreoIdx>=0){attachedOreoIdx=-1;if(typeof window.setDraggingOreoIdx==='function')window.setDraggingOreoIdx(-1);setCursorGrab(false);oreoDropRing.style.display='none';dragGhost.style.display='none';}activeOreoDrag={type:'oreo',emoji:'⚫'};isDraggingOreoFromTray=true;dragGhost.textContent='⚫';dragGhost.style.display='block';const em=new Image();em.src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';e.dataTransfer.setDragImage(em,0,0);e.dataTransfer.effectAllowed='copy';});el.addEventListener('dragend',()=>{dragGhost.style.display='none';oreoDropRing.style.display='none';viewerEl.classList.remove('oreo-drag-over');isDraggingOreoFromTray=false;activeOreoDrag=null;});});
 
 // ── CANDLE TOGGLE & NUMBER PICKER ──
@@ -4957,6 +7426,7 @@ document.addEventListener('dragover',e=>{
     if(isDraggingKitkatFromTray&&activeKitkatDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('kitkat-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';kitkatDropRing.style.display='block';kitkatDropRing.style.left=(e.clientX-rect.left)+'px';kitkatDropRing.style.top=(e.clientY-rect.top)+'px';}else kitkatDropRing.style.display='none';}
     if(isDraggingOreoFromTray&&activeOreoDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('oreo-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';oreoDropRing.style.display='block';oreoDropRing.style.left=(e.clientX-rect.left)+'px';oreoDropRing.style.top=(e.clientY-rect.top)+'px';}else oreoDropRing.style.display='none';}
 if(isDraggingBarShardFromTray&&activeBarShardDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('bar-shard-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';barShardDropRing.style.display='block';barShardDropRing.style.left=(e.clientX-rect.left)+'px';barShardDropRing.style.top=(e.clientY-rect.top)+'px';}else barShardDropRing.style.display='none';}
+    if(isDraggingTobleroneFromTray&&activeTobleroneDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('toblerone-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';tobleroneDropRing.style.display='block';tobleroneDropRing.style.left=(e.clientX-rect.left)+'px';tobleroneDropRing.style.top=(e.clientY-rect.top)+'px';}else tobleroneDropRing.style.display='none';}
     if(isDraggingCandleFromTray&&activeCandleDrag){dragGhost.style.left=e.clientX+'px';dragGhost.style.top=e.clientY+'px';dragGhost.style.transform='translate(-50%,-50%)';viewerEl.classList.toggle('candle-drag-over',over);if(over){e.preventDefault();e.dataTransfer.dropEffect='copy';const cdr=document.getElementById('candleDropRing');cdr.style.display='block';cdr.style.left=(e.clientX-rect.left)+'px';cdr.style.top=(e.clientY-rect.top)+'px';}else document.getElementById('candleDropRing').style.display='none';}
 });
 viewerEl.addEventListener('dragover',e=>e.preventDefault());
@@ -4965,7 +7435,8 @@ viewerEl.addEventListener('drop',async e=>{
     e.preventDefault();
     dropRing.style.display='none';ferreroDropRing.style.display='none';kitkatDropRing.style.display='none';oreoDropRing.style.display='none';
     viewerEl.classList.remove('fruit-drag-over','ferrero-drag-over','kitkat-drag-over','oreo-drag-over');
-    if(activeBarShardDrag&&isDraggingBarShardFromTray){isDraggingBarShardFromTray=false;activeBarShardDrag=null;dragGhost.style.display='none';if(typeof window.placeBarShardOnCake==='function'){const idx=await window.placeBarShardOnCake(e.clientX,e.clientY);if(idx>=0){placedBarShardRecord[idx]={emoji:'🍫'};state.placedBarShard.push({x:e.clientX,y:e.clientY});showToast('🍫 Bar shard placed! Click to move.',2200);updateAll();}}return;}
+   if(activeBarShardDrag&&isDraggingBarShardFromTray){isDraggingBarShardFromTray=false;activeBarShardDrag=null;dragGhost.style.display='none';if(typeof window.placeBarShardOnCake==='function'){const idx=await window.placeBarShardOnCake(e.clientX,e.clientY);if(idx>=0){placedBarShardRecord[idx]={emoji:'🍫'};state.placedBarShard.push({x:e.clientX,y:e.clientY});showToast('🍫 Bar shard placed! Click to move.',2200);updateAll();}}return;}
+    if(activeTobleroneDrag&&isDraggingTobleroneFromTray){isDraggingTobleroneFromTray=false;activeTobleroneDrag=null;dragGhost.style.display='none';if(typeof window.placeTobleroneOnCake==='function'){const idx=await window.placeTobleroneOnCake(e.clientX,e.clientY);if(idx>=0){placedTobleroneRecord[idx]={emoji:'🔺'};state.placedToblerone.push({x:e.clientX,y:e.clientY});showToast('🔺 Toblerone placed! Click to move.',2200);updateAll();}}return;}
     if(activeOreoDrag&&isDraggingOreoFromTray){isDraggingOreoFromTray=false;activeOreoDrag=null;dragGhost.style.display='none';if(typeof window.placeOreoOnCake==='function'){const idx=await window.placeOreoOnCake(e.clientX,e.clientY,state.oreoOrientation);if(idx>=0){placedOreoRecord[idx]={emoji:'⚫'};state.placedOreo.push({x:e.clientX,y:e.clientY,orientation:state.oreoOrientation});showToast(`⚫ Oreo placed ${state.oreoOrientation==='standing'?'standing up':'lying flat'}! Click to move.`,2200);updateAll();}}return;}
     if(activeKitkatDrag&&isDraggingKitkatFromTray){isDraggingKitkatFromTray=false;activeKitkatDrag=null;dragGhost.style.display='none';if(typeof window.placeKitkatOnCake==='function'){const idx=await window.placeKitkatOnCake(e.clientX,e.clientY,state.kitkatOrientation);if(idx>=0){placedKitkatRecord[idx]={emoji:'🍬'};state.placedKitkat.push({x:e.clientX,y:e.clientY,orientation:state.kitkatOrientation});showToast(`🍬 KitKat placed ${state.kitkatOrientation==='standing'?'standing up':'lying flat'}! Click to move.`,2200);updateAll();}}return;}
     if(activeFerreroDrag&&isDraggingFerreroFromTray){isDraggingFerreroFromTray=false;activeFerreroDrag=null;dragGhost.style.display='none';if(typeof window.placeFerreroOnCake==='function'){const idx=await window.placeFerreroOnCake(e.clientX,e.clientY);if(idx>=0){placedFerreroRecord[idx]={emoji:'🟤'};state.placedFerrero.push({x:e.clientX,y:e.clientY});showToast('🟤 Ferrero placed! Click it to move.',2200);updateAll();}}return;}
@@ -5026,39 +7497,172 @@ document.getElementById('btnClearCandles').addEventListener('click',()=>{
     showToast('🕯️ Candles cleared',1800);updateAll();
 });
 document.getElementById('btnClearFruits').addEventListener('click',()=>{attachedFruitIdx=-1;touchAttachedIdx=-1;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);setCursorGrab(false);dragGhost.style.display='none';dropRing.style.display='none';state.placedFruits=[];placedFruitRecord.length=0;redrawFruits();if(typeof window.clearFruitModels==='function')window.clearFruitModels();showToast('Fruits cleared',1800);});
+// ── CHOCOLATE PLAQUE TOGGLE & SHAPE PICKER ──
+document.getElementById('plaqueToggleBtn').addEventListener('click',()=>{
+    const v='Chocolate Plaque';
+    if(state.addons.has(v)){
+        state.addons.delete(v);
+        document.getElementById('plaqueToggleBtn').classList.remove('active');
+        document.getElementById('plaqueShapePanel').classList.remove('visible');
+        if(typeof window.clearPlaque==='function') window.clearPlaque();
+    } else {
+        const _pReason = rosetteBlocksAddon('plaque');
+        if(_pReason){ showToast('⚠ '+_pReason, 2600); return; }
+        state.addons.set(v,80);
+        document.getElementById('plaqueToggleBtn').classList.add('active');
+        document.getElementById('plaqueShapePanel').classList.add('visible');
+    const _tryPlace=(attempts)=>{
+            if(typeof window.placePlaqueOnCake==='function'){
+                window.placePlaqueOnCake(state.plaqueShape).then(ok=>{
+                    if(ok){
+                        showToast('🍫 Chocolate Plaque added!',1800);
+                        if(state.plaqueMessage && typeof window.setPlaqueMessage==='function') window.setPlaqueMessage(state.plaqueMessage);
+                    }
+                });
+            } else if(attempts>0){ setTimeout(()=>_tryPlace(attempts-1),150); }
+        };
+        setTimeout(()=>_tryPlace(10),300);
+    }
+    updateAll();
+});
+document.getElementById('opts-plaque-shape').querySelectorAll('[data-plaque-shape]').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('opts-plaque-shape').querySelectorAll('[data-plaque-shape]').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.plaqueShape=el.dataset.plaqueShape;
+        document.getElementById('plaqueShapeBadge').textContent=`Selected: ${state.plaqueShape} plaque`;
+      if(state.addons.has('Chocolate Plaque') && typeof window.placePlaqueOnCake==='function'){
+            window.placePlaqueOnCake(state.plaqueShape).then(ok=>{
+                if(ok && state.plaqueMessage && typeof window.setPlaqueMessage==='function') window.setPlaqueMessage(state.plaqueMessage);
+            });
+        }
+        updateAll();
+    });
+});
+
+document.getElementById('plaqueMessageInput').addEventListener('keydown',function(e){
+    if(e.key === 'Enter'){
+        const currentLines = this.value.split('\n').length;
+        if(currentLines >= 3) e.preventDefault();
+    }
+});
+document.getElementById('plaqueMessageInput').addEventListener('input',function(){
+    let lines = this.value.split('\n');
+    if(lines.length > 3){
+        lines = lines.slice(0,3);
+        this.value = lines.join('\n');
+    }
+    state.plaqueMessage = this.value;
+    if(state.addons.has('Chocolate Plaque') && typeof window.setPlaqueMessage==='function'){
+        window.setPlaqueMessage(this.value);
+    }
+});
+document.getElementById('characterToggleBtn').addEventListener('click',()=>{
+    const v='Character Topper';
+    if(state.addons.has(v)){
+        state.addons.delete(v);
+        document.getElementById('characterToggleBtn').classList.remove('active');
+        document.getElementById('characterPickerPanel').classList.remove('visible');
+        if(typeof window.clearCharacterModels==='function') window.clearCharacterModels();
+        document.getElementById('characterActiveBadge').textContent = 'None placed yet — tap a character to add';
+    } else {
+        state.addons.set(v,0);
+        document.getElementById('characterToggleBtn').classList.add('active');
+        document.getElementById('characterPickerPanel').classList.add('visible');
+        // No auto-placement — wait for the user to pick a character from the panel
+    }
+    updateAll();
+});
+document.getElementById('btnClearCharacters').addEventListener('click',()=>{
+    if(typeof window.clearCharacterModels==='function') window.clearCharacterModels();
+    state.addons.delete('Character Topper');
+    document.getElementById('characterToggleBtn').classList.remove('active');
+    document.getElementById('characterActiveBadge').textContent = 'None placed yet — tap a character to add';
+    if(typeof window._hideCharacterMovePanel==='function') window._hideCharacterMovePanel();
+    showToast('🎭 All characters cleared',1800);
+    updateAll();
+});
+// ── Accordion toggle for character categories ──
+document.querySelectorAll('#characterCategoryList .char-cat-toggle').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const group = btn.closest('.char-cat-group');
+        group.classList.toggle('open');
+    });
+});
+
+// ── Character selection (works across all category groups) — every tap adds
+// another instance to the cake, so any quantity/mix of characters can be placed. ──
+document.querySelectorAll('#characterCategoryList [data-character]').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        document.querySelectorAll('#characterCategoryList [data-character]').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.characterTopper = el.dataset.character;
+        if(!state.addons.has('Character Topper')){
+            state.addons.set('Character Topper', 0);
+            document.getElementById('characterToggleBtn').classList.add('active');
+            document.getElementById('characterPickerPanel').classList.add('visible');
+        }
+        if(typeof window.placeCharacterOnCake==='function'){
+            window.placeCharacterOnCake(state.characterTopper).then(idx=>{
+                if(idx>=0){
+                    const count = typeof window.getCharacterModels==='function' ? window.getCharacterModels().length : 1;
+                    const price = CHARACTER_PRICES[state.characterTopper] || 350;
+                    document.getElementById('characterActiveBadge').textContent = `${count} placed — tap any character again to add more`;
+                    showToast(`🎭 ${state.characterTopper} added! (₱${price})`,1600);
+                    updateAll();
+                }
+            });
+        }
+    });
+});
 document.getElementById('btnClearAllChoco').addEventListener('click',()=>{
-    attachedFerreroIdx=-1;attachedKitkatIdx=-1;attachedOreoIdx=-1;attachedBarShardIdx=-1;
+    attachedFerreroIdx=-1;attachedKitkatIdx=-1;attachedOreoIdx=-1;attachedBarShardIdx=-1;attachedTobleroneIdx=-1;
     if(typeof window.clearFerreroModels==='function')window.clearFerreroModels();
     if(typeof window.clearKitkatModels==='function')window.clearKitkatModels();
     if(typeof window.clearOreoModels==='function')window.clearOreoModels();
     if(typeof window.clearBarShardModels==='function')window.clearBarShardModels();
-    state.placedFerrero=[];state.placedKitkat=[];state.placedOreo=[];state.placedBarShard=[];
-    placedFerreroRecord.length=0;placedKitkatRecord.length=0;placedOreoRecord.length=0;placedBarShardRecord.length=0;
-    setCursorGrab(false);dragGhost.style.display='none';ferreroDropRing.style.display='none';kitkatDropRing.style.display='none';oreoDropRing.style.display='none';barShardDropRing.style.display='none';
+    if(typeof window.clearTobleroneModels==='function')window.clearTobleroneModels();
+    state.placedFerrero=[];state.placedKitkat=[];state.placedOreo=[];state.placedBarShard=[];state.placedToblerone=[];
+    placedFerreroRecord.length=0;placedKitkatRecord.length=0;placedOreoRecord.length=0;placedBarShardRecord.length=0;placedTobleroneRecord.length=0;
+    setCursorGrab(false);dragGhost.style.display='none';ferreroDropRing.style.display='none';kitkatDropRing.style.display='none';oreoDropRing.style.display='none';barShardDropRing.style.display='none';tobleroneDropRing.style.display='none';
     showToast('🍫 All chocolate decorations cleared',1800);updateAll();
 });
-
-['opts-choco','opts-sprinkles','opts-candles','opts-deco'].forEach(id=>{
+['opts-choco','opts-sprinkles','opts-candles'].forEach(id=>{
     document.getElementById(id).querySelectorAll('.addon-opt').forEach(el=>{
-        if(['ferreroToggleBtn','kitkatToggleBtn','oreoToggleBtn'].includes(el.id))return;
-        if(el.dataset.val==='Chocolate Bar Shard')return;
-        if(el.dataset.val==='Number Candles')return;
-        if(el.dataset.val==='Cupcake')return;
+        if(['ferreroToggleBtn','kitkatToggleBtn','oreoToggleBtn','tobleroneToggleBtn'].includes(el.id))return;
+    if(el.dataset.val==='Chocolate Bar Shard')return;
+    if(el.dataset.val==='Toblerone Triangle')return;
+    if(el.dataset.val==='Chocolate Curls')return;
+ 
+        if(el.dataset.val==='Chocolate Plaque')return;
+        if(el.dataset.val==='Character Topper')return;
         el.addEventListener('click',()=>{
             const v=el.dataset.val,p=parseInt(el.dataset.price)||0;
             if(state.addons.has(v)){
                 state.addons.delete(v);
                 el.classList.remove('active');
-             if(v==='Cylinder Sprinkles' && typeof window.clearSprinkles==='function') { window.clearSprinkles('cylinder'); document.getElementById('cylinderPlacementPanel').style.display='none'; }
+              if(v==='Cylinder Sprinkles' && typeof window.clearSprinkles==='function') { window.clearSprinkles('cylinder'); document.getElementById('cylinderPlacementPanel').style.display='none'; }
                 if(v==='Sphere Sprinkles'   && typeof window.clearSprinkles==='function') { window.clearSprinkles('pearl');    document.getElementById('pearlPlacementPanel').style.display='none'; }
-            } else {
+                if(v==='Chocolate Sprinkles'&& typeof window.clearSprinkles==='function') { window.clearSprinkles('chocoSprinkle'); document.getElementById('chocoSprinklePlacementPanel').style.display='none'; }
+                if(v==='Crushed Peanuts'    && typeof window.clearSprinkles==='function') { window.clearSprinkles('peanuts');  document.getElementById('peanutsPlacementPanel').style.display='none'; }
+                } else {
+                const _sprinkleTypeMap = {'Cylinder Sprinkles':'cylinder','Sphere Sprinkles':'pearl','Chocolate Sprinkles':'chocoSprinkle','Crushed Peanuts':'peanuts'};
+                const _sType = _sprinkleTypeMap[v];
+                if(_sType){
+                    const _curP = (window._sprinklePlacement && window._sprinklePlacement[_sType]) || 'top';
+                    const _sReason = rosetteBlocksAddon('sprinkle', _curP);
+                    if(_sReason){ showToast('⚠ '+_sReason, 2600); return; }
+                }
                 state.addons.set(v,p);
                 el.classList.add('active');
                 // Wait for cake to be in scene then build
                 const _tryBuild = (attempts) => {
-                    if (typeof window.buildCylinderSprinkles === 'function') {
+                        if (typeof window.buildCylinderSprinkles === 'function') {
                        if(v==='Cylinder Sprinkles') { window.buildCylinderSprinkles(); document.getElementById('cylinderPlacementPanel').style.display='block'; }
                 if(v==='Sphere Sprinkles')   { window.buildPearlSprinkles();    document.getElementById('pearlPlacementPanel').style.display='block'; }
+                if(v==='Chocolate Sprinkles'){ window.buildChocoSprinkles();    document.getElementById('chocoSprinklePlacementPanel').style.display='block'; }
+                if(v==='Crushed Peanuts')   { window.buildCrushedPeanuts();    document.getElementById('peanutsPlacementPanel').style.display='block'; }
                     } else if (attempts > 0) {
                         setTimeout(() => _tryBuild(attempts - 1), 150);
                     }
@@ -5072,18 +7676,61 @@ document.getElementById('btnClearAllChoco').addEventListener('click',()=>{
 function getEffectiveShape(){
     if(state.shape==='Round'&&state.tier==='Two-tier')   return 'Two-tier Round';
     if(state.shape==='Round'&&state.tier==='Three-tier') return 'Three-tier Round';
+
+    if(state.shape==='Square'&&state.tier==='Two-tier')  return 'Two-tier Square';
+    if(state.shape==='Square'&&state.tier==='Three-tier')return 'Three-tier Square';
+
+    if(state.shape==='Heart'&&state.tier==='Two-tier')   return 'Two-tier Heart';
+    if(state.shape==='Heart'&&state.tier==='Three-tier') return 'Three-tier Heart';
+
     return state.shape;
 }
-function getBasePrice(){const eff=getEffectiveShape();return eff==='Round'?(ROUND_SIZE_PRICES[state.roundSize]||350):(SHAPE_PRICES[eff]||350);}
-function getFrostingExtraPrice(){let e=0;state.frostings.forEach(f=>{e+=(FROSTING_PRICES[f]||0);});return e;}
+function getBasePrice(){const eff=getEffectiveShape();const shapeBase=eff==='Round'?(ROUND_SIZE_PRICES[state.roundSize]||350):(SHAPE_PRICES[eff]||350);return shapeBase+(CAKE_TYPE_PRICES[state.cakeType]||0);}
+function getFillingPrice(){return FILLING_PRICES[state.filling]||0;}
+function getFrostingExtraPrice(){
+    const ti = getTierIdx();
+    let e = 0;
+    const activeStyle = CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
+    e += (CAKE_STYLE_TIER_PRICES[activeStyle] || [0,0,0])[ti];
+    state.frostings.forEach(f=>{
+        if(f === activeStyle) return; // already priced above as the cake style itself
+        if(f === 'Smooth Buttercream')      e += FROSTING_SHELL_TIER_PRICES[ti];
+        else if(f === 'Sugar Icing')        e += FROSTING_SUGAR_TIER_PRICES[ti];
+        else if(f === 'Textured Buttercream') e += FROSTING_TEXTURE_TIER_PRICES[ti];
+        else if(f === 'Rosettes')           e += FROSTING_ROSETTE_TIER_PRICES[ti];
+    });
+    return e;
+}
 function getShapeLabel(){const eff=getEffectiveShape();if(eff==='Round')return `Round ${state.roundSize}"`;if(eff==='Number'){if(state.numberDigits===2)return `Number ${state.numberTens}${state.numberUnits}`;return `Number ${state.numberChoice}`;}return eff;}
-// ── MAIN UPDATE ──
+// Customer-friendly combined name, e.g. "Blueberry Cheesecake", "Ube Chiffon Cake", "Chocolate Sponge Cake"
+function getCombinedCakeTypeLabel(){
+    const type=state.cakeType, flavor=state.flavor;
+    if(type==='Cheesecake') return `${flavor} Cheesecake`;
+    if(type==='Chiffon Cake') return `${flavor} Chiffon Cake`;
+    if(type==='Sponge Cake') return `${flavor} Sponge Cake`;
+    return `${flavor} ${type}`;
+}
+// Resolves the flavor key actually sent to the 3D preview — reuses the existing
+// Blueberry/Strawberry/Mango Cheesecake palette entries when Cake Type is Cheesecake,
+// otherwise passes the plain flavor through untouched.
+function getEffectiveFlavorKey(){
+    if(state.cakeType==='Cheesecake' && CHEESECAKE_FLAVOR_MAP[state.flavor]) return CHEESECAKE_FLAVOR_MAP[state.flavor];
+    return state.flavor;
+}
 function updateAll(){
-    const base=getBasePrice(),frostExtra=getFrostingExtraPrice();
+  syncRosetteAddonLocks();
+  const base=getBasePrice(),frostExtra=getFrostingExtraPrice(),fillingPrice=getFillingPrice();
+  const ti=getTierIdx();
 // These are priced per placed piece — exclude from flat addon sum
-   const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Strawberry','Blueberry','Raspberry','Cherry','Cupcake']);
-    let addonTotal=0;state.addons.forEach((p,k)=>{if(!PER_PIECE_KEYS.has(k))addonTotal+=p;});
- const FRUIT_PRICES={'Strawberry':45,'Blueberry':25,'Raspberry':55,'Cherry':35};
+ const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Toblerone Triangle','Number Candles','Strawberry','Blueberry','Raspberry','Cherry','Character Topper']);
+    let addonTotal=0;
+    state.addons.forEach((p,k)=>{
+        if(PER_PIECE_KEYS.has(k)) return;
+        // Tier-dependent add-ons always price off the live tier, regardless
+        // of what value was stored on it at the moment it was clicked.
+        addonTotal += ADDON_TIER_PRICES[k] ? ADDON_TIER_PRICES[k][ti] : p;
+    });
+ const FRUIT_PRICES={'Strawberry':45,'Blueberry':25,'Raspberry':55,'Cherry':35,'Mango Slice':40,'Kiwi Slice':30,'Peach Slice':35};
     const fruitCounts={};
     if(typeof window.getFruitModels==='function'){window.getFruitModels().forEach(m=>{fruitCounts[m.fruit]=(fruitCounts[m.fruit]||0)+1;});}
     FRUIT_KEYS.forEach(k=>{addonTotal+=(fruitCounts[k]||0)*(FRUIT_PRICES[k]||0);});
@@ -5091,23 +7738,35 @@ function updateAll(){
     const kitkatCount=(typeof window.getKitkatModels==='function')?window.getKitkatModels().length:state.placedKitkat.length;
     const oreoCount=(typeof window.getOreoModels==='function')?window.getOreoModels().length:state.placedOreo.length;
 const barShardCount2=(typeof window.getBarShardModels==='function')?window.getBarShardModels().length:0;
+    const tobleroneCount2=(typeof window.getTobleroneModels==='function')?window.getTobleroneModels().length:0;
     const candleCount=(typeof window.getCandleModels==='function')?window.getCandleModels().length:state.placedCandles.length;
 if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*55;
     if(state.addons.has('Kitkat Sticks'))addonTotal+=kitkatCount*30;
     if(state.addons.has('Oreo Cookie'))addonTotal+=oreoCount*20;
     if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*40;
+    if(state.addons.has('Toblerone Triangle'))addonTotal+=tobleroneCount2*50;
 if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
-    if(state.addons.has('Cupcake'))addonTotal+=85*(state.cupcakeQty||1);
+    const characterModelsList=(typeof window.getCharacterModels==='function')?window.getCharacterModels():[];
+    const characterCount=characterModelsList.length;
+    let characterTotalPrice=0;
+    if(state.addons.has('Character Topper')){
+        characterModelsList.forEach(m=>{ characterTotalPrice += (CHARACTER_PRICES[m.key] || 350); });
+        addonTotal += characterTotalPrice;
+    }
     // Fruits: always count placed pieces regardless of addons map value
     // (already computed above via fruitCounts loop)
-    const total=base+frostExtra+addonTotal;
+   const total=base+frostExtra+addonTotal+fillingPrice;
     document.getElementById('priceBase').textContent='₱'+base.toLocaleString();
     document.getElementById('priceAddons').textContent='₱'+addonTotal.toLocaleString();
     document.getElementById('priceTotal').textContent=total.toLocaleString();
     document.getElementById('priceAddons').classList.toggle('zero',addonTotal===0);
     const frostRow=document.getElementById('priceFrostingRow');
     if(frostExtra>0){frostRow.style.display='';document.getElementById('priceFrosting').textContent='₱'+frostExtra.toLocaleString();}else frostRow.style.display='none';
-    const shapeLabel=getShapeLabel(),frostingLabel=[...state.frostings].join(' + ');
+  const shapeLabel=getShapeLabel(),frostingLabel=[...state.frostings].join(' + ');
+    document.getElementById('selCakeType').textContent=getCombinedCakeTypeLabel();
+    document.getElementById('selFlavorRow').style.display='none';
+    const fillingRowEl=document.getElementById('selFillingRow');
+    if(state.filling && state.filling!=='No Filling'){fillingRowEl.style.display='';document.getElementById('selFilling').textContent=state.filling+(fillingPrice>0?` (+₱${fillingPrice})`:'');}else{fillingRowEl.style.display='none';}
     const isSugarIcing=state.frostings.has(SUGAR_ICING_VAL),isFondant=state.frostings.has(FONDANT_VAL);
     document.getElementById('selShape').textContent=shapeLabel;
     document.getElementById('selFlavor').textContent=state.flavor;
@@ -5128,8 +7787,7 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
     const hasB=state.addons.has('Chocolate Bar Shard');
     const barShardCount=(typeof window.getBarShardModels==='function')?window.getBarShardModels().length:state.placedBarShard.length;
    if(hasB){document.getElementById('selBarShardRow').style.display='';document.getElementById('selBarShard').textContent=barShardCount>0?`${barShardCount} placed`:'Selected · drag to place';}else document.getElementById('selBarShardRow').style.display='none';
-    const hasCupcake=state.addons.has('Cupcake');
-if(hasCupcake){document.getElementById('selCupcakeRow').style.display='';document.getElementById('selCupcake').textContent=`${state.cupcakeQty} pc${state.cupcakeQty>1?'s':''} · ${state.cupcakeFlavor} · ₱${(85*state.cupcakeQty).toLocaleString()}`;}else document.getElementById('selCupcakeRow').style.display='none';
+
     const chips=[];
     if(isFondant)chips.push(`<span class="cfg-chip chip-gold">⬜ Fondant</span>`);
     else{[...state.frostings].forEach(f=>{if(f===SUGAR_ICING_VAL)chips.push(`<span class="cfg-chip chip-gold">🍦 Sugar Icing · ${state.icingColorName}</span>`);else if(state.frostings.size>1||f!=='Smooth Buttercream')chips.push(`<span class="cfg-chip chip-teal">${f}</span>`);});}
@@ -5138,22 +7796,27 @@ if(hasCupcake){document.getElementById('selCupcakeRow').style.display='';documen
     if(hasK)chips.push(`<span class="cfg-chip chip-accent">🍬 KitKat${kitkatCount>0?' ×'+kitkatCount:''} · ${state.kitkatOrientation==='standing'?'Standing':'Flat'}</span>`);
     if(hasO)chips.push(`<span class="cfg-chip chip-accent">⚫ Oreo${oreoCount>0?' ×'+oreoCount:''} · ${state.oreoOrientation==='standing'?'Standing':'Flat'}</span>`);
  if(hasB)chips.push(`<span class="cfg-chip chip-accent">🍫 Bar Shard${barShardCount>0?' ×'+barShardCount:''}</span>`);
+ const hasT=state.addons.has('Toblerone Triangle');
+    const tobleroneCount=(typeof window.getTobleroneModels==='function')?window.getTobleroneModels().length:0;
+    if(hasT)chips.push(`<span class="cfg-chip chip-accent">🔺 ${state.tobleroneFlavor||'Chocolate'} Toblerone${tobleroneCount>0?' ×'+tobleroneCount:''}</span>`);
    if(state.addons.has('Number Candles'))chips.push(`<span class="cfg-chip chip-gold">🕯️ Candles${candleCount>0?' ×'+candleCount:''}</span>`);
-   if(state.addons.has('Cupcake'))chips.push(`<span class="cfg-chip chip-accent">🧁 Cupcake ×${state.cupcakeQty||1} · ${state.cupcakeFlavor||'Vanilla'} · ₱${(85*(state.cupcakeQty||1)).toLocaleString()}</span>`);
+  if(state.addons.has('Cupcake'))chips.push(`<span class="cfg-chip chip-accent">🧁 Cupcake ×${state.cupcakeQty||1} · ${state.cupcakeFlavor||'Vanilla'} · ₱${(85*(state.cupcakeQty||1)).toLocaleString()}</span>`);
+if(state.addons.has('Character Topper'))chips.push(`<span class="cfg-chip chip-accent">🎭 ${characterCount>0?characterCount+'× characters · ₱'+characterTotalPrice.toLocaleString():state.characterTopper}</span>`);
 const fruitChipKeys=new Set(FRUIT_KEYS);
     state.addons.forEach((p,k)=>{
-        if(['Drip','Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Cupcake'].includes(k))return;
+          if(['Drip','Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Number Candles','Character Topper'].includes(k))return;
         if(fruitChipKeys.has(k))return; // fruits shown via selFruitsRow, not chips
         chips.push(`<span class="cfg-chip chip-accent">${k}</span>`);
     });
     document.getElementById('addonsSummary').innerHTML=chips.length?chips.join(''):'<span class="cfg-val muted" style="font-size:.73rem;">None selected</span>';
-    if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:isSugarIcing?state.icingColor:null});}
+   const shellBorderColorActive = state.frostings.has('Smooth Buttercream') && !isSugarIcing && !isFondant && state.hasCustomIcingColor;
+ if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),flavor:getEffectiveFlavorKey(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:(isSugarIcing||shellBorderColorActive)?state.icingColor:null});}
 }
 
 // ── SAVE DRAFT ──
 async function saveDraft(){
     const btn=document.getElementById('btnSaveDraft');
-    const cfg={shape:state.shape,roundSize:state.roundSize,numberDigits:state.numberDigits,numberChoice:state.numberChoice,numberTens:state.numberTens,numberUnits:state.numberUnits,flavor:state.flavor,frostings:[...state.frostings],addons:[...state.addons.keys()],hasDrip:state.hasDrip,dripFlavor:state.dripFlavor,icingColor:state.icingColor,icingColorName:state.icingColorName,placedFruits:state.placedFruits,placedFerrero:state.placedFerrero,kitkatOrientation:state.kitkatOrientation,placedKitkat:state.placedKitkat,oreoOrientation:state.oreoOrientation,placedOreo:state.placedOreo};
+  const cfg={cakeType:state.cakeType,filling:state.filling,shape:state.shape,roundSize:state.roundSize,numberDigits:state.numberDigits,numberChoice:state.numberChoice,numberTens:state.numberTens,numberUnits:state.numberUnits,flavor:state.flavor,frostings:[...state.frostings],addons:[...state.addons.keys()],hasDrip:state.hasDrip,dripFlavor:state.dripFlavor,icingColor:state.icingColor,icingColorName:state.icingColorName,placedFruits:state.placedFruits,placedFerrero:state.placedFerrero,kitkatOrientation:state.kitkatOrientation,placedKitkat:state.placedKitkat,oreoOrientation:state.oreoOrientation,placedOreo:state.placedOreo};
     try{
         const res=await fetch('{{ route("customer.cake-builder.saveDraft") }}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':'{{ csrf_token() }}'},body:JSON.stringify(cfg)});
         if(res.ok){btn.classList.add('saved');btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;showToast('✓ Draft saved successfully');setTimeout(()=>{btn.classList.remove('saved');btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Draft`;},3000);}
@@ -5179,6 +7842,8 @@ async function loadDraft(){
             if(isSingle&&d.numberChoice!==undefined){state.numberChoice=d.numberChoice;document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberChoice));}
             else if(!isSingle){state.numberTens=d.numberTens??1;state.numberUnits=d.numberUnits??0;document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberTens));document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberUnits));refreshDualPreview();}
         }
+       if(d.cakeType){state.cakeType=d.cakeType;document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').forEach(el=>el.classList.toggle('active',el.dataset.cakeType===d.cakeType));syncCakeTypeUI();}
+        if(d.filling){state.filling=d.filling;document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEach(el=>el.classList.toggle('active',el.dataset.filling===d.filling));}
         document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.flavor));state.flavor=d.flavor;
         state.frostings=new Set();const savedFrostings=Array.isArray(d.frostings)?d.frostings:(d.frosting?[d.frosting]:['Smooth Buttercream']);savedFrostings.forEach(f=>state.frostings.add(f));if(state.frostings.size===0)state.frostings.add('Smooth Buttercream');
         state.icingColor=d.icingColor||'#FFFFFF';state.icingColorName=d.icingColorName||'White';document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>el.classList.toggle('active',el.dataset.icingColor===state.icingColor));document.getElementById('icingColorLabel').textContent=state.icingColorName;
@@ -5208,8 +7873,9 @@ function proceed(){
     const kitkatCount=(typeof window.getKitkatModels==='function')?window.getKitkatModels().length:0;
     const oreoCount=(typeof window.getOreoModels==='function')?window.getOreoModels().length:0;
 
-
-    document.getElementById('configInput').value=JSON.stringify({
+document.getElementById('configInput').value=JSON.stringify({
+        cakeType:state.cakeType,
+        filling:state.filling,
         shape:state.shape,
         roundSize:state.shape==='Round'?state.roundSize:null,
         numberDigits:state.shape==='Number'?state.numberDigits:null,
@@ -5294,9 +7960,11 @@ function proceed(){
 if(document.getElementById('btnProceed')) document.getElementById('btnProceed').addEventListener('click',proceed);
 document.getElementById('btnProceedLg').addEventListener('click',proceed);
 document.getElementById('btnResetView').addEventListener('click',()=>{if(typeof window.resetCamera==='function')window.resetCamera();showToast('View reset');});
-if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.10);
+if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.07);
 window._updateAll=updateAll;
 syncFrostingUI();
+updateOmbrePreview();
+refreshTierPriceLabels();
 
 // ── PRESET LOADER (from dashboard featured cards) ──
 (function applyPreset() {
@@ -5390,7 +8058,7 @@ syncFrostingUI();
 
 function tryInit(){if(typeof window.updateModel==='function')updateAll();else setTimeout(tryInit,80);}
 tryInit();
-
+setTimeout(()=>{ if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape); }, 1500);
 
 
 // ── MOBILE SUMMARY SHEET ──
@@ -5491,6 +8159,33 @@ initMobileSummary();
             <button id="chocoRotInlineApply" style="flex:1;padding:9px;background:var(--gold);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">✓ Apply Rotation</button>
             <button id="chocoRotInlineDelete" title="Remove this item" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'">🗑</button>
             <button id="chocoRotInlineReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
+        </div>
+    </div>
+</div>
+<div id="characterMovePanel" style="display:none;">
+    <div style="background:linear-gradient(135deg,#3A4A9A 0%,#2A3878 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.4rem;line-height:1;">🎭</span>
+            <div>
+                <div style="font-size:.68rem;font-weight:700;color:#D8E0FF;font-family:var(--font-display);">Move &amp; rotate <span id="characterMovePanelName">character</span></div>
+                <div style="font-size:.60rem;color:rgba(216,224,255,0.65);font-family:var(--font-display);">Drag on the cake to move · spin below to rotate</div>
+            </div>
+        </div>
+        <button id="characterMovePanelClose" style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.15);border-radius:7px;color:rgba(216,224,255,0.85);font-size:.75rem;cursor:pointer;padding:4px 8px;font-family:var(--font-display);">Done</button>
+    </div>
+    <div style="background:var(--warm-white);padding:12px 14px;">
+        <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↔ Rotate 360°</div>
+        <input type="range" id="characterMovePanelRange" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
+        <div id="characterMovePanelDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:#3A4A9A;font-family:var(--font-display);margin-top:2px;margin-bottom:10px;">0°</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
+            <button class="character-move-preset" data-deg="0"   style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">0°</button>
+            <button class="character-move-preset" data-deg="90"  style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">90°</button>
+            <button class="character-move-preset" data-deg="180" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">180°</button>
+            <button class="character-move-preset" data-deg="270" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">270°</button>
+        </div>
+        <div style="display:flex;gap:6px;">
+            <button id="characterMovePanelDelete" title="Remove this topper" style="flex:1;padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">🗑 Remove</button>
+            <button id="characterMovePanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺ Reset</button>
         </div>
     </div>
 </div>

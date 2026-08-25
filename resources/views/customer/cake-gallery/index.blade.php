@@ -1511,4 +1511,4 @@
 
 
 </div>{{-- end .gallery-page --}}
-@endsection
+@endsection 
