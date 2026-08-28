@@ -47,10 +47,10 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 
 .sidebar-nav { flex:1; padding:1.5rem 0.75rem; overflow-y:auto; }
 .nav-section-label { font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.25); padding:0 1rem; margin:1.25rem 0 0.5rem; }
-.nav-link { display:flex; align-items:center; gap:0.75rem; padding:0.7rem 1rem; border-radius:10px; color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.875rem; font-weight:500; transition:all 0.2s; margin-bottom:0.15rem; font-family: 'Plus Jakarta Sans', sans-serif; }
+.nav-link { display:flex; align-items:center; gap:0.55rem; padding:0.7rem 0.9rem; border-radius:10px; color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.875rem; font-weight:500; transition:all 0.2s; margin-bottom:0.15rem; font-family: 'Plus Jakarta Sans', sans-serif; }
 .nav-link:hover { background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.95); }
 .nav-link.active { background:var(--caramel); color:white; box-shadow:0 4px 16px rgba(200,137,74,0.35); }
-.nav-link .icon { width:20px; text-align:center; font-size:1rem; }
+.nav-link .icon { width:16px; text-align:left; font-size:1rem; flex-shrink:0; }
 
 .sidebar-user { padding:1.25rem 1.75rem; border-top:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; gap:0.85rem; }
 .user-avatar { width:38px; height:38px; border-radius:50%; background:var(--caramel); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.875rem; color:white; flex-shrink:0; overflow:hidden; }
@@ -130,8 +130,9 @@ html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgro
 
     <nav class="sidebar-nav">
    <div class="nav-section-label">Overview</div>
-        <a href="{{ route('customer.dashboard') }}" class="nav-link {{ request()->routeIs('customer.dashboard') ? 'active' : '' }}">
-            <span class="icon">⊞</span> Dashboard
+            <a href="{{ route('customer.dashboard') }}" class="nav-link {{ request()->routeIs('customer.dashboard') ? 'active' : '' }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Dashboard
         </a>
 
       <div class="nav-section-label">Orders</div>
