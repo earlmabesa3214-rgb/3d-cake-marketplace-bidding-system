@@ -92,7 +92,6 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible,
 nav {
     height: var(--nav-h);
     background: var(--brown-deep);
-    border-bottom: 2.5px solid var(--brown-deep);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -977,9 +976,32 @@ nav { animation: navReveal 0.4s cubic-bezier(0.4,0,0.2,1) both; }
 .panel:last-child { animation: slideInRight 0.5s 0.16s cubic-bezier(0.4,0,0.2,1) both; }
 .viewer { animation: fadeInUp 0.55s 0.06s cubic-bezier(0.4,0,0.2,1) both; }
 .btn-save-draft, .btn-proceed { display: none !important; }
+/* ================= READ-ONLY PREVIEW MODE (?view_draft=ID) ================= */
+body.preview-mode nav,
+body.preview-mode .panel,
+body.preview-mode .toast,
+body.preview-mode #mobileSummaryBtn,
+body.preview-mode .viewer-controls,
+body.preview-mode .viewer-hint,
+body.preview-mode .viewer-badge,
+body.preview-mode .model-status,
+body.preview-mode #brightnessControl,
+body.preview-mode .fruit-tray,
+body.preview-mode .choco-tray { display: none !important; }
+body.preview-mode .builder { grid-template-columns: 1fr; padding: 0; background: transparent !important; }
+body.preview-mode .viewer {
+    margin: 0; border-radius: 0; height: 100vh; box-shadow: none;
+    background: transparent !important;
+}
+body.preview-mode .viewer::before,
+body.preview-mode .viewer::after { content: none !important; }
+body.preview-mode,
+body.preview-mode html { background: transparent !important; }
+body.preview-mode #model-container canvas { background: transparent !important; }
     </style>
 </head>
 <body>
+<script>if(new URLSearchParams(window.location.search).has('view_draft')) document.body.classList.add('preview-mode');</script>
 
 <!-- ================= TUTORIAL OVERLAY ================= -->
 <div class="tut-overlay" id="tutOverlay">
@@ -1923,7 +1945,8 @@ nav { animation: navReveal 0.4s cubic-bezier(0.4,0,0.2,1) both; }
             </button>
         </div>
       <div id="brightnessControl" style="display:none;"></div>
-        <div class="viewer-hint" id="viewerHint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom</div>
+          <div class="viewer-hint" id="viewerHint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom</div>
+        <div id="fruitCoordLiveBadge" style="display:none;position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(20,10,4,0.85);color:#F5D090;font-family:'DM Mono',monospace;font-size:.78rem;font-weight:700;padding:8px 16px;border-radius:10px;border:1.5px solid rgba(245,208,144,0.4);z-index:60;pointer-events:none;white-space:nowrap;"></div>
         <div class="model-status hidden" id="modelStatus">Ready</div>
 
       {{-- FRUIT TRAY --}}
@@ -2030,6 +2053,10 @@ nav { animation: navReveal 0.4s cubic-bezier(0.4,0,0.2,1) both; }
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     Submit Request
                 </button>
+                              <button class="btn-load-draft" id="btnSaveDraft">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Save Draft
+                </button>
                 <button class="btn-load-draft" id="btnLoadDraft">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Load Saved Draft
@@ -2045,6 +2072,11 @@ nav { animation: navReveal 0.4s cubic-bezier(0.4,0,0.2,1) both; }
     <input type="hidden" name="config" id="configInput">
     <input type="hidden" name="cake_preview" id="cakePreviewInput">
 </form>
+<form id="saveDraftForm" method="POST" action="{{ route('customer.cake-builder.saveDraft') }}">
+    @csrf
+    <input type="hidden" name="config" id="saveDraftConfigInput">
+    <input type="hidden" name="preview_image" id="saveDraftPreviewInput">
+</form>
 
 <script type="module">
 import * as THREE        from '/js/three/three.module.js';
@@ -2055,11 +2087,12 @@ const container = document.getElementById('model-container');
 const loadingEl = document.getElementById('modelLoading');
 const loadingTx = document.getElementById('loadingText');
 const statusEl  = document.getElementById('modelStatus');
+const isPreview = document.body.classList.contains('preview-mode');
 
 const renderer = new THREE.WebGLRenderer({
     antialias: false,
     alpha: true,
-    preserveDrawingBuffer: false,
+    preserveDrawingBuffer: true,
     powerPreference: 'high-performance',
 });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
@@ -2163,7 +2196,7 @@ tableBouce.position.set(0, -2, 2); scene.add(tableBouce);
 const backWall = new THREE.DirectionalLight(0xE8C870, 0.04);
 backWall.position.set(1, 3, -8); scene.add(backWall);
 scene.add(new THREE.AmbientLight(0xC89840, 0.12));
-
+if(!isPreview){
 // ── Soft circular glow behind/under the cake ──
 (function buildAtmosphere(){
     // Radial floor glow — warm pool of light under cake stand
@@ -2372,6 +2405,7 @@ const coneMesh = new THREE.Mesh(coneGeo, coneMat);
     });
 
 })();
+}
 
 controls.enableDamping    = true;
 controls.dampingFactor    = 0.08;
@@ -2763,6 +2797,20 @@ function disposeMaterial(mat){
     });
     mat.dispose();
 }
+function _disposeDecorGroup(g, keepGeometry){
+    if(!g) return;
+    g.traverse(obj=>{
+        if(!obj.isMesh && !obj.isInstancedMesh) return;
+        if(!keepGeometry && obj.geometry && obj.geometry !== window._peanutBaseGeo){
+            obj.geometry.dispose();
+        }
+        if(obj.material){
+            const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+            mats.forEach(m=>disposeMaterial(m));
+        }
+    });
+}
+window._disposeDecorGroup = _disposeDecorGroup;
 function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapIntensity,emissiveHex='#000'){
     group.traverse(child=>{
         if(!child.isMesh) return;
@@ -3574,8 +3622,19 @@ function buildCakePlateStand(cakeRadius){
     ringMesh.rotation.x=Math.PI/2; ringMesh.position.y=-pedestalH-0.001; ringMesh.castShadow=true; g.add(ringMesh);
     return g;
 }
+function showStatus(msg){
+    // Never show builder status messages inside Saved Draft 3D previews.
+    if (isPreview) return;
 
-function showStatus(msg){statusEl.textContent=msg;statusEl.classList.remove('hidden');clearTimeout(window._stTimer);window._stTimer=setTimeout(()=>statusEl.classList.add('hidden'),3500);}
+    statusEl.textContent = msg;
+    statusEl.classList.remove('hidden');
+
+    clearTimeout(window._stTimer);
+
+    window._stTimer = setTimeout(() => {
+        statusEl.classList.add('hidden');
+    }, 3500);
+}
 
 const glbCache={};
 const sceneRoot=new THREE.Group();
@@ -3624,6 +3683,37 @@ function stripOutlierMeshes(group, label){
         if(tallRatio > 4 || (info.size.y > medianHoriz * 3 && tinyFootprint)){
             console.warn(`[GLB cleanup] Removing outlier mesh "${info.mesh.name}" in ${label} — size:`, info.size);
             if(info.mesh.parent) info.mesh.parent.remove(info.mesh);
+        }
+    });
+}
+// Removes any mesh that sits floating, disconnected, above the main body of
+// a group — e.g. a stray plate/lid mesh accidentally baked into a fondant
+// export. Identifies the "main body" as whichever mesh has the largest
+// bounding-box volume, then strips any other mesh whose bottom edge sits
+// clearly above that body's top edge (i.e. not touching/overlapping it).
+function stripFloatingTopMesh(group, label){
+    const meshes = [];
+    group.traverse(c => { if(c.isMesh) meshes.push(c); });
+    if(meshes.length <= 1) return;
+
+    group.updateMatrixWorld(true);
+    const infos = meshes.map(m => ({ mesh: m, box: new THREE.Box3().setFromObject(m) }));
+
+    let mainIdx = 0, mainVol = -1;
+    infos.forEach((info, i) => {
+        const size = info.box.getSize(new THREE.Vector3());
+        const vol = size.x * size.y * size.z;
+        if (vol > mainVol) { mainVol = vol; mainIdx = i; }
+    });
+    const mainBox = infos[mainIdx].box;
+    const mainHeight = mainBox.max.y - mainBox.min.y;
+
+    infos.forEach((info, i) => {
+        if (i === mainIdx) return;
+        const gap = info.box.min.y - mainBox.max.y;
+        if (gap > mainHeight * 0.02) {
+            console.warn(`[Fondant cleanup] Removing floating top mesh "${info.mesh.name}" in ${label}`, info.box);
+            if (info.mesh.parent) info.mesh.parent.remove(info.mesh);
         }
     });
 }
@@ -3775,7 +3865,11 @@ function alignDualDigits(gT,gU,wrapper){
 }
 function clearScene(keepDecorations=false){
     invalidateCakeMeshesCache();
-    while(sceneRoot.children.length) sceneRoot.remove(sceneRoot.children[0]);
+    while(sceneRoot.children.length){
+        const _outgoing = sceneRoot.children[0];
+        _disposeDecorGroup(_outgoing, false);
+        sceneRoot.remove(_outgoing);
+    }
    currentBase=currentFrost=currentDrip=currentIcing=currentTexture=currentRosette=currentCheesecakeCrust=null;
     if(!keepDecorations){
         fruitModels.forEach(m=>scene.remove(m.group));
@@ -3799,6 +3893,10 @@ function clearScene(keepDecorations=false){
     }
 }
 function addStandToScene(cakeGroup, extraSink=0){
+    // Saved Drafts already has its own cake stand.
+    // Do not create another stand inside the transparent preview.
+    if (isPreview) return null;
+
     const TABLE_Y       = -1.18;
     const STAND_BOTTOM  =  0.255;
     const PLATE_TOP_LOCAL = 0.018;
@@ -3835,11 +3933,8 @@ function showNoPreview(shapeName){
     setTimeout(()=>{loadingEl.style.display='none';},400);
 }
 
-// Builds a thin graham-cracker-style crust layer that hugs the cake's own
-// footprint, so it automatically matches Round, Square, Heart, or tiered
-// shapes without needing separate crust models per shape. Removes any
 function updateCheesecakeCrust(cakeType){
-    if(currentCheesecakeCrust){ sceneRoot.remove(currentCheesecakeCrust); currentCheesecakeCrust=null; }
+    if(currentCheesecakeCrust){ _disposeDecorGroup(currentCheesecakeCrust, false); sceneRoot.remove(currentCheesecakeCrust); currentCheesecakeCrust=null; }
     if(cakeType !== 'Cheesecake') return;
     const cakeRef = currentBase || currentFrost;
     if(!cakeRef || !glbHasMesh(cakeRef)) return;
@@ -4056,7 +4151,7 @@ sceneRoot.add(baseWrapper);
                             sceneRoot.add(texWrapper); currentTexture=texWrapper;
                         }
                     }
-                    // ── Drip overlay — dedicated per-digit export (drip0.glb, drip1.glb, ...), layered ON TOP of the base ──
+                                   // ── Drip overlay — dedicated per-digit export (drip0.glb, drip1.glb, ...), layered ON TOP of the base ──
                     if(hasDrip){
                         const dripNameT = getNumberDripFileName(T);
                         const dripNameU = getNumberDripFileName(U);
@@ -4068,8 +4163,17 @@ sceneRoot.add(baseWrapper);
                         const dgU=drU.status==='fulfilled'&&drU.value&&glbHasMesh(drU.value)?drU.value:null;
                         if(dgT||dgU){
                             const dripWrapper=new THREE.Group();
+                            baseWrapper.updateMatrixWorld(true);
+                            const baseDigitMeshesDrip = baseWrapper.children; // [gT, gU] — already individually scaled
                             if(dgT&&dgU){
                                 [dgT,dgU].forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
+                                // Apply each base digit's OWN scale to its matching drip overlay —
+                                // same fix as the Textured overlay above. Without this the drip
+                                // was resetting to identity scale (raw/unscaled) instead of
+                                // matching its digit's actual rendered size.
+                                dgT.scale.copy(baseDigitMeshesDrip[0].scale);
+                                dgU.scale.copy(baseDigitMeshesDrip[1].scale);
+                                dgT.updateMatrixWorld(true); dgU.updateMatrixWorld(true);
                                 const dp = baseWrapper.userData.digitLocalPos;
                                 if(dp){
                                     dgT.position.copy(dp.T);
@@ -4084,8 +4188,11 @@ sceneRoot.add(baseWrapper);
                                     dgU.position.z=-(bU4.min.z+(bU4.max.z-bU4.min.z)/2);
                                 }
                                 dripWrapper.add(dgT); dripWrapper.add(dgU);
-                            } else { dripWrapper.add(dgT||dgU); }
-                            dripWrapper.scale.copy(baseWrapper.scale);
+                            } else {
+                                const single = dgT||dgU;
+                                single.scale.copy(dgT ? baseDigitMeshesDrip[0].scale : baseDigitMeshesDrip[1].scale);
+                                dripWrapper.add(single);
+                            }
                             dripWrapper.position.copy(baseWrapper.position);
                             sceneRoot.add(dripWrapper); currentDrip=dripWrapper;
                         }
@@ -4495,8 +4602,17 @@ if(idxRosetteStart >= 0){
 clearScene(true);
 
 const toPos = [];
-if(baseGLB  && glbHasMesh(baseGLB)) { currentBase  = baseGLB;  sceneRoot.add(currentBase);  toPos.push(currentBase);  }
-if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
+if(hasFondant){
+    // fondant_<slug>.glb is already the WHOLE cake (base + fondant skin) —
+    // never also add the plain base mesh here, or an unstyled/unscaled cake
+    // floats above the fondant-covered one. This is why only single-tier
+    // Round looked fine before: it happened to overlap by coincidence,
+    // every other shape (Square, Heart, Two-tier, Three-tier) didn't.
+    if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
+} else {
+    if(baseGLB  && glbHasMesh(baseGLB)) { currentBase  = baseGLB;  sceneRoot.add(currentBase);  toPos.push(currentBase);  }
+    if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
+}
 if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
 if(dripGLB  && glbHasMesh(dripGLB))  { currentDrip  = dripGLB;  sceneRoot.add(currentDrip);  toPos.push(currentDrip);  }
 const rosetteIsCombo = rosettePieces.length > 1;
@@ -4632,6 +4748,11 @@ const _inches = (shape==='Round') ? (state.roundSize||6) : (shape==='Heart') ? 7
 if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                 // ── FONDANT: use positionGroup for consistent sizing ──
                 currentFrost.position.set(0,0,0); currentFrost.rotation.set(0,0,0); currentFrost.scale.set(1,1,1);
+                currentFrost.updateMatrixWorld(true);
+
+                // Strip any stray floating mesh (e.g. a leftover plate/lid baked
+                // into fondant_square.glb, fondant_heart.glb, etc.) before sizing.
+                stripFloatingTopMesh(currentFrost, `fondant_${slug}`);
                 currentFrost.updateMatrixWorld(true);
 
                 // Scale using the same logic as normal cakes
@@ -4817,6 +4938,42 @@ fitRosetteToCake(toPos[0]);
 loadedKey=newKey; sceneRoot.visible=true;
     invalidateCakeMeshesCache();
 isLoading=false;
+if(isPreview){
+    // Saved Draft preview contains ONLY the cake.
+    // The parent Saved Draft scene provides the physical cake stand.
+
+    sceneRoot.updateMatrixWorld(true);
+
+    const _pBox = new THREE.Box3().setFromObject(sceneRoot);
+    const _pSize = _pBox.getSize(new THREE.Vector3());
+    const _pCenter = _pBox.getCenter(new THREE.Vector3());
+    const _pMaxDim = Math.max(_pSize.x, _pSize.y, _pSize.z);
+
+    // Larger framing so the cake properly fills the stand.
+    const _pFitDist =
+        (_pMaxDim * 0.64) /
+        (2 * Math.tan(camera.fov * Math.PI / 360));
+
+    camera.position.set(
+        _pCenter.x,
+        _pCenter.y + _pSize.y * 0.04,
+        _pCenter.z + _pFitDist
+    );
+
+    camera.lookAt(
+        _pCenter.x,
+        _pCenter.y + _pSize.y * 0.02,
+        _pCenter.z
+    );
+
+    controls.target.set(
+        _pCenter.x,
+        _pCenter.y + _pSize.y * 0.02,
+        _pCenter.z
+    );
+
+    controls.update();
+}
     loadingEl.style.opacity='0'; setTimeout(()=>{loadingEl.style.display='none';},400);
     isLoading=false;
     if(typeof window._requestRender==='function') window._requestRender(3000); // covers reveal animations + settling
@@ -4926,6 +5083,7 @@ function _buildSurfacePoints(density) {
 }
 function buildCylinderSprinkles() {
     if (sprinklesMeshes.cylinder) {
+        _disposeDecorGroup(sprinklesMeshes.cylinder);
         scene.remove(sprinklesMeshes.cylinder);
         sprinklesMeshes.cylinder = null;
     }
@@ -5017,6 +5175,7 @@ function buildCylinderSprinkles() {
 }
 function buildPearlSprinkles() {
     if (sprinklesMeshes.pearl) {
+        _disposeDecorGroup(sprinklesMeshes.pearl);
         scene.remove(sprinklesMeshes.pearl);
         sprinklesMeshes.pearl = null;
     }
@@ -5110,9 +5269,9 @@ if (sprinklePlacement.pearl === 'sides' || sprinklePlacement.pearl === 'both') {
     sprinklesMeshes.pearl = group;
 }
 
-// ── Chocolate Sprinkles — same rod style as Cylinder Sprinkles, single dark choco tone ──
 function buildChocoSprinkles() {
     if (sprinklesMeshes.chocoSprinkle) {
+        _disposeDecorGroup(sprinklesMeshes.chocoSprinkle);
         scene.remove(sprinklesMeshes.chocoSprinkle);
         sprinklesMeshes.chocoSprinkle = null;
     }
@@ -5179,15 +5338,9 @@ function buildChocoSprinkles() {
     scene.add(group);
     sprinklesMeshes.chocoSprinkle = group;
 }
-// ── Crushed Peanuts — dense-looking crushed topping built cheaply via
-// InstancedMesh. Raycasting stays at the same coarse density as the other
-// decorations (fruits/sprinkles); we get the "extra dense" look by spawning a
-// small cluster of jittered chunks per sampled point, then batching ALL chunks
-// into one InstancedMesh per color (4 draw calls total) instead of thousands
-// of individual Mesh/geometry/material objects — that per-object overhead
-// (plus the old ultra-fine raycast grid) is what was freezing the page. ──
 function buildCrushedPeanuts() {
     if (sprinklesMeshes.peanuts) {
+        _disposeDecorGroup(sprinklesMeshes.peanuts);
         scene.remove(sprinklesMeshes.peanuts);
         sprinklesMeshes.peanuts = null;
     }
@@ -5289,18 +5442,22 @@ function buildCrushedPeanuts() {
 }
 function clearSprinkles(type) {
     if (type === 'cylinder' && sprinklesMeshes.cylinder) {
+        _disposeDecorGroup(sprinklesMeshes.cylinder);
         scene.remove(sprinklesMeshes.cylinder);
         sprinklesMeshes.cylinder = null;
     }
     if (type === 'pearl' && sprinklesMeshes.pearl) {
+        _disposeDecorGroup(sprinklesMeshes.pearl);
         scene.remove(sprinklesMeshes.pearl);
         sprinklesMeshes.pearl = null;
     }
     if (type === 'chocoSprinkle' && sprinklesMeshes.chocoSprinkle) {
+        _disposeDecorGroup(sprinklesMeshes.chocoSprinkle);
         scene.remove(sprinklesMeshes.chocoSprinkle);
         sprinklesMeshes.chocoSprinkle = null;
     }
     if (type === 'peanuts' && sprinklesMeshes.peanuts) {
+        _disposeDecorGroup(sprinklesMeshes.peanuts);
         scene.remove(sprinklesMeshes.peanuts);
         sprinklesMeshes.peanuts = null;
     }
@@ -5551,10 +5708,9 @@ if(!parts){
 
         // Clear any previously placed curl piece(s) before loading the new set
         if(currentChocoCurls && currentChocoCurls.length){
-            currentChocoCurls.forEach(obj=>scene.remove(obj));
+            currentChocoCurls.forEach(obj=>{ _disposeDecorGroup(obj, true); scene.remove(obj); });
         }
         currentChocoCurls = [];
-
       // ── Realistic dark chocolate curl color — override whatever material the GLB came with ──
         const CURL_BASE   = new THREE.Color('#22100A');
         const CURL_HILITE = new THREE.Color('#3D2416');
@@ -5628,7 +5784,7 @@ if(!parts){
 };
 window.clearChocoCurls = function(){
     if(currentChocoCurls && currentChocoCurls.length){
-        currentChocoCurls.forEach(obj=>scene.remove(obj));
+        currentChocoCurls.forEach(obj=>{ _disposeDecorGroup(obj, true); scene.remove(obj); });
     }
     currentChocoCurls = [];
     currentChocoCurlsPlacement = null;
@@ -5669,9 +5825,7 @@ window.placePlaqueOnCake = async function(shapeKey){
         const cakeBox = new THREE.Box3().setFromObject(cakeRef);
         const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
         const cakeDiameter = Math.max(cakeBox.max.x - cakeBox.min.x, cakeBox.max.z - cakeBox.min.z);
-
-        if(currentPlaque){ scene.remove(currentPlaque); currentPlaque = null; }
-
+        if(currentPlaque){ _disposeDecorGroup(currentPlaque,true); scene.remove(currentPlaque); currentPlaque = null; }
    const fg = await loadDecoGLB(`/models/${file}.glb`);
         const PLAQUE_BASE   = new THREE.Color('#22100A');
         const PLAQUE_HILITE = new THREE.Color('#3D2416');
@@ -5723,7 +5877,7 @@ window.placePlaqueOnCake = async function(shapeKey){
     }
 };
 window.clearPlaque = function(){
-    if(currentPlaque){ scene.remove(currentPlaque); currentPlaque = null; }
+    if(currentPlaque){ _disposeDecorGroup(currentPlaque,true); scene.remove(currentPlaque); currentPlaque = null; }
     if(typeof window.clearPlaqueMessage === 'function') window.clearPlaqueMessage();
 };
 let currentPlaqueText = null;
@@ -5876,11 +6030,9 @@ const CHARACTER_SIZE_MODE = {
     'Powerpuff House':        'height',
     'Mickey Mouse Clubhouse': 'height',
 };
-// Per-character starting yaw (Y-axis rotation, radians) so every model faces
 const CHARACTER_ROTATION_Y = {
     'Kuromi':    Math.PI,
     'My Melody': Math.PI,
-    'Gary':      Math.PI,
 };
 
 window.placeCharacterOnCake = async function(characterKey, cx, cy){
@@ -5959,13 +6111,14 @@ window.placeCharacterOnCake = async function(characterKey, cx, cy){
         return -1;
     }
 };
-window.clearCharacterModels = function(){
-    characterModels.forEach(m=>scene.remove(m.group));
+window.clearCharacterModels = function() {
+    characterModels.forEach(m=>{_disposeDecorGroup(m.group,true); scene.remove(m.group);});
     characterModels.length = 0;
     _draggingCharacterIdx = -1;
 };
-window.removeCharacterModel = function(idx){
+window.removeCharacterModel = function(idx) {
     if(idx<0||idx>=characterModels.length) return false;
+    _disposeDecorGroup(characterModels[idx].group,true);
     scene.remove(characterModels[idx].group);
     characterModels.splice(idx,1);
     return true;
@@ -6239,7 +6392,16 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
                     fallbackMesh.castShadow = fallbackMesh.receiveShadow = true;
                     fg.add(fallbackMesh);
                 }
-              if(fruitName==='Strawberry'||fruitName==='Raspberry'){fg.rotation.x=0;fg.rotation.y=0;}
+              if(fruitName==='Strawberry'||fruitName==='Raspberry'){
+                    // Lay the strawberry on its side so the tip points sideways
+                    // (across the cake, in view) instead of toward/away from the
+                    // camera. Tipping on Z instead of X fixes the "pointing at
+                    // viewer" look — Z swings the tip left-right in view, X swung
+                    // it front-back (toward the lens), which read as "facing me".
+                                   fg.rotation.z = Math.PI / 2 + 0.15; // slight extra tip for a flatter lay
+                    fg.rotation.y = Math.random() * Math.PI * 2;
+                    fg.rotation.x = (Math.random() - 0.5) * 0.08; // barely any wobble — mostly flat
+                }
                 fg.updateMatrixWorld(true);
                 // Re-center horizontally so the mesh's visual center (not its raw
                 // GLB pivot) lands under the cursor. Some exports — e.g. banana.glb —
@@ -6265,11 +6427,18 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
             const cb=new THREE.Box3().setFromObject(sceneRoot),cc=cb.getCenter(new THREE.Vector3());
             sp=new THREE.Vector3(cc.x,cb.max.y,cc.z);
         }
-        fg.updateMatrixWorld(true);
+          fg.updateMatrixWorld(true);
         const _fBox=new THREE.Box3().setFromObject(fg);
         const _fHeight=_fBox.max.y-_fBox.min.y;
         const _fOffset=-_fBox.min.y-(_fHeight*0.25);
         fg.position.set(sp.x,sp.y+_fOffset,sp.z);
+               if(window._fruitCoordDebug && typeof getCakeCenterAndRadius === 'function'){
+            const {cx:_ccx,cz:_ccz,r:_ccr} = getCakeCenterAndRadius();
+            const fracX = ((sp.x-_ccx)/_ccr).toFixed(4);
+            const fracZ = ((sp.z-_ccz)/_ccr).toFixed(4);
+            const badge=document.getElementById('fruitCoordLiveBadge');
+            if(badge){badge.style.display='block';badge.textContent=`${fruitName}  →  x: ${fracX}   z: ${fracZ}`;}
+        }
         if(ei!==undefined&&ei>=0&&fruitModels[ei])return ei;
         scene.add(fg);
         const idx=fruitModels.length;
@@ -6277,10 +6446,10 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
         return idx;
     }catch(err){console.error('[Fruit]',fruitName,err);return -1;}
 };
-window.clearFruitModels=function(){fruitModels.forEach(m=>scene.remove(m.group));fruitModels.length=0;_draggingFruitIdx=-1;};
-window.removeFruitModel=function(idx){if(idx<0||idx>=fruitModels.length)return false;scene.remove(fruitModels[idx].group);fruitModels.splice(idx,1);if(window._placedFruitRecord)window._placedFruitRecord.splice(idx,1);return true;};
+window.clearFruitModels=function(){fruitModels.forEach(m=>{_disposeDecorGroup(m.group,true);scene.remove(m.group);});fruitModels.length=0;_draggingFruitIdx=-1;};
+window.removeFruitModel=function(idx){if(idx<0||idx>=fruitModels.length)return false;_disposeDecorGroup(fruitModels[idx].group,true);scene.remove(fruitModels[idx].group);fruitModels.splice(idx,1);if(window._placedFruitRecord)window._placedFruitRecord.splice(idx,1);return true;};
 window.getFruitIndexAtScreen=function(cx,cy){const rect=document.getElementById('viewerEl').getBoundingClientRect(),ndc=new THREE.Vector2(((cx-rect.left)/rect.width)*2-1,-((cy-rect.top)/rect.height)*2+1),rc=new THREE.Raycaster();rc.setFromCamera(ndc,camera);for(let i=fruitModels.length-1;i>=0;i--){const t=[];fruitModels[i].group.traverse(c=>{if(c.isMesh)t.push(c);});if(rc.intersectObjects(t,false).length>0)return i;}return -1;};
-window.moveDraggingFruit=function(cx,cy){if(_draggingFruitIdx<0||!fruitModels[_draggingFruitIdx])return;const e=fruitModels[_draggingFruitIdx];fruitModels.forEach(m=>m.group.visible=false);const h=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);if(h){e.group.position.set(h.x,h.y+e.bottomOffset,h.z);}};
+window.moveDraggingFruit=function(cx,cy){if(_draggingFruitIdx<0||!fruitModels[_draggingFruitIdx])return;const e=fruitModels[_draggingFruitIdx];fruitModels.forEach(m=>m.group.visible=false);const h=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);if(h){e.group.position.set(h.x,h.y+e.bottomOffset,h.z);if(window._fruitCoordDebug && typeof getCakeCenterAndRadius === 'function'){const c=getCakeCenterAndRadius();const fracX=((h.x-c.cx)/c.r).toFixed(4);const fracZ=((h.z-c.cz)/c.r).toFixed(4);const spinDeg=Math.round((e.group.rotation.y*180/Math.PI+360)%360);const badge=document.getElementById('fruitCoordLiveBadge');if(badge){badge.style.display='block';badge.textContent=e.fruit+'  →  x: '+fracX+'   z: '+fracZ+'   spin: '+spinDeg+'°';}}}};
 window.setDraggingFruitIdx=function(idx){_draggingFruitIdx=idx;};
 window.getDraggingFruitIdx=function(){return _draggingFruitIdx;};
 window.getFruitModels=function(){return fruitModels;};
@@ -6324,8 +6493,8 @@ window.placeFerreroOnCake = async function(cx, cy, ei) {
         return idx;
     } catch (err) { console.error('[Ferrero]', err); return -1; }
 };
-window.clearFerreroModels = function() { ferreroModels.forEach(m => scene.remove(m.group)); ferreroModels.length = 0; _draggingFerreroIdx = -1; };
-window.removeFerreroModel = function(idx) { if(idx<0||idx>=ferreroModels.length)return false; scene.remove(ferreroModels[idx].group); ferreroModels.splice(idx,1); if(window._placedFerreroRecord)window._placedFerreroRecord.splice(idx,1); return true; };
+window.clearFerreroModels = function() { ferreroModels.forEach(m => {_disposeDecorGroup(m.group,true); scene.remove(m.group);}); ferreroModels.length = 0; _draggingFerreroIdx = -1; };
+window.removeFerreroModel = function(idx) { if(idx<0||idx>=ferreroModels.length)return false; _disposeDecorGroup(ferreroModels[idx].group,true); scene.remove(ferreroModels[idx].group); ferreroModels.splice(idx,1); if(window._placedFerreroRecord)window._placedFerreroRecord.splice(idx,1); return true; };
 window.getFerreroIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -6402,8 +6571,8 @@ window.placeKitkatOnCake = async function(cx, cy, orientation, ei) {
         return idx;
     } catch (err) { console.error('[KitKat]', err); return -1; }
 };
-window.clearKitkatModels = function() { kitkatModels.forEach(m => scene.remove(m.group)); kitkatModels.length = 0; _draggingKitkatIdx = -1; };
-window.removeKitkatModel = function(idx) { if(idx<0||idx>=kitkatModels.length)return false; scene.remove(kitkatModels[idx].group); kitkatModels.splice(idx,1); if(window._placedKitkatRecord)window._placedKitkatRecord.splice(idx,1); return true; };
+window.clearKitkatModels = function() { kitkatModels.forEach(m => {_disposeDecorGroup(m.group,true); scene.remove(m.group);}); kitkatModels.length = 0; _draggingKitkatIdx = -1; };
+window.removeKitkatModel = function(idx) { if(idx<0||idx>=kitkatModels.length)return false; _disposeDecorGroup(kitkatModels[idx].group,true); scene.remove(kitkatModels[idx].group); kitkatModels.splice(idx,1); if(window._placedKitkatRecord)window._placedKitkatRecord.splice(idx,1); return true; };
 window.getKitkatIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -6489,8 +6658,8 @@ window.placeOreoOnCake = async function(cx, cy, orientation, ei) {
         return idx;
     } catch (err) { console.error('[Oreo]', err); return -1; }
 };
-window.clearOreoModels = function() { oreoModels.forEach(m => scene.remove(m.group)); oreoModels.length = 0; _draggingOreoIdx = -1; };
-window.removeOreoModel = function(idx) { if(idx<0||idx>=oreoModels.length)return false; scene.remove(oreoModels[idx].group); oreoModels.splice(idx,1); if(window._placedOreoRecord)window._placedOreoRecord.splice(idx,1); return true; };
+window.clearOreoModels = function() { oreoModels.forEach(m => {_disposeDecorGroup(m.group,true); scene.remove(m.group);}); oreoModels.length = 0; _draggingOreoIdx = -1; };
+window.removeOreoModel = function(idx) { if(idx<0||idx>=oreoModels.length)return false; _disposeDecorGroup(oreoModels[idx].group,true); scene.remove(oreoModels[idx].group); oreoModels.splice(idx,1); if(window._placedOreoRecord)window._placedOreoRecord.splice(idx,1); return true; };
 window.getOreoIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -6731,8 +6900,8 @@ window.placeTobleroneOnCake = async function(cx, cy, ei) {
         return idx;
     } catch (err) { console.error('[Toblerone]', err); return -1; }
 };
-window.clearTobleroneModels = function() { tobleroneModels.forEach(m => scene.remove(m.group)); tobleroneModels.length = 0; _draggingTobleroneIdx = -1; };
-window.removeTobleroneModel = function(idx) { if(idx<0||idx>=tobleroneModels.length)return false; scene.remove(tobleroneModels[idx].group); tobleroneModels.splice(idx,1); if(window._placedTobleroneRecord)window._placedTobleroneRecord.splice(idx,1); return true; };
+window.clearTobleroneModels = function() { tobleroneModels.forEach(m => {clearTobleroneNuts(m.group); _disposeDecorGroup(m.group,true); scene.remove(m.group);}); tobleroneModels.length = 0; _draggingTobleroneIdx = -1; };
+window.removeTobleroneModel = function(idx) { if(idx<0||idx>=tobleroneModels.length)return false; clearTobleroneNuts(tobleroneModels[idx].group); _disposeDecorGroup(tobleroneModels[idx].group,true); scene.remove(tobleroneModels[idx].group); tobleroneModels.splice(idx,1); if(window._placedTobleroneRecord)window._placedTobleroneRecord.splice(idx,1); return true; };
 window.getTobleroneIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -6818,8 +6987,8 @@ window.placeBarShardOnCake = async function(cx, cy, ei) {
         return idx;
     } catch (err) { console.error('[BarShard]', err); return -1; }
 };
-window.clearBarShardModels = function() { barShardModels.forEach(m => scene.remove(m.group)); barShardModels.length = 0; _draggingBarShardIdx = -1; };
-window.removeBarShardModel = function(idx) { if(idx<0||idx>=barShardModels.length)return false; scene.remove(barShardModels[idx].group); barShardModels.splice(idx,1); if(window._placedBarShardRecord)window._placedBarShardRecord.splice(idx,1); return true; };
+window.clearBarShardModels = function() { barShardModels.forEach(m => {_disposeDecorGroup(m.group,false); scene.remove(m.group);}); barShardModels.length = 0; _draggingBarShardIdx = -1; };
+window.removeBarShardModel = function(idx) { if(idx<0||idx>=barShardModels.length)return false; _disposeDecorGroup(barShardModels[idx].group,false); scene.remove(barShardModels[idx].group); barShardModels.splice(idx,1); if(window._placedBarShardRecord)window._placedBarShardRecord.splice(idx,1); return true; };
 window.getBarShardIndexAtScreen = function(cx, cy) {
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const ndc = new THREE.Vector2(((cx - rect.left) / rect.width) * 2 - 1, -((cy - rect.top) / rect.height) * 2 + 1);
@@ -6964,6 +7133,7 @@ candleScene.traverse(child => {
 };
 window.clearCandleModels=function(){
     candleModels.forEach(m=>{
+        _disposeDecorGroup(m.group,true);
         scene.remove(m.group);
         if(m.mixer){const mi=mixers.indexOf(m.mixer);if(mi>=0)mixers.splice(mi,1);}
     });
@@ -7034,6 +7204,103 @@ window._threeCamera   = camera;
 window._threeControls = controls;
 window._threeRenderer = renderer;
 window._threeScene    = scene;
+window.placeFruitAtFraction = async function(fruitName, xFrac, zFrac, spinDeg){
+    const {cx,cz,r} = getCakeCenterAndRadius();
+    const targetX = cx + xFrac*r;
+    const targetZ = cz + zFrac*r;
+    const topRay = new THREE.Raycaster(new THREE.Vector3(targetX, 20, targetZ), new THREE.Vector3(0,-1,0));
+    const meshes = getCakeMeshes();
+    const hits = topRay.intersectObjects(meshes, false);
+    let targetY = 0;
+    if(hits.length > 0){
+        hits.sort((a,b)=>b.point.y-a.point.y);
+        targetY = hits[0].point.y;
+    }
+    const worldPos = new THREE.Vector3(targetX, targetY, targetZ);
+    const vector = worldPos.clone().project(camera);
+    const rect = document.getElementById('viewerEl').getBoundingClientRect();
+    const screenX = (vector.x * 0.5 + 0.5) * rect.width + rect.left;
+    const screenY = (-vector.y * 0.5 + 0.5) * rect.height + rect.top;
+     const idx = await window.placeFruitOnCake(fruitName, screenX, screenY);
+    if(idx >= 0 && spinDeg !== undefined && fruitModels[idx]){
+        fruitModels[idx].group.rotation.y = spinDeg * Math.PI / 180;
+    }
+    return idx;
+};
+window.placeCharacterAtFraction = async function(characterKey, xFrac, zFrac){
+    const {cx,cz,r} = getCakeCenterAndRadius();
+    const targetX = cx + xFrac*r;
+    const targetZ = cz + zFrac*r;
+    const topRay = new THREE.Raycaster(new THREE.Vector3(targetX, 20, targetZ), new THREE.Vector3(0,-1,0));
+    const meshes = getCakeMeshes();
+    const hits = topRay.intersectObjects(meshes, false);
+    let targetY = 0;
+    if(hits.length > 0){
+        hits.sort((a,b)=>b.point.y-a.point.y);
+        targetY = hits[0].point.y;
+    }
+    const worldPos = new THREE.Vector3(targetX, targetY, targetZ);
+    const vector = worldPos.clone().project(camera);
+    const rect = document.getElementById('viewerEl').getBoundingClientRect();
+    const screenX = (vector.x * 0.5 + 0.5) * rect.width + rect.left;
+    const screenY = (-vector.y * 0.5 + 0.5) * rect.height + rect.top;
+    return await window.placeCharacterOnCake(characterKey, screenX, screenY);
+};
+window.placeCandleAtFraction = async function(candleNum, xFrac, zFrac){
+    const {cx,cz,r} = getCakeCenterAndRadius();
+    const targetX = cx + xFrac*r;
+    const targetZ = cz + zFrac*r;
+    const topRay = new THREE.Raycaster(new THREE.Vector3(targetX, 20, targetZ), new THREE.Vector3(0,-1,0));
+    const meshes = getCakeMeshes();
+    const hits = topRay.intersectObjects(meshes, false);
+    let targetY = 0;
+    if(hits.length > 0){
+        hits.sort((a,b)=>b.point.y-a.point.y);
+        targetY = hits[0].point.y;
+    }
+    const worldPos = new THREE.Vector3(targetX, targetY, targetZ);
+    const vector = worldPos.clone().project(camera);
+    const rect = document.getElementById('viewerEl').getBoundingClientRect();
+    const screenX = (vector.x * 0.5 + 0.5) * rect.width + rect.left;
+    const screenY = (-vector.y * 0.5 + 0.5) * rect.height + rect.top;
+    return await window.placeCandleOnCake(candleNum, screenX, screenY);
+};
+function _fractionToScreen(xFrac, zFrac){
+    const {cx,cz,r} = getCakeCenterAndRadius();
+    const targetX = cx + xFrac*r, targetZ = cz + zFrac*r;
+    const topRay = new THREE.Raycaster(new THREE.Vector3(targetX, 20, targetZ), new THREE.Vector3(0,-1,0));
+    const hits = topRay.intersectObjects(getCakeMeshes(), false);
+    let targetY = 0;
+    if(hits.length > 0){ hits.sort((a,b)=>b.point.y-a.point.y); targetY = hits[0].point.y; }
+    const worldPos = new THREE.Vector3(targetX, targetY, targetZ);
+    const vector = worldPos.clone().project(camera);
+    const rect = document.getElementById('viewerEl').getBoundingClientRect();
+    return {
+        x: (vector.x * 0.5 + 0.5) * rect.width + rect.left,
+        y: (-vector.y * 0.5 + 0.5) * rect.height + rect.top,
+    };
+}
+window.placeFerreroAtFraction = async function(xFrac, zFrac){
+    const p = _fractionToScreen(xFrac, zFrac);
+    return await window.placeFerreroOnCake(p.x, p.y);
+};
+window.placeKitkatAtFraction = async function(xFrac, zFrac, orientation){
+    const p = _fractionToScreen(xFrac, zFrac);
+    return await window.placeKitkatOnCake(p.x, p.y, orientation || 'standing');
+};
+window.placeOreoAtFraction = async function(xFrac, zFrac, orientation){
+    const p = _fractionToScreen(xFrac, zFrac);
+    return await window.placeOreoOnCake(p.x, p.y, orientation || 'lying');
+};
+window.placeBarShardAtFraction = async function(xFrac, zFrac){
+    const p = _fractionToScreen(xFrac, zFrac);
+    return await window.placeBarShardOnCake(p.x, p.y);
+};
+window.placeTobleroneAtFraction = async function(xFrac, zFrac, flavor){
+    if(flavor && typeof state !== 'undefined') state.tobleroneFlavor = flavor;
+    const p = _fractionToScreen(xFrac, zFrac);
+    return await window.placeTobleroneOnCake(p.x, p.y);
+};
 window._requestShadowUpdate = function(){ if(renderer) renderer.shadowMap.needsUpdate = true; };
 window.isCakeSceneReady=function(){ return !!(currentBase || currentFrost); };
 window.updateModel=(state)=>updateScene(state);
@@ -7131,10 +7398,21 @@ window._viewerReady=true;
 document.getElementById('fruitRotPanelApply').addEventListener('click', () => {
         const deg = parseInt(range.value);
         const em = emojiEl.textContent;
+        if(window._fruitCoordDebug){
+            const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
+            const m = models[activeFruitPanelIdx];
+            if(m && typeof getCakeCenterAndRadius === 'function'){
+                const {cx:_ccx,cz:_ccz,r:_ccr} = getCakeCenterAndRadius();
+                const fracX = ((m.group.position.x-_ccx)/_ccr).toFixed(4);
+                const fracZ = ((m.group.position.z-_ccz)/_ccr).toFixed(4);
+                const spinDeg = Math.round((m.group.rotation.y * 180 / Math.PI + 360) % 360);
+                const badge=document.getElementById('fruitCoordLiveBadge');
+                if(badge){badge.style.display='block';badge.textContent=`${m.fruit}  →  x: ${fracX}   z: ${fracZ}   spin: ${spinDeg}°`;}
+            }
+        }
         showToast(`${em} Rotated ${deg}°`, 1600);
         hidePanel();
     });
-
     document.getElementById('fruitRotPanelDelete').addEventListener('click', () => {
         const idx = activeFruitPanelIdx;
         const models = typeof window.getFruitModels === 'function' ? window.getFruitModels() : [];
@@ -9172,59 +9450,404 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
     if(typeof window._requestShadowUpdate==='function') setTimeout(window._requestShadowUpdate, 200);
       if(typeof window._requestRender==='function') window._requestRender();  
 }
+// Gathers every placed decoration as CAKE-RELATIVE FRACTIONS (not screen
+// pixels), so a draft can be rebuilt later at any camera angle/screen size —
+// same fraction system already used by placeFruitAtFraction / preset loading.
+function collectDecorPlacements(){
+    if(typeof window._saveAllToppingNormals==='function') window._saveAllToppingNormals();
+    const deg=r=>Math.round((r*180/Math.PI+360)%360);
+    const out={};
 
-// ── SAVE DRAFT ──
+    const fruits=(typeof window.getFruitModels==='function')?window.getFruitModels():[];
+    out.fruits=fruits.filter(m=>m._normX!==undefined).map(m=>({
+        fruit:m.fruit, x:m._normX, z:m._normZ,
+        rotZ:deg(m.group.rotation.z), rotY:deg(m.group.rotation.y),
+    }));
+
+    const ferreros=(typeof window.getFerreroModels==='function')?window.getFerreroModels():[];
+    out.ferrero=ferreros.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, rotZ:deg(m.group.rotation.z), rotY:deg(m.group.rotation.y),
+    }));
+
+    const kitkats=(typeof window.getKitkatModels==='function')?window.getKitkatModels():[];
+    out.kitkat=kitkats.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, orientation:m.orientation,
+    }));
+
+    const oreos=(typeof window.getOreoModels==='function')?window.getOreoModels():[];
+    out.oreo=oreos.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, orientation:m.orientation,
+    }));
+
+    const barShards=(typeof window.getBarShardModels==='function')?window.getBarShardModels():[];
+    out.barShard=barShards.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, rotZ:deg(m.group.rotation.z), rotY:deg(m.group.rotation.y),
+    }));
+
+    const toblerones=(typeof window.getTobleroneModels==='function')?window.getTobleroneModels():[];
+    out.toblerone=toblerones.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, flavor:m.flavor, rotZ:deg(m.group.rotation.z), rotY:deg(m.group.rotation.y),
+    }));
+
+    const candles=(typeof window.getCandleModels==='function')?window.getCandleModels():[];
+    out.candles=candles.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, num:m.candleNum,
+    }));
+
+    const characters=(typeof window.getCharacterModels==='function')?window.getCharacterModels():[];
+    out.characters=characters.filter(m=>m._normX!==undefined).map(m=>({
+        x:m._normX, z:m._normZ, key:m.key, rotY:deg(m.group.rotation.y),
+    }));
+
+    return out;
+}
 async function saveDraft(){
-    const btn=document.getElementById('btnSaveDraft');
-  const cfg={cakeType:state.cakeType,filling:state.filling,shape:state.shape,roundSize:state.roundSize,numberDigits:state.numberDigits,numberChoice:state.numberChoice,numberTens:state.numberTens,numberUnits:state.numberUnits,flavor:state.flavor,frostings:[...state.frostings],addons:[...state.addons.keys()],hasDrip:state.hasDrip,dripFlavor:state.dripFlavor,icingColor:state.icingColor,icingColorName:state.icingColorName,placedFruits:state.placedFruits,placedFerrero:state.placedFerrero,kitkatOrientation:state.kitkatOrientation,placedKitkat:state.placedKitkat,oreoOrientation:state.oreoOrientation,placedOreo:state.placedOreo};
-    try{
-        const res=await fetch('{{ route("customer.cake-builder.saveDraft") }}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':'{{ csrf_token() }}'},body:JSON.stringify(cfg)});
-        if(res.ok){btn.classList.add('saved');btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;showToast('✓ Draft saved successfully');setTimeout(()=>{btn.classList.remove('saved');btn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Draft`;},3000);}
-    }catch(e){showToast('⚠ Could not save draft');}
+    const cfg={
+        cakeType:state.cakeType,filling:state.filling,shape:state.shape,tier:state.tier,roundSize:state.roundSize,
+        numberDigits:state.numberDigits,numberChoice:state.numberChoice,numberTens:state.numberTens,numberUnits:state.numberUnits,
+        flavor:state.flavor,frostings:[...state.frostings],addons:[...state.addons.keys()],
+        hasDrip:state.hasDrip,dripFlavor:state.dripFlavor,icingColor:state.icingColor,icingColorName:state.icingColorName,
+        hasCustomIcingColor:state.hasCustomIcingColor,
+        decorations:collectDecorPlacements(),
+        kitkatOrientation:state.kitkatOrientation,
+        oreoOrientation:state.oreoOrientation,
+        chocoCurlsPlacement: state.addons.has('Chocolate Curls') ? state.chocoCurlsPlacement : null,
+        plaqueShape: state.addons.has('Chocolate Plaque') ? state.plaqueShape : null,
+        plaqueMessage: state.addons.has('Chocolate Plaque') ? state.plaqueMessage : '',
+        rosettePlacement: state.frostings.has('Rosettes') ? state.rosettePlacement : null,
+        rosetteColor: state.frostings.has('Rosettes') ? state.rosetteColor : null,
+        rosetteColorName: state.frostings.has('Rosettes') ? state.rosetteColorName : null,
+        ombreTopColor: state.frostings.has('Ombre Style') ? state.ombreTopColor : null,
+        ombreBottomColor: state.frostings.has('Ombre Style') ? state.ombreBottomColor : null,
+        sprinklePlacement: window._sprinklePlacement ? {...window._sprinklePlacement} : null,
+        tobleroneFlavor: state.tobleroneFlavor,
+        characterTopper: state.characterTopper,
+        shapeLabel:getShapeLabel(),
+        cakeLabel:getCombinedCakeTypeLabel(),
+        total: parseInt((document.getElementById('priceTotal').textContent||'0').replace(/,/g,''))||0,
+    };
+    document.getElementById('saveDraftConfigInput').value = JSON.stringify(cfg);
+
+    // Capture a transparent PNG of the cake exactly as it looks right now,
+    // using the same beauty-shot angle proceed() uses for order snapshots.
+    const canvas = document.querySelector('#model-container canvas');
+    if (canvas && window._threeCamera && window._threeControls && window._threeRenderer && window._threeScene) {
+        const _cam = window._threeCamera, _ctl = window._threeControls, _ren = window._threeRenderer, _scn = window._threeScene;
+        const savedPos = _cam.position.clone(), savedTarget = _ctl.target.clone();
+        const tier = state ? state.tier : 'Single';
+        let camY = 0.8, camZ = 7.0, tgtY = -0.6;
+        if (tier === 'Two-tier')   { camY = 1.2; camZ = 8.5;  tgtY = -0.2; }
+        if (tier === 'Three-tier') { camY = 1.8; camZ = 10.5; tgtY = 0.2; }
+        _cam.position.set(0, camY, camZ);
+        _ctl.target.set(0, tgtY, 0);
+        _ctl.update();
+        _ren.render(_scn, _cam);
+        try {
+            const off = document.createElement('canvas');
+            off.width = canvas.width;
+            off.height = canvas.height;
+            const ctx = off.getContext('2d');
+            ctx.drawImage(canvas, 0, 0); // no fill = stays transparent
+            document.getElementById('saveDraftPreviewInput').value = off.toDataURL('image/png');
+        } catch(e) {
+            console.warn('Draft snapshot failed:', e);
+        }
+        _cam.position.copy(savedPos);
+        _ctl.target.copy(savedTarget);
+        _ctl.update();
+    }
+
+    document.getElementById('saveDraftForm').submit();
 }
 if(document.getElementById('btnSaveDraft')) document.getElementById('btnSaveDraft').addEventListener('click',saveDraft);
 
-// ── LOAD DRAFT ──
-async function loadDraft(){
-    try{
-        const res=await fetch('{{ route("customer.cake-builder.loadDraft") }}');
-        const data=await res.json();const d=data.draft;
-        if(!d){showToast('No saved draft found');return;}
-        document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.shape));
-        state.shape=d.shape||'Round';
-        if(d.roundSize){state.roundSize=d.roundSize;document.getElementById('sizeRange').value=state.roundSize;document.getElementById('sizeDisplay').textContent=state.roundSize;}
-        document.getElementById('sizeSliderWrap').classList.toggle('visible',state.shape==='Round');
-        document.getElementById('numberPickerWrap').classList.toggle('visible',state.shape==='Number');
-        if(state.shape==='Number'){
-            const digits=d.numberDigits||1;state.numberDigits=digits;const isSingle=digits===1;
-            document.getElementById('btnSingleDigit').classList.toggle('active',isSingle);document.getElementById('btnDualDigit').classList.toggle('active',!isSingle);
-            document.getElementById('singleDigitSection').style.display=isSingle?'':'none';document.getElementById('dualDigitSection').classList.toggle('visible',!isSingle);
-            if(isSingle&&d.numberChoice!==undefined){state.numberChoice=d.numberChoice;document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberChoice));}
-            else if(!isSingle){state.numberTens=d.numberTens??1;state.numberUnits=d.numberUnits??0;document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberTens));document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberUnits));refreshDualPreview();}
-        }
-       if(d.cakeType){state.cakeType=d.cakeType;document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').forEach(el=>el.classList.toggle('active',el.dataset.cakeType===d.cakeType));syncCakeTypeUI();}
-        if(d.filling){state.filling=d.filling;document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEach(el=>el.classList.toggle('active',el.dataset.filling===d.filling));}
-        document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.flavor));state.flavor=d.flavor;
-        state.frostings=new Set();const savedFrostings=Array.isArray(d.frostings)?d.frostings:(d.frosting?[d.frosting]:['Smooth Buttercream']);savedFrostings.forEach(f=>state.frostings.add(f));if(state.frostings.size===0)state.frostings.add('Smooth Buttercream');
-        state.icingColor=d.icingColor||'#FFFFFF';state.icingColorName=d.icingColorName||'White';document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>el.classList.toggle('active',el.dataset.icingColor===state.icingColor));document.getElementById('icingColorLabel').textContent=state.icingColorName;
-        syncFrostingUI();
-        state.hasDrip=!!d.hasDrip;state.dripFlavor=d.dripFlavor||'Vanilla';document.getElementById('dripToggleBtn').classList.toggle('active',state.hasDrip);document.getElementById('dripFlavorPanel').classList.toggle('visible',state.hasDrip);document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el=>el.classList.toggle('active',el.dataset.dripFlavor===state.dripFlavor));
-        if(d.kitkatOrientation){state.kitkatOrientation=d.kitkatOrientation;document.getElementById('btnKitkatStanding').classList.toggle('active',d.kitkatOrientation==='standing');document.getElementById('btnKitkatLying').classList.toggle('active',d.kitkatOrientation==='lying');document.getElementById('kitkatOrientBadge').textContent=d.kitkatOrientation==='standing'?'📏 Standing':'📐 Lying Flat';}
-        if(d.oreoOrientation){state.oreoOrientation=d.oreoOrientation;document.getElementById('btnOreoStanding').classList.toggle('active',d.oreoOrientation==='standing');document.getElementById('btnOreoLying').classList.toggle('active',d.oreoOrientation==='lying');document.getElementById('oreoOrientBadge').textContent=d.oreoOrientation==='standing'?'🔘 Standing':'⚫ Lying Flat';}
-        state.addons=new Map();
-        document.getElementById('opts-fruits').querySelectorAll('.addon-opt').forEach(el=>{const inDraft=(d.addons||[]).includes(el.dataset.val);el.classList.toggle('active',inDraft);if(inDraft)state.addons.set(el.dataset.val,parseInt(el.dataset.price)||0);});
-        document.querySelectorAll('#opts-choco .addon-opt,#opts-sprinkles .addon-opt,#opts-candles .addon-opt,#opts-deco .addon-opt').forEach(el=>{
-            const special=['ferreroToggleBtn','kitkatToggleBtn','oreoToggleBtn'];
-            if(special.includes(el.id)){const keyMap={ferreroToggleBtn:'Ferrero-style Ball',kitkatToggleBtn:'Kitkat Sticks',oreoToggleBtn:'Oreo Cookie'};const inDraft=(d.addons||[]).includes(keyMap[el.id]);el.classList.toggle('active',inDraft);if(inDraft){state.addons.set(keyMap[el.id],parseInt(el.dataset.price)||0);if(el.id==='kitkatToggleBtn')updateKitkatTray();if(el.id==='oreoToggleBtn')updateOreoTray();if(el.id==='ferreroToggleBtn')updateFerreroTray();}return;}
-            const inDraft=(d.addons||[]).includes(el.dataset.val);el.classList.toggle('active',inDraft);if(inDraft)state.addons.set(el.dataset.val,parseInt(el.dataset.price)||0);
-        });
-        if(state.hasDrip)state.addons.set('Drip',180);
-        state.placedFruits=Array.isArray(d.placedFruits)?d.placedFruits:[];state.placedFerrero=Array.isArray(d.placedFerrero)?d.placedFerrero:[];state.placedKitkat=Array.isArray(d.placedKitkat)?d.placedKitkat:[];state.placedOreo=Array.isArray(d.placedOreo)?d.placedOreo:[];
-        redrawFruits();updateFruitTray();updateFerreroTray();updateKitkatTray();updateOreoTray();updateAll();showToast('✓ Draft loaded');
-    }catch(e){showToast('⚠ Could not load draft');}
+// ── LOAD DRAFT ── (pass an id to resume a specific saved draft)
+async function fetchDraftById(id){
+    const url = id
+        ? '{{ route("customer.cake-builder.loadDraft") }}?id=' + encodeURIComponent(id)
+        : '{{ route("customer.cake-builder.loadDraft") }}';
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.draft;
 }
-document.getElementById('btnLoadDraft').addEventListener('click',loadDraft);
 
+// Restores a saved draft's ENTIRE cake — shape/flavor/frosting/tier AND every
+// placed decoration (fruits, chocolates, candles, characters) at its saved
+// cake-relative position. Used by both "Load Saved Draft" / "Resume Editing"
+// inside the builder, and by the read-only preview mode on the drafts gallery.
+async function applyDraftConfig(d){
+    if(!d) return;
+
+    if(typeof window.clearFruitModels==='function')     window.clearFruitModels();
+    if(typeof window.clearFerreroModels==='function')   window.clearFerreroModels();
+    if(typeof window.clearKitkatModels==='function')    window.clearKitkatModels();
+    if(typeof window.clearOreoModels==='function')      window.clearOreoModels();
+    if(typeof window.clearBarShardModels==='function')  window.clearBarShardModels();
+    if(typeof window.clearTobleroneModels==='function') window.clearTobleroneModels();
+    if(typeof window.clearCandleModels==='function')    window.clearCandleModels();
+    if(typeof window.clearCharacterModels==='function') window.clearCharacterModels();
+    if(typeof window.clearChocoCurls==='function')      window.clearChocoCurls();
+    if(typeof window.clearPlaque==='function')          window.clearPlaque();
+    state.addons = new Map();
+
+    document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.shape));
+    state.shape=d.shape||'Round';
+    if(d.roundSize){state.roundSize=d.roundSize;document.getElementById('sizeRange').value=state.roundSize;document.getElementById('sizeDisplay').textContent=state.roundSize;}
+    document.getElementById('sizeSliderWrap').classList.toggle('visible',state.shape==='Round');
+    document.getElementById('numberPickerWrap').classList.toggle('visible',state.shape==='Number');
+    if(d.tier){
+        state.tier = d.tier;
+        document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=>el.classList.toggle('active', el.dataset.tier===d.tier));
+    }
+    document.getElementById('cakeTierSection').style.display = (state.shape === 'Round') ? '' : 'none';
+
+    if(state.shape==='Number'){
+        const digits=d.numberDigits||1;state.numberDigits=digits;const isSingle=digits===1;
+        document.getElementById('btnSingleDigit').classList.toggle('active',isSingle);document.getElementById('btnDualDigit').classList.toggle('active',!isSingle);
+        document.getElementById('singleDigitSection').style.display=isSingle?'':'none';document.getElementById('dualDigitSection').classList.toggle('visible',!isSingle);
+        if(isSingle&&d.numberChoice!==undefined){state.numberChoice=d.numberChoice;document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberChoice));}
+        else if(!isSingle){state.numberTens=d.numberTens??1;state.numberUnits=d.numberUnits??0;document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberTens));document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el=>el.classList.toggle('active',parseInt(el.dataset.val)===state.numberUnits));refreshDualPreview();}
+    }
+    if(d.cakeType){state.cakeType=d.cakeType;document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').forEach(el=>el.classList.toggle('active',el.dataset.cakeType===d.cakeType));syncCakeTypeUI();}
+    if(d.filling){state.filling=d.filling;document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEach(el=>el.classList.toggle('active',el.dataset.filling===d.filling));}
+    document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.flavor));
+    state.flavor=d.flavor||'Vanilla';
+
+    state.frostings=new Set();
+    (Array.isArray(d.frostings)?d.frostings:(d.frosting?[d.frosting]:['Smooth Buttercream'])).forEach(f=>state.frostings.add(f));
+    if(state.frostings.size===0)state.frostings.add('Smooth Buttercream');
+
+    state.icingColor=d.icingColor||'#FFFFFF';
+    state.icingColorName=d.icingColorName||'White';
+    state.hasCustomIcingColor=!!d.hasCustomIcingColor;
+    document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>el.classList.toggle('active',el.dataset.icingColor===state.icingColor));
+    document.getElementById('icingColorLabel').textContent=state.icingColorName;
+
+    if(d.rosettePlacement){
+        state.rosettePlacement = d.rosettePlacement;
+        document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(el=>el.classList.toggle('active', el.dataset.rosettePlacement===d.rosettePlacement));
+        const badge=document.getElementById('rosettePlacementBadge'); if(badge) badge.textContent='Selected: '+d.rosettePlacement.replace('+',' + ');
+    }
+    if(d.rosetteColor){
+        state.rosetteColor = d.rosetteColor; state.rosetteColorName = d.rosetteColorName || d.rosetteColor;
+        document.getElementById('rosetteColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>el.classList.toggle('active', el.dataset.rosetteColor===d.rosetteColor));
+        document.getElementById('rosetteColorLabel').textContent = state.rosetteColorName;
+    }
+    if(d.ombreTopColor) state.ombreTopColor = d.ombreTopColor;
+    if(d.ombreBottomColor) state.ombreBottomColor = d.ombreBottomColor;
+    updateOmbrePreview();
+
+    syncFrostingUI();
+
+    state.hasDrip=!!d.hasDrip;
+    state.dripFlavor=d.dripFlavor||'Vanilla';
+    document.getElementById('dripToggleBtn').classList.toggle('active',state.hasDrip);
+    document.getElementById('dripFlavorPanel').classList.toggle('visible',state.hasDrip);
+    document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el=>el.classList.toggle('active',el.dataset.dripFlavor===state.dripFlavor));
+    if(state.hasDrip){ state.addons.set('Drip',180); window._pendingDripReveal = true; }
+
+    state.kitkatOrientation = d.kitkatOrientation || 'standing';
+    document.getElementById('btnKitkatStanding').classList.toggle('active',state.kitkatOrientation==='standing');
+    document.getElementById('btnKitkatLying').classList.toggle('active',state.kitkatOrientation==='lying');
+    document.getElementById('kitkatOrientBadge').textContent=state.kitkatOrientation==='standing'?'📏 Standing':'📐 Lying Flat';
+
+    state.oreoOrientation = d.oreoOrientation || 'lying';
+    document.getElementById('btnOreoStanding').classList.toggle('active',state.oreoOrientation==='standing');
+    document.getElementById('btnOreoLying').classList.toggle('active',state.oreoOrientation==='lying');
+    document.getElementById('oreoOrientBadge').textContent=state.oreoOrientation==='standing'?'🔘 Standing':'⚫ Lying Flat';
+
+    state.tobleroneFlavor = d.tobleroneFlavor || 'Chocolate';
+    state.characterTopper = d.characterTopper || state.characterTopper;
+
+    const decor = d.decorations || {};
+    if((decor.fruits||[]).length){ decor.fruits.forEach(f=>state.addons.set(f.fruit,0)); updateFruitTray(); }
+    if((decor.ferrero||[]).length){ state.addons.set('Ferrero-style Ball',0); document.getElementById('ferreroToggleBtn').classList.add('active'); updateFerreroTray(); }
+    if((decor.kitkat||[]).length){ state.addons.set('Kitkat Sticks',0); document.getElementById('kitkatToggleBtn').classList.add('active'); updateKitkatTray(); }
+    if((decor.oreo||[]).length){ state.addons.set('Oreo Cookie',0); document.getElementById('oreoToggleBtn').classList.add('active'); updateOreoTray(); }
+    if((decor.barShard||[]).length){ state.addons.set('Chocolate Bar Shard',0); document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Bar Shard"]').classList.add('active'); updateBarShardTray(); }
+    if((decor.toblerone||[]).length){ state.addons.set('Toblerone Triangle',0); document.getElementById('tobleroneToggleBtn').classList.add('active'); updateTobleroneTray(); }
+    if((decor.candles||[]).length){ state.addons.set('Number Candles',0); document.getElementById('opts-candles').querySelector('[data-val="Number Candles"]').classList.add('active'); updateCandleTray(); }
+    if((decor.characters||[]).length){ state.addons.set('Character Topper',0); document.getElementById('characterToggleBtn').classList.add('active'); }
+
+    if(d.chocoCurlsPlacement){
+        state.chocoCurlsPlacement = d.chocoCurlsPlacement;
+        state.addons.set('Chocolate Curls', 0);
+        const btn=document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]'); if(btn) _setAddonOptChecked(btn,true);
+        document.getElementById('chocoCurlsPlacementPanel').style.display='block';
+        document.querySelectorAll('.choco-curls-place-btn').forEach(b=>{
+            const on=b.dataset.placement===d.chocoCurlsPlacement;
+            b.style.background=on?'var(--gold)':'var(--surface)'; b.style.color=on?'#fff':'var(--text-muted)'; b.style.fontWeight=on?'700':'600';
+        });
+    }
+    if(d.plaqueShape){
+        state.plaqueShape = d.plaqueShape; state.plaqueMessage = d.plaqueMessage || '';
+        state.addons.set('Chocolate Plaque', 80);
+        document.getElementById('plaqueToggleBtn').classList.add('active');
+        document.getElementById('plaqueShapePanel').classList.add('visible');
+        document.getElementById('opts-plaque-shape').querySelectorAll('[data-plaque-shape]').forEach(el=>el.classList.toggle('active', el.dataset.plaqueShape===d.plaqueShape));
+        document.getElementById('plaqueShapeBadge').textContent = `Selected: ${d.plaqueShape} plaque`;
+        document.getElementById('plaqueMessageInput').value = state.plaqueMessage;
+    }
+    if(d.sprinklePlacement && window._sprinklePlacement){
+        Object.keys(d.sprinklePlacement).forEach(k=>{ window._sprinklePlacement[k] = d.sprinklePlacement[k]; });
+    }
+    (d.addons||[]).forEach(name=>{
+        if(!state.addons.has(name)){
+            const priceMap = {'Cylinder Sprinkles':30,'Sphere Sprinkles':30,'Chocolate Sprinkles':30,'Crushed Peanuts':35};
+            state.addons.set(name, priceMap[name]||0);
+            const el = document.querySelector(`[data-val="${CSS.escape(name)}"]`);
+            if(el) el.classList.add('active');
+        }
+    });
+
+    updateAll();
+
+    // Wait for the cake model itself to finish loading before placing
+    // decorations on it — placement raycasts need the mesh in the scene.
+    await new Promise(res=>{
+        const check=(n)=>{ if(typeof window.isCakeSceneReady==='function' && window.isCakeSceneReady()) res(); else if(n>0) setTimeout(()=>check(n-1),150); else res(); };
+        check(40);
+    });
+
+    for(const f of (decor.fruits||[])){
+        const idx = await window.placeFruitAtFraction(f.fruit, f.x, f.z, f.rotY);
+        if(idx>=0 && f.rotZ!==undefined && typeof window.getFruitModels==='function'){
+            const m = window.getFruitModels()[idx];
+            if(m) m.group.rotation.z = f.rotZ*Math.PI/180;
+        }
+    }
+    for(const p of (decor.ferrero||[])){
+        const idx = await window.placeFerreroAtFraction(p.x, p.z);
+        if(idx>=0 && typeof window.getFerreroModels==='function'){
+            const m=window.getFerreroModels()[idx];
+            if(m){ if(p.rotZ!==undefined) m.group.rotation.z=p.rotZ*Math.PI/180; if(p.rotY!==undefined) m.group.rotation.y=p.rotY*Math.PI/180; }
+        }
+    }
+    for(const p of (decor.kitkat||[])) await window.placeKitkatAtFraction(p.x, p.z, p.orientation);
+    for(const p of (decor.oreo||[]))   await window.placeOreoAtFraction(p.x, p.z, p.orientation);
+    for(const p of (decor.barShard||[])){
+        const idx = await window.placeBarShardAtFraction(p.x, p.z);
+        if(idx>=0 && typeof window.getBarShardModels==='function'){
+            const m=window.getBarShardModels()[idx];
+            if(m){ if(p.rotZ!==undefined) m.group.rotation.z=p.rotZ*Math.PI/180; if(p.rotY!==undefined) m.group.rotation.y=p.rotY*Math.PI/180; }
+        }
+    }
+    for(const p of (decor.toblerone||[])){
+        const idx = await window.placeTobleroneAtFraction(p.x, p.z, p.flavor);
+        if(idx>=0 && typeof window.getTobleroneModels==='function'){
+            const m=window.getTobleroneModels()[idx];
+            if(m){ if(p.rotZ!==undefined) m.group.rotation.z=p.rotZ*Math.PI/180; if(p.rotY!==undefined) m.group.rotation.y=p.rotY*Math.PI/180; }
+        }
+    }
+    for(const p of (decor.candles||[])) await window.placeCandleAtFraction(p.num, p.x, p.z);
+    for(const p of (decor.characters||[])){
+        const idx = await window.placeCharacterAtFraction(p.key, p.x, p.z);
+        if(idx>=0 && p.rotY!==undefined && typeof window.setCharacterYRotation==='function') window.setCharacterYRotation(idx, p.rotY);
+    }
+    if(decor.characters && decor.characters.length){
+        const badge=document.getElementById('characterActiveBadge');
+        if(badge) badge.textContent = `${decor.characters.length} placed — tap any character again to add more`;
+    }
+    if(d.chocoCurlsPlacement && typeof window.placeChocoCurls==='function'){
+        window.placeChocoCurls(d.chocoCurlsPlacement, state.tier, state.shape, false);
+    }
+    if(d.plaqueShape && typeof window.placePlaqueOnCake==='function'){
+        window.placePlaqueOnCake(d.plaqueShape).then(ok=>{ if(ok && state.plaqueMessage && typeof window.setPlaqueMessage==='function') window.setPlaqueMessage(state.plaqueMessage); });
+    }
+    if(state.addons.has('Cylinder Sprinkles') && typeof window.buildCylinderSprinkles==='function') window.buildCylinderSprinkles();
+    if(state.addons.has('Sphere Sprinkles') && typeof window.buildPearlSprinkles==='function') window.buildPearlSprinkles();
+    if(state.addons.has('Chocolate Sprinkles') && typeof window.buildChocoSprinkles==='function') window.buildChocoSprinkles();
+    if(state.addons.has('Crushed Peanuts') && typeof window.buildCrushedPeanuts==='function') window.buildCrushedPeanuts();
+
+    updateAll();
+}
+
+async function loadDraft(id){
+    try{
+        const d = await fetchDraftById(id);
+        if(!d){showToast('No saved draft found');return;}
+        await applyDraftConfig(d);
+        showToast('✓ Draft loaded');
+    }catch(e){console.error('[loadDraft]',e);showToast('⚠ Could not load draft');}
+}
+document.getElementById('btnLoadDraft').addEventListener('click',()=>loadDraft());
+// ── Auto-resume a draft when arriving from the Saved Drafts page (?resume_draft=ID) ──
+(function autoResumeDraft(){
+    const params = new URLSearchParams(window.location.search);
+    const resumeId = params.get('resume_draft');
+    if(!resumeId) return;
+    const tryResume=(attempts)=>{
+        if(typeof window.updateModel==='function'){
+            loadDraft(resumeId);
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if(attempts>0){
+            setTimeout(()=>tryResume(attempts-1),150);
+        }
+    };
+    tryResume(30);
+})();
+
+// ── Read-only preview mode for the Saved Drafts gallery (?view_draft=ID) ──
+// Rebuilds the full cake exactly as saved — shape, flavor, frosting, and
+// every placed decoration — then hides all editing UI and locks the camera.
+(function autoPreviewDraft(){
+    const params = new URLSearchParams(window.location.search);
+    const previewId = params.get('view_draft');
+    if(!previewId) return;
+
+    // IMPORTANT: Saved Drafts embeds this page as a transparent 3D viewer.
+    // Do not use preview_image here. The draft config is rebuilt into the
+    // same Three.js scene, including the base, frosting, rosettes, drips,
+    // fruits, chocolates, candles, characters and other GLB decorations.
+    const style = document.createElement('style');
+    style.textContent = `
+        html, body { width:100% !important; height:100% !important; margin:0 !important; overflow:hidden !important; background:transparent !important; }
+        nav, .builder > .panel, .builder > .panel:last-child, .nav-center, .viewer-badge, .viewer-controls,
+        #mobileSummaryBtn, #mobileSummarySheet, #tutorialOverlay, #toastContainer, .model-loading,
+        .viewer > :not(#model-container):not(#fruitCanvas):not(.icing-anim-overlay) { display:none !important; }
+        .builder { display:block !important; position:fixed !important; inset:0 !important; padding:0 !important; margin:0 !important; }
+        .viewer { position:fixed !important; inset:0 !important; width:100% !important; height:100% !important; min-width:0 !important; }
+        #model-container { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; background:transparent !important; }
+        #model-container canvas { width:100% !important; height:100% !important; display:block !important; }
+        #fruitCanvas { display:none !important; }
+    `;
+    document.head.appendChild(style);
+    document.body.dataset.draftPreview = 'true';
+
+    const tryPreview = async (attempts) => {
+        if(typeof window.updateModel==='function'){
+            try {
+                const d = await fetchDraftById(previewId);
+                if(!d) return;
+
+                // Rebuild the actual 3D cake from the saved configuration.
+                await applyDraftConfig(d);
+                      if(window._threeControls){
+                    window._threeControls.enabled = true;
+                    const trayScale = parseFloat(new URLSearchParams(window.location.search).get('tray_scale')) || 1;
+                    window._threeControls.rotateSpeed = 0.6 * trayScale;
+                    window._threeControls.zoomSpeed = 0.8 * trayScale;
+                }
+                if(window._threeCamera && window._threeControls){
+                    const tier = state ? state.tier : 'Single';
+                    let camY = 1.6, camZ = 6.6, tgtY = -0.1;
+                    if (tier === 'Two-tier')   { camY = 2.4; camZ = 7.8; tgtY = 0.2; }
+                    if (tier === 'Three-tier') { camY = 3.4; camZ = 9.4; tgtY = 0.5; }
+                    window._threeCamera.position.set(0, camY, camZ);
+                    window._threeControls.target.set(0, tgtY, 0);
+                    window._threeControls.update();
+                }
+                if(typeof window._requestRender === 'function') window._requestRender(1000);
+                window.parent.postMessage({ type:'bakesphere-draft-3d-ready', draftId:previewId }, '*');
+            } catch(e) {
+                console.error('[SavedDraft 3D Preview]', e);
+            }
+        } else if(attempts>0){
+            setTimeout(()=>tryPreview(attempts-1),150);
+        }
+    };
+    tryPreview(40);
+})();
 function proceed(){
     const base=getBasePrice(),frostExtra=getFrostingExtraPrice();
     let addonTotal=0; state.addons.forEach(p=>addonTotal+=p);
@@ -9351,26 +9974,92 @@ refreshTierPriceLabels();
     document.getElementById('sizeSliderWrap').classList.toggle('visible', shape === 'Round');
     document.getElementById('numberPickerWrap').classList.toggle('visible', shape === 'Number');
 
+    // Number cake digits (only relevant when shape === 'Number')
+    if (shape === 'Number') {
+        const numDigits = parseInt(params.get('preset_number_digits') || '1');
+        state.numberDigits = numDigits;
+        if (numDigits === 2) {
+            state.numberTens  = parseInt(params.get('preset_number_tens')  || '1');
+            state.numberUnits = parseInt(params.get('preset_number_units') || '0');
+            document.getElementById('btnDualDigit').classList.add('active');
+            document.getElementById('btnSingleDigit').classList.remove('active');
+            document.getElementById('singleDigitSection').style.display = 'none';
+            document.getElementById('dualDigitSection').classList.add('visible');
+            document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.val) === state.numberTens);
+            });
+            document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.val) === state.numberUnits);
+            });
+            refreshDualPreview();
+        } else {
+            state.numberChoice = parseInt(params.get('preset_number_choice') || '0');
+            document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.val) === state.numberChoice);
+            });
+        }
+    }
+
     // Flavor
     state.flavor = flavor;
     document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el => {
         el.classList.toggle('active', el.dataset.val === flavor);
     });
-
     // Frosting
     state.frostings = new Set();
-    const CAKE_STYLE_MAP = {
+     const CAKE_STYLE_MAP = {
         'Smooth Buttercream':   () => { state.frostings.add('Smooth Buttercream'); },
         'Semi-naked Style':     () => { state.frostings.add('Semi-naked Style'); },
         'Fondant Smooth':       () => { state.frostings.add('Fondant Smooth'); },
+        'Sugar Icing':          () => { state.frostings.add('Sugar Icing'); },
         'Textured Buttercream': () => {
             state.frostings.add('Smooth Buttercream');
             state.frostings.add('Textured Buttercream');
         },
+        'Rosettes': () => { state.frostings.add('Semi-naked Style'); state.frostings.add('Rosettes'); },
     };
     (CAKE_STYLE_MAP[frosting] || CAKE_STYLE_MAP['Smooth Buttercream'])();
+
+    // Rosette placement + color (only meaningful when frosting === 'Rosettes')
+    const presetRosettePlacement = params.get('preset_rosette_placement');
+    const presetRosetteColor     = params.get('preset_rosette_color');
+    const presetRosetteColorName = params.get('preset_rosette_color_name');
+    if (frosting === 'Rosettes' && presetRosettePlacement) {
+        state.rosettePlacement = presetRosettePlacement;
+        if (presetRosetteColor) {
+            state.rosetteColor = presetRosetteColor;
+            state.rosetteColorName = presetRosetteColorName || presetRosetteColor;
+        }
+    }
+
+    // Base icing color (Shell Border / Sugar Icing)
+    const presetIcingColor     = params.get('preset_icing_color');
+    const presetIcingColorName = params.get('preset_icing_color_name');
+    if (presetIcingColor) {
+        state.icingColor = presetIcingColor;
+        state.icingColorName = presetIcingColorName || presetIcingColor;
+        state.hasCustomIcingColor = true;
+        document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el => {
+            el.classList.toggle('active', el.dataset.icingColor === presetIcingColor);
+        });
+        document.getElementById('icingColorLabel').textContent = state.icingColorName;
+    }
+
     syncFrostingUI();
 
+    // Rosette UI sync (placement buttons + color swatches)
+    if (frosting === 'Rosettes') {
+        document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(el => {
+            el.classList.toggle('active', el.dataset.rosettePlacement === state.rosettePlacement);
+        });
+        const badge = document.getElementById('rosettePlacementBadge');
+        if (badge) badge.textContent = 'Selected: ' + state.rosettePlacement.replace('+',' + ');
+        document.getElementById('rosetteColorGrid').querySelectorAll('.icing-color-opt').forEach(el => {
+            el.classList.toggle('active', el.dataset.rosetteColor === state.rosetteColor);
+        });
+        document.getElementById('rosetteColorLabel').textContent = state.rosetteColorName;
+        window._pendingRosetteReveal = true;
+    }
     // Drip
     if (hasDrip) {
         state.hasDrip = true;
@@ -9381,6 +10070,22 @@ refreshTierPriceLabels();
         document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el => {
             el.classList.toggle('active', el.dataset.dripFlavor === dripFlavor);
         });
+    }
+    // Choco Curls (optional add-on placement — 'middle' | 'sides' | 'both')
+    const presetChocoCurls = params.get('preset_choco_curls');
+    if (presetChocoCurls) {
+        state.chocoCurlsPlacement = presetChocoCurls;
+        state.addons.set('Chocolate Curls', ADDON_TIER_PRICES['Chocolate Curls'][getTierIdx()]);
+        const chocoCurlsBtn = document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]');
+        if (chocoCurlsBtn) _setAddonOptChecked(chocoCurlsBtn, true);
+        document.getElementById('chocoCurlsPlacementPanel').style.display = 'block';
+        document.querySelectorAll('.choco-curls-place-btn').forEach(b => {
+            const on = b.dataset.placement === presetChocoCurls;
+            b.style.background = on ? 'var(--gold)' : 'var(--surface)';
+            b.style.color      = on ? '#fff'         : 'var(--text-muted)';
+            b.style.fontWeight = on ? '700'          : '600';
+        });
+        setTimeout(() => _tryPlaceChocoCurls(presetChocoCurls, 25), 1000);
     }
 
     // Sprinkles
@@ -9406,6 +10111,169 @@ refreshTierPriceLabels();
             setTimeout(() => _waitAndBuild(15), 800);
         }
     }
+       // Fruits — auto-place fruit once the cake model is ready.
+    //  • preset_fruit_positions="x:z,x:z,..." → EXACT spots. Each x/z is a
+    //    fraction of the cake's radius from its center (0 = center,
+    //    roughly -1..1 = edge). x>0=right, x<0=left, z>0=front, z<0=back.
+    //    One fruit is placed per pair, and this takes priority over count.
+    //  • preset_fruit_count="N" → fallback auto-cluster near center (old behavior).
+    const presetFruit          = params.get('preset_fruit');
+    const presetFruitCount     = parseInt(params.get('preset_fruit_count') || '0');
+    const presetFruitPositions = params.get('preset_fruit_positions');
+
+    if (presetFruit && (presetFruitCount > 0 || presetFruitPositions)) {
+        const fruitBtn = document.querySelector(`#opts-fruits .addon-opt[data-val="${presetFruit}"]`);
+        if (fruitBtn) {
+            state.addons.set(presetFruit, 0);
+            fruitBtn.classList.add('active');
+            updateFruitTray();
+        }
+
+        if (presetFruitPositions) {
+            // ── EXACT COORDINATES MODE ──
+            const coords = presetFruitPositions.split(',').map(pair => {
+                const [x, z] = pair.split(':').map(Number);
+                return { x, z };
+            }).filter(p => isFinite(p.x) && isFinite(p.z));
+
+            const waitThenPlace = (attempts) => {
+                if (typeof window.placeFruitAtFraction === 'function' && typeof window.isCakeSceneReady === 'function' && window.isCakeSceneReady()) {
+                    let i = 0;
+                    const placeOne = (retriesLeft) => {
+                        if (i >= coords.length) { updateAll(); return; }
+                        const { x, z } = coords[i];
+                        window.placeFruitAtFraction(presetFruit, x, z).then(idx => {
+                            if (idx < 0 && retriesLeft > 0) {
+                                setTimeout(() => placeOne(retriesLeft - 1), 250);
+                                return;
+                            }
+                            if (idx >= 0) window._placedFruitRecord[idx] = { fruit: presetFruit, emoji: '' };
+                            i++;
+                            placeOne(3);
+                        });
+                    };
+                    placeOne(3);
+                } else if (attempts > 0) {
+                    setTimeout(() => waitThenPlace(attempts - 1), 300);
+                }
+            };
+            setTimeout(() => waitThenPlace(20), 1000);
+        } else {
+            // ── AUTO-CLUSTER MODE (fallback) ──
+            const dropAtCakeCenter = (attempts) => {
+                if (typeof window.placeFruitOnCake === 'function' && typeof window.isCakeSceneReady === 'function' && window.isCakeSceneReady()) {
+                    const viewerRect = document.getElementById('viewerEl').getBoundingClientRect();
+                    const cx = viewerRect.left + viewerRect.width / 2;
+                    const cy = viewerRect.top + viewerRect.height / 2;
+                    let placed = 0;
+                    const GOLDEN_ANGLE = 137.508 * Math.PI / 180;
+                    const placeOne = (retriesLeft) => {
+                        const angle = placed * GOLDEN_ANGLE;
+                        const radius = 5 + placed * 4;
+                        const px = cx + Math.cos(angle) * radius;
+                        const py = cy + Math.sin(angle) * radius;
+                        window.placeFruitOnCake(presetFruit, px, py).then(idx => {
+                            if (idx < 0 && retriesLeft > 0) {
+                                setTimeout(() => placeOne(retriesLeft - 1), 250);
+                                return;
+                            }
+                            if (idx >= 0) window._placedFruitRecord[idx] = { fruit: presetFruit, emoji: '' };
+                            placed++;
+                            if (placed < presetFruitCount) placeOne(3);
+                            else updateAll();
+                        });
+                    };
+                    placeOne(3);
+                } else if (attempts > 0) {
+                    setTimeout(() => dropAtCakeCenter(attempts - 1), 300);
+                }
+            };
+            setTimeout(() => dropAtCakeCenter(20), 1000);
+        }
+    }
+    // Character toppers — place one or more named characters at exact
+    // coordinates. preset_characters is a comma-separated list of character
+    // keys (matching CHARACTER_FILE_MAP), preset_character_positions is a
+    // matching comma-separated list of "x:z" fraction pairs.
+    const presetCharacters         = params.get('preset_characters');
+    const presetCharacterPositions = params.get('preset_character_positions');
+    if (presetCharacters && presetCharacterPositions) {
+        const charKeys = presetCharacters.split(',').map(s => s.trim());
+        const coords = presetCharacterPositions.split(',').map(pair => {
+            const [x, z] = pair.split(':').map(Number);
+            return { x, z };
+        });
+
+        if (!state.addons.has('Character Topper')) {
+            state.addons.set('Character Topper', 0);
+            document.getElementById('characterToggleBtn').classList.add('active');
+            document.getElementById('characterPickerPanel').classList.add('visible');
+        }
+
+        const waitThenPlaceChars = (attempts) => {
+            if (typeof window.placeCharacterAtFraction === 'function' && typeof window.isCakeSceneReady === 'function' && window.isCakeSceneReady()) {
+                let i = 0;
+                const placeOne = (retriesLeft) => {
+                    if (i >= charKeys.length) { updateAll(); return; }
+                    const key = charKeys[i];
+                    const pos = coords[i] || { x: 0, z: 0 };
+                    window.placeCharacterAtFraction(key, pos.x, pos.z).then(idx => {
+                        if (idx < 0 && retriesLeft > 0) {
+                            setTimeout(() => placeOne(retriesLeft - 1), 250);
+                            return;
+                        }
+                        i++;
+                        placeOne(3);
+                    });
+                };
+                placeOne(3);
+            } else if (attempts > 0) {
+                setTimeout(() => waitThenPlaceChars(attempts - 1), 300);
+            }
+        };
+        setTimeout(() => waitThenPlaceChars(20), 1200);
+    }
+
+    // Number candles — place specific candle numbers at exact coordinates.
+    const presetCandleNumbers   = params.get('preset_candle_numbers');
+    const presetCandlePositions = params.get('preset_candle_positions');
+    if (presetCandleNumbers && presetCandlePositions) {
+        const nums = presetCandleNumbers.split(',').map(s => parseInt(s.trim()));
+        const coords = presetCandlePositions.split(',').map(pair => {
+            const [x, z] = pair.split(':').map(Number);
+            return { x, z };
+        });
+
+        if (!state.addons.has('Number Candles')) {
+            state.addons.set('Number Candles', 0);
+            document.getElementById('opts-candles').querySelector('[data-val="Number Candles"]').classList.add('active');
+            document.getElementById('candlePickerPanel').classList.add('visible');
+        }
+
+        const waitThenPlaceCandles = (attempts) => {
+            if (typeof window.placeCandleAtFraction === 'function' && typeof window.isCakeSceneReady === 'function' && window.isCakeSceneReady()) {
+                let i = 0;
+                const placeOne = (retriesLeft) => {
+                    if (i >= nums.length) { updateCandleTray(); updateAll(); return; }
+                    const num = nums[i];
+                    const pos = coords[i] || { x: 0, z: 0 };
+                    window.placeCandleAtFraction(num, pos.x, pos.z).then(idx => {
+                        if (idx < 0 && retriesLeft > 0) {
+                            setTimeout(() => placeOne(retriesLeft - 1), 250);
+                            return;
+                        }
+                        if (idx >= 0) window._placedCandleRecord[idx] = { num };
+                        i++;
+                        placeOne(3);
+                    });
+                };
+                placeOne(3);
+            } else if (attempts > 0) {
+                setTimeout(() => waitThenPlaceCandles(attempts - 1), 300);
+            }
+        };
+        setTimeout(() => waitThenPlaceCandles(20), 1300);
+    }
 
     // Toast
     if (presetName) {
@@ -9415,7 +10283,6 @@ refreshTierPriceLabels();
     // Clean URL
     window.history.replaceState({}, document.title, window.location.pathname);
 })();
-
 function tryInit(){if(typeof window.updateModel==='function')updateAll();else setTimeout(tryInit,80);}
 tryInit();
 setTimeout(()=>{ if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape); }, 400);
@@ -9650,8 +10517,7 @@ initMobileSummary();
     skipBtn.addEventListener('click', ()=> closeTutorial(true));
     overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeTutorial(true); });
     if(helpBtn) helpBtn.addEventListener('click', openTutorial);
-
-    openTutorial();
+    if(!document.body.classList.contains('preview-mode')) openTutorial();
 })();
 </script>
 </body>

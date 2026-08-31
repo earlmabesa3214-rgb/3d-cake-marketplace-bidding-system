@@ -440,4 +440,4 @@ Route::get('/admin/transactions',              [TransactionController::class, 'i
     Route::post('/admin/escrow/withdrawals/{withdrawal}/approve',  [\App\Http\Controllers\Admin\EscrowController::class, 'approveWithdrawal'])->name('admin.escrow.withdrawal.approve');
     Route::post('/admin/escrow/withdrawals/{withdrawal}/reject',   [\App\Http\Controllers\Admin\EscrowController::class, 'rejectWithdrawal'])->name('admin.escrow.withdrawal.reject');
     Route::post('/admin/escrow/accounts/{account}',                [\App\Http\Controllers\Admin\EscrowController::class, 'updatePlatformAccount'])->name('admin.escrow.account.update');
-});
+});   Route::get('/prepare-scene-test', fn () => view('prepare-scene-test'));

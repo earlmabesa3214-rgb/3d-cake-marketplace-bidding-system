@@ -63,24 +63,6 @@ class CakeBuilderController extends Controller
         ]);
     }
 
-    public function saveDraft(Request $request)
-    {
-        $user = Auth::user();
-
-        $key = "cake_draft_{$user->id}";
-        Cache::put($key, $request->all(), now()->addDays(7));
-
-        return response()->json(['message' => 'Draft saved!']);
-    }
-
-    public function loadDraft()
-    {
-        $user = Auth::user();
-        $key  = "cake_draft_{$user->id}";
-        $draft = Cache::get($key);
-
-        return response()->json(['draft' => $draft]);
-    }
 public function saveAndProceed(Request $request)
 {
     $tempKey = null;
@@ -100,18 +82,98 @@ public function saveAndProceed(Request $request)
         'temp_key'  => $tempKey,
     ]);
 }
-public function drafts()
+    public function saveDraft(Request $request)
 {
-    $user  = Auth::user();
-    $key   = "cake_draft_{$user->id}";
-    $draft = Cache::get($key);
+    $user = Auth::user();
+    $key  = "cake_drafts_{$user->id}";
 
-    return view('customer.save-draft.index', ['draft' => $draft]);
+    $drafts = Cache::get($key, []);
+
+    // Only 5 slots exist in the shelf scene (scenes 2–6). Block the save
+    // and flash a flag the scene view uses to pop the "storage full" modal.
+    if (count($drafts) >= 5) {
+        return redirect()->route('customer.cake-builder.drafts')
+            ->with('draft_limit_reached', true);
+    }
+
+    $draft = json_decode($request->input('config', '{}'), true) ?: [];
+
+    $draft['id']       = (string) \Illuminate\Support\Str::uuid();
+    $draft['saved_at'] = now()->toDateTimeString();
+
+    // Save the snapshot to disk instead of caching the base64 blob directly —
+    // keeps each cached draft row tiny regardless of how many drafts are saved.
+    if ($request->filled('preview_image')) {
+        $dataUrl = $request->input('preview_image');
+        if (preg_match('/^data:image\/(\w+);base64,(.+)$/', $dataUrl, $matches)) {
+            $ext       = $matches[1] === 'jpeg' ? 'jpg' : $matches[1];
+            $imageData = base64_decode($matches[2]);
+            $path      = 'draft-previews/' . $draft['id'] . '.' . $ext;
+            \Storage::disk('public')->put($path, $imageData);
+            $draft['preview_image'] = \Storage::disk('public')->url($path);
+        }
+    }
+
+    // Newest draft goes first
+    array_unshift($drafts, $draft);
+
+    // Cap at 5 — oldest gets bumped off, and clean up its stored image file
+    if (count($drafts) > 5) {
+        $overflow = array_slice($drafts, 5);
+        foreach ($overflow as $old) {
+            if (!empty($old['preview_image'])) {
+                $oldPath = str_replace(\Storage::disk('public')->url(''), '', $old['preview_image']);
+                \Storage::disk('public')->delete($oldPath);
+            }
+        }
+        $drafts = array_slice($drafts, 0, 5);
+    }
+
+    Cache::put($key, $drafts, now()->addDays(30));
+
+    return redirect()->route('customer.cake-builder.drafts')
+        ->with('success', 'Draft saved!');
+}
+public function loadDraft(Request $request)
+{
+    $user   = Auth::user();
+    $key    = "cake_drafts_{$user->id}";
+    $drafts = Cache::get($key, []);
+
+    $draft = $request->filled('id')
+        ? collect($drafts)->firstWhere('id', $request->query('id'))
+        : ($drafts[0] ?? null);
+
+    return response()->json(['draft' => $draft]);
 }
 
-public function discardDraft()
+public function drafts()
 {
-    Cache::forget("cake_draft_" . Auth::id());
+    $user   = Auth::user();
+    $key    = "cake_drafts_{$user->id}";
+    $drafts = Cache::get($key, []);
+
+    return view('customer.save-draft.index', ['drafts' => $drafts]);
+}
+
+public function discardDraft(Request $request)
+{
+    $user   = Auth::user();
+    $key    = "cake_drafts_{$user->id}";
+    $drafts = Cache::get($key, []);
+
+    $id = $request->input('id');
+
+    $target = collect($drafts)->firstWhere('id', $id);
+    if ($target && !empty($target['preview_image'])) {
+        $path = str_replace(\Storage::disk('public')->url(''), '', $target['preview_image']);
+        \Storage::disk('public')->delete($path);
+    }
+
+    $drafts = array_values(array_filter($drafts, fn($d) => ($d['id'] ?? null) !== $id));
+
+    Cache::put($key, $drafts, now()->addDays(30));
+
     return redirect()->route('customer.cake-builder.drafts')
         ->with('success', 'Draft discarded.');
 }
