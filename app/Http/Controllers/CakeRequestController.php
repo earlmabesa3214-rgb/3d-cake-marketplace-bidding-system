@@ -189,6 +189,12 @@ $rushExpiresAt = $isRush ? now()->addSeconds(60) : null;
         }
 
 if (!in_array($cakeRequest->status, ['OPEN', 'BIDDING', 'ACCEPTED', 'RUSH_MATCHING'])) {
+    if (request()->wantsJson()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Only open, bidding, or accepted requests can be cancelled.',
+        ], 422);
+    }
     return back()->withErrors(['error' => 'Only open, bidding, or accepted requests can be cancelled.']);
 }
       $cakeRequest->update(['status' => 'CANCELLED']);
@@ -205,11 +211,16 @@ if ($bakerOrder && !in_array($bakerOrder->status, ['CANCELLED', 'DELIVERED', 'CO
         'cancel_reason' => 'Cancelled by customer.',
     ]);
 }
+if (request()->wantsJson()) {
+    return response()->json([
+        'success' => true,
+        'message' => 'Request cancelled successfully.',
+    ]);
+}
 
 return redirect()->route('customer.cake-requests.index')
     ->with('success', 'Request cancelled successfully.');
     }
-
    public function acceptBid(Request $request, int $requestId, int $bidId)
 {
         $cakeRequest = \App\Models\CakeRequest::where('user_id', auth()->id())->findOrFail($requestId);
