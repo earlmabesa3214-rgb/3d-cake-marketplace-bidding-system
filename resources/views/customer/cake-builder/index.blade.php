@@ -2205,9 +2205,10 @@ if(!isPreview){
         color: 0xFFCC66, transparent: true, opacity: 0.13,
         depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
     });
-    const glowMesh = new THREE.Mesh(glowGeo, glowMat);
+      const glowMesh = new THREE.Mesh(glowGeo, glowMat);
     glowMesh.rotation.x = -Math.PI / 2;
     glowMesh.position.set(0, -1.17, 0);
+    glowMesh.userData.isBackgroundProp = true;
     scene.add(glowMesh);
 
     // Inner tighter glow
@@ -2216,17 +2217,17 @@ if(!isPreview){
         color: 0xFFEE99, transparent: true, opacity: 0.18,
         depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
     });
-    const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+      const innerMesh = new THREE.Mesh(innerGeo, innerMat);
     innerMesh.rotation.x = -Math.PI / 2;
     innerMesh.position.set(0, -1.16, 0);
+    innerMesh.userData.isBackgroundProp = true;
     scene.add(innerMesh);
-
 
 })();
 const tableMat = new THREE.MeshStandardMaterial({ color: 0x7A6040, roughness: 0.55, metalness: 0.0, envMapIntensity: 0.50 });
 const tableTop = new THREE.Mesh(new THREE.PlaneGeometry(22, 22), tableMat);
 tableTop.rotation.x=-Math.PI/2; tableTop.position.y=-1.20;
-tableTop.receiveShadow=true; scene.add(tableTop);
+tableTop.receiveShadow=true; tableTop.userData.isBackgroundProp = true; scene.add(tableTop);
 
 (function buildTileGrid(){
     const S=512, tileSize=32;
@@ -2247,7 +2248,7 @@ tableTop.receiveShadow=true; scene.add(tableTop);
     const tileMat=new THREE.MeshStandardMaterial({ map:ttex, roughness:0.48, metalness:0.02, envMapIntensity:0.45 });
     const tileMesh=new THREE.Mesh(new THREE.PlaneGeometry(20,20),tileMat);
     tileMesh.rotation.x=-Math.PI/2; tileMesh.position.y=-1.195;
-    tileMesh.receiveShadow=true; scene.add(tileMesh);
+    tileMesh.receiveShadow=true; tileMesh.userData.isBackgroundProp = true; scene.add(tileMesh);
 })();
 
 const shadowCatcher = new THREE.Mesh(
@@ -2255,7 +2256,7 @@ const shadowCatcher = new THREE.Mesh(
     new THREE.ShadowMaterial({opacity:0.40, transparent:true})
 );
 shadowCatcher.rotation.x=-Math.PI/2; shadowCatcher.position.y=-1.18;
-shadowCatcher.receiveShadow=true; scene.add(shadowCatcher);
+shadowCatcher.receiveShadow=true; shadowCatcher.userData.isBackgroundProp = true; scene.add(shadowCatcher);
 // ── VISIBLE SPOTLIGHT FIXTURE ──
 // ── VISIBLE SPOTLIGHT FIXTURE ──
 (function buildSpotlight(){
@@ -2349,6 +2350,7 @@ FIXTURE_POSITIONS.forEach(([fx, fy, fz]) => {
         // Tilt fixture to point toward cake center
         clone.lookAt(0, -0.2, 0);
         clone.rotateX(-Math.PI / 2); // correct for cylinder orientation
+        clone.userData.isBackgroundProp = true;
         scene.add(clone);
 
         // Cone tip starts at fixture, points toward cake
@@ -2390,17 +2392,18 @@ FIXTURE_POSITIONS.forEach(([fx, fy, fz]) => {
         coneGeo.setAttribute('color',    new THREE.Float32BufferAttribute(cc, 4));
         coneGeo.setIndex(ci);
         coneGeo.computeVertexNormals();
-
 const coneMesh = new THREE.Mesh(coneGeo, coneMat);
         coneMesh.position.set(fx, fy, fz);
         const quaternion = new THREE.Quaternion();
         quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir);
         coneMesh.setRotationFromQuaternion(quaternion);
+        coneMesh.userData.isBackgroundProp = true;
         scene.add(coneMesh);
 
         const halo = new THREE.Mesh(new THREE.CircleGeometry(0.22, 24), haloMat);
         halo.position.set(fx, fy - 0.05, fz);
         halo.lookAt(fx, fy + 1, fz);
+        halo.userData.isBackgroundProp = true;
         scene.add(halo);
     });
 
@@ -3784,8 +3787,14 @@ function loadGLB(url){
 }
 function glbHasMesh(group){let f=false;group.traverse(c=>{if(c.isMesh)f=true;});return f;}
 
-// Maps inch size to world-space diameter. 6" = 2.0 (baseline)
 function inchesToWorldScale(inches){ return (inches / 6.0) * 2.0; }
+
+// Vertical squash factor applied ONLY to Number-shape cakes (both single-
+// and dual-digit). 1.0 = original height, 0.75 = 25% shorter, etc. Footprint
+// (diameter) is untouched — only the Y axis shrinks. Every overlay (Shell
+// Border, Sugar Icing, Textured, Drip, Rosette) measures itself off the
+// base cake's already-scaled box, so they all adapt automatically.
+const NUMBER_CAKE_HEIGHT_MULT = 0.7;
 
 function positionGroup(group, inches, heightMult){
     group.position.set(0,0,0); group.rotation.set(0,0,0); group.scale.set(1,1,1); group.updateMatrixWorld(true);
@@ -3817,21 +3826,12 @@ function positionMultiGroup(inches, ...groups){
 function alignDualDigits(gT,gU,wrapper){
     [gT,gU].forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
 
-    // Scale EACH digit independently to the SAME footprint diameter a solo
-    // digit uses — matching positionGroup()'s own single-digit target
-    // (largest of X/Z, i.e. the horizontal footprint), NOT the vertical Y
-    // height. Numeral cake meshes are mostly flat (small Y, large X/Z), so
-    // targeting Y forced thin digits like "1"/"7" to scale up massively to
-    // hit that height, blowing up X/Z right along with it since scale is
-    // uniform. Targeting the same diameter every solo digit already uses
-    // means each digit in a double-digit cake renders at EXACTLY solo size,
-    // regardless of which two digits are picked — no more size mismatch.
-    const DUAL_DIGIT_TARGET_DIAM = inchesToWorldScale(4.5) * 0.85;
+     const DUAL_DIGIT_TARGET_DIAM = inchesToWorldScale(4.5) * 0.85;
     function scaleDigitToDiam(g){
         const b = new THREE.Box3().setFromObject(g);
         const hSize = Math.max(b.max.x-b.min.x, b.max.z-b.min.z);
         const s = hSize > 0.0001 ? DUAL_DIGIT_TARGET_DIAM / hSize : 1.0;
-        g.scale.setScalar(s);
+        g.scale.set(s, s * NUMBER_CAKE_HEIGHT_MULT, s);
         g.updateMatrixWorld(true);
     }
     scaleDigitToDiam(gT);
@@ -4046,7 +4046,7 @@ let usedGLB=false;
                 if(gT||gU){
                     const baseWrapper=new THREE.Group();
       if(gT&&gU) alignDualDigits(gT,gU,baseWrapper);
-        else { baseWrapper.add(gT||gU); positionGroup(baseWrapper, 4.5, 1.0); }
+        else { baseWrapper.add(gT||gU); positionGroup(baseWrapper, 4.5, NUMBER_CAKE_HEIGHT_MULT); }
 sceneRoot.add(baseWrapper);
                     if(frostingsArr.includes('Fondant Smooth')){ currentFrost=baseWrapper; } else { currentBase=baseWrapper; }
 
@@ -4346,9 +4346,9 @@ sceneRoot.add(baseWrapper);
                 }
    } else {
                const N=state.numberChoice??0;
-              const baseGLB=await loadGLB(`/models/${getNumberBaseFileName(N, frostingsArr)}.glb`).catch(()=>null);
+                            const baseGLB=await loadGLB(`/models/${getNumberBaseFileName(N, frostingsArr)}.glb`).catch(()=>null);
      if(baseGLB&&glbHasMesh(baseGLB)){
-            positionGroup(baseGLB, 4.5, 1.0);
+            positionGroup(baseGLB, 4.5, NUMBER_CAKE_HEIGHT_MULT);
                   sceneRoot.add(baseGLB);
                     if(frostingsArr.includes('Fondant Smooth')){ currentFrost=baseGLB; } else { currentBase=baseGLB; }
 
@@ -4526,6 +4526,12 @@ sceneRoot.add(baseWrapper);
 const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : (SHAPE_SLUG[shape]||'round');
 const originalShape = shape;
 _isBundtActive = (slug === 'bundt');
+// Vertical stretch factor applied ONLY to the Three-tier Round cake.
+// 1.0 = original height, 1.15 = 15% taller, etc. Footprint (diameter) is
+// untouched — only the Y axis grows. Every overlay (Shell Border, Sugar
+// Icing, Textured, Drip, Rosette) measures itself off the base cake's
+// already-scaled box, so they all adapt automatically.
+const THREE_TIER_HEIGHT_MULT = (shape === 'Three-tier Round') ? 1.2 : 1.0;
 const needFrost = shouldLoadFrostingGLB(frostingsArr);
 const hasFondant    = frostingsArr.includes('Fondant Smooth');
 const hasSemiNaked  = frostingsArr.includes('Semi-naked Style');
@@ -4766,7 +4772,7 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
    } else {
 if(hasSemiNakedR && currentFrost && !currentBase) {
         // Shell border only — frosting_round_seminaked_smooth.glb IS the whole cake
-        positionGroup(currentFrost, _inches);
+        positionGroup(currentFrost, _inches, THREE_TIER_HEIGHT_MULT);
         currentFrost.updateMatrixWorld(true);
         addStandToScene(currentFrost);
         currentFrost.updateMatrixWorld(true);
@@ -4778,13 +4784,12 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                     // to the base below. Drip is handled separately further down: its seminaked
                     // export already matches the base's own coordinate frame, so force-fitting it
                     // like a thin ring was squishing it and pulling it up too high instead of
-                    // letting it hang down naturally like it does on Smooth BC.
-                    const overlays = [];
+                                 const overlays = [];
                     if(currentFrost) overlays.push(currentFrost);
                     if(currentIcing) overlays.push(currentIcing);
                     // Size the base independently (this is base_seminaked_*.glb — its own
                     // dedicated raw file, proven to size correctly on its own via positionGroup).
-                    positionGroup(currentBase, _inches);
+                    positionGroup(currentBase, _inches, THREE_TIER_HEIGHT_MULT);
 
                     // Now fit each overlay independently to the base's ACTUAL final size/
                     // position — never assume the overlay shares the base's raw coordinate
@@ -9538,9 +9543,17 @@ async function saveDraft(){
         let camY = 0.8, camZ = 7.0, tgtY = -0.6;
         if (tier === 'Two-tier')   { camY = 1.2; camZ = 8.5;  tgtY = -0.2; }
         if (tier === 'Three-tier') { camY = 1.8; camZ = 10.5; tgtY = 0.2; }
-        _cam.position.set(0, camY, camZ);
+          _cam.position.set(0, camY, camZ);
         _ctl.target.set(0, tgtY, 0);
         _ctl.update();
+
+           const _hiddenForSnapshot = [];
+        _scn.traverse(obj => {
+            if (obj.userData && (obj.userData.isBackgroundProp || obj.userData.isStand) && obj.visible) {
+                _hiddenForSnapshot.push(obj);
+                obj.visible = false;
+            }
+        });
         _ren.render(_scn, _cam);
         try {
             const off = document.createElement('canvas');
@@ -9548,10 +9561,50 @@ async function saveDraft(){
             off.height = canvas.height;
             const ctx = off.getContext('2d');
             ctx.drawImage(canvas, 0, 0); // no fill = stays transparent
-            document.getElementById('saveDraftPreviewInput').value = off.toDataURL('image/png');
+
+            // Auto-crop to the visible (non-transparent) cake pixels so the
+            // saved thumbnail is tightly framed instead of mostly empty space.
+            const imgData = ctx.getImageData(0, 0, off.width, off.height);
+            const data = imgData.data;
+            let minX = off.width, minY = off.height, maxX = 0, maxY = 0;
+            const ALPHA_THRESHOLD = 10;
+            for (let y = 0; y < off.height; y += 2) {
+                for (let x = 0; x < off.width; x += 2) {
+                    const alpha = data[(y * off.width + x) * 4 + 3];
+                    if (alpha > ALPHA_THRESHOLD) {
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+
+            if (maxX > minX && maxY > minY) {
+                const pad = Math.round(Math.max(maxX - minX, maxY - minY) * 0.08);
+                minX = Math.max(0, minX - pad);
+                minY = Math.max(0, minY - pad);
+                maxX = Math.min(off.width, maxX + pad);
+                maxY = Math.min(off.height, maxY + pad);
+                const cropW = maxX - minX;
+                const cropH = maxY - minY;
+
+                const cropped = document.createElement('canvas');
+                cropped.width = cropW;
+                cropped.height = cropH;
+                cropped.getContext('2d').drawImage(off, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+                document.getElementById('saveDraftPreviewInput').value = cropped.toDataURL('image/png');
+            } else {
+                document.getElementById('saveDraftPreviewInput').value = off.toDataURL('image/png');
+            }
         } catch(e) {
             console.warn('Draft snapshot failed:', e);
         }
+
+        // Restore background props for the normal builder view
+        _hiddenForSnapshot.forEach(obj => { obj.visible = true; });
+        if (typeof window._requestRender === 'function') window._requestRender(500);
+
         _cam.position.copy(savedPos);
         _ctl.target.copy(savedTarget);
         _ctl.update();

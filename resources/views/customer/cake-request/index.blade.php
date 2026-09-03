@@ -246,8 +246,8 @@
     <canvas id="myorders-canvas"></canvas>
 </div>
 
-<button type="button" id="calibration-toggle" class="calibration-toggle-btn">🎛️ Enable 3D Calibration</button>
-<div id="model-load-status" style="position:fixed; top:9.5rem; right:1rem; z-index:200; font-size:0.7rem; font-family:monospace; background:rgba(0,0,0,0.75); color:#fff; padding:0.4rem 0.6rem; border-radius:6px; max-width:260px; line-height:1.4;"></div>
+<button type="button" id="calibration-toggle" class="calibration-toggle-btn" style="display:none;">🎛️ Enable 3D Calibration</button>
+<div id="model-load-status" style="display:none; position:fixed; top:9.5rem; right:1rem; z-index:200; font-size:0.7rem; font-family:monospace; background:rgba(0,0,0,0.75); color:#fff; padding:0.4rem 0.6rem; border-radius:6px; max-width:260px; line-height:1.4;"></div>
 
 <div id="calibration-panel" class="calibration-panel" hidden>
     <h4>Model — Position</h4>
@@ -489,14 +489,23 @@ const CAMERA_CONFIG = {
     fov: 45
 };
 
-      const MODEL_URL = '/models/myorders.glb';
+    const MODEL_URL = '/models/myorders.glb';
     const PEN_MODEL_URL = '/models/pen.glb';
+
+    // Calibration UI (toggle button, coordinate readout, on-screen status
+    // log) is dev-only — hidden from every normal customer and only
+    // shown when the page is opened with ?calibrate=1.
+    const CALIBRATE_ALLOWED = new URLSearchParams(window.location.search).get('calibrate') === '1';
+    const toggleBtnEl = document.getElementById('calibration-toggle');
     const statusEl = document.getElementById('model-load-status');
+    if (CALIBRATE_ALLOWED) {
+        if (toggleBtnEl) toggleBtnEl.style.display = '';
+        if (statusEl) statusEl.style.display = '';
+    }
     function logStatus(msg) {
         console.log('[bakesphere]', msg);
-        if (statusEl) statusEl.innerHTML += msg + '<br>';
+        if (CALIBRATE_ALLOWED && statusEl) statusEl.innerHTML += msg + '<br>';
     }
-
     // Reveal the page text/table only once BOTH glb models have loaded
     // (or a max wait has elapsed, so a slow/broken model never blocks
     // the page forever) — avoids the ugly "text pops in, model catches
@@ -511,9 +520,12 @@ const CAMERA_CONFIG = {
         if (pageContentEl) pageContentEl.classList.add('assets-ready');
     }
     function maybeRevealPageContent() {
-        if (mainModelReady && penModelReady) revealPageContent();
+        // Only gate on the main model — the pen is a decorative overlay
+        // that finishes loading and animates in on its own; waiting on it
+        // too was what made the text/table feel slow to appear.
+        if (mainModelReady) revealPageContent();
     }
-    const ASSET_REVEAL_TIMEOUT_MS = 4000;
+    const ASSET_REVEAL_TIMEOUT_MS = 500;
     setTimeout(revealPageContent, ASSET_REVEAL_TIMEOUT_MS);
     const bg = document.getElementById('bakesphere-3d-bg');
     const canvas = document.getElementById('myorders-canvas');
@@ -871,12 +883,12 @@ const PEN_CIRCLE_RADIUS_Z = 0.06; // depth of the oval, keep small
     });
 
     document.querySelectorAll('.table tbody tr').forEach(function (row) {
-         row.addEventListener('mouseenter', function () {
+          row.addEventListener('mouseenter', function () {
             hoveredRowIndex = computeVisibleSlot(row);
             circleAngle = 0;
             circleActive = true; // reset so each new hover gets its own single loop
             trailClear(); // wipe any leftover ink from a previous row's loop
-            if (statusEl) statusEl.innerHTML = 'Hovering visible slot ' + hoveredRowIndex + ' — use arrows/W/S to nudge (Shift = bigger step)';
+            if (CALIBRATE_ALLOWED && statusEl) statusEl.innerHTML = 'Hovering visible slot ' + hoveredRowIndex + ' — use arrows/W/S to nudge (Shift = bigger step)';
         });
         row.addEventListener('mouseleave', function () {
             hoveredRowIndex = null;

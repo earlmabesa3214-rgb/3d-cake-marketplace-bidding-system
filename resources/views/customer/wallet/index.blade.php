@@ -23,11 +23,17 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
         </div>
-        <div class="stat-card stat-deposited">
+            <div class="stat-card stat-deposited">
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            </div>
             <div class="stat-lbl">Total Deposited</div>
             <div class="stat-amt">₱{{ number_format($wallet->total_deposited, 2) }}</div>
         </div>
         <div class="stat-card stat-spent">
+            <div class="stat-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            </div>
             <div class="stat-lbl">Total Spent</div>
             <div class="stat-amt">₱{{ number_format($wallet->total_spent, 2) }}</div>
         </div>
@@ -54,12 +60,16 @@
         <div class="card cashin-card">
             <div class="card-head">
           <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                     Top Up via GCash
                 </div>
                 <div class="card-desc">Send money to our GCash number, then upload your proof here.</div>
             </div>
 
          <div class="gcash-info-box">
+                <div class="gcash-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0369a1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                </div>
                 <div class="gcash-number-label">Send to GCash Number</div>
                 <div class="gcash-number">0917 – XXX – XXXX</div>
                 <div class="gcash-name">BakeSphere Official</div>
@@ -140,10 +150,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($transactions as $txn)
+                                                     @foreach($transactions as $txn)
+                            @php
+                                // typeLabel() prepends an emoji glyph (e.g. 🔒 / 💳) — strip any
+                                // leading pictographs/symbols so we can render a proper SVG icon
+                                // instead, consistent with the rest of the page's icon system.
+                                $txnLabel = trim(preg_replace('/[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{FE0F}]/u', '', $txn->typeLabel()));
+                            @endphp
                             <tr>
                                 <td>
-                                    <div class="txn-type">{{ $txn->typeLabel() }}</div>
+                                    <div class="txn-type">
+                                        <span class="txn-icon {{ $txn->isCredit() ? 'txn-icon-credit' : 'txn-icon-debit' }}">
+                                            @if($txn->isCredit())
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                                            @endif
+                                        </span>
+                                        {{ $txnLabel }}
+                                    </div>
                                     <div class="txn-desc">{{ $txn->description ?? '—' }}</div>
                                 </td>
                                 <td>
@@ -182,14 +207,22 @@
 /* BALANCE ROW */
 .balance-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
 
-.bal-card { position: relative; background: linear-gradient(135deg, #c8894a 0%, #a0622e 60%, #7a4520 100%); border-radius: 16px; padding: 1.25rem 1.5rem; color: #fff; overflow: hidden; box-shadow: 0 6px 24px rgba(160,98,46,0.3); }
+.bal-card { position: relative; background: linear-gradient(135deg, #c8894a 0%, #a0622e 60%, #7a4520 100%); border-radius: 16px; padding: 1.25rem 1.5rem; color: #fff; overflow: hidden; box-shadow: 0 6px 24px rgba(160,98,46,0.3); transition: box-shadow 0.2s, transform 0.2s; }
+.bal-card:hover { box-shadow: 0 10px 30px rgba(160,98,46,0.4); transform: translatey(-1px); }
 .bal-card-bg { position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; background: rgba(255,255,255,0.07); border-radius: 50%; }
 .bal-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; margin-bottom: 0.35rem; position: relative; z-index: 1; }
 .bal-amount { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; position: relative; z-index: 1; }
 .wallet-icon-bg { position: absolute; bottom: -10px; right: 16px; opacity: 0.1; z-index: 0; user-select: none; color: white; }
 
-.stat-card { background: var(--warm-white, #fff); border: 1px solid var(--border, #e8e0d8); border-radius: 16px; padding: 1.25rem 1.5rem; }
-.stat-lbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted, #9a8a7a); margin-bottom: 0.35rem; }
+.stat-card { position: relative; background: var(--warm-white, #fff); border: 1px solid var(--border, #e8e0d8); border-radius: 16px; padding: 1.25rem 1.5rem; transition: box-shadow 0.2s, transform 0.2s; }
+.stat-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.06); transform: translateY(-1px); }
+.stat-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; }
+.stat-deposited .stat-icon { background: #ecfdf5; color: #059669; }
+.stat-spent .stat-icon { background: #fef2f2; color: #dc2626; }
+.stat-lbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted, #9a8a7a); margin-bottom: 0.3rem; }
+.stat-amt { font-size: 1.5rem; font-weight: 800; }
+.stat-deposited .stat-amt { color: #059669; }
+.stat-spent .stat-amt { color: #dc2626; }.stat-lbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted, #9a8a7a); margin-bottom: 0.35rem; }
 .stat-amt { font-size: 1.5rem; font-weight: 800; }
 .stat-deposited .stat-amt { color: #059669; }
 .stat-spent .stat-amt { color: #dc2626; }
@@ -211,12 +244,11 @@
 .card-title { font-size: 0.95rem; font-weight: 700; color: var(--text-dark, #1a1a1a); display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.2rem; }
 .card-desc { font-size: 0.78rem; color: var(--text-muted, #9a8a7a); margin: 0; }
 
-/* GCASH */
-.gcash-info-box { margin: 1rem 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: 12px; padding: 0.85rem 1rem; text-align: center; }
+.gcash-info-box { position: relative; margin: 1rem 1.5rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: 12px; padding: 1.1rem 1rem 0.9rem; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+.gcash-icon { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin: 0 auto 0.5rem; background: #fff; border-radius: 50%; box-shadow: 0 3px 8px rgba(3,105,161,0.15); }
 .gcash-number-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: #0369a1; font-weight: 600; margin-bottom: 0.25rem; }
 .gcash-number { font-size: 1.25rem; font-weight: 800; color: #0c4a6e; letter-spacing: 0.05em; }
 .gcash-name { font-size: 0.72rem; color: #0369a1; margin-top: 0.15rem; }
-
 /* FORM */
 .cashin-form { display: flex; flex-direction: column; gap: 0.9rem; padding: 0 1.5rem 1.5rem; }
 .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
@@ -251,7 +283,10 @@
 .txn-table td { padding: 0.85rem 1.25rem; font-size: 0.82rem; border-bottom: 1px solid var(--border, #f0ebe3); color: var(--text-dark, #1a1a1a); vertical-align: middle; }
 .txn-table tr:last-child td { border-bottom: none; }
 .txn-table tbody tr:hover td { background: #fef9f4; }
-.txn-type { font-weight: 700; font-size: 0.82rem; color: var(--text-dark, #1a1a1a); }
+.txn-type { display: flex; align-items: center; gap: 0.4rem; font-weight: 700; font-size: 0.82rem; color: var(--text-dark, #1a1a1a); }
+.txn-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 7px; flex-shrink: 0; }
+.txn-icon-credit { background: #ecfdf5; color: #059669; }
+.txn-icon-debit { background: #fef2f2; color: #dc2626; }
 .txn-desc { font-size: 0.72rem; color: var(--text-muted, #9a8a7a); margin-top: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .txn-date-main { font-size: 0.78rem; font-weight: 600; }
 .txn-date-sub { font-size: 0.68rem; color: #bbb; margin-top: 0.1rem; }

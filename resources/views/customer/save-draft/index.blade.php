@@ -32,6 +32,14 @@ html, body {
     z-index: 10;
 }
 #draftSceneLoading.hidden { opacity: 0; }
+
+/* Cake images (thumbnails + detail overlays) stay invisible until the
+   savedraft.glb case has actually finished loading, so the case never
+   appears empty-then-populated. */
+.assets-loading .draft-overview-thumb img,
+.assets-loading .draft-detail-img {
+    visibility: hidden;
+}
 .draft-scene-spinner {
     width: 34px; height: 34px;
     border: 3px solid rgba(160,100,30,0.15);
@@ -80,20 +88,16 @@ html, body {
 }
 .draft-overview-thumb {
     position: absolute;
-    width: 150px;
+    width: 130px;
     pointer-events: auto;
     transform: translate(-50%, -50%);
-    background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(160,100,30,0.15);
-    border-radius: 14px;
-    padding: 12px;
+    background: transparent;
     text-align: center;
-    box-shadow: 0 6px 18px rgba(120,80,30,0.14);
 }
 .draft-overview-thumb img {
-    width: 100%; height: 110px;
+    width: 100%; height: 100px;
     object-fit: contain;
+    object-position: center bottom;
     display: block;
     margin-bottom: 8px;
 }
@@ -123,7 +127,7 @@ html, body {
     display: none;
     position: absolute;
     top: 134px; right: 24px;
-    width: 260px;
+    width: 300px;
     pointer-events: auto;
     background: rgba(20,10,5,0.85);
     border-radius: 10px;
@@ -131,8 +135,8 @@ html, body {
     z-index: 9999;
 }
 .draft-offset-panel textarea {
-    width: 100%; height: 160px;
-    font-family: monospace; font-size: .72rem;
+    width: 100%; height: 320px;
+    font-family: monospace; font-size: .70rem;
     background: #1a1a1a; color: #d8c9a8;
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 6px; padding: 6px;
@@ -144,6 +148,9 @@ html, body {
     border: none; border-radius: 6px;
     padding: 7px; font-size: .74rem; font-weight: 700;
     cursor: pointer;
+}
+.draft-model-title {
+    color: #d8c9a8; font-size: .72rem; font-weight: 700; margin-bottom: 8px;
 }
 .draft-overview-thumb.calibrating {
     cursor: grab;
@@ -163,21 +170,34 @@ html, body {
 .draft-detail.active { display: flex; }
 .draft-detail-card {
     pointer-events: auto;
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(160,100,30,0.18);
-    border-radius: 20px;
+    background: transparent;
     padding: 20px;
     display: flex;
     gap: 16px;
     max-width: 420px;
-    box-shadow: 0 16px 40px rgba(80,50,20,0.28);
+}
+.draft-detail-imgs-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    display: none;
 }
 .draft-detail-img {
-    width: 130px; height: 130px;
+    position: absolute;
+    width: 340px; height: 340px;
     object-fit: contain;
-    flex-shrink: 0;
+    object-position: center bottom;
+    pointer-events: none;
+    transform: translate(-50%, -100%);
 }
+.draft-detail-img.calibrating {
+    pointer-events: auto;
+    cursor: grab;
+    outline: 2px dashed rgba(184,92,56,0.7);
+    touch-action: none;
+}
+.draft-detail-img.calibrating:active { cursor: grabbing; }
 .draft-detail-info h3 {
     margin: 0 0 8px;
     font-size: 1.02rem; font-weight: 800; color: #3B1F0E;
@@ -230,23 +250,23 @@ html, body {
 .draft-modal .btn-modal-manage { background: transparent; border: 1.5px solid #B85C38; color: #B85C38; }
 </style>
 
-<div id="draftSceneBg">
+<div id="draftSceneBg" class="assets-loading">
     <div id="draftSceneContainer"></div>
+
+    <button type="button" class="draft-calibrate-btn" id="draftCalibrateToggle">Calibrate positions</button>
+    <div class="draft-offset-panel" id="draftOffsetPanel">
+        <textarea id="draftOffsetOutput" readonly>{}</textarea>
+        <button type="button" id="draftOffsetCopy">Copy coordinates</button>
+    </div>
 
     {{-- SCENE 1: overview of every saved draft --}}
     <div class="draft-panel draft-overview" id="draftOverview" data-scene="1">
         <div class="draft-overview-title">Your Saved Drafts</div>
            <div class="draft-overview-sub">{{ $draftSlots->count() }} / 5 slots used — scroll to browse each one</div>
-        <button type="button" class="draft-calibrate-btn" id="draftCalibrateToggle">Calibrate positions</button>
-        <div class="draft-offset-panel" id="draftOffsetPanel">
-            <textarea id="draftOffsetOutput" readonly>{}</textarea>
-            <button type="button" id="draftOffsetCopy">Copy coordinates</button>
-        </div>
         <div class="draft-overview-grid">
             @forelse($draftSlots as $d)
-                <div class="draft-overview-thumb">
+                             <div class="draft-overview-thumb">
                     <img src="{{ $d['preview_image'] ?? '' }}" alt="{{ $d['cakeLabel'] ?? 'Saved cake' }}">
-                    <span>{{ $d['cakeLabel'] ?? 'Custom Cake' }}</span>
                 </div>
             @empty
                 <p class="draft-empty-msg">No saved drafts yet — design a cake and hit "Save Draft" to see it here.</p>
@@ -254,12 +274,20 @@ html, body {
         </div>
     </div>
 
+    {{-- Persistent layer for scene 2–6 cake images — stays visible across
+         every scene since neighboring papers remain in view as you scroll --}}
+    <div class="draft-detail-imgs-layer" id="draftDetailImgsLayer">
+        @foreach($draftSlots as $i => $d)
+            @php $sceneNum = $i + 2; @endphp
+            <img class="draft-detail-img" id="draftDetailImg{{ $sceneNum }}" src="{{ $d['preview_image'] ?? '' }}" alt="">
+        @endforeach
+    </div>
+
     {{-- SCENES 2–6: one detail card per slot --}}
     @foreach($draftSlots as $i => $d)
         @php $sceneNum = $i + 2; @endphp
         <div class="draft-panel draft-detail" id="draftDetail{{ $sceneNum }}" data-scene="{{ $sceneNum }}">
             <div class="draft-detail-card">
-                <img class="draft-detail-img" src="{{ $d['preview_image'] ?? '' }}" alt="">
                 <div class="draft-detail-info">
                     <h3>{{ $d['cakeLabel'] ?? 'Custom Cake' }}</h3>
                     <ul>
@@ -270,10 +298,11 @@ html, body {
                     </ul>
                     <div class="draft-detail-actions">
                         <a class="btn-draft-continue" href="{{ route('customer.cake-builder.index') }}?resume_draft={{ $d['id'] }}">Continue</a>
-                        <form method="POST" action="{{ route('customer.cake-builder.discardDraft') }}" onsubmit="return confirm('Delete this saved cake?');">
+                                             <form method="POST" action="{{ route('customer.cake-builder.discardDraft') }}" class="draft-delete-form" data-draft-label="{{ $d['cakeLabel'] ?? 'this cake' }}">
                             @csrf
+                            @method('DELETE')
                             <input type="hidden" name="id" value="{{ $d['id'] }}">
-                            <button type="submit" class="btn-draft-delete">Delete</button>
+                            <button type="button" class="btn-draft-delete draft-delete-trigger">Delete</button>
                         </form>
                     </div>
                 </div>
@@ -287,6 +316,16 @@ html, body {
             <p>Empty slot — save a new cake draft to fill this spot.</p>
         </div>
     @endfor
+    <div class="draft-modal-overlay" id="draftDeleteConfirmModal" style="display:none;">
+        <div class="draft-modal">
+            <h3>Delete this cake?</h3>
+            <p id="draftDeleteConfirmText">Are you sure you want to delete this saved draft? This can't be undone.</p>
+            <div class="draft-modal-actions">
+                <button type="button" class="btn-modal-manage" id="draftDeleteCancelBtn">Cancel</button>
+                <button type="button" class="btn-modal-close" id="draftDeleteConfirmBtn" style="background:#C0392B;">Delete</button>
+            </div>
+        </div>
+    </div>
 
     @if(session('draft_limit_reached'))
         <div class="draft-modal-overlay" id="draftFullModal">
@@ -350,16 +389,105 @@ rimLight.position.set(0, 3, -4);
 scene.add(rimLight);
 
 const SCENES = {
-    1: { camera: { position: [18.3, 5.15, -4.58],  target: [19.3, 5.08, -4.58]  } },
-    2: { camera: { position: [19.38, 5.46, -5.1],   target: [19.97, 5.41, -5.1]  } },
-    3: { camera: { position: [19.36, 5.46, -4.61],  target: [19.95, 5.41, -4.62] } },
-    4: { camera: { position: [19.37, 5.46, -4.11],  target: [19.96, 5.41, -4.12] } },
-    5: { camera: { position: [19.37, 4.62, -4.84],  target: [20.09, 4.56, -4.82] } },
-    6: { camera: { position: [19.35, 4.62, -4.32],  target: [20.07, 4.57, -4.3]  } },
+1: { camera: { position: [-0.94, 14.85, 23.07], target: [-1.13, 8.21, 0.09] } },
+    2: { camera: { position: [-3.03, 14.07, 11.41], target: [-3.01, 10.77, -0.63] } },
+    3: { camera: { position: [2.5, 14.11, 11.41], target: [2.52, 10.76, -0.62] } },
+    4: { camera: { position: [3.28, 10.37, 10.5], target: [3.24, 6.79, 0.5] } },
+    5: { camera: { position: [-0.25, 10.31, 10.53], target: [-0.28, 6.73, 0.54] } },
+    6: { camera: { position: [-3.75, 10.37, 10.52], target: [-4.03, 6.79, 0.53] } },
 };
+
+
+// Left-drag: orbit · Shift + left-drag: pan · Scroll: zoom
+let camDragging = false;
+let camPanning  = false;
+let lastPointerX = 0, lastPointerY = 0;
+const ORBIT_SPEED = 0.006;
+const PAN_SPEED    = 0.0015;
+const ZOOM_SPEED   = 0.0015;
+const MIN_ZOOM_DIST = 0.05;
+
+function orbitCamera(dx, dy) {
+    const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    spherical.theta -= dx * ORBIT_SPEED;
+    spherical.phi   -= dy * ORBIT_SPEED;
+    spherical.phi = Math.max(0.001, Math.min(Math.PI - 0.001, spherical.phi));
+    offset.setFromSpherical(spherical);
+    camera.position.copy(controls.target).add(offset);
+    camera.lookAt(controls.target);
+}
+
+function panCamera(dx, dy) {
+    const distance = camera.position.distanceTo(controls.target);
+    const panScale = distance * PAN_SPEED;
+    const right = new THREE.Vector3();
+    const up = new THREE.Vector3();
+    camera.matrix.extractBasis(right, up, new THREE.Vector3());
+    const move = new THREE.Vector3()
+        .addScaledVector(right, -dx * panScale)
+        .addScaledVector(up, dy * panScale);
+    camera.position.add(move);
+    controls.target.add(move);
+}
+function zoomCamera(deltaY) {
+    const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+    const distance = offset.length();
+    const newDistance = Math.max(MIN_ZOOM_DIST, distance * (1 + deltaY * ZOOM_SPEED));
+    offset.setLength(newDistance);
+    camera.position.copy(controls.target).add(offset);
+}
+
+// Formats the current camera as a ready-to-paste SCENES[n] line,
+// e.g.  1: { camera: { position: [18.3, 5.15, -4.58], target: [19.3, 5.08, -4.58] } },
+function formatSceneCameraLine(sceneNum) {
+    const p = camera.position.toArray().map(n => +n.toFixed(2));
+    const t = controls.target.toArray().map(n => +n.toFixed(2));
+    return `${sceneNum}: { camera: { position: [${p.join(', ')}], target: [${t.join(', ')}] } },`;
+}
+
 
 const overviewThumbs = Array.from(document.querySelectorAll('.draft-overview-thumb'));
 
+const DETAIL_IMG_OFFSETS = {
+    2: { 2: { x: 73,   y: 93  }, 3: { x: 338,  y: 80  }, 4: { x: 179,  y: 287 }, 5: { x: 109,   y: 259}, 6: { x: 22,   y: 228 } },
+    3: { 2: { x: -190, y: 64  }, 3: { x: 37,   y: 100 }, 4: { x: 41,   y: 285 }, 5: { x: -36,  y: 267 }, 6: { x: -156, y: 239 } },
+    4: { 2: { x: -175, y: 76  }, 3: { x: 74,   y: 4   }, 4: { x: 26,   y: 172 }, 5: { x: -138, y: 161 }, 6: { x: -156, y: 239 } },
+    5: { 2: { x: -175, y: 76  }, 3: { x: 74,   y: 4   }, 4: { x: 208,  y: 163 }, 5: { x: 38,   y: 153 }, 6: { x: -88,  y: 154 } },
+    6: { 2: { x: -175, y: 76  }, 3: { x: 74,   y: 4   }, 4: { x: 79,  y: 778 }, 5: { x: 231,  y: 171 }, 6: { x: 60,   y: 171 } },
+};
+// Only the ACTIVE scene's cake is ever shown. Its screen position is
+// projected live, every frame, from that scene's own target through the
+// live camera — which, once the transition settles, IS that scene's own
+// camera (SCENES[activeScene]). Because only one image is visible at a
+// time, there is no cross-scene contamination: Scene 2's projection can
+// never affect Scene 3's stored offset or vice versa.
+function updateDetailImagePosition() {
+    const layer = document.getElementById('draftDetailImgsLayer');
+    if (!layer) return;
+    if (activeScene === 1) {
+        layer.style.display = 'none';
+        return;
+    }
+    layer.style.display = 'block';
+
+    // Offsets are looked up per ACTIVE scene, since the same cake needs a
+    // different screen position depending on which camera is currently live.
+    const sceneOffsets = DETAIL_IMG_OFFSETS[activeScene] || {};
+
+    for (let sceneNum = 2; sceneNum <= 6; sceneNum++) {
+        const img = document.getElementById('draftDetailImg' + sceneNum);
+        const s = SCENES[sceneNum];
+        if (!img || !s) continue;
+
+        img.style.display = 'block';
+        const target = new THREE.Vector3(...s.camera.target);
+        const { x, y } = project3DToScreen(target, camera, container);
+        const offset = sceneOffsets[sceneNum] || { x: 0, y: 0 };
+        img.style.left = (x + offset.x) + 'px';
+        img.style.top = (y + offset.y) + 'px';
+    }
+}
 let bgModel = null;
 let activeScene = 1;
 let isTransitioning = false;
@@ -398,16 +526,27 @@ function project3DToScreen(vec3, cam, cont) {
         y: (-v.y * 0.5 + 0.5) * cont.clientHeight
     };
 }
-// Calibrated per-slot pixel nudges so each thumbnail sits centered
-// on its paper in the Scene 1 overview. Keyed by sceneNum (2–6),
-// not by draft ID — so these stay correct even after a slot's
-// draft is deleted and replaced with a new one.
 const OVERVIEW_OFFSETS = {
-    2: { x: 99, y: 89 },   // paper 1
-    3: { x: 76, y: 88 },   // paper 2
-    4: { x: 39, y: 88 },   // paper 3
-    5: { x: 50, y: 25 },   // paper 4
-    6: { x: 38, y: 25 },   // paper 5
+    2: {
+            "x": 2,
+            "y": -45
+        },
+        3: {
+            "x": 50,
+            "y": -46
+        },
+        4: {
+            "x": 40,
+            "y": 7
+        },
+        5: {
+            "x": 20,
+            "y": 4
+        },
+        6: {
+            "x": -1,
+            "y": 5
+},
 };
 
 // Cake i (0-indexed) maps to Scene i+2's camera target,
@@ -433,9 +572,15 @@ let calibrationMode = false;
 
 function refreshOffsetOutput() {
     const out = document.getElementById('draftOffsetOutput');
-    if (out) out.value = JSON.stringify(OVERVIEW_OFFSETS, null, 4);
+    if (out) out.value = JSON.stringify({
+        OVERVIEW_OFFSETS,
+        DETAIL_IMG_OFFSETS,
+        CAMERA: {
+            position: camera.position.toArray().map(n => +n.toFixed(3)),
+            target: controls.target.toArray().map(n => +n.toFixed(3))
+        }
+    }, null, 4);
 }
-
 function enableThumbDragging() {
     overviewThumbs.forEach((el, i) => {
         const sceneNum = i + 2;
@@ -460,6 +605,34 @@ function enableThumbDragging() {
 }
 enableThumbDragging();
 
+function enableDetailImgDragging() {
+    for (let sceneNum = 2; sceneNum <= 6; sceneNum++) {
+        const el = document.getElementById('draftDetailImg' + sceneNum);
+        if (!el) continue;
+        let dragging = false;
+
+        el.addEventListener('pointerdown', (e) => {
+            if (!calibrationMode) return;
+            dragging = true;
+            el.setPointerCapture(e.pointerId);
+            e.preventDefault();
+        });
+
+        el.addEventListener('pointermove', (e) => {
+            if (!calibrationMode || !dragging) return;
+            // Mutates ONLY this (activeScene -> cake) pair. Every other
+            // scene/cake combination in DETAIL_IMG_OFFSETS is untouched.
+            const sceneOffsets = DETAIL_IMG_OFFSETS[activeScene] || (DETAIL_IMG_OFFSETS[activeScene] = {});
+            const offset = sceneOffsets[sceneNum] || (sceneOffsets[sceneNum] = { x: 0, y: 0 });
+            offset.x += e.movementX;
+            offset.y += e.movementY;
+            refreshOffsetOutput();
+        });
+
+        el.addEventListener('pointerup', () => { dragging = false; });
+    }
+}
+enableDetailImgDragging();
 const calibrateBtn = document.getElementById('draftCalibrateToggle');
 const offsetPanel   = document.getElementById('draftOffsetPanel');
 if (!calibrateAllowed) {
@@ -470,9 +643,15 @@ if (!calibrateAllowed) {
 calibrateBtn.addEventListener('click', () => {
     calibrationMode = !calibrationMode;
     calibrateBtn.textContent = calibrationMode ? 'Stop calibrating' : 'Calibrate positions';
-    offsetPanel.style.display = calibrationMode ? 'block' : 'none';
+      offsetPanel.style.display = calibrationMode ? 'block' : 'none';
     overviewThumbs.forEach(el => el.classList.toggle('calibrating', calibrationMode));
-    if (calibrationMode) refreshOffsetOutput();
+    for (let sceneNum = 2; sceneNum <= 6; sceneNum++) {
+        const el = document.getElementById('draftDetailImg' + sceneNum);
+        if (el) el.classList.toggle('calibrating', calibrationMode);
+    }
+    if (calibrationMode) {
+        refreshOffsetOutput();
+    }
 });
 
 document.getElementById('draftOffsetCopy').addEventListener('click', () => {
@@ -481,35 +660,103 @@ document.getElementById('draftOffsetCopy').addEventListener('click', () => {
     navigator.clipboard.writeText(out.value).catch(() => document.execCommand('copy'));
 });
 
-goToScene(1, true); // page load = scene 1, snap instantly
+// ── Delete draft confirmation modal ──
+let pendingDeleteForm = null;
+const deleteModal = document.getElementById('draftDeleteConfirmModal');
+const deleteConfirmText = document.getElementById('draftDeleteConfirmText');
 
+document.querySelectorAll('.draft-delete-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+        pendingDeleteForm = btn.closest('.draft-delete-form');
+        const label = pendingDeleteForm?.dataset.draftLabel || 'this saved draft';
+        deleteConfirmText.textContent = `Are you sure you want to delete "${label}"? This can't be undone.`;
+        deleteModal.style.display = 'flex';
+    });
+});
+document.getElementById('draftDeleteCancelBtn').addEventListener('click', () => {
+    pendingDeleteForm = null;
+    deleteModal.style.display = 'none';
+});
+document.getElementById('draftDeleteConfirmBtn').addEventListener('click', () => {
+    if (pendingDeleteForm) pendingDeleteForm.submit();
+    deleteModal.style.display = 'none';
+});
+
+goToScene(1, true);
 const gltfLoader = new GLTFLoader();
 gltfLoader.load(
     '/models/savedraft.glb',
     (gltf) => {
-        bgModel = gltf.scene;
+         bgModel = gltf.scene;
         scene.add(bgModel);
+            // ── TEMP DEBUG: click-to-identify. Click directly on any cake (or
+        // any object) in the viewport and the console prints its full path,
+        // world center, and bounding-box size. Click the SAME cake near its
+        // TOP and near its BASE if you want to check whether frosting/base
+        // are separate meshes. ──
+        function getPath(obj){
+            const parts = [];
+            let n = obj;
+            while (n && n !== bgModel) { parts.unshift(n.name || '(unnamed)'); n = n.parent; }
+            return parts.join(' > ');
+        }
+        // Attach to document + capture phase, NOT renderer.domElement — the
+        // .draft-overview-thumb <img> overlays sit on top of the canvas with
+        // pointer-events:auto and would otherwise swallow the click before
+        // it ever reaches the WebGL canvas.
+        document.addEventListener('pointerdown', (ev) => {
+            const rect = renderer.domElement.getBoundingClientRect();
+            // Ignore clicks outside the 3D viewport entirely
+            if (ev.clientX < rect.left || ev.clientX > rect.right || ev.clientY < rect.top || ev.clientY > rect.bottom) return;
+            const mouse = new THREE.Vector2(
+                ((ev.clientX - rect.left) / rect.width) * 2 - 1,
+                -((ev.clientY - rect.top) / rect.height) * 2 + 1
+            );
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+                     const hits = raycaster.intersectObject(bgModel, true);
+            if (hits.length === 0) { console.log('[click] no mesh hit at', ev.clientX, ev.clientY); return; }
+            console.log('[CLICK] ' + hits.length + ' objects along this ray, nearest first:');
+            hits.slice(0, 8).forEach((h, i) => {
+                const hit = h.object;
+                const box = new THREE.Box3().setFromObject(hit);
+                const size = box.getSize(new THREE.Vector3());
+                const center = box.getCenter(new THREE.Vector3());
+                console.log(
+                    '  #' + i + '  dist=' + h.distance.toFixed(2) + '  ' + getPath(hit) +
+                    '\n      center=(' + center.x.toFixed(2) + ', ' + center.y.toFixed(2) + ', ' + center.z.toFixed(2) + ')' +
+                    '  size=(' + size.x.toFixed(2) + ', ' + size.y.toFixed(2) + ', ' + size.z.toFixed(2) + ')'
+                );
+            });
+        }, true); // capture: true — fires before the overlay <img> can eat it
+             console.log('Click-to-identify is active — click any cake in the case to log its mesh info.');
 
-        // Free movement: no distance/angle restrictions. (No camera
-        // repositioning here — SCENES coordinates stay in full control.)
-        controls.minDistance = 0.01;
+        // ── TEMP DIAGNOSTIC: hide all draft thumbnail <img> overlays to see
+        // if the "cakes" are actually 3D geometry underneath, or if they
+        // disappear entirely (meaning they're 2D photo overlays only). ──
+        window._toggleThumbImages = function(hide){
+            document.querySelectorAll('.draft-overview-thumb img').forEach(img => {
+                img.style.visibility = hide ? 'hidden' : 'visible';
+            });
+            console.log(hide ? 'Thumb images HIDDEN — check if cakes are still visible in the case.' : 'Thumb images shown again.');
+        };
+        console.log('Run window._toggleThumbImages(true) in console to hide thumbnail images and check.');
+            controls.minDistance = 0.01;
         controls.maxDistance = 1000;
         controls.minPolarAngle = 0;
         controls.maxPolarAngle = Math.PI;
         controls.minAzimuthAngle = -Infinity;
         controls.maxAzimuthAngle = Infinity;
-
-        // Re-apply whatever scene is currently active, now that the model
-        // exists, in case scroll fired before the model finished loading.
-        goToScene(activeScene, true);
+               goToScene(activeScene, true);
         updateOverviewThumbPositions();
-
+        document.getElementById('draftSceneBg').classList.remove('assets-loading');
         loadingEl.classList.add('hidden');
         setTimeout(() => { loadingEl.style.display = 'none'; }, 300);
     },
     undefined,
     (err) => {
         console.error('Failed to load savedraft.glb', err);
+        document.getElementById('draftSceneBg').classList.remove('assets-loading');
         loadingEl.classList.add('hidden');
         setTimeout(() => { loadingEl.style.display = 'none'; }, 300);
     }
@@ -520,6 +767,7 @@ const SCROLL_COOLDOWN_MS = 700; // >= the camera lerp settle time in animate()
 let scrollLocked = false;
 
 window.addEventListener('wheel', (e) => {
+    // Camera zoom disabled — GLB position is fixed and locked.
     e.preventDefault();
     if (scrollLocked) return;
 
@@ -531,7 +779,6 @@ window.addEventListener('wheel', (e) => {
     goToScene(nextScene);
     setTimeout(() => { scrollLocked = false; }, SCROLL_COOLDOWN_MS);
 }, { passive: false });
-
 function animate() {
     requestAnimationFrame(animate);
     if (isTransitioning && transitionTarget) {
@@ -543,6 +790,7 @@ function animate() {
     }
     controls.update();
     updateOverviewThumbPositions();
+    updateDetailImagePosition();
     renderer.render(scene, camera);
 }
 animate();
@@ -552,7 +800,8 @@ window.addEventListener('resize', () => {
     renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    updateOverviewThumbPositions();
+      updateOverviewThumbPositions();
+    updateDetailImagePosition();
 });
 </script>
 
