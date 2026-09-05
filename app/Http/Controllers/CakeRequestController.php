@@ -228,10 +228,29 @@ return redirect()->route('customer.cake-requests.index')
 //abort_if(!in_array($cakeRequest->status, ['OPEN', 'BIDDING']), 403, 'This request is no longer open. Current status: ' . $cakeRequest->status);
 
 
-
         $bid = \App\Models\Bid::where('cake_request_id', $requestId)->findOrFail($bidId);
 
-        \DB::transaction(function () use ($cakeRequest, $bid) {
+        $fulfillmentType = request()->input('fulfillment_type', 'delivery');
+        $fulfillmentType = in_array($fulfillmentType, ['delivery', 'pickup']) ? $fulfillmentType : 'delivery';
+
+        $deliveryFee        = 0;
+        $deliveryDistanceKm = null;
+
+        if ($fulfillmentType === 'delivery') {
+            $baker = \App\Models\Baker::where('user_id', $bid->baker_id)->first();
+            if ($baker?->latitude && $baker?->longitude && $cakeRequest->delivery_lat && $cakeRequest->delivery_lng) {
+                $quote = app(\App\Services\DeliveryFeeService::class)->quote(
+                    (float) $baker->latitude,
+                    (float) $baker->longitude,
+                    (float) $cakeRequest->delivery_lat,
+                    (float) $cakeRequest->delivery_lng
+                );
+                $deliveryFee        = $quote['delivery_fee'];
+                $deliveryDistanceKm = $quote['distance_km'];
+            }
+        }
+
+        \DB::transaction(function () use ($cakeRequest, $bid, $fulfillmentType, $deliveryFee, $deliveryDistanceKm) {
             $bid->update(['status' => 'ACCEPTED']);
 
             \App\Models\Bid::where('cake_request_id', $cakeRequest->id)
@@ -240,18 +259,19 @@ return redirect()->route('customer.cake-requests.index')
 $agreedPrice = $bid->amount + ($bid->rush_fee ?? 0);
 
 \App\Models\BakerOrder::create([
-    'baker_id'        => $bid->baker_id,
-    'cake_request_id' => $cakeRequest->id,
-    'bid_id'          => $bid->id,
-    'agreed_price'    => $agreedPrice,
-    'status'          => 'WAITING_FOR_PAYMENT',
-    'payout_status'   => 'PENDING',
+    'baker_id'              => $bid->baker_id,
+    'cake_request_id'       => $cakeRequest->id,
+    'bid_id'                => $bid->id,
+    'agreed_price'          => $agreedPrice,
+    'delivery_fee'          => $deliveryFee,
+    'delivery_distance_km'  => $deliveryDistanceKm,
+    'status'                => 'WAITING_FOR_PAYMENT',
+    'payout_status'         => 'PENDING',
 ]);
 
-$fulfillmentType = request()->input('fulfillment_type', 'delivery');
 $cakeRequest->update([
     'status'           => 'WAITING_FOR_PAYMENT',
-    'fulfillment_type' => in_array($fulfillmentType, ['delivery','pickup']) ? $fulfillmentType : 'delivery',
+    'fulfillment_type' => $fulfillmentType,
 ]);
 
 

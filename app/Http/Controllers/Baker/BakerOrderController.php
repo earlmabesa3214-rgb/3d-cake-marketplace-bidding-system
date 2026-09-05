@@ -35,131 +35,84 @@ class BakerOrderController extends Controller
 
         $order->load(['cakeRequest.user', 'baker', 'messages']);
 
-        $downpayment  = Payment::where('cake_request_id', $order->cake_request_id)->where('payment_type', 'downpayment')->first();
-        $finalPayment = Payment::where('cake_request_id', $order->cake_request_id)->where('payment_type', 'final')->first();
-        $isPickup     = $order->cakeRequest->isPickup();
-        $downEscrow   = $downpayment?->escrow_status;
-        $finalEscrow  = $finalPayment?->escrow_status;
+        $payment  = Payment::where('cake_request_id', $order->cake_request_id)->where('payment_type', 'full')->first();
+        $isPickup = $order->cakeRequest->isPickup();
+        $escrow   = $payment?->escrow_status;
 
-        return view('baker.orders.show', compact(
-            'order', 'downpayment', 'finalPayment',
-            'isPickup', 'downEscrow', 'finalEscrow'
-        ));
+        return view('baker.orders.show', compact('order', 'payment', 'isPickup', 'escrow'));
     }
 
+    /**
+     * PREPARING -> READY only. Everything after READY is handled by
+     * confirmHandover() (pickup) or the customer's confirmReceived() (delivery).
+     */
     public function advance(Request $request, BakerOrder $order)
     {
         abort_if($order->baker_id !== Auth::id(), 403);
         abort_if($order->status === 'CANCELLED', 422, 'This order has been cancelled.');
+        abort_if($order->status !== 'PREPARING', 422, 'Cannot advance order from current status.');
 
-        $isPickup = $order->cakeRequest->isPickup();
- $next = $isPickup ? [
-            'PREPARING'             => 'READY',
-            'READY'                 => 'WAITING_FINAL_PAYMENT',
-            'WAITING_FINAL_PAYMENT' => 'COMPLETED',
-        ] : [
-            'PREPARING'             => 'READY',
-            'READY'                 => 'WAITING_FINAL_PAYMENT',
-            'WAITING_FINAL_PAYMENT' => 'DELIVERED',
-        ];
-        if (!isset($next[$order->status])) {
-            return back()->with('error', 'Cannot advance order from current status.');
-        }
+        $request->validate(['cake_final_photo' => 'required|image|max:5120']);
 
-        $newStatus = $next[$order->status];
-
-        DB::transaction(function () use ($order, $newStatus, $request) {
-            $updateData = ['status' => $newStatus];
-
-   if ($newStatus === 'READY' && $request->hasFile('cake_final_photo')) {
-    $updateData['cake_final_photo'] = $request->file('cake_final_photo')
-        ->store('cake-final-photos', 'public');
-}
-
-        $order->update($updateData);
-
-if ($newStatus === 'READY') {
-    $order->cakeRequest->update(['status' => 'WAITING_FINAL_PAYMENT']);
-} else {
-    $order->cakeRequest->update(['status' => 'IN_PROGRESS']);
-}
+        DB::transaction(function () use ($order, $request) {
+            $order->update([
+                'status'           => 'READY',
+                'cake_final_photo' => $request->file('cake_final_photo')->store('cake-final-photos', 'public'),
+            ]);
+            $order->cakeRequest->update(['status' => 'IN_PROGRESS']);
         });
-
-        $order->cakeRequest->user->notify(
-            new \App\Notifications\OrderStatusChangedNotification($order, $newStatus)
-        );
-
-        return back()->with('success', '📦 Cake marked as ready! Customer has been notified to confirm and pay.');
-    }
-
-/**
-     * Baker confirms final payment (pickup cash or delivery wallet release).
-     */
-    public function confirmFinalPayment(Request $request, BakerOrder $order)
-    {
-        abort_if($order->baker_id !== Auth::id(), 403);
-        abort_if($order->status !== 'WAITING_FINAL_PAYMENT', 422, 'Order is not awaiting final payment.');
-
-        $isPickup = $order->cakeRequest->isPickup();
-
-        DB::transaction(function () use ($order, $isPickup) {
-            if ($isPickup) {
-                // Cash pickup — no wallet, just complete directly
-                $order->update(['status' => 'COMPLETED', 'completed_at' => now()]);
-                $order->cakeRequest->update(['status' => 'COMPLETED']);
-
-                // Release downpayment escrow to baker
-                try {
-                    $this->escrow->releaseToBaker($order);
-                } catch (\Exception $e) {
-                    // Already released or no escrow, continue
-                }
-            } else {
-                // Delivery — baker confirms they delivered, release escrow
-                $order->update(['status' => 'COMPLETED', 'completed_at' => now()]);
-                $order->cakeRequest->update(['status' => 'COMPLETED']);
-
-                try {
-                    $this->escrow->releaseToBaker($order);
-                } catch (\Exception $e) {
-                    // Already released, continue
-                }
-            }
-        });
-
-        $order->cakeRequest->user->notify(
-            new \App\Notifications\OrderStatusChangedNotification($order, 'COMPLETED')
-        );
-
-        return redirect()
-            ->route('baker.orders.show', $order->id)
-            ->with('success', $isPickup ? '💵 Cash confirmed! Order completed.' : '🎉 Order completed! Funds released to your wallet.');
-    }
-
-    /**
-     * Baker marks "Ready for Pickup" — customer sees cake photo and pays final via wallet.
-     */
-    public function markReadyForPickup(Request $request, BakerOrder $order)
-    {
-        abort_if($order->baker_id !== Auth::id(), 403);
-        abort_if($order->status !== 'PREPARING', 422);
-
-        $request->validate([
-            'cake_final_photo' => 'required|image|max:5120',
-        ]);
-
-        $path = $request->file('cake_final_photo')->store('cake-final-photos', 'public');
-
-        $order->update([
-            'status'          => 'READY',
-            'cake_final_photo' => $path,
-        ]);
-        $order->cakeRequest->update(['status' => 'IN_PROGRESS']);
 
         $order->cakeRequest->user->notify(
             new \App\Notifications\OrderStatusChangedNotification($order, 'READY')
         );
 
-        return back()->with('success', '🏪 Customer notified — they will confirm and pay via wallet.');
+        return back()->with('success', ' Cake marked as ready! Customer has been notified.');
+    }
+
+    /**
+     * Pickup only: baker confirms the customer collected the cake in person.
+     * No cash — full payment was already made upfront. Releases escrow.
+     */
+    public function confirmHandover(Request $request, BakerOrder $order)
+    {
+        abort_if($order->baker_id !== Auth::id(), 403);
+        abort_if($order->status !== 'READY', 422, 'Order is not ready for pickup yet.');
+        abort_if(!$order->cakeRequest->isPickup(), 422, 'Use the delivery confirmation flow instead.');
+
+        try {
+            $this->escrow->releaseToBaker($order);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error completing order: ' . $e->getMessage());
+        }
+
+        $order->update(['status' => 'COMPLETED', 'completed_at' => now()]);
+        $order->cakeRequest->update(['status' => 'COMPLETED']);
+
+        $order->cakeRequest->user->notify(
+            new \App\Notifications\OrderStatusChangedNotification($order, 'COMPLETED')
+        );
+        return redirect()
+            ->route('baker.orders.show', $order->id)
+            ->with('success', '🎉 Pickup confirmed! Funds released to your wallet.');
+    }
+
+    /**
+     * Delivery only: baker marks the cake as delivered, once the customer
+     * has approved (status OUT_FOR_DELIVERY). Does NOT release escrow —
+     * that still happens when the customer confirms receipt.
+     */
+    public function markDelivered(Request $request, BakerOrder $order)
+    {
+        abort_if($order->baker_id !== Auth::id(), 403);
+        abort_if($order->cakeRequest->isPickup(), 422, 'Pickup orders are confirmed via handover instead.');
+        abort_if($order->status !== 'OUT_FOR_DELIVERY', 422, 'Customer has not yet approved delivery.');
+
+        $order->update(['status' => 'DELIVERED', 'delivered_at' => now()]);
+
+        $order->cakeRequest->user->notify(
+            new \App\Notifications\OrderStatusChangedNotification($order, 'DELIVERED')
+        );
+
+        return back()->with('success', '🚚 Marked as delivered! Customer has been notified to confirm receipt.');
     }
 }

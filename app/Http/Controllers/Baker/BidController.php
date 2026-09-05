@@ -36,6 +36,10 @@ class BidController extends Controller
         if (!in_array($cakeRequest->status, ['OPEN', 'BIDDING'])) {
             return back()->with('error', 'This request is no longer accepting bids.');
         }
+                $bakerRecord = \App\Models\Baker::where('user_id', Auth::id())->first();
+        if (!$bakerRecord || (!$bakerRecord->accepts_delivery && !$bakerRecord->accepts_pickup)) {
+            return back()->with('error', 'Set your Delivery/Pickup preference on your dashboard before placing a bid.');
+        }
 
         // Prevent duplicate bids from the same baker
         $alreadyBid = Bid::where('baker_id', Auth::id())

@@ -1202,8 +1202,8 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 </div>
                 </div>
              <div id="cakeTierSection">
-              <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round only</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Only applies to <strong>Round</strong> as of now.</p>
+                   <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round &amp; Square only</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Applies to <strong>Round</strong> and <strong>Square</strong> as of now.</p>
                 <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
                     <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
                     <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
@@ -2576,6 +2576,24 @@ const SHAPE_SLUG = {
     'Four-tier Round':'four-tier',
 };
 function getRosetteFileMap(slug){
+    if(slug === 'two-tier_square'){
+        return {
+            'Border':        'rosette_square_two-tier',
+            'Full Top':      'rosette_top_square_two-tier',
+            'Sides':         'rosette_sides_square_two-tier',
+            'Cluster Right': 'rosette_cluster_right_square_two-tier',
+            'Cluster Left':  'rosette_cluster_left_square_two-tier',
+        };
+    }
+    if(slug === 'three-tier_square'){
+        return {
+            'Border':        'rosette_square_three-tier',
+            'Full Top':      'rosette_top_square_three-tier',
+            'Sides':         'rosette_sides_square_three-tier',
+            'Cluster Right': 'rosette_cluster_right_square_three-tier',
+            'Cluster Left':  'rosette_cluster_left_square_three-tier',
+        };
+    }
     if(slug === 'square'){
         return {
             'Border':        'rosette_square',
@@ -4003,7 +4021,7 @@ if(isNumber){
         const numRosetteKey = numRosetteOnKey ? `_rosette_${(rosettePlacement||'Border').replace(/\s+/g,'')}_${rosetteColor||'ni'}` : '_norosette';
         newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}_${numStyleKey}${numTexKey}${numRosetteKey}`;
 } else {
-        const slug=SHAPE_SLUG[shape]||'round';
+        const slug=shape==='Two-tier Square'?'two-tier_square':shape==='Three-tier Square'?'three-tier_square':(SHAPE_SLUG[shape]||'round');
       const sizeKey=(shape==='Round')?`_${state.roundSize||6}in`:'';
 const shellBorderKey = (frostingsArr.includes('Semi-naked Style') && frostingsArr.includes('Smooth Buttercream')) ? '_withshell' : '_noshell';
 const _cakeStyleKey = frostingsArr.includes('Semi-naked Style') ? 'sn' : frostingsArr.includes('Fondant Smooth') ? 'fn' : 'bc';
@@ -4523,7 +4541,7 @@ sceneRoot.add(baseWrapper);
         } catch(e){ console.warn('Number GLB error',e); }
         if(!usedGLB){ showNoPreview('Number'); }
     } else {
-const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : (SHAPE_SLUG[shape]||'round');
+const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : shape === 'Two-tier Square' ? 'two-tier_square' : shape === 'Three-tier Square' ? 'three-tier_square' : (SHAPE_SLUG[shape]||'round');
 const originalShape = shape;
 _isBundtActive = (slug === 'bundt');
 // Vertical stretch factor applied ONLY to the Three-tier Round cake.
@@ -4545,28 +4563,49 @@ const baseURL  = (slug === 'bundt')
 console.log('[Debug] Loading base:', baseURL);
 const hasShellBorder = frostingsArr.includes('Smooth Buttercream');
 const hasTextured = frostingsArr.includes('Textured Buttercream');
+// Textured Buttercream is now always a SEPARATE additive overlay (loaded below
+// as textureURL/currentTexture) rather than folded into frostURL's combined
+// suffix — this lets Shell Border + Textured be mixed from independent
+// per-shape files (frosting_<slug>_smooth.glb + frosting_<slug>_textured.glb)
+// without needing a dedicated combined "smoothandtextured" file per shape/tier.
 const frostURL = hasFondant
     ? `/models/fondant_${slug}.glb`
-  : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart'))
+  : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart' || slug === 'two-tier_square' || slug === 'three-tier_square'))
             ? (hasShellBorder ? `/models/frosting_${slug}_smooth.glb` : null)
-  : (isSugarIcing && !hasSemiNaked && !hasTextured)
+  : (isSugarIcing && !hasSemiNaked)
             ? null
             : (slug === 'bundt')
                 ? (hasShellBorder ? `/models/bundt_smoothbc.glb` : null)
-                // Only load a base-coat overlay when Shell Border or Textured is actually
-                // selected — 'Rosettes' alone (with no base coat underneath) must not
-                // silently fall back to the 'smooth' default.
-                : (needFrost && (hasShellBorder || hasTextured) ? `/models/frosting_${slug}_${frostSuffix}.glb` : null);
+                // Only load a base-coat overlay when Shell Border is actually selected —
+                // 'Rosettes' or 'Textured' alone (with no Shell Border underneath) must
+                // not silently fall back to the smooth default.
+                : (needFrost && hasShellBorder ? `/models/frosting_${slug}_smooth.glb` : null);
+// Textured overlay — additive, layered ON TOP of base/frost, never replaces them.
+const textureURL = hasTextured
+    ? `/models/frosting_${slug}_textured.glb`
+    : null;
 console.log('[SemiNaked Debug] hasShellBorder:', hasShellBorder, '| frostURL:', frostURL);
 console.log('[Fondant Debug] hasFondant:', hasFondant, '| frostURL:', frostURL, '| slug:', slug);
 const activeCakeStyle = frostingsArr.find(f => ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'].includes(f)) || 'Smooth Buttercream';
+// Icing files for square tiers use a different naming order than every other
+// asset (icing_square_two-tier.glb / icing_square_three-tier.glb) instead of
+// the usual icing_<slug>.glb pattern — map those two cases explicitly.
+const icingSlugOverride = (slug === 'two-tier_square') ? 'square_two-tier'
+                         : (slug === 'three-tier_square') ? 'square_three-tier'
+                         : slug;
 const icingURL = isSugarIcing
     ? (slug === 'bundt'
         ? `/models/bundt_icing.glb`
         : activeCakeStyle === 'Semi-naked Style' && !hasShellBorder
-            ? `/models/icing_${slug}_seminaked.glb`
-            : `/models/icing_${slug}.glb`)
+            ? `/models/icing_${icingSlugOverride}_seminaked.glb`
+            : `/models/icing_${icingSlugOverride}.glb`)
     : null;
+// Drip files for square tiers use a different naming order than every other
+// asset (drip_square_two-tier.glb / drip_square_three-tier.glb) instead of
+// the usual drip_<slug>.glb pattern — map those two cases explicitly.
+const dripSlugOverride = (slug === 'two-tier_square') ? 'square_two-tier'
+                        : (slug === 'three-tier_square') ? 'square_three-tier'
+                        : slug;
 const dripURL = hasDrip
     ? (slug === 'bundt'
         ? `/models/bundt_drip.glb`
@@ -4574,7 +4613,7 @@ const dripURL = hasDrip
             ? `/models/fondant_drip_${slug}.glb`
             : hasSemiNaked
                 ? (slug === 'heart' ? `/models/drip_heart_round.glb` : `/models/drip_seminaked_${slug}.glb`)
-                : `/models/drip_${slug}.glb`)
+                : `/models/drip_${dripSlugOverride}.glb`)
     : null;
 const rosetteActive = frostingsArr.includes('Rosettes') && !hasFondant;
 // Combo placements (e.g. "Border+Sides") need TWO rosette pieces instead of
@@ -4585,6 +4624,7 @@ const urlList  = [baseURL];
 const idxFrost = (frostURL) ? (urlList.push(frostURL)-1) : -1;
 const idxIcing = icingURL                 ? (urlList.push(icingURL)-1) : -1;
 const idxDrip  = dripURL                  ? (urlList.push(dripURL) -1) : -1;
+const idxTexture = textureURL             ? (urlList.push(textureURL)-1) : -1;
 const idxRosetteStart = rosetteURLs.length ? urlList.length : -1;
 rosetteURLs.forEach(u=>urlList.push(u));
 
@@ -4594,6 +4634,8 @@ const frostGLB = idxFrost>=0 && results[idxFrost]?.status==='fulfilled' ? result
 if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${slug}.glb`);
 const icingGLB = idxIcing>=0 && results[idxIcing]?.status==='fulfilled' ? results[idxIcing].value : null;
 const dripGLB  = idxDrip >=0 && results[idxDrip] ?.status==='fulfilled' ? results[idxDrip].value  : null;
+const textureGLB = idxTexture>=0 && results[idxTexture]?.status==='fulfilled' ? results[idxTexture].value : null;
+if(hasTextured && !textureGLB) console.error(`[Textured] Missing: ${textureURL}`);
 // Each entry: { glb, placement } — one per piece in the combo (or a single entry for non-combos)
 const rosettePieces = [];
 if(idxRosetteStart >= 0){
@@ -4621,6 +4663,7 @@ if(hasFondant){
 }
 if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
 if(dripGLB  && glbHasMesh(dripGLB))  { currentDrip  = dripGLB;  sceneRoot.add(currentDrip);  toPos.push(currentDrip);  }
+if(textureGLB && glbHasMesh(textureGLB)) { currentTexture = textureGLB; sceneRoot.add(currentTexture); toPos.push(currentTexture); }
 const rosetteIsCombo = rosettePieces.length > 1;
 if(rosettePieces.length === 1) {
     // Single placement (no combo) — keep this EXACTLY like before: the raw
@@ -4661,12 +4704,14 @@ function fitRosetteToCake(cakeRef){
         const rawRoseDiam = Math.max(rawRoseBox.max.x-rawRoseBox.min.x, rawRoseBox.max.z-rawRoseBox.min.z);
         const cakeBoxNow  = new THREE.Box3().setFromObject(cakeRef);
         const cakeDiamNow = Math.max(cakeBoxNow.max.x-cakeBoxNow.min.x, cakeBoxNow.max.z-cakeBoxNow.min.z);
-        const ROSETTE_SIDES_ADJUST = {
+          const ROSETTE_SIDES_ADJUST = {
             'round':      { diamMult: 1.08, yNudge: 0 },
             'square':     { diamMult: 1.1, yNudge: 0 },
             'heart':      { diamMult: 1.05, yNudge: 0 },
             'two-tier':   { diamMult: 1.14, yNudge: 0.05 },
             'three-tier': { diamMult: 1.10, yNudge: 0.07 },
+            'two-tier_square':   { diamMult: 1.14, yNudge: 0.05 },
+            'three-tier_square': { diamMult: 1.10, yNudge: 0.07 },
         };
         const ROSETTE_FULLTOP_ADJUST = {
             heart:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
@@ -4674,6 +4719,8 @@ function fitRosetteToCake(cakeRef){
             square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
             'two-tier': { diamMult: 0.8, xNudge: 0, zNudge: 0 },
             'three-tier': { diamMult: 0.53, xNudge: 0, zNudge: 0 },
+            'two-tier_square':   { diamMult: 0.7, xNudge: 0, zNudge: 0 },
+            'three-tier_square': { diamMult: 0.43, xNudge: 0, zNudge: 0 },
         };
         const ROSETTE_CLUSTER_RIGHT_ADJUST = {
             heart:  { diamMult: 0.8, xNudge: 0, zNudge: 0 },
@@ -4681,6 +4728,8 @@ function fitRosetteToCake(cakeRef){
             square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
             'two-tier': { diamMult: 0.8, xNudge: -0.05, zNudge: 0 },
             'three-tier': { diamMult: 0.5, xNudge: -0.1, zNudge: 0 },
+            'two-tier_square':   { diamMult: 0.73, xNudge: -0.05, zNudge: 0 },
+            'three-tier_square': { diamMult: 0.45, xNudge: -0.13, zNudge: 0 },
         };
         const ROSETTE_CLUSTER_LEFT_ADJUST = {
             heart:  { diamMult: 0.8, xNudge: 0, zNudge: 0 },
@@ -4688,10 +4737,14 @@ function fitRosetteToCake(cakeRef){
             square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
             'two-tier': { diamMult: 0.8, xNudge: 0.05, zNudge: 0 },
             'three-tier': { diamMult: 0.5, xNudge: 0.1, zNudge: 0 },
+            'two-tier_square':   { diamMult: 0.73, xNudge: 0.05, zNudge: 0 },
+            'three-tier_square': { diamMult: 0.45, xNudge: 0.13, zNudge: 0 },
         };
       const ROSETTE_BORDER_ADJUST = {
     'two-tier':   { diamMult: 1.05, yNudge: 0.24 },
     'three-tier': { diamMult: 1.05, yNudge: 0.38 },
+    'two-tier_square':   { diamMult: 1.0, yNudge: 0.19 },
+    'three-tier_square': { diamMult: 1.05, yNudge: 0.37 },
 };
         const roseDiamMult = (placement === 'Sides')
             ? (ROSETTE_SIDES_ADJUST[slug]?.diamMult ?? 1.14)
@@ -7908,19 +7961,20 @@ state.shape = newShape;
             }
         }
         syncFrostingUI(); // refresh Shell Border lock state (restricted for Bundt)
-             // Reset tier to Single for non-Round shapes
-        if(state.shape !== 'Round'){
+        // Reset tier to Single for shapes that don't support tiers
+        if(state.shape !== 'Round' && state.shape !== 'Square'){
             state.tier = 'Single';
             document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.toggle('active', x.dataset.tier==='Single'));
             refreshTierPriceLabels();
         }
-       // Disable Two/Three-tier buttons when shape is not Round
+       // Disable Two/Three-tier buttons unless shape supports tiers (Round & Square)
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>{
             const isTiered = x.dataset.tier !== 'Single';
-            x.style.opacity = (state.shape !== 'Round' && isTiered) ? '0.35' : '';
-            x.style.pointerEvents = (state.shape !== 'Round' && isTiered) ? 'none' : '';
+            const tiersAllowed = (state.shape === 'Round' || state.shape === 'Square');
+            x.style.opacity = (!tiersAllowed && isTiered) ? '0.35' : '';
+            x.style.pointerEvents = (!tiersAllowed && isTiered) ? 'none' : '';
         });
-        document.getElementById('cakeTierSection').style.display = (state.shape === 'Round') ? '' : 'none';
+        document.getElementById('cakeTierSection').style.display = (state.shape === 'Round' || state.shape === 'Square') ? '' : 'none';
         // Dynamic size label
         const lblMap = {'Round':'Round Size','Square':'Square Size','Heart':'Heart Size','Number':'Number Size'};
         const lbl = document.getElementById('sizeLabelText');
@@ -7962,10 +8016,9 @@ if(typeof window.setDraggingBarShardIdx==='function') window.setDraggingBarShard
         if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape);
     });
 });
-// ── TIER ──
 document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=>{
     el.addEventListener('click',()=>{
-        if(state.shape !== 'Round' && el.dataset.tier !== 'Single') return;
+        if(state.shape !== 'Round' && state.shape !== 'Square' && el.dataset.tier !== 'Single') return;
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
         state.tier = el.dataset.tier;

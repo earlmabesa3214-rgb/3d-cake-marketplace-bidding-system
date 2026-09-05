@@ -14,110 +14,75 @@ class CustomerOrderController extends Controller
     public function __construct(private EscrowService $escrow) {}
 
     /**
-     * Customer confirms cake looks good + pays final payment from wallet.
-     * Delivery flow only.
+     * Customer pays the full agreed price from wallet before the baker starts.
+     * Applies to both delivery and pickup orders.
      */
-    public function confirmCakeAndPay(Request $request, BakerOrder $order)
+    public function payFull(Request $request, BakerOrder $order)
     {
         abort_if($order->cakeRequest->user_id !== Auth::id(), 403);
-abort_if(!in_array($order->status, ['WAITING_FINAL_PAYMENT', 'READY']), 422, 'Order is not ready yet.');
+        abort_if($order->status !== 'WAITING_FOR_PAYMENT', 422, 'Order is not awaiting payment.');
 
-        abort_if($order->cakeRequest->isPickup(), 422, 'Use pickup flow instead.');
+        $wallet = Wallet::forUser(Auth::id());
 
-        $totalAmount = $order->agreed_price;
-        $finalAmount = round($totalAmount * 0.5, 2);
-        $wallet      = Wallet::forUser(Auth::id());
-
-        if (!$wallet->hasEnough($finalAmount)) {
+        if (!$wallet->hasEnough($order->agreed_price)) {
             return redirect()
                 ->route('customer.wallet.index')
-                ->with('error', "Insufficient balance. You need ₱{$finalAmount} more. Please top up your wallet first.");
-        }
-try {
-    $this->escrow->holdFinalPayment($order);
-} catch (\Exception $e) {
-    return back()->with('error', 'Payment failed: ' . $e->getMessage());
-}
-
-// Advance baker order to WAITING_FINAL_PAYMENT so baker can confirm delivery
-$order->update(['status' => 'WAITING_FINAL_PAYMENT']);
-$order->cakeRequest->update(['status' => 'WAITING_FINAL_PAYMENT']);
-
-// Notify baker
-$order->baker->notify(
-    new \App\Notifications\OrderStatusChangedNotification($order, 'WAITING_FINAL_PAYMENT')
-);
-
-return redirect()
-    ->route('customer.cake-requests.show', $order->cake_request_id)
-    ->with('success', '✅ Final payment confirmed! Your baker will now prepare your cake for delivery. Click "Cake Received" once you get it.');
-    }
-
-    /**
-     * Customer clicks "Cake Received" — releases escrow to baker.
-     * Delivery flow.
-     */
-    public function confirmReceived(Request $request, BakerOrder $order)
-    {
-        abort_if($order->cakeRequest->user_id !== Auth::id(), 403);
-        abort_if($order->status !== 'WAITING_FINAL_PAYMENT', 422);
-        abort_if($order->cakeRequest->isPickup(), 422);
-
-        try {
-   $this->escrow->releaseToBaker($order);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error completing order: ' . $e->getMessage());
-        }
-
-        return redirect()
-            ->route('customer.cake-requests.show', $order->cake_request_id)
-            ->with('success', '🎉 Order complete! Thank you for your purchase.');
-    }
-
-    /**
-     * Pickup: customer pays final 50% from wallet + confirms pickup done.
-     */
-    public function confirmPickup(Request $request, BakerOrder $order)
-    {
-        abort_if($order->cakeRequest->user_id !== Auth::id(), 403);
-        abort_if($order->status !== 'READY', 422);
-        abort_if(!$order->cakeRequest->isPickup(), 422);
-
-        $finalAmount = round($order->agreed_price * 0.5, 2);
-        $wallet      = Wallet::forUser(Auth::id());
-
-        if (!$wallet->hasEnough($finalAmount)) {
-            return redirect()
-                ->route('customer.wallet.index')
-                ->with('error', "Insufficient balance. You need ₱{$finalAmount}. Please top up your wallet.");
+                ->with('error', "Insufficient balance. You need ₱{$order->agreed_price}. Please top up your wallet first.");
         }
 
         try {
-            $this->escrow->processPickupCompletion($order);
+            $this->escrow->holdFullPayment($order); // ⚠ needs to exist in EscrowService
         } catch (\Exception $e) {
             return back()->with('error', 'Payment failed: ' . $e->getMessage());
         }
 
         return redirect()
             ->route('customer.cake-requests.show', $order->cake_request_id)
-            ->with('success', '🎉 Pickup complete! Order finished. Baker has been paid.');
+            ->with('success', ' Payment confirmed! Your baker will now begin preparing your cake.');
     }
-    public function payDownpayment(Request $request, BakerOrder $order)
-{
-    abort_if($order->cakeRequest->user_id !== Auth::id(), 403);
-    abort_if($order->status !== 'WAITING_FOR_PAYMENT', 422, 'Order is not awaiting payment.');
+    /**
+     * Customer approves the finished cake and greenlights the baker to
+     * begin delivery. Delivery flow only — pickup orders skip this since
+     * the baker confirms handover in person.
+     */
+    public function approveDelivery(Request $request, BakerOrder $order)
+    {
+        abort_if($order->cakeRequest->user_id !== Auth::id(), 403);
+        abort_if($order->cakeRequest->isPickup(), 422, 'Pickup orders do not need delivery approval.');
+        abort_if($order->status !== 'READY', 422, 'Order is not ready for delivery approval yet.');
 
-    try {
-        $this->escrow->holdDownpayment($order);
-    } catch (\Exception $e) {
-        $msg = $e->getMessage() === 'insufficient_balance'
-            ? 'Insufficient wallet balance. Please top up first.'
-            : 'Payment failed: ' . $e->getMessage();
-        return back()->with('error', $msg);
+        $order->update(['status' => 'OUT_FOR_DELIVERY', 'approved_for_delivery_at' => now()]);
+
+        $order->baker->notify(
+            new \App\Notifications\OrderStatusChangedNotification($order, 'OUT_FOR_DELIVERY')
+        );
+
+        return redirect()
+            ->route('customer.cake-requests.show', $order->cake_request_id)
+            ->with('success', '🚚 Baker notified — your cake is being delivered!');
     }
 
-    return redirect()
-        ->route('customer.cake-requests.show', $order->cake_request_id)
-        ->with('success', '✅ Downpayment paid! Your baker will now begin preparing your cake.');
-}
+    /**
+     * Customer clicks "Cake Received" — releases escrow to baker.
+     * Delivery flow only (pickup is confirmed by the baker instead).
+     */
+    public function confirmReceived(Request $request, BakerOrder $order)
+    {
+        abort_if($order->cakeRequest->user_id !== Auth::id(), 403);
+        abort_if($order->status !== 'DELIVERED', 422, 'Order has not been marked as delivered yet.');
+        abort_if($order->cakeRequest->isPickup(), 422, 'Pickup orders are confirmed by the baker.');
+
+        try {
+            $this->escrow->releaseToBaker($order);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error completing order: ' . $e->getMessage());
+        }
+
+        $order->update(['status' => 'COMPLETED', 'completed_at' => now()]);
+        $order->cakeRequest->update(['status' => 'COMPLETED']);
+
+        return redirect()
+            ->route('customer.cake-requests.show', $order->cake_request_id)
+            ->with('success', '🎉 Order complete! Thank you for your purchase.');
+    }
 }

@@ -17,11 +17,8 @@ class CustomerPaymentController extends Controller
     {
         abort_if($cakeRequest->user_id !== Auth::id(), 403);
 
-        abort_unless(
-            in_array($cakeRequest->status, [
-                'WAITING_FOR_PAYMENT', 'WAITING_FINAL_PAYMENT',
-                'ACCEPTED', 'IN_PROGRESS', 'COMPLETED',
-            ]),
+               abort_unless(
+            in_array($cakeRequest->status, ['WAITING_FOR_PAYMENT', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETED']),
             404, 'Payment is not available for this request.'
         );
 
@@ -35,38 +32,26 @@ class CustomerPaymentController extends Controller
         $gcashAccount     = $platformAccounts->where('type', 'gcash')->first();
         $mayaAccount      = $platformAccounts->where('type', 'maya')->first();
 
-        $downpayment  = Payment::where('cake_request_id', $cakeRequest->id)
-            ->where('payment_type', 'downpayment')->first();
-        $finalPayment = Payment::where('cake_request_id', $cakeRequest->id)
-            ->where('payment_type', 'final')->first();
-
-        $activePaymentType = $cakeRequest->status === 'WAITING_FINAL_PAYMENT'
-            ? 'final'
-            : 'downpayment';
+               $payment = Payment::where('cake_request_id', $cakeRequest->id)
+            ->where('payment_type', 'full')->first();
 
         return view('customer.payment.show', compact(
             'cakeRequest', 'acceptedBid',
             'gcashAccount', 'mayaAccount',
-            'downpayment', 'finalPayment',
-            'activePaymentType'
+            'payment'
         ));
     }
 
     public function submitProof(Request $request, CakeRequest $cakeRequest)
     {
         abort_if($cakeRequest->user_id !== Auth::id(), 403);
-
         abort_unless(
-            in_array($cakeRequest->status, [
-                'WAITING_FOR_PAYMENT', 'WAITING_FINAL_PAYMENT',
-                'ACCEPTED', 'IN_PROGRESS',
-            ]),
+            in_array($cakeRequest->status, ['WAITING_FOR_PAYMENT', 'ACCEPTED']),
             403, 'Cannot submit payment for this request.'
         );
 
         $request->validate([
             'payment_method'    => 'required|in:gcash,maya',
-            'payment_type'      => 'required|in:downpayment,final',
             'platform_reference'=> 'required|string|max:100',
             'proof_of_payment'  => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ], [
@@ -74,27 +59,21 @@ class CustomerPaymentController extends Controller
             'proof_of_payment.required'   => 'Please upload your payment screenshot.',
         ]);
 
-        $paymentType = $request->payment_type;
-
         $existing = Payment::where('cake_request_id', $cakeRequest->id)
-            ->where('payment_type', $paymentType)->first();
+            ->where('payment_type', 'full')->first();
 
         if ($existing && $existing->isPaid()) {
-            return back()->with('error', ucfirst($paymentType) . ' has already been confirmed.');
+            return back()->with('error', 'Payment has already been confirmed.');
         }
 
-        $acceptedBid       = $cakeRequest->bids()->whereIn('status', ['ACCEPTED', 'accepted'])->first();
-        $totalAmount       = $acceptedBid->amount;
-        $downpaymentAmount = round($totalAmount * 0.5, 2);
-        $amount            = $paymentType === 'downpayment'
-            ? $downpaymentAmount
-            : ($totalAmount - $downpaymentAmount);
+        $acceptedBid = $cakeRequest->bids()->whereIn('status', ['ACCEPTED', 'accepted'])->first();
+        $totalAmount = $acceptedBid->amount;
 
         $proofPath = $request->file('proof_of_payment')
             ->store('payment-proofs', 'public');
 
         Payment::updateOrCreate(
-            ['cake_request_id' => $cakeRequest->id, 'payment_type' => $paymentType],
+            ['cake_request_id' => $cakeRequest->id, 'payment_type' => 'full'],
             [
                 'bid_id'             => $acceptedBid->id,
                 'customer_id'        => Auth::id(),
@@ -102,7 +81,7 @@ class CustomerPaymentController extends Controller
                 'status'             => 'pending',
                 'escrow_status'      => 'pending',
                 'agreed_price'       => $totalAmount,
-                'amount'             => $amount,
+                'amount'             => $totalAmount,
                 'proof_of_payment_path' => $proofPath,
                 'platform_reference' => $request->platform_reference,
                 'paid_at'            => now(),
@@ -118,16 +97,14 @@ class CustomerPaymentController extends Controller
     {
         abort_if($cakeRequest->user_id !== Auth::id(), 403);
 
-        $request->validate([
-            'payment_type'      => 'required|in:downpayment,final',
+            $request->validate([
             'proof'             => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
             'platform_reference'=> 'required|string|max:100',
         ]);
 
         $payment = Payment::where('cake_request_id', $cakeRequest->id)
-            ->where('payment_type', $request->payment_type)
+            ->where('payment_type', 'full')
             ->firstOrFail();
-
         if ($payment->status !== 'rejected') {
             return redirect()
                 ->route('customer.cake-requests.show', $cakeRequest->id)

@@ -200,20 +200,45 @@
 </style>
 @endpush
 
+@php
+    $bakerRecordDash = \App\Models\Baker::where('user_id', auth()->id())->first();
+@endphp
+
 @section('content')
 
 <div class="dash-hero">
     <div class="hero-content">
         <div class="hero-eyebrow">Welcome</div>
         <div class="hero-title">Hello, {{ auth()->user()->first_name }}!</div>
-        <div class="hero-sub">
+             <div class="hero-sub">
             @if($openRequestsCount > 0)
                 You have <strong style="color:var(--caramel-light);">{{ $openRequestsCount }} open {{ Str::plural('request', $openRequestsCount) }}</strong> waiting for a bid. Get baking!
             @else
                 Welcome back — here's what's happening today.
             @endif
         </div>
- 
+
+        <div class="hero-rush-wrap" id="fulfillment-wrap">
+            <div class="hero-rush" style="flex-direction:column; align-items:flex-start; gap:0.5rem; padding:0.75rem 1rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span class="rush-label" style="opacity:0.85;">How do you fulfill orders? <span style="color:var(--caramel-light);">*required to bid</span></span>
+                </div>
+                <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                    <label style="display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); padding:0.4rem 0.75rem; border-radius:8px;">
+                        <input type="checkbox" id="pref-delivery" {{ $bakerRecordDash?->accepts_delivery ? 'checked' : '' }} onchange="saveFulfillment()" style="accent-color: var(--caramel);">
+                        🚚 Delivery
+                    </label>
+                    <label style="display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); padding:0.4rem 0.75rem; border-radius:8px;">
+                        <input type="checkbox" id="pref-pickup" {{ $bakerRecordDash?->accepts_pickup ? 'checked' : '' }} onchange="saveFulfillment()" style="accent-color: var(--caramel);">
+                        🏪 Pickup
+                    </label>
+                </div>
+                <div id="fulfillment-status" style="font-size:0.68rem; color:{{ (!$bakerRecordDash?->accepts_delivery && !$bakerRecordDash?->accepts_pickup) ? '#FCA5A5' : 'rgba(255,255,255,0.4)' }};">
+                    {{ (!$bakerRecordDash?->accepts_delivery && !$bakerRecordDash?->accepts_pickup) ? 'Select at least one — you can\'t bid until this is set.' : 'Saved automatically' }}
+                </div>
+            </div>
+        </div>
+
 </div>
 
     <div class="hero-illustration">
@@ -383,8 +408,27 @@
 
 @push('scripts')
 <script>
-function toggleRush(checkbox) {
-    const feeWrap = document.getElementById('rush-fee-wrap');
+function saveFulfillment() {
+    const delivery = document.getElementById('pref-delivery').checked;
+    const pickup   = document.getElementById('pref-pickup').checked;
+    const statusEl = document.getElementById('fulfillment-status');
+
+    fetch('{{ route("baker.toggle-rush") }}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+        body: JSON.stringify({ accepts_delivery: delivery, accepts_pickup: pickup })
+    });
+
+    if (!delivery && !pickup) {
+        statusEl.textContent = "Select at least one — you can't bid until this is set.";
+        statusEl.style.color = '#FCA5A5';
+    } else {
+        statusEl.textContent = 'Saved automatically';
+        statusEl.style.color = 'rgba(255,255,255,0.4)';
+    }
+}
+
+function toggleRush(checkbox) {    const feeWrap = document.getElementById('rush-fee-wrap');
     const dot = document.getElementById('rushDot');
     feeWrap.style.display = checkbox.checked ? '' : 'none';
     dot.classList.toggle('off', !checkbox.checked);

@@ -16,14 +16,17 @@ protected $fillable = [
     'dti_sec_number', 'business_permit', 'dti_certificate',
     'sanitary_permit', 'bir_certificate', 'gov_id_type',
     'gov_id_front', 'gov_id_back', 'id_selfie', 'food_safety_cert',
-    'portfolio', 'is_available', 'is_approved', 'password',
+      'portfolio', 'is_available', 'is_approved', 'password',
     'accepts_rush_orders', 'rush_fee',
+    'accepts_delivery', 'accepts_pickup',
 ];
 
 protected $casts = [
     'is_available'        => 'boolean',
     'is_approved'         => 'boolean',
     'accepts_rush_orders' => 'boolean',
+    'accepts_delivery'    => 'boolean',
+    'accepts_pickup'      => 'boolean',
     'latitude'            => 'decimal:7',
     'longitude'           => 'decimal:7',
 ];
@@ -87,5 +90,16 @@ protected $casts = [
     public function getLiveReviewCountAttribute(): int
     {
         return $this->reviews()->count();
+    }
+
+    /**
+     * Human label for the baker's fulfillment preference, e.g. for admin lists or logs.
+     */
+    public function getFulfillmentLabelAttribute(): string
+    {
+        if ($this->accepts_delivery && $this->accepts_pickup) return 'Delivery & Pickup';
+        if ($this->accepts_delivery) return 'Delivery only';
+        if ($this->accepts_pickup)   return 'Pickup only';
+        return 'Not set';
     }
 }

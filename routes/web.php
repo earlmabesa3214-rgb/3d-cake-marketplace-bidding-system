@@ -151,11 +151,15 @@ if ($baker?->user_id) {
         }
     }
 }
+// 2. Fall back to reverse-geocoding baker's coordinates (only if not already cached on the baker record)
+if (!$resolvedAddress && $baker?->address) {
+    // Address was cached from a previous lookup — use it, skip the network call entirely.
+    $resolvedAddress = $baker->address;
+}
 
-// 2. Fall back to reverse-geocoding baker's coordinates
 if (!$resolvedAddress && $baker?->latitude && $baker?->longitude) {
     try {
-        $geo = \Illuminate\Support\Facades\Http::timeout(3)
+        $geo = \Illuminate\Support\Facades\Http::timeout(2)
             ->withHeaders(['User-Agent' => 'BakeSphere/1.0'])
             ->get('https://nominatim.openstreetmap.org/reverse', [
                 'format' => 'jsonv2',
@@ -164,40 +168,41 @@ if (!$resolvedAddress && $baker?->latitude && $baker?->longitude) {
             ]);
         if ($geo->ok()) {
             $resolvedAddress = $geo->json('display_name');
+            if ($resolvedAddress) {
+                // Cache it so future opens of this modal skip the network round-trip entirely.
+                $baker->update(['address' => $resolvedAddress]);
+            }
         }
     } catch (\Exception $e) {}
 }
-
-    // If still empty but we have coordinates, reverse-geocode on the server
-    if (!$resolvedAddress && $baker?->latitude && $baker?->longitude) {
-        try {
-            $geo = \Illuminate\Support\Facades\Http::timeout(3)
-                ->withHeaders(['User-Agent' => 'BakeSphere/1.0'])
-                ->get('https://nominatim.openstreetmap.org/reverse', [
-                    'format' => 'jsonv2',
-                    'lat'    => $baker->latitude,
-                    'lon'    => $baker->longitude,
-                ]);
-            if ($geo->ok()) {
-                $resolvedAddress = $geo->json('display_name');
-                // Save it back so we don't need to geocode again next time
-                $baker->update(['address' => $resolvedAddress]);
-            }
-        } catch (\Exception $e) {}
-    }
 $liveCount  = \App\Models\BakerReview::where('baker_user_id', $userId)->count();
 $liveAvg    = \App\Models\BakerReview::where('baker_user_id', $userId)->avg('rating');
 
+$deliveryQuote = null;
+if ($baker?->latitude && $baker?->longitude && request()->filled('cust_lat') && request()->filled('cust_lng')) {
+    $deliveryQuote = app(\App\Services\DeliveryFeeService::class)->quote(
+        (float) $baker->latitude,
+        (float) $baker->longitude,
+        (float) request('cust_lat'),
+        (float) request('cust_lng')
+    );
+}
 return response()->json([
-    'address'       => $resolvedAddress,
-    'rating'        => $liveCount > 0 ? round((float) $liveAvg, 1) : null,
-    'total_reviews' => $liveCount,
-    'latitude'      => $baker?->latitude  ?? null,
-    'longitude'     => $baker?->longitude ?? null,
-    'reviews'       => $reviews,
+    'address'           => $resolvedAddress,
+    'rating'            => $liveCount > 0 ? round((float) $liveAvg, 1) : null,
+    'total_reviews'     => $liveCount,
+    'latitude'          => $baker?->latitude  ?? null,
+    'longitude'         => $baker?->longitude ?? null,
+    'reviews'           => $reviews,
+    'distance_km'       => $deliveryQuote['distance_km']  ?? null,
+    'duration_min'      => $deliveryQuote['duration_min'] ?? null,
+    'delivery_fee'      => $deliveryQuote['delivery_fee'] ?? null,
+    'route_geometry'    => $deliveryQuote['geometry']     ?? null,
+    'route_source'      => $deliveryQuote['source']       ?? null,
+    'accepts_delivery'  => (bool) ($baker?->accepts_delivery ?? false),
+    'accepts_pickup'    => (bool) ($baker?->accepts_pickup ?? false),
 ]);
 });
-
 Route::middleware('auth')->get('/baker-reviews/{userId}', function ($userId) {
     $reviews = \App\Models\BakerReview::where('baker_user_id', $userId)
         ->with('customer:id,first_name,last_name')
@@ -252,11 +257,11 @@ Route::get('/cake-gallery',        [CakeGalleryController::class, 'index'])->nam
 // ── Wallet ──
     Route::get('/wallet',              [\App\Http\Controllers\Customer\WalletController::class, 'index'])->name('wallet.index');
     Route::post('/wallet/cash-in',     [\App\Http\Controllers\Customer\WalletController::class, 'cashIn'])->name('wallet.cash-in');
-
-   Route::post('/orders/{order}/pay-downpayment',   [\App\Http\Controllers\Customer\CustomerOrderController::class, 'payDownpayment'])->name('orders.pay-downpayment');
-Route::post('/orders/{order}/confirm-cake-pay',  [\App\Http\Controllers\Customer\CustomerOrderController::class, 'confirmCakeAndPay'])->name('orders.confirm-cake-pay');
-Route::post('/orders/{order}/confirm-received',  [\App\Http\Controllers\Customer\CustomerOrderController::class, 'confirmReceived'])->name('orders.confirm-received');
-Route::post('/orders/{order}/confirm-pickup',    [\App\Http\Controllers\Customer\CustomerOrderController::class, 'confirmPickup'])->name('orders.confirm-pickup');
+      Route::post('/orders/{order}/pay-full',           [\App\Http\Controllers\Customer\CustomerOrderController::class, 'payFull'])->name('orders.pay-full');
+  
+    Route::post('/orders/{order}/confirm-cake-pay',   [\App\Http\Controllers\Customer\CustomerOrderController::class, 'confirmCakeAndPay'])->name('orders.confirm-cake-pay');
+       Route::post('/orders/{order}/confirm-received',   [\App\Http\Controllers\Customer\CustomerOrderController::class, 'confirmReceived'])->name('orders.confirm-received');
+    Route::post('/orders/{order}/approve-delivery',    [\App\Http\Controllers\Customer\CustomerOrderController::class, 'approveDelivery'])->name('orders.approve-delivery');
     Route::get('/cake-requests/{cakeRequest}/payment',             [CustomerPaymentController::class, 'show'])->name('payment.show');
     Route::post('/cake-requests/{cakeRequest}/payment/proof',      [CustomerPaymentController::class, 'submitProof'])->name('payment.submit-proof');
     Route::post('/cake-requests/{cakeRequest}/payment/reupload',   [CustomerPaymentController::class, 'reupload'])->name('payment.reupload');
@@ -345,10 +350,10 @@ Route::middleware(['auth', 'role:baker'])->prefix('baker')->name('baker.')->grou
     Route::get('/orders/{order}',          [BakerOrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/advance', [BakerOrderController::class, 'advance'])->name('orders.advance');
 
-    Route::post('/orders/{order}/confirm-payment',       [BakerOrderController::class, 'confirmPayment'])->name('orders.confirm-payment');
-    Route::post('/orders/{order}/confirm-final-payment', [BakerOrderController::class, 'confirmFinalPayment'])->name('orders.confirm-final-payment');
-    Route::post('/orders/{order}/reject-payment',        [BakerOrderController::class, 'rejectPayment'])->name('orders.reject-payment');
-
+     Route::post('/orders/{order}/confirm-payment',  [BakerOrderController::class, 'confirmPayment'])->name('orders.confirm-payment');
+    Route::post('/orders/{order}/confirm-handover', [BakerOrderController::class, 'confirmHandover'])->name('orders.confirm-handover');
+    Route::post('/orders/{order}/reject-payment',   [BakerOrderController::class, 'rejectPayment'])->name('orders.reject-payment');
+    Route::post('/orders/{order}/mark-delivered',   [BakerOrderController::class, 'markDelivered'])->name('orders.mark-delivered');
   Route::get('/earnings', [BakerEarningsController::class, 'index'])->name('earnings.index');
 
   Route::get('/wallet',         [\App\Http\Controllers\Baker\BakerWalletController::class, 'index'])->name('wallet.index');

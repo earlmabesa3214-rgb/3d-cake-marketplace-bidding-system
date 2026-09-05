@@ -143,7 +143,17 @@ public function toggleRush(Request $request)
         if ($request->has('rush_fee')) {
             $baker->update(['rush_fee' => max(0, (int) $request->rush_fee)]);
         }
+        if ($request->has('accepts_delivery')) {
+            $baker->update(['accepts_delivery' => (bool) $request->accepts_delivery]);
+        }
+        if ($request->has('accepts_pickup')) {
+            $baker->update(['accepts_pickup' => (bool) $request->accepts_pickup]);
+        }
 
-        return response()->json(['ok' => true]);
+        return response()->json([
+            'ok'                => true,
+            'accepts_delivery'  => (bool) $baker->accepts_delivery,
+            'accepts_pickup'    => (bool) $baker->accepts_pickup,
+        ]);
     }
 }

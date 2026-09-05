@@ -743,9 +743,9 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                     <span style="color:var(--text-muted);font-weight:500;">Submitted</span>
                     <span style="font-weight:600;color:var(--text-dark);">{{ $request->created_at->format('M d, Y') }}</span>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:0.8rem;">
+                               <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:0.8rem;">
                     <span style="color:var(--text-muted);font-weight:500;">Fulfillment</span>
-                    <span style="font-weight:600;color:var(--caramel);">{{ $request->fulfillment_label ?? 'Delivery' }}</span>
+                    <span style="font-weight:600;color:var(--caramel);">{!! $request->fulfillment_label ?? 'Delivery' !!}</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem;font-size:0.8rem;">
                     <span style="color:var(--text-muted);font-weight:500;">Total Bids</span>

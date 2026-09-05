@@ -25,27 +25,21 @@ class OrderStatePollController extends Controller
 
         $order->refresh();
 
-        // Use the relationship properly
         $cakeRequest = CakeRequest::find($order->cake_request_id);
 
-        $down  = Payment::where('cake_request_id', $cakeRequest->id)
-                        ->where('payment_type', 'downpayment')
-                        ->first();
-        $final = Payment::where('cake_request_id', $cakeRequest->id)
-                        ->where('payment_type', 'final')
+        $payment = Payment::where('cake_request_id', $cakeRequest->id)
+                        ->where('payment_type', 'full')
                         ->first();
 
         return response()->json([
-    'order_status'   => $order->status,
-    'request_status' => $cakeRequest->status,
-    'down_status'    => $down?->status,
-    'down_escrow'    => $down?->escrow_status,
-    'final_status'   => $final?->status,
-    'final_escrow'   => $final?->escrow_status,
-    'has_cake_photo' => (bool) $order->cake_final_photo,
-    'agreed_price'   => $order->agreed_price,
-    'baker_payout'   => $order->baker_payout,
-]);
+            'order_status'    => $order->status,
+            'request_status'  => $cakeRequest->status,
+            'payment_status'  => $payment?->status,
+            'payment_escrow'  => $payment?->escrow_status,
+            'has_cake_photo'  => (bool) $order->cake_final_photo,
+            'agreed_price'    => $order->agreed_price,
+            'baker_payout'    => $order->baker_payout,
+        ]);
     }
 
     /**
@@ -62,25 +56,20 @@ class OrderStatePollController extends Controller
                         ->latest()
                         ->first();
 
-        $down  = Payment::where('cake_request_id', $cakeRequest->id)
-                        ->where('payment_type', 'downpayment')
-                        ->first();
-        $final = Payment::where('cake_request_id', $cakeRequest->id)
-                        ->where('payment_type', 'final')
+        $payment = Payment::where('cake_request_id', $cakeRequest->id)
+                        ->where('payment_type', 'full')
                         ->first();
 
-       return response()->json([
-    'request_status'     => $cakeRequest->status,
-    'baker_order_status' => $bakerOrder?->status,
-    'bids_count'         => $cakeRequest->bids()->count(),
-    'last_bid_id'        => $cakeRequest->bids()->max('id') ?? 0,
-    'down_status'        => $down?->status,
-    'down_escrow'        => $down?->escrow_status,
-    'final_status'       => $final?->status,
-    'final_escrow'       => $final?->escrow_status,
-    'has_cake_photo'     => (bool) $bakerOrder?->cake_final_photo,
-    'baker_order_id'     => $bakerOrder?->id,
-    'agreed_price'       => $bakerOrder?->agreed_price,
-]);
+        return response()->json([
+            'request_status'     => $cakeRequest->status,
+            'baker_order_status' => $bakerOrder?->status,
+            'bids_count'         => $cakeRequest->bids()->count(),
+            'last_bid_id'        => $cakeRequest->bids()->max('id') ?? 0,
+            'payment_status'     => $payment?->status,
+            'payment_escrow'     => $payment?->escrow_status,
+            'has_cake_photo'     => (bool) $bakerOrder?->cake_final_photo,
+            'baker_order_id'     => $bakerOrder?->id,
+            'agreed_price'       => $bakerOrder?->agreed_price,
+        ]);
     }
 }

@@ -106,7 +106,7 @@ public function approveWithdrawal(Request $request, WalletWithdrawal $withdrawal
 
         foreach ($pendingOrders as $order) {
             try {
-                $escrow->holdDownpayment($order);
+              $escrow->holdFullPayment($order);
             } catch (\Exception $e) {
                 // Still not enough balance, skip
             }

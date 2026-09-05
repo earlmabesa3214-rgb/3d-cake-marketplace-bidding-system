@@ -9,11 +9,13 @@ class BakerOrder extends Model
 {
     use HasFactory;
 
-   protected $fillable = [
+     protected $fillable = [
     'baker_id',
     'cake_request_id',
     'bid_id',
     'agreed_price',
+    'delivery_fee',
+    'delivery_distance_km',
     'status',
     'completed_at',
     'cancelled_at',
@@ -22,9 +24,11 @@ class BakerOrder extends Model
 ];
 
     protected $casts = [
-        'agreed_price' => 'decimal:2',
-        'completed_at' => 'datetime',
-        'cancelled_at' => 'datetime',
+        'agreed_price'          => 'decimal:2',
+        'delivery_fee'          => 'decimal:2',
+        'delivery_distance_km'  => 'decimal:2',
+        'completed_at'          => 'datetime',
+        'cancelled_at'          => 'datetime',
     ];
 
     public function baker()       { return $this->belongsTo(User::class, 'baker_id'); }
