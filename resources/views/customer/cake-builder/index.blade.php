@@ -1202,8 +1202,8 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 </div>
                 </div>
              <div id="cakeTierSection">
-                   <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round &amp; Square only</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Applies to <strong>Round</strong> and <strong>Square</strong> as of now.</p>
+                         <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round, Square &amp; Heart only</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Applies to <strong>Round</strong>, <strong>Square</strong> and <strong>Heart</strong> as of now.</p>
                 <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
                     <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
                     <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
@@ -2612,6 +2612,24 @@ function getRosetteFileMap(slug){
             'Cluster Left':  'rosette_cluster_left_heart',
         };
     }
+      if(slug === 'two-tier_heart'){
+        return {
+            'Border':        'rosette_two-tier_heart',
+            'Full Top':      'rosette_top_two-tier_heart',
+            'Sides':         'rosette_sides_two-tier_heart',
+            'Cluster Right': 'rosette_cluster_right_two-tier_heart',
+            'Cluster Left':  'rosette_cluster_left_two-tier_heart',
+        };
+    }
+    if(slug === 'three-tier_heart'){
+        return {
+            'Border':        'rosette_three-tier_heart',
+            'Full Top':      'rosette_top_three-tier_heart',
+            'Sides':         'rosette_sides_three-tier_heart',
+            'Cluster Right': 'rosette_cluster_right_three-tier_heart',
+            'Cluster Left':  'rosette_cluster_left_three-tier_heart',
+        };
+    }
     if(slug === 'two-tier'){
         return {
             'Border':        'rosette_two-tier',
@@ -3827,19 +3845,170 @@ function positionGroup(group, inches, heightMult){
     const box3=new THREE.Box3().setFromObject(group), midY=(box3.min.y+box3.max.y)*.5;
     group.position.y-=midY;
 }
-function positionMultiGroup(inches, ...groups){
+function positionMultiGroup(inches, heightMult, ...groups){
     groups.forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
     const cb=new THREE.Box3(); groups.forEach(g=>cb.expandByObject(g));
     const cs=cb.getSize(new THREE.Vector3()), hSize=Math.max(cs.x,cs.z);
     const targetDiameter = inchesToWorldScale(inches || 6);
     const scale=hSize>0.0001?targetDiameter/hSize:1.0;
-    groups.forEach(g=>{g.scale.set(scale,scale,scale);g.updateMatrixWorld(true);});
+    groups.forEach(g=>{g.scale.set(scale,scale*(heightMult||1.0),scale);g.updateMatrixWorld(true);});
     const sb=new THREE.Box3(); groups.forEach(g=>sb.expandByObject(g));
     const ox=-sb.getCenter(new THREE.Vector3()).x, oy=-sb.min.y, oz=-sb.getCenter(new THREE.Vector3()).z;
-    groups.forEach(g=>{g.position.set(ox,oy,oz);g.updateMatrixWorld(true);});
+       groups.forEach(g=>{g.position.set(ox,oy,oz);g.updateMatrixWorld(true);});
     const fb=new THREE.Box3(); groups.forEach(g=>fb.expandByObject(g));
     const midY=(fb.min.y+fb.max.y)*.5;
     groups.forEach(g=>{g.position.y-=midY;});
+}
+
+// ── Splits a loaded GLB into its separate top-level tier objects (each
+// Blender object — e.g. BézierCircle.001/.002/.055 — becomes one top-level
+// child of the loaded scene), sorted bottom-to-top by vertical center. ──
+function getTierGroups(rootGroup){
+    rootGroup.updateMatrixWorld(true);
+    const candidates = rootGroup.children.filter(c=>{
+        let hasMesh=false; c.traverse(n=>{ if(n.isMesh) hasMesh=true; });
+        return hasMesh;
+    });
+    candidates.forEach(c=>c.updateMatrixWorld(true));
+    candidates.sort((a,b)=>{
+        const ba=new THREE.Box3().setFromObject(a), bb=new THREE.Box3().setFromObject(b);
+        return ((ba.min.y+ba.max.y)/2)-((bb.min.y+bb.max.y)/2);
+    });
+    return candidates;
+}
+// Loads and positions base_<slug>.glb, returning its per-tier objects
+// sorted bottom-to-top. Used as the reference proportions that any other
+// multi-tier heart mesh (fondant shell, drip icicles, etc.) can be fitted
+// against, tier-by-tier.
+async function getBaseHeartTiers(slug, inches, heightMult){
+    const baseRef = await loadGLB(`/models/base_${slug}.glb`).catch(()=>null);
+    if(!baseRef || !glbHasMesh(baseRef)) return null;
+    positionGroup(baseRef, inches, heightMult);
+    baseRef.updateMatrixWorld(true);
+    const tiers = getTierGroups(baseRef);
+    return tiers.length ? tiers : null;
+}
+// Fits each tier object of `targetGroup` (fondant shell, drip icicles, etc.)
+// to the matching tier's diameter/height in `baseTiers`, tier-by-tier —
+// instead of scaling the whole mesh as one block, which stretches/squashes
+// icicle rings or fondant shape unevenly relative to each tier's real size.
+// opts.diamMult widens the target slightly beyond the base tier's own
+// diameter (useful for drip, which should hang a bit outside the shell).
+// opts.yNudge shifts each tier up/down as a fraction of that tier's height.
+function fitGroupTiersToBaseTiers(targetGroup, baseTiers, opts){
+    if(!targetGroup || !baseTiers || baseTiers.length===0) return false;
+    targetGroup.position.set(0,0,0); targetGroup.rotation.set(0,0,0); targetGroup.scale.set(1,1,1);
+    targetGroup.updateMatrixWorld(true);
+    const targetTiers = getTierGroups(targetGroup);
+    if(targetTiers.length===0 || targetTiers.length!==baseTiers.length) return false;
+
+    const diamMult = (opts && opts.diamMult) || 1.0;
+    // yNudge can be a single number (applied to every tier) OR an array with
+    // one value per tier (index 0 = bottom tier, matching baseTiers' bottom-
+    // to-top order) — use the array form when different tiers need different
+    // amounts of vertical correction.
+    const yNudgeOpt = (opts && opts.yNudge) || 0;
+    const yNudgeIsArray = Array.isArray(yNudgeOpt);
+
+    baseTiers.forEach((baseTier,i)=>{
+        const targetTier = targetTiers[i];
+        const baseBox = new THREE.Box3().setFromObject(baseTier);
+        const baseDiam = Math.max(baseBox.max.x-baseBox.min.x, baseBox.max.z-baseBox.min.z);
+        const baseHeight = baseBox.max.y - baseBox.min.y;
+
+        targetTier.position.set(0,0,0); targetTier.rotation.set(0,0,0); targetTier.scale.set(1,1,1);
+        targetTier.updateMatrixWorld(true);
+        const rawBox = new THREE.Box3().setFromObject(targetTier);
+        const rawDiam = Math.max(rawBox.max.x-rawBox.min.x, rawBox.max.z-rawBox.min.z);
+        const rawHeight = rawBox.max.y - rawBox.min.y;
+
+        const scaleXZ = rawDiam>0.0001 ? (baseDiam*diamMult)/rawDiam : 1.0;
+        const scaleY  = rawHeight>0.0001 ? baseHeight/rawHeight : scaleXZ;
+        targetTier.scale.set(scaleXZ, scaleY, scaleXZ);
+        targetTier.updateMatrixWorld(true);
+
+        const scaledBox = new THREE.Box3().setFromObject(targetTier);
+        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+        const baseCenter = baseBox.getCenter(new THREE.Vector3());
+        const yNudgeFrac = yNudgeIsArray ? (yNudgeOpt[i] || 0) : yNudgeOpt;
+        targetTier.position.set(
+            baseCenter.x - scaledCenter.x,
+            (baseBox.min.y - scaledBox.min.y) + (baseHeight * yNudgeFrac),
+            baseCenter.z - scaledCenter.z
+        );
+        targetTier.updateMatrixWorld(true);
+    });
+    return true;
+}
+
+function fitRingOverlayTiersToBaseTiers(overlayGroup, baseTiers, diamMult, extraSinkFrac, perTierDiamMult){
+    if(!overlayGroup || !baseTiers || baseTiers.length===0) return false;
+    overlayGroup.position.set(0,0,0); overlayGroup.rotation.set(0,0,0); overlayGroup.scale.set(1,1,1);
+    overlayGroup.updateMatrixWorld(true);
+    let overlayTiers = getTierGroups(overlayGroup);
+
+    // Some overlay exports (e.g. Sugar Icing for tiered Heart cakes) ship as
+    // ONE combined ring mesh instead of one object per tier — unlike the base
+    // cake and the Shell Border frosting file, which ARE split per tier. When
+    // that happens, clone the single piece once per base tier so each tier
+    // still gets its own independently scaled/positioned ring, instead of
+    // silently falling back to a single flat fit for the whole cake (which is
+    // why per-tier nudge values had no visible effect before this fix).
+    if(overlayTiers.length === 1 && baseTiers.length > 1){
+        const templateSrc = overlayTiers[0];
+        const clones = [];
+        for(let i=0;i<baseTiers.length;i++){
+            const clone = i===0 ? templateSrc : templateSrc.clone(true);
+            clone.traverse(node=>{
+                if(node.isMesh){
+                    node.geometry = node.geometry.clone();
+                    if(Array.isArray(node.material)) node.material = node.material.map(m=>m.clone());
+                    else if(node.material) node.material = node.material.clone();
+                }
+            });
+            if(i>0) overlayGroup.add(clone);
+            clones.push(clone);
+        }
+        overlayGroup.updateMatrixWorld(true);
+        overlayTiers = clones;
+    }
+
+    if(overlayTiers.length===0 || overlayTiers.length!==baseTiers.length) return false;
+
+    baseTiers.forEach((baseTier,i)=>{
+        const ringTier = overlayTiers[i];
+        const baseBox = new THREE.Box3().setFromObject(baseTier);
+        const baseDiam = Math.max(baseBox.max.x-baseBox.min.x, baseBox.max.z-baseBox.min.z);
+
+        ringTier.position.set(0,0,0); ringTier.rotation.set(0,0,0); ringTier.scale.set(1,1,1);
+        ringTier.updateMatrixWorld(true);
+        const rawBox = new THREE.Box3().setFromObject(ringTier);
+        const rawDiam = Math.max(rawBox.max.x-rawBox.min.x, rawBox.max.z-rawBox.min.z);
+        const tierDiamBoost = Array.isArray(perTierDiamMult) ? (perTierDiamMult[i] || 1.0) : 1.0;
+        const scale = rawDiam>0.0001 ? (baseDiam*(diamMult||1.0)*tierDiamBoost)/rawDiam : 1.0;
+        ringTier.scale.setScalar(scale);
+        ringTier.updateMatrixWorld(true);
+
+        const scaledBox = new THREE.Box3().setFromObject(ringTier);
+        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+        const baseCenter = baseBox.getCenter(new THREE.Vector3());
+        const sink = (scaledBox.max.y - scaledBox.min.y) * 0.12;
+        // Extra downward push, as a fraction of THIS tier's own diameter — lets
+        // Shell Border / Sugar Icing sit lower on the tier than the default 12%
+        // sink alone allows, tuned independently per shape/overlay type/tier.
+        // extraSinkFrac can be a single number (every tier) OR an array with one
+        // value per tier (index 0 = bottom, matching baseTiers order) — needed
+        // whenever different tiers require different vertical correction.
+        const extraSinkForTier = Array.isArray(extraSinkFrac) ? (extraSinkFrac[i] || 0) : (extraSinkFrac || 0);
+        const extraSink = baseDiam * extraSinkForTier;
+        ringTier.position.set(
+            baseCenter.x - scaledCenter.x,
+            baseBox.max.y - scaledBox.min.y - sink - extraSink,
+            baseCenter.z - scaledCenter.z
+        );
+        ringTier.updateMatrixWorld(true);
+    });
+    return true;
 }
 function alignDualDigits(gT,gU,wrapper){
     [gT,gU].forEach(g=>{g.position.set(0,0,0);g.rotation.set(0,0,0);g.scale.set(1,1,1);g.updateMatrixWorld(true);});
@@ -4021,7 +4190,7 @@ if(isNumber){
         const numRosetteKey = numRosetteOnKey ? `_rosette_${(rosettePlacement||'Border').replace(/\s+/g,'')}_${rosetteColor||'ni'}` : '_norosette';
         newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}_${numStyleKey}${numTexKey}${numRosetteKey}`;
 } else {
-        const slug=shape==='Two-tier Square'?'two-tier_square':shape==='Three-tier Square'?'three-tier_square':(SHAPE_SLUG[shape]||'round');
+ const slug=shape==='Two-tier Square'?'two-tier_square':shape==='Three-tier Square'?'three-tier_square':shape==='Two-tier Heart'?'two-tier_heart':shape==='Three-tier Heart'?'three-tier_heart':(SHAPE_SLUG[shape]||'round');
       const sizeKey=(shape==='Round')?`_${state.roundSize||6}in`:'';
 const shellBorderKey = (frostingsArr.includes('Semi-naked Style') && frostingsArr.includes('Smooth Buttercream')) ? '_withshell' : '_noshell';
 const _cakeStyleKey = frostingsArr.includes('Semi-naked Style') ? 'sn' : frostingsArr.includes('Fondant Smooth') ? 'fn' : 'bc';
@@ -4541,20 +4710,28 @@ sceneRoot.add(baseWrapper);
         } catch(e){ console.warn('Number GLB error',e); }
         if(!usedGLB){ showNoPreview('Number'); }
     } else {
-const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : shape === 'Two-tier Square' ? 'two-tier_square' : shape === 'Three-tier Square' ? 'three-tier_square' : (SHAPE_SLUG[shape]||'round');
+const slug      = shape === 'Two-tier Round' ? 'two-tier' : shape === 'Three-tier Round' ? 'three-tier' : shape === 'Two-tier Square' ? 'two-tier_square' : shape === 'Three-tier Square' ? 'three-tier_square' : shape === 'Two-tier Heart' ? 'two-tier_heart' : shape === 'Three-tier Heart' ? 'three-tier_heart' : (SHAPE_SLUG[shape]||'round');
 const originalShape = shape;
 _isBundtActive = (slug === 'bundt');
-// Vertical stretch factor applied ONLY to the Three-tier Round cake.
-// 1.0 = original height, 1.15 = 15% taller, etc. Footprint (diameter) is
-// untouched — only the Y axis grows. Every overlay (Shell Border, Sugar
-// Icing, Textured, Drip, Rosette) measures itself off the base cake's
-// already-scaled box, so they all adapt automatically.
+// Heart (single, two-tier, and three-tier) all get the same extra height
+// stretch so each tier matches the height of a single round cake.
+const HEART_HEIGHT_MULT = (originalShape === 'Heart' || originalShape === 'Two-tier Heart' || originalShape === 'Three-tier Heart')
+    ? (window._heartHeightMultOverride ?? 1.3)
+    : 1.0;
 const THREE_TIER_HEIGHT_MULT = (shape === 'Three-tier Round') ? 1.2 : 1.0;
 const needFrost = shouldLoadFrostingGLB(frostingsArr);
 const hasFondant    = frostingsArr.includes('Fondant Smooth');
 const hasSemiNaked  = frostingsArr.includes('Semi-naked Style');
 const hasSemiNakedR = hasSemiNaked;
-const semiNakedSlug = (shape === 'Two-tier Round') ? 'two-tier' : (shape === 'Three-tier Round') ? 'three-tier' : (shape === 'Heart') ? 'heart' : (shape === 'Square') ? 'square' : 'round';
+const semiNakedSlug = (shape === 'Two-tier Round') ? 'two-tier'
+                     : (shape === 'Three-tier Round') ? 'three-tier'
+                     : (shape === 'Two-tier Square') ? 'square_two-tier'
+                     : (shape === 'Three-tier Square') ? 'square_three-tier'
+                     : (shape === 'Two-tier Heart') ? 'heart_two-tier'
+                     : (shape === 'Three-tier Heart') ? 'heart_three-tier'
+                     : (shape === 'Heart') ? 'heart'
+                     : (shape === 'Square') ? 'square'
+                     : 'round';
 const baseURL  = (slug === 'bundt')
     ? (hasSemiNaked ? `/models/bundt_seminaked.glb` : `/models/bundt.glb`)
     : hasSemiNaked
@@ -4568,9 +4745,12 @@ const hasTextured = frostingsArr.includes('Textured Buttercream');
 // suffix — this lets Shell Border + Textured be mixed from independent
 // per-shape files (frosting_<slug>_smooth.glb + frosting_<slug>_textured.glb)
 // without needing a dedicated combined "smoothandtextured" file per shape/tier.
+const fondantSlugOverride = (slug === 'two-tier_square') ? 'square_two-tier'
+                           : (slug === 'three-tier_square') ? 'square_three-tier'
+                           : slug;
 const frostURL = hasFondant
-    ? `/models/fondant_${slug}.glb`
-  : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart' || slug === 'two-tier_square' || slug === 'three-tier_square'))
+    ? `/models/fondant_${fondantSlugOverride}.glb`
+    : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart' || slug === 'two-tier_square' || slug === 'three-tier_square' || slug === 'two-tier_heart' || slug === 'three-tier_heart'))
             ? (hasShellBorder ? `/models/frosting_${slug}_smooth.glb` : null)
   : (isSugarIcing && !hasSemiNaked)
             ? null
@@ -4593,10 +4773,12 @@ const activeCakeStyle = frostingsArr.find(f => ['Semi-naked Style','Fondant Smoo
 const icingSlugOverride = (slug === 'two-tier_square') ? 'square_two-tier'
                          : (slug === 'three-tier_square') ? 'square_three-tier'
                          : slug;
+const isSquareTier = (slug === 'two-tier_square' || slug === 'three-tier_square');
+const isHeartTierIcing = (slug === 'two-tier_heart' || slug === 'three-tier_heart');
 const icingURL = isSugarIcing
     ? (slug === 'bundt'
         ? `/models/bundt_icing.glb`
-        : activeCakeStyle === 'Semi-naked Style' && !hasShellBorder
+        : activeCakeStyle === 'Semi-naked Style' && !hasShellBorder && !isSquareTier && !isHeartTierIcing
             ? `/models/icing_${icingSlugOverride}_seminaked.glb`
             : `/models/icing_${icingSlugOverride}.glb`)
     : null;
@@ -4610,9 +4792,16 @@ const dripURL = hasDrip
     ? (slug === 'bundt'
         ? `/models/bundt_drip.glb`
         : hasFondant
-            ? `/models/fondant_drip_${slug}.glb`
+            ? (slug === 'heart' ? `/models/drip_heart.glb`
+                : slug === 'two-tier_heart' ? `/models/drip_two-tier_heart.glb`
+                : slug === 'three-tier_heart' ? `/models/drip_three-tier_heart.glb`
+                : `/models/fondant_drip_${slug}.glb`)
             : hasSemiNaked
-                ? (slug === 'heart' ? `/models/drip_heart_round.glb` : `/models/drip_seminaked_${slug}.glb`)
+                ? (slug === 'heart' ? `/models/drip_heart.glb`
+                    : slug === 'two-tier_heart' ? `/models/drip_two-tier_heart.glb`
+                    : slug === 'three-tier_heart' ? `/models/drip_three-tier_heart.glb`
+                    : isSquareTier ? `/models/drip_${dripSlugOverride}.glb`
+                    : `/models/drip_seminaked_${slug}.glb`)
                 : `/models/drip_${dripSlugOverride}.glb`)
     : null;
 const rosetteActive = frostingsArr.includes('Rosettes') && !hasFondant;
@@ -4631,7 +4820,7 @@ rosetteURLs.forEach(u=>urlList.push(u));
 const results  = await Promise.allSettled(urlList.map(u=>loadGLB(u)));
 const baseGLB  = results[0]?.status==='fulfilled' ? results[0].value : null;
 const frostGLB = idxFrost>=0 && results[idxFrost]?.status==='fulfilled' ? results[idxFrost].value : null;
-if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${slug}.glb`);
+if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${fondantslugoverride}.glb`);
 const icingGLB = idxIcing>=0 && results[idxIcing]?.status==='fulfilled' ? results[idxIcing].value : null;
 const dripGLB  = idxDrip >=0 && results[idxDrip] ?.status==='fulfilled' ? results[idxDrip].value  : null;
 const textureGLB = idxTexture>=0 && results[idxTexture]?.status==='fulfilled' ? results[idxTexture].value : null;
@@ -4704,24 +4893,28 @@ function fitRosetteToCake(cakeRef){
         const rawRoseDiam = Math.max(rawRoseBox.max.x-rawRoseBox.min.x, rawRoseBox.max.z-rawRoseBox.min.z);
         const cakeBoxNow  = new THREE.Box3().setFromObject(cakeRef);
         const cakeDiamNow = Math.max(cakeBoxNow.max.x-cakeBoxNow.min.x, cakeBoxNow.max.z-cakeBoxNow.min.z);
-          const ROSETTE_SIDES_ADJUST = {
+        const ROSETTE_SIDES_ADJUST = {
             'round':      { diamMult: 1.08, yNudge: 0 },
             'square':     { diamMult: 1.1, yNudge: 0 },
-            'heart':      { diamMult: 1.05, yNudge: 0 },
-            'two-tier':   { diamMult: 1.14, yNudge: 0.05 },
+            'heart':      { diamMult: 1.05, yNudge: 0.02 },
+            'two-tier':   { diamMult: 1.1, yNudge: 0.05 },
             'three-tier': { diamMult: 1.10, yNudge: 0.07 },
-            'two-tier_square':   { diamMult: 1.14, yNudge: 0.05 },
+            'two-tier_square':   { diamMult: 1.10, yNudge: 0.05 },
             'three-tier_square': { diamMult: 1.10, yNudge: 0.07 },
+            'two-tier_heart':    { diamMult: 1.06, yNudge: 0.06 },
+            'three-tier_heart':  { diamMult: 1.06, yNudge: 0.09, zNudge:  0.01, xNudge: 0.01},
         };
-        const ROSETTE_FULLTOP_ADJUST = {
-            heart:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
-            round:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
-            square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
-            'two-tier': { diamMult: 0.8, xNudge: 0, zNudge: 0 },
-            'three-tier': { diamMult: 0.53, xNudge: 0, zNudge: 0 },
-            'two-tier_square':   { diamMult: 0.7, xNudge: 0, zNudge: 0 },
-            'three-tier_square': { diamMult: 0.43, xNudge: 0, zNudge: 0 },
-        };
+   const ROSETTE_FULLTOP_ADJUST = {
+    heart:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+    round:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+    square: { diamMult: 1.0, xNudge: 0, zNudge: 0 },
+    'two-tier': { diamMult: 0.8, xNudge: 0, zNudge: 0 },
+    'three-tier': { diamMult: 0.53, xNudge: 0, zNudge: 0 },
+    'two-tier_square':   { diamMult: 0.7, xNudge: 0, zNudge: 0 },
+    'three-tier_square': { diamMult: 0.43, xNudge: 0, zNudge: 0 },
+    'two-tier_heart':    { diamMult: 0.56, xNudge: 0, zNudge: 0 },
+    'three-tier_heart':  { diamMult: 0.30, xNudge: 0, zNudge: 0.028 },
+};
         const ROSETTE_CLUSTER_RIGHT_ADJUST = {
             heart:  { diamMult: 0.8, xNudge: 0, zNudge: 0 },
             round:  { diamMult: 1.0, xNudge: 0, zNudge: 0 },
@@ -4730,6 +4923,11 @@ function fitRosetteToCake(cakeRef){
             'three-tier': { diamMult: 0.5, xNudge: -0.1, zNudge: 0 },
             'two-tier_square':   { diamMult: 0.73, xNudge: -0.05, zNudge: 0 },
             'three-tier_square': { diamMult: 0.45, xNudge: -0.13, zNudge: 0 },
+            'two-tier_heart':    { diamMult: 0.47, xNudge: -0.1, zNudge: 0.02 },
+                'three-tier_heart':  { diamMult: 0.2, xNudge: -0.28, zNudge: 0.023 },
+
+            
+            
         };
         const ROSETTE_CLUSTER_LEFT_ADJUST = {
             heart:  { diamMult: 0.8, xNudge: 0, zNudge: 0 },
@@ -4739,12 +4937,18 @@ function fitRosetteToCake(cakeRef){
             'three-tier': { diamMult: 0.5, xNudge: 0.1, zNudge: 0 },
             'two-tier_square':   { diamMult: 0.73, xNudge: 0.05, zNudge: 0 },
             'three-tier_square': { diamMult: 0.45, xNudge: 0.13, zNudge: 0 },
+                        'two-tier_heart':    { diamMult: 0.47, xNudge: 0.08, zNudge: 0.02 },
+                                        'three-tier_heart':  { diamMult: 0.23, xNudge: 0.275, zNudge: 0.02 },
+
+
         };
-      const ROSETTE_BORDER_ADJUST = {
+   const ROSETTE_BORDER_ADJUST = {
     'two-tier':   { diamMult: 1.05, yNudge: 0.24 },
     'three-tier': { diamMult: 1.05, yNudge: 0.38 },
     'two-tier_square':   { diamMult: 1.0, yNudge: 0.19 },
     'three-tier_square': { diamMult: 1.05, yNudge: 0.37 },
+    'two-tier_heart':    { diamMult: 1.02, yNudge: 0.125 },
+    'three-tier_heart':  { diamMult: 1.02, yNudge: 0.23 },
 };
         const roseDiamMult = (placement === 'Sides')
             ? (ROSETTE_SIDES_ADJUST[slug]?.diamMult ?? 1.14)
@@ -4779,70 +4983,249 @@ function fitRosetteToCake(cakeRef){
         const roseSink = scaledRoseSize.y * 0.12;
 
         if(placement === 'Cluster Right' || placement === 'Cluster Left'){
-            const clusterOffset = cakeRadiusNow * 0.42;
-            targetX += (placement === 'Cluster Right' ? clusterOffset : -clusterOffset);
-            const clusterAdjust = (placement === 'Cluster Right' ? ROSETTE_CLUSTER_RIGHT_ADJUST : ROSETTE_CLUSTER_LEFT_ADJUST)[slug] || { xNudge:0, zNudge:0 };
-            targetX += cakeDiamNow * clusterAdjust.xNudge;
-            targetZ += cakeDiamNow * clusterAdjust.zNudge;
-            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
+    const clusterOffset = cakeRadiusNow * 0.42;
+    targetX += (placement === 'Cluster Right' ? clusterOffset : -clusterOffset);
+    const clusterAdjust = (placement === 'Cluster Right' ? ROSETTE_CLUSTER_RIGHT_ADJUST : ROSETTE_CLUSTER_LEFT_ADJUST)[slug] || { xNudge:0, zNudge:0 };
+    targetX += cakeDiamNow * clusterAdjust.xNudge;
+    targetZ += cakeDiamNow * clusterAdjust.zNudge;
+    targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
         } else if(placement === 'Sides'){
-            const sidesSink = scaledRoseSize.y * 0.90;
-            const sidesYNudge = ROSETTE_SIDES_ADJUST[slug]?.yNudge ?? 0;
-            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - sidesSink - (cakeDiamNow * sidesYNudge);
-        } else if(placement === 'Border' && ROSETTE_BORDER_ADJUST[slug]){
-            const bAdjust = ROSETTE_BORDER_ADJUST[slug];
-            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink - (cakeDiamNow * bAdjust.yNudge);
-        } else {
-            targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
-        }
+    const sidesSink = scaledRoseSize.y * 0.90;
+    const sidesAdjust = ROSETTE_SIDES_ADJUST[slug] || {};
+    const sidesYNudge = sidesAdjust.yNudge ?? 0;
+    const sidesZNudge = sidesAdjust.zNudge ?? 0;
+    targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - sidesSink - (cakeDiamNow * sidesYNudge);
+    targetZ += cakeDiamNow * sidesZNudge;
+} else if(placement === 'Border' && ROSETTE_BORDER_ADJUST[slug]){
+    const bAdjust = ROSETTE_BORDER_ADJUST[slug];
+    targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink - (cakeDiamNow * bAdjust.yNudge);
+} else if(placement === 'Full Top' && ROSETTE_FULLTOP_ADJUST[slug]){
+    const ftAdjust = ROSETTE_FULLTOP_ADJUST[slug];
+    targetX += cakeDiamNow * (ftAdjust.xNudge || 0);
+    targetZ += cakeDiamNow * (ftAdjust.zNudge || 0);
+    targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink - (cakeDiamNow * (ftAdjust.yNudge || 0));
+} else {
+    targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
+}
         child.position.set(targetX, targetY, targetZ);
         child.updateMatrixWorld(true);
     });
 }
 
+// ── Per-tier correction for the single-piece heart Border rosette ──
+// rosette_two-tier_heart.glb / rosette_three-tier_heart.glb is ONE continuous
+// mesh whose baked-in tier spacing doesn't match the actual rendered cake's
+// tier proportions — fitRosetteToCake above only anchors the TOP of the whole
+// mesh to the cake's top, so only the topmost ring lands correctly; lower
+// rings drift. This clusters the mesh's sub-meshes by height into tierCount
+// groups (same dynamic-gap approach used for Sugar Icing) and nudges each
+// tier's ring independently. nudgeFractions is bottom-to-top; each value is
+// a fraction of the cake's own diameter (negative = move down, positive = up).
+function nudgeRosetteBorderPerTier(rosetteGroup, cakeRef, tierCount, nudgeFractions){
+    if(!rosetteGroup || !cakeRef) return;
+    rosetteGroup.updateMatrixWorld(true);
+    const meshes = [];
+    rosetteGroup.traverse(c=>{ if(c.isMesh) meshes.push(c); });
+    if(meshes.length < tierCount) return;
+
+    const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+    const cakeDiam = Math.max(cakeBox.max.x-cakeBox.min.x, cakeBox.max.z-cakeBox.min.z);
+
+    const meshCenters = meshes.map(mesh=>{
+        const mBox = new THREE.Box3().setFromObject(mesh);
+        return { mesh, centerY: (mBox.min.y + mBox.max.y) / 2 };
+    });
+    meshCenters.sort((a,b)=>a.centerY-b.centerY);
+
+    const numBoundariesNeeded = tierCount - 1;
+    let boundaries = [];
+    if(meshCenters.length > tierCount){
+        const gaps = [];
+        for(let i=0;i<meshCenters.length-1;i++){
+            gaps.push({ idx:i, size: meshCenters[i+1].centerY - meshCenters[i].centerY });
+        }
+        gaps.sort((a,b)=>b.size-a.size);
+        const topGaps = gaps.slice(0, numBoundariesNeeded).sort((a,b)=>a.idx-b.idx);
+        boundaries = topGaps.map(g => (meshCenters[g.idx].centerY + meshCenters[g.idx+1].centerY) / 2);
+    }
+    if(boundaries.length !== numBoundariesNeeded) return; // couldn't reliably cluster — leave as-is
+
+    meshes.forEach(mesh=>{
+        const mBox = new THREE.Box3().setFromObject(mesh);
+        const mCenterY = (mBox.min.y + mBox.max.y) / 2;
+        let tierIdx = 0;
+        for(let i=0;i<boundaries.length;i++){
+            if(mCenterY > boundaries[i]) tierIdx = i+1;
+        }
+        mesh.position.y += cakeDiam * (nudgeFractions[tierIdx] || 0);
+    });
+    rosetteGroup.updateMatrixWorld(true);
+}
 if(toPos.length > 0 || hasFondant){
             sceneRoot.updateMatrixWorld(true);
-const _inches = (shape==='Round') ? (state.roundSize||6) : (shape==='Heart') ? 7.5 : (shape==='Number') ? 5 : 6;
-
+const _inches = (shape==='Round') ? (state.roundSize||6) : (shape==='Heart' || shape==='Two-tier Heart' || shape==='Three-tier Heart') ? 7.5 : (shape==='Number') ? 5 : 6;
 if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                 // ── FONDANT: use positionGroup for consistent sizing ──
-                currentFrost.position.set(0,0,0); currentFrost.rotation.set(0,0,0); currentFrost.scale.set(1,1,1);
+                         currentFrost.position.set(0,0,0); currentFrost.rotation.set(0,0,0); currentFrost.scale.set(1,1,1);
                 currentFrost.updateMatrixWorld(true);
 
-                // Strip any stray floating mesh (e.g. a leftover plate/lid baked
-                // into fondant_square.glb, fondant_heart.glb, etc.) before sizing.
-                stripFloatingTopMesh(currentFrost, `fondant_${slug}`);
-                currentFrost.updateMatrixWorld(true);
+                              // Skip floating-mesh cleanup for multi-tier cakes — the top tier's
+                // bottom sits well above the bottom tier's top (with a middle tier in
+                // between), which this single-reference check misreads as a stray
+                // floating mesh and incorrectly strips it, leaving three-tier fondant
+                // cakes looking like two-tier.
+                if(state.tier === 'Single'){
+                    stripFloatingTopMesh(currentFrost, `fondant_${slug}`);
+                    currentFrost.updateMatrixWorld(true);
+                }
 
-                // Scale using the same logic as normal cakes
-                positionGroup(currentFrost, _inches);
+                // Multi-tier fondant Heart is a separately-authored model whose
+                // per-tier proportions don't naturally match base_two-tier_heart.glb /
+                // base_three-tier_heart.glb. Match each tier's diameter/height
+                // independently against its equivalent Smooth BC tier instead of
+                // scaling the whole fondant mesh as one block. Computed once here
+                // and reused below for the drip icicles too.
+                let _heartBaseTiers = null;
+                if(slug === 'two-tier_heart' || slug === 'three-tier_heart'){
+                    _heartBaseTiers = await getBaseHeartTiers(slug, _inches, HEART_HEIGHT_MULT);
+                }
+                let _fondantTiersMatched = false;
+                if(_heartBaseTiers){
+                    _fondantTiersMatched = fitGroupTiersToBaseTiers(currentFrost, _heartBaseTiers);
+                }
+                if(!_fondantTiersMatched){
+                    positionGroup(currentFrost, _inches, HEART_HEIGHT_MULT);
+                }
                 currentFrost.updateMatrixWorld(true);
+                const HEART_FONDANT_DRIP_NUDGE_MAP = {
+                    'heart':             { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'two-tier_heart':    { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'three-tier_heart':  { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                };
+                const HEART_FONDANT_DRIP_NUDGE = HEART_FONDANT_DRIP_NUDGE_MAP[slug];
+                // Multi-tier heart drip icicles are exported per-tier (same as the
+                // fondant shell) — fit each tier's icicle ring to its matching base
+                // tier instead of scaling the whole drip mesh as one block, or the
+                // rings end up unevenly stretched/squashed on each tier.
+                let _dripTiersMatched = false;
+                if(_heartBaseTiers && currentDrip && glbHasMesh(currentDrip)){
+                    _dripTiersMatched = fitGroupTiersToBaseTiers(currentDrip, _heartBaseTiers, { diamMult: 1.02, yNudge: 0.01 });
+                }
+                if(!_dripTiersMatched && HEART_FONDANT_DRIP_NUDGE && currentDrip && glbHasMesh(currentDrip)){
+                    currentDrip.position.set(0,0,0); currentDrip.rotation.set(0,0,0); currentDrip.scale.set(1,1,1);
+                    currentDrip.updateMatrixWorld(true);
+                    const frostBoxHF  = new THREE.Box3().setFromObject(currentFrost);
+                    const frostDiamHF = Math.max(frostBoxHF.max.x-frostBoxHF.min.x, frostBoxHF.max.z-frostBoxHF.min.z);
+                    const rawDripBoxHF  = new THREE.Box3().setFromObject(currentDrip);
+                    const rawDripDiamHF = Math.max(rawDripBoxHF.max.x-rawDripBoxHF.min.x, rawDripBoxHF.max.z-rawDripBoxHF.min.z);
+                    const dripScaleHF = rawDripDiamHF > 0.0001 ? (frostDiamHF * HEART_FONDANT_DRIP_NUDGE.diamMult) / rawDripDiamHF : 1.0;
+                    currentDrip.scale.setScalar(dripScaleHF);
+                    currentDrip.updateMatrixWorld(true);
+                    const scaledDripBoxHF = new THREE.Box3().setFromObject(currentDrip);
+                    const scaledDripCenterHF = scaledDripBoxHF.getCenter(new THREE.Vector3());
+                    const frostCenterHF = frostBoxHF.getCenter(new THREE.Vector3());
+                    currentDrip.position.set(
+                        frostCenterHF.x - scaledDripCenterHF.x + (frostDiamHF * HEART_FONDANT_DRIP_NUDGE.xNudge),
+                        (frostBoxHF.max.y - scaledDripBoxHF.max.y) + (frostDiamHF * HEART_FONDANT_DRIP_NUDGE.yNudge),
+                        frostCenterHF.z - scaledDripCenterHF.z + (frostDiamHF * HEART_FONDANT_DRIP_NUDGE.zNudge)
+                    );
+                    currentDrip.updateMatrixWorld(true);
+                } else if(currentDrip){
+                    currentDrip.scale.copy(currentFrost.scale);
+                    currentDrip.position.copy(currentFrost.position);
+                    currentDrip.rotation.copy(currentFrost.rotation);
+                }
 
                 // Add stand
                 const yBefore = currentFrost.position.y;
                 addStandToScene(currentFrost);
                 currentFrost.updateMatrixWorld(true);
+                const yDelta = currentFrost.position.y - yBefore;
+                if(yDelta !== 0 && currentDrip){
+                    currentDrip.position.y += yDelta;
+                    currentDrip.updateMatrixWorld(true);
+                }
    } else {
-if(hasSemiNakedR && currentFrost && !currentBase) {
-        // Shell border only — frosting_round_seminaked_smooth.glb IS the whole cake
-        positionGroup(currentFrost, _inches, THREE_TIER_HEIGHT_MULT);
+    if(hasSemiNakedR && currentFrost && !currentBase) {
+             // Shell border only — frosting_round_seminaked_smooth.glb IS the whole cake.
+        positionGroup(currentFrost, _inches, HEART_HEIGHT_MULT);
         currentFrost.updateMatrixWorld(true);
         addStandToScene(currentFrost);
         currentFrost.updateMatrixWorld(true);
     fitRosetteToCake(currentFrost);
     recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
         usedGLB = true; showStatus('Loaded ✓');
-    } else if(hasSemiNakedR && currentBase){
-                    // Collect ring-style overlay GLBs (frost, icing) — these get diameter-fitted
-                    // to the base below. Drip is handled separately further down: its seminaked
-                    // export already matches the base's own coordinate frame, so force-fitting it
-                    // like a thin ring was squishing it and pulling it up too high instead of
+       } else if(hasSemiNakedR && currentBase){
                                  const overlays = [];
                     if(currentFrost) overlays.push(currentFrost);
-                    if(currentIcing) overlays.push(currentIcing);
-                    // Size the base independently (this is base_seminaked_*.glb — its own
-                    // dedicated raw file, proven to size correctly on its own via positionGroup).
-                    positionGroup(currentBase, _inches, THREE_TIER_HEIGHT_MULT);
+                    // Round (single/two-tier/three-tier, no Shell Border) uses a dedicated
+                    // "_seminaked" icing file positioned via direct-copy further below — keep
+                    // it OUT of this generic ring-fitting loop. Every other case (Square tiers,
+                    // Heart tiers, or Round WITH Shell Border) reuses the same ring-fit overlays
+                    // system Shell Border already uses successfully.
+                    const _icingUsesDedicatedRoundFile = isSugarIcing && !hasShellBorder && !isSquareTier && !isHeartTierIcing;
+                    // icing_two-tier_heart.glb / icing_three-tier_heart.glb are single
+                    // continuous drape meshes (NOT split per tier like Shell Border's file),
+                    // so they must NOT go through the per-tier ring fit — that fit's
+                    // "clone into N pieces" fallback chops one continuous drape into
+                    // independently-rescaled fragments, breaking coverage on lower tiers.
+                    const _isHeartTierWholeMeshIcing = (slug === 'two-tier_heart' || slug === 'three-tier_heart');
+                    if(currentIcing && !_icingUsesDedicatedRoundFile && !_isHeartTierWholeMeshIcing) overlays.push(currentIcing);
+                    positionGroup(currentBase, _inches, HEART_HEIGHT_MULT);
+                    if(currentIcing && _isHeartTierWholeMeshIcing){
+                        currentIcing.position.set(0,0,0); currentIcing.rotation.set(0,0,0); currentIcing.scale.set(1,1,1);
+                        currentIcing.updateMatrixWorld(true);
+                        const baseBoxHI = new THREE.Box3().setFromObject(currentBase);
+                        const baseDiamHI = Math.max(baseBoxHI.max.x-baseBoxHI.min.x, baseBoxHI.max.z-baseBoxHI.min.z);
+                        const baseHeightHI = baseBoxHI.max.y - baseBoxHI.min.y;
+                        const rawIcingBoxHI = new THREE.Box3().setFromObject(currentIcing);
+                        const rawIcingDiamHI = Math.max(rawIcingBoxHI.max.x-rawIcingBoxHI.min.x, rawIcingBoxHI.max.z-rawIcingBoxHI.min.z);
+                        // UNIFORM scale only (X/Y/Z together) — the icing file has its rim
+                        // bands baked in at fixed positions relative to each tier. Scaling
+                        // Y independently from X/Z (as before) stretched/squashed those
+                        // baked-in bands away from the tier rims, dragging them to sit
+                        // mid-tier instead of at the top edge of each tier.
+                        const scaleHI = rawIcingDiamHI>0.0001 ? baseDiamHI/rawIcingDiamHI : 1.0;
+                        currentIcing.scale.setScalar(scaleHI);
+                        currentIcing.updateMatrixWorld(true);
+                        const scaledIcingBoxHI = new THREE.Box3().setFromObject(currentIcing);
+                        const scaledIcingCenterHI = scaledIcingBoxHI.getCenter(new THREE.Vector3());
+                        const baseCenterHI = baseBoxHI.getCenter(new THREE.Vector3());
+                        // Vertical nudge, as a fraction of the whole cake's own height —
+                        // reuses the value already tuned for this shape in
+                        // SUGAR_ICING_Y_EXTRA_SEMINAKED (three-tier_heart: -0.1) instead of
+                        // sitting flush at the top edge (0 offset), which was the original
+                        // position bug reported for this cake.
+                        const _heartIcingYExtra = (slug === 'three-tier_heart') ? -0.10 : (slug === 'two-tier_heart') ? 0.10 : 0;
+                        currentIcing.position.set(
+                            baseCenterHI.x - scaledIcingCenterHI.x,
+                            (baseBoxHI.max.y - scaledIcingBoxHI.max.y) + (baseHeightHI * _heartIcingYExtra),
+                            baseCenterHI.z - scaledIcingCenterHI.z
+                        );
+                        currentIcing.updateMatrixWorld(true);
+                    }
+                    // The Shell Border / Sugar Icing overlay files are authored against the
+                    // REGULAR (non-semi-naked) base file, so for multi-tier shapes their raw
+                    // per-tier proportions don't line up with the semi-naked base. Fit each
+                    // overlay tier-by-tier against the ACTUAL, already-sized semi-naked
+                    // base's own real tier boxes — no separate reference file needed, and it
+                    // can't silently fail the way loading base_<slug>.glb could.
+                    let _actualBaseTiersSN = null;
+                    if(slug === 'two-tier' || slug === 'three-tier' || slug === 'two-tier_square' || slug === 'three-tier_square' || slug === 'two-tier_heart' || slug === 'three-tier_heart'){
+                        currentBase.updateMatrixWorld(true);
+                        const _tiersFoundSN = getTierGroups(currentBase);
+                        if(_tiersFoundSN.length > 1){
+                            _actualBaseTiersSN = _tiersFoundSN;
+                        } else if(slug === 'two-tier_heart' || slug === 'three-tier_heart'){
+                            // Semi-naked heart base is one fused mesh (no separate tier
+                            // objects), so getTierGroups can't split it. Fall back to the
+                            // REGULAR (non-semi-naked) base file as a reference — it IS
+                            // split into tiers (this is what Fondant/Drip already use
+                            // successfully via getBaseHeartTiers) — and use those tier
+                            // boxes purely as fitting targets for the overlay rings.
+                            _actualBaseTiersSN = await getBaseHeartTiers(slug, _inches, HEART_HEIGHT_MULT);
+                        }
+                    }
 
                     // Now fit each overlay independently to the base's ACTUAL final size/
                     // position — never assume the overlay shares the base's raw coordinate
@@ -4853,27 +5236,73 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                                const baseBoxSN = new THREE.Box3().setFromObject(currentBase);
                     const baseCenterSN = baseBoxSN.getCenter(new THREE.Vector3());
                     const baseDiamSN = Math.max(baseBoxSN.max.x-baseBoxSN.min.x, baseBoxSN.max.z-baseBoxSN.min.z);
-                                   // Per-shape diameter correction for the Shell Border ring — some shapes'
-                    // ring GLBs are exported slightly smaller than the cake footprint, so a
-                    // straight diameter match leaves them sitting inset instead of on the edge.
-                    // Tune per-shape here; 1.0 = no change.
-                    const SHELL_BORDER_DIAM_MULT = {
+                                     const SHELL_BORDER_DIAM_MULT = {
                         round:  1.0,
-                        square: 1.12,
+                        square: 1.0,
                         heart:  1.0,
                     };
-                                     // Per-shape extra Y offset ON TOP OF the base 0.08 nudge — increase to
-                    // lift the ring further up, decrease (or go negative) to push it down.
                     const SHELL_BORDER_Y_EXTRA = {
-                        round:      0,
+    round:      0,
+    square:     0,
+    heart:      0.03,
+    'two-tier':   -0.04,
+    'three-tier': -0.05,
+    'two-tier_square':   -0.05,
+    'three-tier_square': -0.09,
+    'two-tier_heart':    -0.02,
+    'three-tier_heart':  -0.03,
+};
+                                                    const shellDiamMult = SHELL_BORDER_DIAM_MULT[slug] ?? 1.0;
+                    const shellYExtra = SHELL_BORDER_Y_EXTRA[slug] ?? 0;
+                    // Sugar Icing is a full drape mesh, not a thin piped ring like Shell
+                    // Border — it needs its own diameter/Y tuning instead of inheriting
+                    // Shell Border's. Square matches the diameter that already sits well
+                    // on the tiered square's bottom tier; Round/Heart get lifted higher.
+                const SUGAR_ICING_DIAM_MULT_SEMINAKED = {
+    round:  1.0,
+    square: 1.0,
+    heart:  1.0,
+    'two-tier':   1.0,
+    'three-tier': 1.0,
+    'two-tier_square':   1.0,
+    'three-tier_square': 1.0,
+    'two-tier_heart':    0.96,
+    'three-tier_heart':  0.90,
+};
+       const SUGAR_ICING_Y_EXTRA_SEMINAKED = {
+                        round:      0.05,
                         square:     0,
-                        heart:      0.03,
+                        heart:      0.06,
                         'two-tier':   -0.04,
                         'three-tier': -0.05,
+                        'two-tier_square':   0.03,
+                        'three-tier_square': -0.01,
+                        'two-tier_heart':    0.10,
+                        'three-tier_heart':  -0.1,
                     };
-                                    const shellDiamMult = SHELL_BORDER_DIAM_MULT[slug] ?? 1.0;
-                    const shellYExtra = SHELL_BORDER_Y_EXTRA[slug] ?? 0;
-                                    overlays.forEach(g=>{
+                    const icingDiamMult = SUGAR_ICING_DIAM_MULT_SEMINAKED[slug] ?? 1.0;
+                    const icingYExtra = SUGAR_ICING_Y_EXTRA_SEMINAKED[slug] ?? 0;
+                             const SHELL_BORDER_TIER_SINK_EXTRA = {
+                        'two-tier_heart':    0.02,
+                        'three-tier_heart':  0.02,
+                    };
+                       const SUGAR_ICING_TIER_SINK_EXTRA = {
+    'two-tier_heart':    [0.10, 0.02],
+    'three-tier_heart':  [0.10, 0.06, 0.02],
+};
+                    // Heart icing tiers need much more per-tier tuning than Shell Border —
+                    // bottom/middle tiers sit deeper relative to their own base tier box than
+                    // the top tier does. Sink alone can't fix this (it doesn't touch scale),
+                    // so as sink grows we also widen the ring slightly per tier — otherwise a
+                    // deeper sink just buries more of the ring's fixed diameter into the cake
+                    // body, which reads as the ring visually "shrinking".
+                    overlays.forEach(g=>{
+                        const isIcingOverlay = (g === currentIcing);
+                        const diamMultForG = isIcingOverlay ? icingDiamMult : shellDiamMult;
+                        const yExtraForG    = isIcingOverlay ? icingYExtra   : shellYExtra;
+                        const extraSinkFrac = isIcingOverlay
+                            ? (SUGAR_ICING_TIER_SINK_EXTRA[slug] ?? 0)
+                            : (SHELL_BORDER_TIER_SINK_EXTRA[slug] ?? 0);
                         if(slug === 'bundt'){
                             // Bundt's shell border (bundt_smoothbc.glb) is already authored
                             // to line up correctly when its transform is copied straight from
@@ -4886,9 +5315,7 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                             g.rotation.copy(currentBase.rotation);
                             g.updateMatrixWorld(true);
                                                     // Drip visually eats into the Shell Border / Sugar Icing overlay
-                            // on Bundt cakes since they sit at the same height — nudge the
-                            // overlay up so it clears the drip. Only applies when Drip is on.
-                            if(hasDrip){
+                                                if(hasDrip){
                                 const bundtBoxSN = new THREE.Box3().setFromObject(currentBase);
                                 const bundtHeightSN = bundtBoxSN.max.y - bundtBoxSN.min.y;
                                 g.position.y += bundtHeightSN * 0.055;
@@ -4896,30 +5323,150 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                             }
                             return;
                         }
+                                         if(_actualBaseTiersSN){
+                            // Multi-tier: fit each tier of the overlay ring independently
+                            // against the matching tier of the ACTUAL, already-sized
+                            // semi-naked base — diameter-scaled and top-aligned per tier,
+                            // so it hugs each tier's own real rim instead of floating above
+                            // the cake or matching only the bottom tier's width.
+                            if(fitRingOverlayTiersToBaseTiers(g, _actualBaseTiersSN, diamMultForG, extraSinkFrac)) return;
+                        }
                         g.position.set(0,0,0); g.rotation.set(0,0,0); g.scale.set(1,1,1);
                         g.updateMatrixWorld(true);
                         const rawBoxSN = new THREE.Box3().setFromObject(g);
                         const rawDiamSN = Math.max(rawBoxSN.max.x-rawBoxSN.min.x, rawBoxSN.max.z-rawBoxSN.min.z);
-                        const scaleSN = rawDiamSN > 0.0001 ? (baseDiamSN*shellDiamMult)/rawDiamSN : 1.0;
+                        const scaleSN = rawDiamSN > 0.0001 ? (baseDiamSN*diamMultForG)/rawDiamSN : 1.0;
                         g.scale.setScalar(scaleSN);
                         g.updateMatrixWorld(true);
                         const scaledBoxSN = new THREE.Box3().setFromObject(g);
                         const scaledCenterSN = scaledBoxSN.getCenter(new THREE.Vector3());
-                        // Shell Border / Drip overlays are top-anchored rings, not full-height
-                        // skins — align their TOP to the cake's top so the ring sits at the
-                        // rim (matching the plain Smooth-Buttercream reference render),
-                        // instead of aligning bottoms and burying the ring at the base.
+                        // Shell Border / Sugar Icing / Drip overlays are top-anchored rings or
+                        // drapes, not full-height skins — align their TOP to the cake's top so
+                        // they sit at the rim (matching the plain Smooth-Buttercream reference
+                        // render), instead of aligning bottoms and burying them at the base.
                                      g.position.set(
                             baseCenterSN.x - scaledCenterSN.x,
-                            (baseBoxSN.max.y - scaledBoxSN.max.y) + 0.08 + shellYExtra,
+                            (baseBoxSN.max.y - scaledBoxSN.max.y) + 0.08 + yExtraForG,
                             baseCenterSN.z - scaledCenterSN.z
                         );
-                        g.updateMatrixWorld(true);
+               g.updateMatrixWorld(true);
                     });
+                                   // ── GUARANTEED per-tier Sugar Icing nudge for tiered Heart ──
+                    // icing_*_heart.glb isn't split into clean per-tier groups (it can be
+                    // dozens of small sub-meshes), so classify EACH mesh by which base-tier
+                    // Y-band its center falls into, then nudge it by that band's amount.
+                    // Never touches currentFrost (Shell Border).
+                           if(currentIcing && (slug === 'two-tier_heart' || slug === 'three-tier_heart')){
+                        // index 0 = bottom tier — leave untouched (already correct).
+                        // only tier 2 (and tier 3, if present) get nudged upward
+                        // (negative = up) to line up with their real tier rim.
+                                          const _icingTierNudge = slug === 'three-tier_heart' ? [0, -0.05, -0.2] : [0.03, 0.01];
+                        if(_actualBaseTiersSN && _actualBaseTiersSN.length === _icingTierNudge.length){
+                            currentIcing.updateMatrixWorld(true);
+                            const tierBoxes = _actualBaseTiersSN.map(t => new THREE.Box3().setFromObject(t));
+                            const tierDiams = tierBoxes.map(b => Math.max(b.max.x-b.min.x, b.max.z-b.min.z));
+                            const boundaries = [];
+                            for(let i=0;i<tierBoxes.length-1;i++){
+                                boundaries.push((tierBoxes[i].max.y + tierBoxes[i+1].min.y) / 2);
+                            }
+                            const icingMeshes = [];
+                            currentIcing.traverse(c=>{ if(c.isMesh) icingMeshes.push(c); });
+                            console.log('[SugarIcing DEBUG] classifying', icingMeshes.length, 'meshes into', tierBoxes.length, 'tiers (dynamic clustering)');
 
-                    // Drip — copy the base's transform directly instead of independently
-                    // re-fitting it like a ring, so it hangs down the sides naturally.
-                    if(currentDrip){
+                            // The base-tier-midpoint boundaries don't work for icing RINGS —
+                            // a ring sits near the TOP RIM of its own tier, so its Y-center can
+                            // already be above the boundary meant to separate it from the tier
+                            // above, causing systematic misclassification (confirmed: bottom
+                            // bucket came up empty, 0/29/58 split instead of ~29/29/29).
+                            // Cluster the icing meshes' OWN Y-centers by their largest natural
+                            // gaps instead — this finds where the rings actually group.
+                            const meshCenters = icingMeshes.map(mesh=>{
+                                const mBox = new THREE.Box3().setFromObject(mesh);
+                                return { mesh, centerY: (mBox.min.y + mBox.max.y) / 2 };
+                            });
+                            meshCenters.sort((a,b)=>a.centerY-b.centerY);
+
+                            const numTiers = tierBoxes.length;
+                            const numBoundariesNeeded = numTiers - 1;
+                            let dynBoundaries = [];
+                            if(meshCenters.length > numTiers){
+                                const gaps = [];
+                                for(let i=0;i<meshCenters.length-1;i++){
+                                    gaps.push({ idx:i, size: meshCenters[i+1].centerY - meshCenters[i].centerY });
+                                }
+                                gaps.sort((a,b)=>b.size-a.size);
+                                const topGaps = gaps.slice(0, numBoundariesNeeded).sort((a,b)=>a.idx-b.idx);
+                                dynBoundaries = topGaps.map(g => (meshCenters[g.idx].centerY + meshCenters[g.idx+1].centerY) / 2);
+                            }
+                            if(dynBoundaries.length !== numBoundariesNeeded) dynBoundaries = boundaries;
+
+                            console.log('[SugarIcing DEBUG] dynamic boundaries:', dynBoundaries, 'vs base-tier boundaries:', boundaries);
+
+                            const _tierCounts = {};
+                            icingMeshes.forEach(mesh=>{
+                                const mBox = new THREE.Box3().setFromObject(mesh);
+                                const mCenterY = (mBox.min.y + mBox.max.y) / 2;
+                                let tierIdx = 0;
+                                for(let i=0;i<dynBoundaries.length;i++){
+                                    if(mCenterY > dynBoundaries[i]) tierIdx = i+1;
+                                }
+                                _tierCounts[tierIdx] = (_tierCounts[tierIdx]||0) + 1;
+                                mesh.position.y -= tierDiams[tierIdx] * _icingTierNudge[tierIdx];
+                                if(tierIdx === 2){
+                                    console.log('[SugarIcing DEBUG] TOP mesh nudge applied:', mesh.name, 'offset=', tierDiams[tierIdx] * _icingTierNudge[tierIdx], 'finalY=', mesh.position.y, 'diam=', tierDiams[tierIdx]);
+                                }
+                            });
+                            console.log('[SugarIcing DEBUG] mesh count per tier:', _tierCounts, '(0=bottom, 1=middle, 2=top)');
+                            currentIcing.updateMatrixWorld(true);
+                        } else {
+                                                   console.warn('[SugarIcing DEBUG] no valid base tier reference (_actualBaseTiersSN) — cannot per-tier nudge');
+                        }
+                    }
+                    const _icingIsDedicatedSeminaked = _icingUsesDedicatedRoundFile;
+                    if(currentIcing && glbHasMesh(currentIcing) && _icingIsDedicatedSeminaked){
+                        currentIcing.scale.copy(currentBase.scale);
+                        currentIcing.position.copy(currentBase.position);
+                        currentIcing.rotation.copy(currentBase.rotation);
+                        currentIcing.updateMatrixWorld(true);
+                        // remove it from the generic overlays loop above's effect by re-marking so
+                        // it isn't double-fitted — overlays array no longer includes currentIcing,
+                        // so this is the only positioning pass it gets.
+                    }
+           
+                                     // Multi-tier heart drip icicles are exported per-tier — fit each
+                    // tier's icicle ring to its matching base tier (same approach as
+                    // the Fondant path) instead of scaling the whole drip mesh as one
+                    // block, which is what was causing it to float off the cake.
+                    let _dripTiersMatchedSN = false;
+                    if((slug === 'two-tier_heart' || slug === 'three-tier_heart') && _actualBaseTiersSN && currentDrip && glbHasMesh(currentDrip)){
+                        _dripTiersMatchedSN = fitGroupTiersToBaseTiers(currentDrip, _actualBaseTiersSN, { diamMult: 1.02, yNudge: 0.01 });
+                    }
+                    const HEART_SEMINAKED_DRIP_NUDGE_MAP = {
+                        'heart':             { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                        'two-tier_heart':    { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                        'three-tier_heart':  { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    };
+                    const HEART_SEMINAKED_DRIP_NUDGE = HEART_SEMINAKED_DRIP_NUDGE_MAP[slug];
+                    if(!_dripTiersMatchedSN && currentDrip && HEART_SEMINAKED_DRIP_NUDGE){
+                        currentDrip.position.set(0,0,0); currentDrip.rotation.set(0,0,0); currentDrip.scale.set(1,1,1);
+                        currentDrip.updateMatrixWorld(true);
+                        const baseBoxHS  = new THREE.Box3().setFromObject(currentBase);
+                        const baseDiamHS = Math.max(baseBoxHS.max.x-baseBoxHS.min.x, baseBoxHS.max.z-baseBoxHS.min.z);
+                        const rawDripBoxHS  = new THREE.Box3().setFromObject(currentDrip);
+                        const rawDripDiamHS = Math.max(rawDripBoxHS.max.x-rawDripBoxHS.min.x, rawDripBoxHS.max.z-rawDripBoxHS.min.z);
+                        const dripScaleHS = rawDripDiamHS > 0.0001 ? (baseDiamHS * HEART_SEMINAKED_DRIP_NUDGE.diamMult) / rawDripDiamHS : 1.0;
+                        currentDrip.scale.setScalar(dripScaleHS);
+                        currentDrip.updateMatrixWorld(true);
+                        const scaledDripBoxHS = new THREE.Box3().setFromObject(currentDrip);
+                        const scaledDripCenterHS = scaledDripBoxHS.getCenter(new THREE.Vector3());
+                        const baseCenterHS = baseBoxHS.getCenter(new THREE.Vector3());
+                        currentDrip.position.set(
+                            baseCenterHS.x - scaledDripCenterHS.x + (baseDiamHS * HEART_SEMINAKED_DRIP_NUDGE.xNudge),
+                            (baseBoxHS.max.y - scaledDripBoxHS.max.y) + (baseDiamHS * HEART_SEMINAKED_DRIP_NUDGE.yNudge),
+                            baseCenterHS.z - scaledDripCenterHS.z + (baseDiamHS * HEART_SEMINAKED_DRIP_NUDGE.zNudge)
+                        );
+                        currentDrip.updateMatrixWorld(true);
+                    } else if(!_dripTiersMatchedSN && currentDrip){
                         currentDrip.scale.copy(currentBase.scale);
                         currentDrip.position.copy(currentBase.position);
                         currentDrip.rotation.copy(currentBase.rotation);
@@ -4936,9 +5483,29 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                     if(yDelta !== 0){
                         overlays.forEach(g => { g.position.y += yDelta; g.updateMatrixWorld(true); });
                         if(currentDrip){ currentDrip.position.y += yDelta; currentDrip.updateMatrixWorld(true); }
+                        if(currentIcing && (_icingIsDedicatedSeminaked || _isHeartTierWholeMeshIcing)){ currentIcing.position.y += yDelta; currentIcing.updateMatrixWorld(true); }
                     }
                         [currentBase, ...overlays, ...(currentDrip?[currentDrip]:[])].forEach(g => { g.visible = true; });
-                    fitRosetteToCake(currentBase);
+                                       fitRosetteToCake(currentBase);
+                 if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Border' && (slug === 'two-tier_heart' || slug === 'three-tier_heart' || slug === 'two-tier' || slug === 'three-tier' || slug === 'two-tier_square' || slug === 'three-tier_square')){
+    const _tierCountHB = (slug === 'three-tier_heart' || slug === 'three-tier' || slug === 'three-tier_square') ? 3 : 2;
+    const _nudgeMap = {
+        'two-tier_heart':    [-0.04, 0],
+        'three-tier_heart':  [-0.07, -0.035, 0],
+        'two-tier':          [1.01, 0],
+        'three-tier':        [-0.05, -0.02, 0],
+        'two-tier_square':   [-0.03, 0],
+        'three-tier_square': [-0.05, -0.02, 0],
+    };
+    const _nudgeHB = _nudgeMap[slug] || [0, 0];
+    nudgeRosetteBorderPerTier(currentRosette, toPos[0], _tierCountHB, _nudgeHB);
+}
+                                        if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'three-tier_heart'){
+                        nudgeRosetteBorderPerTier(currentRosette, currentBase, 3, [-0.01, 0.03, 0.015]);
+                    }
+                                                                 if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'two-tier_heart'){
+                 nudgeRosetteBorderPerTier(currentRosette, toPos[0], -0.01, [0.09, -0.03]); 
+                    }
                 }else {
        if(!hasFondant){
                                    if(slug === 'bundt' && toPos.length >= 2){
@@ -4966,10 +5533,10 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                             if(currentFrost && currentFrost !== currentBase){ currentFrost.position.y += nudgeUp; currentFrost.updateMatrixWorld(true); }
                             if(currentIcing){ currentIcing.position.y += nudgeUp; currentIcing.updateMatrixWorld(true); }
                         }
-                    } else if(toPos.length >= 2){
-                        positionMultiGroup(_inches, ...toPos);
+                                 } else if(toPos.length >= 2){
+                        positionMultiGroup(_inches, HEART_HEIGHT_MULT, ...toPos);
                     } else if(toPos.length === 1){
-                        positionGroup(toPos[0], _inches);
+                        positionGroup(toPos[0], _inches, HEART_HEIGHT_MULT);
                     }
                if(toPos.length > 0){
                         const yBefore = toPos[0].position.y;
@@ -4980,6 +5547,20 @@ if(hasSemiNakedR && currentFrost && !currentBase) {
                         const yDelta = toPos[0].position.y - yBefore;
                         if(yDelta !== 0) toPos.slice(1).forEach(g=>{ g.position.y+=yDelta; g.updateMatrixWorld(true); });
 fitRosetteToCake(toPos[0]);
+                        // Border rosette on tiered hearts: fix lower-tier drift (top tier
+                        // already lands correctly from fitRosetteToCake above).
+                        if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Border' && (slug === 'two-tier_heart' || slug === 'three-tier_heart')){
+                            const _tierCountHB = slug === 'three-tier_heart' ? 3 : 2;
+                            // bottom-to-top; tune these — start small and adjust sign/size per tier.
+                            const _nudgeHB = slug === 'three-tier_heart' ? [-0.07, -0.035, 0] : [-0.04, 0];
+                            nudgeRosetteBorderPerTier(currentRosette, toPos[0], _tierCountHB, _nudgeHB);
+                        }
+                                            if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'three-tier_heart'){
+                      nudgeRosetteBorderPerTier(currentRosette, currentBase, 3, [0.01, 0.03, 0.015]);
+                        }
+                                                             if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'two-tier_heart'){
+                            nudgeRosetteBorderPerTier(currentRosette, toPos[0], -0.01, [0.09, -0.03]);
+                        }
                     }
                 }
                 }
@@ -5039,7 +5620,7 @@ if(isPreview){
 requestAnimationFrame(()=>{
         if(typeof window._reprojectAllToppings==='function') window._reprojectAllToppings();
         if(typeof window._reapplySprinkles==='function') window._reapplySprinkles();
-        if(typeof window._reapplyChocoCurls==='function') window._reapplyChocoCurls(state.tier, state.shape);
+        if(typeof window._reapplyChocoCurls==='function') window._reapplyChocoCurls(state.tier, state.baseShape || state.shape);
         if(typeof window._reapplyPlaque==='function') window._reapplyPlaque();
         if(typeof window._reapplyCharacterTopper==='function') window._reapplyCharacterTopper();
               if(window._pendingIcingReveal && currentIcing){
@@ -5630,9 +6211,6 @@ const CHOCO_CURLS_CONFIG_THREE_TIER = {
         { file:'chococurls_three-tier_around',  diamMult:1.35, sitOnTop:true, sinkFrac:0.15, yNudge:0.54 },
     ],
 };
-// Square variant — a single mesh built to trace a square cake's edge instead
-// of a circular one. Starting values copied from the round "sides" config —
-// tune diamMult (width) / sinkFrac / yNudge once you see it against the cake.
 const CHOCO_CURLS_CONFIG_SQUARE = {
     middle: [ { file:'chococurls_center',        diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
     sides:  [ { file:'chococurls_square_around', diamMult:1.62, sitOnTop:true, sinkFrac:0.15, yNudge:0.52 } ],
@@ -5641,12 +6219,51 @@ const CHOCO_CURLS_CONFIG_SQUARE = {
         { file:'chococurls_square_around', diamMult:1.62, sitOnTop:true, sinkFrac:0.15, yNudge:0.52 },
     ],
 };
+const CHOCO_CURLS_CONFIG_SQUARE_TWO_TIER = {
+    middle: [ { file:'chococurls_square_two-tier_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
+    sides:  [ { file:'chococurls_square_two-tier_around', diamMult:1.7, sitOnTop:true, sinkFrac:0.15, yNudge:0.76 } ],
+    both:   [
+        { file:'chococurls_square_two-tier_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_square_two-tier_around', diamMult:1.7, sitOnTop:true, sinkFrac:0.15, yNudge:0.76 },
+    ],
+};
+window._chocoCurlsSquareTwoTier = CHOCO_CURLS_CONFIG_SQUARE_TWO_TIER;
+const CHOCO_CURLS_CONFIG_SQUARE_THREE_TIER = {
+    middle: [ { file:'chococurls_three-tier_square_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
+    sides:  [ { file:'chococurls_three-tier_square_around', diamMult:1.7, sitOnTop:true, sinkFrac:0.15, yNudge:0.95 } ],
+    both:   [
+        { file:'chococurls_three-tier_square_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
+        { file:'chococurls_three-tier_square_around', diamMult:1.7, sitOnTop:true, sinkFrac:0.15, yNudge:0.95 } ,
+    ],
+};
+window._chocoCurlsSquareThreeTier = CHOCO_CURLS_CONFIG_SQUARE_THREE_TIER;
 const CHOCO_CURLS_CONFIG_HEART = {
-    middle: [ { file:'chococurls_center',       diamMult:1.50, sitOnTop:true, sinkFrac:1.55, yNudge:0.45 } ],
+    middle: [ { file:'chococurls_center',       diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 } ],
     sides:  [ { file:'chococurls_heart_around', diamMult:0.90, sitOnTop:true, sinkFrac:0.15, yNudge:0.01 } ],
     both:   [
         { file:'chococurls_center',       diamMult:0.50, sitOnTop:true, sinkFrac:0.48, yNudge:0 },
         { file:'chococurls_heart_around', diamMult:0.90, sitOnTop:true, sinkFrac:0.15, yNudge:0.01 },
+    ]
+};
+// Two-tier Heart — dedicated combined-mesh pieces authored for this tier count.
+// Starting values copied from the single-Heart config above; tune diamMult
+// (width) and yNudge (height) once you see it rendered against the actual
+// two-tier heart base.
+const CHOCO_CURLS_CONFIG_HEART_TWO_TIER = {
+    middle: [ { file:'chococurls_center_two-tier_heart', diamMult:0.32, sitOnTop:true, sinkFrac:-1.35, yNudge:0.45 } ],
+    sides:  [ { file:'chococurls_heart_two-tier_around', diamMult:0.90, sitOnTop:true, sinkFrac:0.15, yNudge:0.17 } ],
+    both:   [
+     { file:'chococurls_center_two-tier_heart', diamMult:0.32, sitOnTop:true, sinkFrac:-1.35, yNudge:0.45 },
+        { file:'chococurls_heart_two-tier_around', diamMult:0.90, sitOnTop:true, sinkFrac:0.15, yNudge:0.17 },
+    ]
+};
+// Three-tier Heart — same idea, its own combined-mesh pieces.
+const CHOCO_CURLS_CONFIG_HEART_THREE_TIER = {
+    middle: [ { file:'chococurls_center_three-tier_heart', diamMult:0.19, sitOnTop:true, sinkFrac:-2.25, yNudge:0.4, zNudge:0.03 } ],
+    sides:  [ { file:'chococurls_heart_three-tier_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.93, yNudge:0.01 } ],
+    both:   [
+       { file:'chococurls_center_three-tier_heart', diamMult:0.19, sitOnTop:true, sinkFrac:-2.25, yNudge:0.4, zNudge:0.03 },
+       { file:'chococurls_heart_three-tier_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.93, yNudge:0.01 },
     ]
 };
 const CHOCO_CURLS_CONFIG_BUNDT = {
@@ -5654,7 +6271,7 @@ const CHOCO_CURLS_CONFIG_BUNDT = {
     sides:  [ { file:'chococurls_bundt_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 } ],
     both:   [
         { file:'chococurls_bundt_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.57, yNudge:-0.01 },
-        { file:'chococurls_bundt_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 },
+        { file:'chococurls_bundt_around',  mMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 },
     ]
 };
 // Digits with no dedicated "center" (middle) model — Middle and Both get hidden
@@ -5687,14 +6304,15 @@ window.placeChocoCurls = async function(placement, tier, shape, animate){
     currentChocoCurlsTier  = tier  || 'Single';
     currentChocoCurlsShape = shape || 'Round';
  const configSet = currentChocoCurlsShape === 'Bundt'  ? CHOCO_CURLS_CONFIG_BUNDT
+                     : (currentChocoCurlsShape === 'Square' && currentChocoCurlsTier === 'Three-tier') ? CHOCO_CURLS_CONFIG_SQUARE_THREE_TIER
+                     : (currentChocoCurlsShape === 'Square' && currentChocoCurlsTier === 'Two-tier')   ? CHOCO_CURLS_CONFIG_SQUARE_TWO_TIER
                      : currentChocoCurlsShape === 'Square' ? CHOCO_CURLS_CONFIG_SQUARE
+                     : (currentChocoCurlsShape === 'Heart' && currentChocoCurlsTier === 'Three-tier') ? CHOCO_CURLS_CONFIG_HEART_THREE_TIER
+                     : (currentChocoCurlsShape === 'Heart' && currentChocoCurlsTier === 'Two-tier')   ? CHOCO_CURLS_CONFIG_HEART_TWO_TIER
                      : currentChocoCurlsShape === 'Heart'  ? CHOCO_CURLS_CONFIG_HEART
                      : currentChocoCurlsTier === 'Two-tier'   ? CHOCO_CURLS_CONFIG_TWO_TIER
                      : currentChocoCurlsTier === 'Three-tier' ? CHOCO_CURLS_CONFIG_THREE_TIER
                      : CHOCO_CURLS_CONFIG;
-// Fall back through middle → sides → both → first available key, so an
-// unconfigured placement for a given shape/tier never leaves `parts`
-// undefined and silently crashing the whole function.
 let parts = configSet[placement] || configSet.middle || configSet.sides || configSet.both || Object.values(configSet)[0];
 if(!parts){
     console.error('[ChocoCurls] No config available at all for', currentChocoCurlsShape, currentChocoCurlsTier, placement);
@@ -7848,7 +8466,7 @@ const FILLING_PRICES = {
 const FONDANT_VAL    ='Fondant Smooth';
 const SUGAR_ICING_VAL='Sugar Icing';
 const BASE_COAT_VALS =['Smooth Buttercream','Sugar Icing'];
-const SHAPE_PRICES   ={'Round':350,'Square':500,'Heart':520,'Bundt':480,'Sponge Cake':300,'Chiffon':320,'Two-tier Round':950,'Three-tier Round':1400,'Number':600};
+const SHAPE_PRICES   ={'Round':350,'Square':500,'Heart':520,'Bundt':480,'Sponge Cake':300,'Chiffon':320,'Two-tier Round':950,'Three-tier Round':1400,'Two-tier Heart':1400,'Three-tier Heart':2000,'Number':600};
 const ROUND_SIZE_PRICES={4:180,5:220,6:280,7:350,8:420,9:500,10:600};
 const FRUIT_KEYS=['Strawberry','Blueberry','Raspberry','Cherry','Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
 const PLAQUE_SHAPE_FILES = {
@@ -7961,20 +8579,20 @@ state.shape = newShape;
             }
         }
         syncFrostingUI(); // refresh Shell Border lock state (restricted for Bundt)
-        // Reset tier to Single for shapes that don't support tiers
-        if(state.shape !== 'Round' && state.shape !== 'Square'){
+              // Reset tier to Single for shapes that don't support tiers
+        if(state.shape !== 'Round' && state.shape !== 'Square' && state.shape !== 'Heart'){
             state.tier = 'Single';
             document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.toggle('active', x.dataset.tier==='Single'));
             refreshTierPriceLabels();
         }
-       // Disable Two/Three-tier buttons unless shape supports tiers (Round & Square)
+       // Disable Two/Three-tier buttons unless shape supports tiers (Round, Square & Heart)
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>{
             const isTiered = x.dataset.tier !== 'Single';
-            const tiersAllowed = (state.shape === 'Round' || state.shape === 'Square');
+            const tiersAllowed = (state.shape === 'Round' || state.shape === 'Square' || state.shape === 'Heart');
             x.style.opacity = (!tiersAllowed && isTiered) ? '0.35' : '';
             x.style.pointerEvents = (!tiersAllowed && isTiered) ? 'none' : '';
         });
-        document.getElementById('cakeTierSection').style.display = (state.shape === 'Round' || state.shape === 'Square') ? '' : 'none';
+        document.getElementById('cakeTierSection').style.display = (state.shape === 'Round' || state.shape === 'Square' || state.shape === 'Heart') ? '' : 'none';
         // Dynamic size label
         const lblMap = {'Round':'Round Size','Square':'Square Size','Heart':'Heart Size','Number':'Number Size'};
         const lbl = document.getElementById('sizeLabelText');
@@ -8018,7 +8636,7 @@ if(typeof window.setDraggingBarShardIdx==='function') window.setDraggingBarShard
 });
 document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=>{
     el.addEventListener('click',()=>{
-        if(state.shape !== 'Round' && state.shape !== 'Square' && el.dataset.tier !== 'Single') return;
+        if(state.shape !== 'Round' && state.shape !== 'Square' && state.shape !== 'Heart' && el.dataset.tier !== 'Single') return;
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
         state.tier = el.dataset.tier;
@@ -8385,6 +9003,8 @@ const rosettePanelEl = document.getElementById('rosettePlacementPanel');
         const rosetteOn = state.frostings.has('Rosettes') && !fondantActive;
         rosettePanelEl.classList.toggle('visible', rosetteOn);
 const isNumberShape = state.shape === 'Number';
+        // Heart tiers now support all rosette placements, same as Round/Square.
+        const isHeartTiered = false;
         // Only these digits have a dedicated "middle" rosette piece — must match
         // NUMBER_ROSETTE_DIGITS_WITH_MIDDLE in the module script above.
         const NUMBER_ROSETTE_MIDDLE_DIGITS = new Set([0,4,6,8,9]);
@@ -8398,16 +9018,18 @@ const isNumberShape = state.shape === 'Number';
         // Rosettes now work for both single AND dual-digit numbers.
         const numberRosetteReady = isNumberShape;
            document.querySelectorAll('#opts-rosette-placement [data-rosette-placement]').forEach(el=>{
-            const allowed = !isNumberShape || NUMBER_ROSETTE_OPTS.includes(el.dataset.rosettePlacement);
+            const allowed = isHeartTiered
+                ? el.dataset.rosettePlacement === 'Border'
+                : (!isNumberShape || NUMBER_ROSETTE_OPTS.includes(el.dataset.rosettePlacement));
             el.style.display = allowed ? '' : 'none';
         });
         // Combo rendering is only implemented for single-digit numbers.
         const isSingleDigitNumber = isNumberShape && state.numberDigits === 1;
         const comboLabels = rosettePanelEl.querySelectorAll('.frosting-section-label');
         comboLabels.forEach(l=>{ l.style.display = (isNumberShape && !isSingleDigitNumber) ? 'none' : ''; });
-        const comboGrid       = document.getElementById('opts-rosette-combo');
+            const comboGrid       = document.getElementById('opts-rosette-combo');
         const comboGridNumber = document.getElementById('opts-rosette-combo-number');
-        if(comboGrid)       comboGrid.style.display       = isNumberShape ? 'none' : '';
+        if(comboGrid)       comboGrid.style.display       = (isNumberShape || isHeartTiered) ? 'none' : '';
         if(comboGridNumber) comboGridNumber.style.display = isSingleDigitNumber ? '' : 'none';
         if(comboGridNumber){
             const digitHasMiddle = NUMBER_ROSETTE_MIDDLE_DIGITS.has(state.numberChoice);
@@ -8422,9 +9044,10 @@ const isNumberShape = state.shape === 'Number';
         if(validPlacement && state.rosettePlacement === 'Middle+Sides' && !NUMBER_ROSETTE_MIDDLE_DIGITS.has(state.numberChoice)){
             validPlacement = false; // this digit has no Middle piece
         }
-        if(!validPlacement){
+          if(!validPlacement){
             state.rosettePlacement = 'Border';
         }
+   
         document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement], #opts-rosette-combo-number [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement===state.rosettePlacement));
         const badge = document.getElementById('rosettePlacementBadge');
         if(badge) badge.textContent = 'Selected: ' + state.rosettePlacement.replace('+',' + ');
@@ -8765,23 +9388,22 @@ document.getElementById('opts-toblerone-flavor').querySelectorAll('[data-toblero
         showToast(`🔺 Next Toblerone will be ${state.tobleroneFlavor}`, 1800);
     });
 });
-// ── CHOCOLATE CURLS TOGGLE ──
 function _tryPlaceChocoCurls(placement, attempts){
     if(typeof window.placeChocoCurls==='function' && (typeof window.isCakeSceneReady!=='function' || window.isCakeSceneReady())){
         window.placeChocoCurls(placement, state.tier, state.shape).then(ok=>{
             if(ok){
                 showToast('🍫 Choco Curls updated!',1500);
             } else if(attempts>0){
-                setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),200);
+                setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),60);
             } else {
                 showToast('⚠ Could not load Choco Curls for this shape/placement',2400);
             }
         }).catch(()=>{
-            if(attempts>0) setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),200);
+            if(attempts>0) setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),60);
             else showToast('⚠ Could not load Choco Curls for this shape/placement',2400);
         });
     } else if(attempts>0){
-        setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),200);
+        setTimeout(()=>_tryPlaceChocoCurls(placement, attempts-1),60);
     } else {
         showToast('⚠ Could not load Choco Curls for this shape/placement',2400);
     }
@@ -8818,11 +9440,11 @@ document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]').add
     } else {
         const _ccReason = rosetteBlocksAddon('chocoCurls', state.chocoCurlsPlacement || 'middle');
         if(_ccReason){ showToast('⚠ '+_ccReason, 2600); return; }
-        state.addons.set(v, ADDON_TIER_PRICES['Chocolate Curls'][getTierIdx()]);
+              state.addons.set(v, ADDON_TIER_PRICES['Chocolate Curls'][getTierIdx()]);
         _setAddonOptChecked(btn, true);
         document.getElementById('chocoCurlsPlacementPanel').style.display='block';
         if(typeof window._updateChocoCurlsPlacementAvailability==='function') window._updateChocoCurlsPlacementAvailability();
-        setTimeout(()=>_tryPlaceChocoCurls(state.chocoCurlsPlacement, 25),300);
+        _tryPlaceChocoCurls(state.chocoCurlsPlacement, 25);
     }
     updateAll();
 });
@@ -9504,7 +10126,7 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
     if(state.addons.has('Character Topper'))chips.push(`<span class="cfg-chip chip-accent">🎭 ${characterCount>0?characterCount+'× characters · ₱'+characterTotalPrice.toLocaleString():state.characterTopper}</span>`);
     document.getElementById('addonsSummary').innerHTML=chips.length?chips.join(''):'<span class="cfg-val muted" style="font-size:.73rem;">None selected</span>';
    const shellBorderColorActive = state.frostings.has('Smooth Buttercream') && !isSugarIcing && !isFondant && state.hasCustomIcingColor;
- if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),flavor:getEffectiveFlavorKey(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:(isSugarIcing||shellBorderColorActive)?state.icingColor:null});}
+ if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),baseShape:state.shape,flavor:getEffectiveFlavorKey(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:(isSugarIcing||shellBorderColorActive)?state.icingColor:null});}
     if(typeof window._requestShadowUpdate==='function') setTimeout(window._requestShadowUpdate, 200);
       if(typeof window._requestRender==='function') window._requestRender();  
 }
@@ -9705,7 +10327,7 @@ async function applyDraftConfig(d){
         state.tier = d.tier;
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=>el.classList.toggle('active', el.dataset.tier===d.tier));
     }
-    document.getElementById('cakeTierSection').style.display = (state.shape === 'Round') ? '' : 'none';
+    document.getElementById('cakeTierSection').style.display = (state.shape === 'Round' || state.shape === 'Square' || state.shape === 'Heart') ? '' : 'none';
 
     if(state.shape==='Number'){
         const digits=d.numberDigits||1;state.numberDigits=digits;const isSingle=digits===1;
