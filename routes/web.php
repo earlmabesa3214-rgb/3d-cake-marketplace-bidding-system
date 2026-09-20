@@ -409,8 +409,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
     Route::resource('ingredients', IngredientController::class);
+    Route::patch('ingredients/{ingredient}/status', [IngredientController::class, 'updateStatus'])->name('ingredients.status');
     Route::resource('orders',      OrderController::class);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
     Route::resource('products',  ProductController::class);

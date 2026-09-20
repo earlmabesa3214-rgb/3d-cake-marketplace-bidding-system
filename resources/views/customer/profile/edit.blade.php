@@ -47,8 +47,17 @@
     align-items: center;
     gap: 0.5rem;
 }
-.section-label span { font-size: 1rem; }
-
+.sl-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(192,120,64,0.1);
+    color: var(--caramel, #C07840);
+    flex-shrink: 0;
+}
 /* ── PHOTO SECTION ── */
 .photo-row {
     display: flex;
@@ -210,7 +219,7 @@
 
             {{-- PROFILE PHOTO --}}
             <div class="edit-section">
-                <div class="section-label"><span>📷</span> Profile Photo</div>
+     <div class="section-label"><span class="sl-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"></path><circle cx="12" cy="13" r="3.5"></circle></svg></span> Profile Photo</div>
                 <div class="photo-row">
                     <div class="photo-thumb">
                         @if(auth()->user()->profile_photo)
@@ -222,8 +231,9 @@
                     <div class="photo-info">
                         <div class="photo-info-title">{{ auth()->user()->first_name }}'s Photo</div>
                         <div class="photo-info-hint">JPG or PNG, max 2MB. Recommended 200×200px.</div>
-                        <label class="photo-upload-btn">
-                            📁 Choose New Photo
+                    <label class="photo-upload-btn">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            Choose New Photo
                             <input type="file" name="profile_photo" accept="image/*"
                                    onchange="previewPhoto(this)">
                         </label>
@@ -236,7 +246,7 @@
 
             {{-- PERSONAL INFO --}}
             <div class="edit-section">
-                <div class="section-label"><span>👤</span> Personal Information</div>
+             <div class="section-label"><span class="sl-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span> Personal Information</div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">First Name *</label>
@@ -282,7 +292,7 @@
 
             {{-- CHANGE PASSWORD --}}
             <div class="edit-section">
-                <div class="section-label"><span>🔒</span> Change Password</div>
+          <div class="section-label"><span class="sl-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span> Change Password</div>
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">New Password</label>
@@ -305,7 +315,10 @@
 
             {{-- FOOTER --}}
             <div class="edit-footer">
-                <button type="submit" class="btn-submit">✓ Save Changes</button>
+     <button type="submit" class="btn-submit">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Save Changes
+                </button>
                 <a href="{{ route('customer.profile.index') }}" class="btn-back">← Cancel</a>
             </div>
 

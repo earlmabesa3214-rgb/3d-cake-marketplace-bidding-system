@@ -23,15 +23,77 @@ class CakeBuilderController extends Controller
             'decorative'  => 60,
         ],
     ];
-
     public function index(Request $request)
 {
+    $components = \App\Models\Ingredient::selectable()->orderBy('id')->get()->groupBy('category');
+       $castPriceMap = fn($categoryKey) => $components->get($categoryKey, collect())
+        ->pluck('price', 'name')
+        ->map(fn($p) => (float) $p);
+
+    $priceMaps = [
+        'cake_type' => $castPriceMap('cake_type'),
+        'shape'     => $castPriceMap('shape'),
+        'filling'   => $castPriceMap('filling'),
+        'fruit'     => $castPriceMap('fruit'),
+        'choco'     => $castPriceMap('choco'),
+        'candle'    => $castPriceMap('candle'),
+    ];
+
+    // Tier maps: [single, two-tier, three-tier] per component name.
+    // A blank tier field in the admin falls back to the Single price.
+    $buildTierMap = function ($categoryKey) use ($components) {
+        return $components->get($categoryKey, collect())->mapWithKeys(function ($c) {
+            $single = (float) $c->price;
+            return [$c->name => [
+                $single,
+                $c->price_two_tier !== null ? (float) $c->price_two_tier : $single,
+                $c->price_three_tier !== null ? (float) $c->price_three_tier : $single,
+            ]];
+        });
+    };
+
+    $tierPriceMaps = [
+        'cake_style' => $buildTierMap('cake_style'),
+        'base_icing' => $buildTierMap('base_icing'),
+        'texture'    => $buildTierMap('texture'),
+        'drip'       => $buildTierMap('drip'),
+        'sprinkle'   => $buildTierMap('sprinkle'),
+        'choco'      => $buildTierMap('choco'),
+    ];
+
+    // Round size prices — parses the leading number off names like 'Round 6"'.
+    $roundSizePrices = $components->get('shape', collect())
+        ->filter(fn($c) => preg_match('/^Round (\d+)"$/', $c->name, $m))
+        ->mapWithKeys(function ($c) {
+            preg_match('/^Round (\d+)"$/', $c->name, $m);
+            return [(int) $m[1] => (float) $c->price];
+        });
+
+    // Two/Three-tier shape prices — Round/Square/Heart's own row carries its
+    // tier prices in price_two_tier / price_three_tier.
+    $tierShapePrices = $components->get('shape', collect())
+        ->whereIn('name', ['Round', 'Square', 'Heart'])
+        ->mapWithKeys(fn($c) => [$c->name => [
+            'two'   => $c->price_two_tier !== null ? (float) $c->price_two_tier : (float) $c->price,
+            'three' => $c->price_three_tier !== null ? (float) $c->price_three_tier : (float) $c->price,
+        ]]);
+
+      $characterPrices = $components->get('candle', collect())
+        ->reject(fn($c) => $c->name === 'Number Candles' || $c->name === 'Number Candles (0–9)')
+        ->pluck('price', 'name')
+        ->map(fn($p) => (float) $p);
+
     return view('customer.cake-builder.index', [
-        'pricing'  => $this->pricing,
-        'prefill'  => $request->only(['flavor', 'frosting', 'size', 'budget_min', 'budget_max', 'occasion', 'baker']),
+        'pricing'          => $this->pricing,
+        'prefill'          => $request->only(['flavor', 'frosting', 'size', 'budget_min', 'budget_max', 'occasion', 'baker']),
+        'components'       => $components,
+        'priceMaps'        => $priceMaps,
+        'tierPriceMaps'    => $tierPriceMaps,
+        'roundSizePrices'  => $roundSizePrices,
+        'tierShapePrices'  => $tierShapePrices,
+        'characterPrices'  => $characterPrices,
     ]);
 }
-
     public function calculatePrice(Request $request)
     {
         $request->validate([

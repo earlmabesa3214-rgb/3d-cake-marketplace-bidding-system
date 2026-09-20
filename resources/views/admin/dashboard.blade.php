@@ -115,7 +115,39 @@
 .ing-cat{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:600;color:var(--t2);}
 .ing-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .ing-cnt{font-family:'DM Mono',monospace;font-size:.78rem;font-weight:600;color:var(--tm);}
-@media(max-width:1060px){.db-body{grid-template-columns:1fr;}.kpi-row{grid-template-columns:repeat(2,1fr);}}
+
+/* Marketplace Activity */
+.market-section{margin:1.5rem 1.75rem 0;background:linear-gradient(135deg,var(--espresso) 0%,#3E1E08 55%,#4A2410 100%);border-radius:var(--rxl);padding:1.375rem 1.5rem;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(50,20,0,.16);animation:fadeUp .5s ease both;animation-delay:.16s;}
+.market-section::after{content:'';position:absolute;right:-40px;bottom:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(31,122,108,.16),transparent 65%);border-radius:50%;}
+.market-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem;position:relative;z-index:1;}
+.market-title{display:flex;align-items:center;gap:.5rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:800;color:#fff;}
+.market-dot{width:7px;height:7px;border-radius:50%;background:var(--gold-light);animation:pulse 2.5s infinite;}
+.market-tag{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-light);background:rgba(220,158,72,.14);border:1px solid rgba(220,158,72,.3);padding:.25rem .65rem;border-radius:20px;}
+.market-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.875rem;position:relative;z-index:1;}
+.market-tile{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);border-radius:var(--rl);padding:.9rem .875rem;text-align:left;}
+.market-tile.warn{background:rgba(180,56,64,.14);border-color:rgba(180,56,64,.28);}
+.market-tile.good{background:rgba(31,122,108,.16);border-color:rgba(31,122,108,.3);}
+.market-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1;}
+.market-lbl{font-size:.68rem;font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.07em;margin-top:.4rem;}
+
+/* Popular Customizations */
+.pop-block{margin-bottom:1.125rem;}
+.pop-block:last-child{margin-bottom:0;}
+.pop-block-title{font-size:.7rem;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.09em;margin-bottom:.55rem;}
+.pop-cake-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem .1rem;}
+.pop-cake-name{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:700;color:var(--t1);}
+.pop-rank{width:20px;height:20px;border-radius:6px;background:var(--gold-soft);color:var(--gold-dark);font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pop-cake-count{font-family:'DM Mono',monospace;font-size:.78rem;font-weight:600;color:var(--tm);}
+.pop-size-row{margin-bottom:.6rem;}
+.pop-size-row:last-child{margin-bottom:0;}
+.pop-size-top{display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem;}
+.pop-size-name{font-weight:700;color:var(--t2);}
+.pop-size-pct{font-family:'DM Mono',monospace;font-weight:700;color:var(--gold-dark);}
+.pop-size-bar{height:6px;border-radius:4px;background:var(--s3);overflow:hidden;}
+.pop-size-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+
+@media(max-width:1060px){.db-body{grid-template-columns:1fr;}.kpi-row{grid-template-columns:repeat(2,1fr);}.market-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:640px){.market-section{margin:1.25rem 1rem 0;padding:1.125rem;}.market-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:640px){.kpi-row{grid-template-columns:1fr 1fr;padding:0 1rem;}.hero{padding:1.75rem 1.25rem 4.25rem;}.hero-clock{display:none;}.db-body{padding:1.5rem 1rem 0;}}
 </style>
 @endpush
@@ -173,6 +205,35 @@
             <div class="kpi-val">{{ $stats['total_customers'] }}</div>
             <div class="kpi-lbl">Customers</div>
             <div class="kpi-bar"><div class="kpi-bar-fill" style="width:{{ min(100,$stats['total_customers']*4) }}%"></div></div>
+        </div>
+    </div>
+
+    <div class="market-section">
+        <div class="market-head">
+            <div class="market-title"><span class="market-dot"></span> marketplace activity</div>
+            <span class="market-tag">reverse bidding</span>
+        </div>
+        <div class="market-grid">
+            <div class="market-tile">
+                <div class="market-num">{{ $marketplace['active_requests'] }}</div>
+                <div class="market-lbl">active cake requests</div>
+            </div>
+            <div class="market-tile">
+                <div class="market-num">{{ $marketplace['active_bids'] }}</div>
+                <div class="market-lbl">active bids</div>
+            </div>
+            <div class="market-tile warn">
+                <div class="market-num">{{ $marketplace['awaiting_baker'] }}</div>
+                <div class="market-lbl">awaiting baker</div>
+            </div>
+            <div class="market-tile good">
+                <div class="market-num">{{ $marketplace['awarded_today'] }}</div>
+                <div class="market-lbl">awarded today</div>
+            </div>
+            <div class="market-tile">
+                <div class="market-num">{{ number_format($marketplace['avg_bids_per_request'], 1) }}</div>
+                <div class="market-lbl">avg. bids / request</div>
+            </div>
         </div>
     </div>
 
@@ -253,6 +314,32 @@
                 </div>
             </div>
 
+            <div class="panel" style="animation-delay:.32s">
+                <div class="panel-head">
+                    <div class="panel-title"><div class="pdot gold"></div> Popular Customizations</div>
+                </div>
+                <div class="panel-body">
+                    <div class="pop-block">
+                        <div class="pop-block-title">Top Cake Types</div>
+                        @foreach($popular_cakes as $i => $cake)
+                        <div class="pop-cake-row">
+                            <div class="pop-cake-name"><span class="pop-rank">{{ $i+1 }}</span>{{ $cake->name }}</div>
+                            <span class="pop-cake-count">{{ $cake->order_count }} orders</span>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="pop-block">
+                        <div class="pop-block-title">Popular Sizes</div>
+                        @foreach($popular_sizes as $size)
+                        <div class="pop-size-row">
+                            <div class="pop-size-top"><span class="pop-size-name">{{ $size->name }}</span><span class="pop-size-pct">{{ $size->percentage }}%</span></div>
+                            <div class="pop-size-bar"><div class="pop-size-fill" style="width:{{ $size->percentage }}%"></div></div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
             @if($pending_bakers->count()>0)
             <div class="panel" style="animation-delay:.3s">
                 <div class="panel-head">
@@ -280,7 +367,7 @@
                     <a href="{{ route('ingredients.index') }}" class="plink">Manage →</a>
                 </div>
                 <div class="panel-body">
-                    @php $catColors=['Cake Type'=>'#C07828','Size'=>'#A45224','Flavor'=>'#B04040','Filling'=>'#1F7A6C','Frosting'=>'#C08018','Topping'=>'#6A4824']; $grouped=$ingredients->groupBy('category'); @endphp
+                                  @php $catColors=['shape'=>'#C07828','flavor'=>'#B04040','frosting'=>'#C08018','drip'=>'#1F7A6C','fruit'=>'#A45224','choco'=>'#6A4824','sprinkle'=>'#DC9E48','candle'=>'#9A5E14','deco'=>'#B43840']; $catNames=['shape'=>'Cake Shape','flavor'=>'Flavors','frosting'=>'Frosting','drip'=>'Drips','fruit'=>'Fruits','choco'=>'Choco Decor','sprinkle'=>'Sprinkles','candle'=>'Candles','deco'=>'Decor']; $grouped=$ingredients->groupBy('category'); @endphp
                     @if($grouped->isEmpty())
                     <p style="text-align:center;color:var(--tm);font-size:.8rem;padding:.5rem 0;">No ingredients yet. <a href="{{ route('ingredients.index') }}" style="color:var(--gold);font-weight:600;">Add one →</a></p>
                     @else
@@ -288,7 +375,7 @@
                         @foreach($catColors as $cat=>$clr)
                         @php $n=$grouped->get($cat,collect())->count(); @endphp
                         @if($n>0)
-                        <div class="ing-row"><span class="ing-cat"><span class="ing-dot" style="background:{{ $clr }}"></span>{{ $cat }}</span><span class="ing-cnt">{{ $n }}</span></div>
+                                         <div class="ing-row"><span class="ing-cat"><span class="ing-dot" style="background:{{ $clr }}"></span>{{ $catNames[$cat] ?? $cat }}</span><span class="ing-cnt">{{ $n }}</span></div>
                         @endif
                         @endforeach
                     </div>

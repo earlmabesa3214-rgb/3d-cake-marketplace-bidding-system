@@ -1,80 +1,114 @@
 <?php
-// FILE: app/Http/Controllers/Admin/IngredientController.php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class IngredientController extends Controller
 {
-public function index(Request $request)
+    public function index(Request $request)
     {
-        $ingredients = Ingredient::orderBy('category')->orderBy('name');
+        $query = Ingredient::query();
 
         if ($request->filled('category')) {
-            $ingredients->where('category', $request->category);
+            $query->where('category', $request->category);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
-        $ingredients = $ingredients->get();
-        $products    = \App\Models\Product::orderBy('name')->get();
+        $ingredients = $query->orderBy('category')->orderBy('name')->get();
 
-        return view('admin.ingredients.index', compact('ingredients', 'products'));
+        $stats = [
+            'total'       => Ingredient::count(),
+            'categories'  => Ingredient::distinct('category')->count('category'),
+            'active'      => Ingredient::where('status', 'active')->count(),
+            'coming_soon' => Ingredient::where('status', 'coming_soon')->count(),
+            'inactive'    => Ingredient::where('status', 'inactive')->count(),
+            'draft'       => Ingredient::where('status', 'draft')->count(),
+        ];
+        $categoryCounts = Ingredient::selectRaw('category, count(*) as cnt')
+            ->groupBy('category')
+            ->pluck('cnt', 'category');
+
+        return view('admin.ingredients.index', compact('ingredients', 'stats', 'categoryCounts'));
     }
+
     public function store(Request $request)
     {
-  $request->validate([
-            'name'        => 'required|string|max:255',
-            'emoji'       => 'nullable|string|max:10',
-            'category'    => 'required|in:shape,flavor,frosting,drip,fruit,choco,sprinkle,candle,deco',
-            'price'       => 'required|numeric|min:0|max:999999.99',
-            'description' => 'nullable|string|max:1000',
-            'is_active'   => 'nullable|boolean',
-        ]);
+        $data = $this->validated($request);
+        $this->attachUploads($request, $data);
 
-        Ingredient::create([
-            'name'        => $request->name,
-            'emoji'       => $request->emoji,
-            'category'    => $request->category,
-            'price'       => $request->price,
-            'description' => $request->description,
-            'is_active'   => $request->boolean('is_active'),
-        ]);
+        Ingredient::create($data);
 
         return redirect()->route('ingredients.index')
-            ->with('success', 'Ingredient "' . $request->name . '" added successfully.');
+            ->with('success', 'Component "' . $data['name'] . '" added.');
     }
 
     public function update(Request $request, Ingredient $ingredient)
     {
-  $request->validate([
-            'name'        => 'required|string|max:255',
-            'emoji'       => 'nullable|string|max:10',
-            'category'    => 'required|in:shape,flavor,frosting,drip,fruit,choco,sprinkle,candle,deco',
-            'price'       => 'required|numeric|min:0|max:999999.99',
-            'description' => 'nullable|string|max:1000',
-            'is_active'   => 'nullable|boolean',
-        ]);
+        $data = $this->validated($request);
+        $this->attachUploads($request, $data);
 
-        $ingredient->update([
-            'name'        => $request->name,
-            'emoji'       => $request->emoji,
-            'category'    => $request->category,
-            'price'       => $request->price,
-            'description' => $request->description,
-            'is_active'   => $request->boolean('is_active'),
-        ]);
+        $ingredient->update($data);
+
         return redirect()->route('ingredients.index')
-            ->with('success', 'Ingredient "' . $ingredient->name . '" updated.');
+            ->with('success', 'Component "' . $ingredient->name . '" updated.');
+    }
+
+    /**
+     * Quick status change (Draft / Coming Soon / Active / Inactive).
+     * Route: PATCH /admin/ingredients/{ingredient}/status
+     */
+    public function updateStatus(Request $request, Ingredient $ingredient)
+    {
+        $request->validate(['status' => 'required|in:' . implode(',', Ingredient::STATUSES)]);
+
+        $ingredient->update(['status' => $request->status]);
+
+        return back()->with('success', $ingredient->name . ' is now ' . str_replace('_', ' ', $request->status) . '.');
     }
 
     public function destroy(Ingredient $ingredient)
     {
-        $name = $ingredient->name;
+        // Only drafts are safe to hard-delete — anything that ever reached
+        // Coming Soon/Active/Inactive may already be captured inside a
+        // customer's saved cake_configuration JSON.
+        if ($ingredient->status !== 'draft') {
+            return back()->with('error', 'Only draft components can be deleted. Set this to Inactive instead to retire it.');
+        }
+
         $ingredient->delete();
 
-        return redirect()->route('ingredients.index')
-            ->with('success', 'Ingredient "' . $name . '" deleted.');
+        return redirect()->route('ingredients.index')->with('success', 'Draft component deleted.');
+    }
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'name'             => 'required|string|max:255',
+            'emoji'            => 'nullable|string|max:10',
+            'category'         => 'required|in:' . implode(',', Ingredient::CATEGORIES),
+            'price'            => 'required|numeric|min:0|max:999999.99',
+            'price_two_tier'   => 'nullable|numeric|min:0|max:999999.99',
+            'price_three_tier' => 'nullable|numeric|min:0|max:999999.99',
+            'price_unit'       => 'nullable|string|max:50',
+            'description'      => 'nullable|string|max:1000',
+            'component_type'   => 'required|in:' . implode(',', Ingredient::COMPONENT_TYPES),
+            'placement'        => 'nullable|in:' . implode(',', Ingredient::PLACEMENTS),
+            'status'           => 'required|in:' . implode(',', Ingredient::STATUSES),
+        ]);
+    }
+
+    private function attachUploads(Request $request, array &$data): void
+    {
+        if ($request->hasFile('model_file')) {
+            $data['model_path'] = Storage::disk('public')->putFile('cake-components/models', $request->file('model_file'));
+        }
+        if ($request->hasFile('thumbnail_file')) {
+            $data['thumbnail_path'] = Storage::disk('public')->putFile('cake-components/thumbnails', $request->file('thumbnail_file'));
+        }
     }
 }

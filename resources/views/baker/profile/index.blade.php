@@ -339,10 +339,10 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 @endphp
 
 @if(session('success'))
-    <div class="alert alert-success">✅ {{ session('success') }}</div>
+<div class="alert alert-success" style="display:flex;align-items:center;gap:0.5rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> {{ session('success') }}</div>
 @endif
 @if($errors->any())
-    <div class="alert alert-error">✕ {{ $errors->first() }}</div>
+<div class="alert alert-error" style="display:flex;align-items:center;gap:0.5rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> {{ $errors->first() }}</div>
 @endif
 
 {{-- ── HERO ── --}}
@@ -361,42 +361,41 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             <div class="hero-name">{{ $baker->first_name }} {{ $baker->last_name }}</div>
             <div class="hero-email">{{ $baker->email }}</div>
             <div class="hero-tags">
-                <span class="tag tag-role">🎂 Baker</span>
+         <span class="tag tag-role" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg> Baker</span>
                 @if(!empty($bakerRecord?->shop_name))
-                    <span class="tag tag-shop">🏪 {{ $bakerRecord->shop_name }}</span>
+                <span class="tag tag-shop" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 20v-6h6v6"/></svg> {{ $bakerRecord->shop_name }}</span>
                 @endif
                 @if($bakerRecord?->is_approved)
-                    <span class="tag tag-approved">✅ Approved</span>
+                       <span class="tag tag-approved" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Approved</span>
                 @else
-                    <span class="tag tag-pending">⏳ Pending Approval</span>
+                    <span class="tag tag-pending" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Pending Approval</span>
                 @endif
                 @if($missingCount > 0)
-                    <span class="tag tag-incomplete">⚠ {{ $missingCount }} incomplete</span>
+                    <span class="tag tag-incomplete" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> {{ $missingCount }} incomplete</span>
                 @endif
             </div>
         </div>
     </div>
 
     <div class="tab-nav">
-        <button class="tab-btn active" onclick="switchTab('overview', this)">Overview</button>
-        <button class="tab-btn" onclick="switchTab('bakery', this)">
-            Bakery Info
+              <button class="tab-btn active" onclick="switchTab('overview', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Overview</button>
+        <button class="tab-btn" onclick="switchTab('bakery', this)" style="display:inline-flex;align-items:center;gap:0.4rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 20v-6h6v6"/></svg> Bakery Info
             @if(empty($bakerRecord?->shop_name)) <span class="tab-badge">!</span> @endif
         </button>
-<button class="tab-btn" onclick="switchTab('documents', this)">Documents</button>
-        <button class="tab-btn" onclick="switchTab('location', this)">
-            Location
+<button class="tab-btn" onclick="switchTab('documents', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Documents</button>
+        <button class="tab-btn" onclick="switchTab('location', this)" style="display:inline-flex;align-items:center;gap:0.4rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location
             @if(empty($bakerRecord?->latitude)) <span class="tab-badge">!</span> @endif
         </button>
-<button class="tab-btn" onclick="switchTab('portfolio', this)">Cake Designs</button>
-{{-- ADD THIS --}}
-<button class="tab-btn" onclick="switchTab('reviews', this)">⭐ Reviews
+<button class="tab-btn" onclick="switchTab('portfolio', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg> Cake Designs</button>
+<button class="tab-btn" onclick="switchTab('reviews', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Reviews
     @if($reviews->count() > 0)
         <span class="tab-badge" style="background:var(--caramel);">{{ $reviews->count() }}</span>
     @endif
 </button>
 
-<button class="tab-btn" onclick="switchTab('payments', this)">💳 Payments</button>
+<button class="tab-btn" onclick="switchTab('payments', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Payments</button>
 
     </div>
 </div>
@@ -418,7 +417,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             <div class="completion-chips">
                 @foreach($allChecks as $label => $done)
                     <span class="completion-chip {{ $done ? 'chip-ok' : 'chip-missing' }}">
-                        {{ $done ? '✓' : '✕' }} {{ $label }}
+{!! $done ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" style="vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' !!} {{ $label }}
                     </span>
                 @endforeach
             </div>
@@ -428,7 +427,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
         <div class="section-card">
             <div class="section-card-header">
                 <div class="section-card-title">
-                    <div class="section-card-icon">👤</div>
+                   <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
                     Personal Information
                 </div>
                 <span style="font-size:0.72rem;color:var(--text-muted);font-weight:500;">Member since {{ $baker->created_at->format('M Y') }}</span>
@@ -449,7 +448,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                         <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.1rem;">{{ $baker->email }}</div>
                         <div style="margin-top:0.4rem;">
                             <span style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.7rem;font-weight:600;background:var(--cream);border:1px solid var(--border);color:var(--text-mid);padding:0.15rem 0.6rem;border-radius:20px;">
-                                {{ $bakerRecord?->seller_type === 'homebased' ? '🏠 Home-Based Baker' : '🏢 Registered Business' }}
+                              {!! $bakerRecord?->seller_type === 'homebased' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;margin-right:3px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home-Based Baker' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;margin-right:3px;"><rect x="4" y="2" width="16" height="20" rx="1"/></svg> Registered Business' !!}
                             </span>
                         </div>
                     </div>
@@ -459,14 +458,14 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                 <div style="display:grid;grid-template-columns:1fr 1fr;">
                     @php
                         $phone = $baker->phone ?? $bakerRecord?->phone;
-                        $details = [
-                            ['📞', 'Phone', $phone ?: null],
-                            ['📅', 'Member Since', $baker->created_at->format('F d, Y')],
+                                      $details = [
+                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>', 'Phone', $phone ?: null],
+                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', 'Member Since', $baker->created_at->format('F d, Y')],
                         ];
                     @endphp
                     @foreach($details as [$icon, $lbl, $val])
                     <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);{{ $loop->even ? 'border-left:1px solid var(--border);' : '' }}">
-                        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.35rem;">{{ $icon }} {{ $lbl }}</div>
+                      <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.3rem;">{!! $icon !!} {{ $lbl }}</div>
                         <div style="font-size:0.88rem;font-weight:600;color:var(--text-dark);">
                             @if($val) {{ $val }} @else <span style="color:var(--border);font-style:italic;font-weight:400;font-size:0.82rem;">Not provided</span> @endif
                         </div>
@@ -481,12 +480,12 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
         <div class="section-card">
             <div class="section-card-header">
                 <div class="section-card-title">
-                    <div class="section-card-icon">🧁</div>
+                               <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg></div>
                     Bakery Details
                 </div>
                 <button onclick="switchTab('bakery', document.querySelector('[onclick*=bakery]'))"
                     style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.75rem;font-weight:600;color:var(--caramel);background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:0.3rem 0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;">
-                    ✏️ Edit
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit
                 </button>
             </div>
             <div class="section-card-body" style="padding:0;">
@@ -507,15 +506,15 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                 {{-- Stats row --}}
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);">
                     @php
-                        $stats = [
-                            ['⏱️', 'Experience', $bakerRecord?->experience_years ?? null],
-                            ['💰', 'Min. Order',  $bakerRecord?->min_order_price ? '₱'.number_format($bakerRecord->min_order_price,0) : null],
-                            ['🔗', 'Online Shop',  $bakerRecord?->social_media ? 'Linked' : null],
+                                         $stats = [
+                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', 'Experience', $bakerRecord?->experience_years ?? null],
+                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="14.5" r="2.2"/></svg>', 'Min. Order',  $bakerRecord?->min_order_price ? '₱'.number_format($bakerRecord->min_order_price,0) : null],
+                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>', 'Online Shop',  $bakerRecord?->social_media ? 'Linked' : null],
                         ];
                     @endphp
                     @foreach($stats as [$icon, $lbl, $val])
                     <div style="padding:1rem 1.25rem;text-align:center;{{ !$loop->last ? 'border-right:1px solid var(--border);' : '' }}">
-                        <div style="font-size:1.1rem;margin-bottom:0.2rem;">{{ $icon }}</div>
+                      <div style="margin-bottom:0.2rem;color:var(--caramel);display:flex;justify-content:center;">{!! $icon !!}</div>
                         <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.25rem;">{{ $lbl }}</div>
                         @if($val)
                             @if($lbl === 'Online Shop' && $bakerRecord?->social_media)
@@ -532,7 +531,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
                 {{-- Specialties --}}
                 <div style="padding:1.1rem 1.5rem;">
-                    <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.65rem;">🎂 Specialties</div>
+                  <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.65rem;display:flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg> Specialties</div>
                     @if(!empty($bakerRecord?->specialties))
                         <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
                             @foreach((array)$bakerRecord->specialties as $s)
@@ -557,7 +556,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
             <div class="section-card">
                 <div class="section-card-header">
-                    <div class="section-card-title"><div class="section-card-icon">🧁</div> Bakery Information</div>
+             <div class="section-card-title"><div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg></div> Bakery Information</div>
                 </div>
                 <div class="section-card-body">
                     <div class="form-row">
@@ -621,7 +620,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             </div>
 
             <div style="display:flex;justify-content:flex-end;">
-                <button type="submit" class="btn-save">💾 Save Bakery Info</button>
+<button type="submit" class="btn-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Bakery Info</button>
             </div>
         </form>
     </div>
@@ -631,23 +630,23 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
     <div class="section-card">
         <div class="section-card-header">
             <div class="section-card-title">
-                <div class="section-card-icon">📋</div>
+                         <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
                 Submitted Documents
             </div>
-            <span style="font-size:0.72rem;background:#FEF9E8;color:#7A5800;padding:0.2rem 0.75rem;border-radius:20px;font-weight:700;border:1px solid #F0D4B0;">🔒 Read-only — contact admin to update</span>
+            <span style="font-size:0.72rem;background:#FEF9E8;color:#7A5800;padding:0.2rem 0.75rem;border-radius:20px;font-weight:700;border:1px solid #F0D4B0;display:inline-flex;align-items:center;gap:0.3rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Read-only — contact admin to update</span>
         </div>
         <div class="section-card-body">
             @if(($bakerRecord?->seller_type ?? 'registered') === 'registered')
                 <div class="doc-grid">
                     @foreach([
-                        ['DTI/SEC Number',    $bakerRecord?->dti_sec_number,  '🔢', false],
-                        ['Business Permit',   $bakerRecord?->business_permit, '📄', true],
-                        ['DTI Certificate',   $bakerRecord?->dti_certificate, '📋', true],
-                        ['Sanitary Permit',   $bakerRecord?->sanitary_permit, '🛡️', true],
-                        ['BIR Certificate',   $bakerRecord?->bir_certificate, '📑', true],
+                        ['DTI/SEC Number',    $bakerRecord?->dti_sec_number,  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>', false],
+                        ['Business Permit',   $bakerRecord?->business_permit, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>', true],
+                        ['DTI Certificate',   $bakerRecord?->dti_certificate, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/></svg>', true],
+                        ['Sanitary Permit',   $bakerRecord?->sanitary_permit, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', true],
+                        ['BIR Certificate',   $bakerRecord?->bir_certificate, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>', true],
                     ] as [$label, $value, $icon, $isFile])
                     <div class="info-item">
-                        <div class="info-label">{{ $icon }} {{ $label }}</div>
+                        <div class="info-label">{!! $icon !!} {{ $label }}</div>
                         <div class="info-value">
                             @if($value)
                                 @if($isFile)
@@ -665,14 +664,14 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             @else
                 <div class="doc-grid">
                     @foreach([
-                        ['ID Type',         $bakerRecord?->gov_id_type,  '🪪', false],
-                        ['Gov\'t ID Front',  $bakerRecord?->gov_id_front, '🪪', true],
-                        ['Gov\'t ID Back',   $bakerRecord?->gov_id_back,  '🪪', true],
-                        ['Selfie with ID',   $bakerRecord?->id_selfie,    '🤳', true],
-                        ['Food Safety Cert', $bakerRecord?->food_safety_cert, '🛡️', true],
+                        ['ID Type',         $bakerRecord?->gov_id_type,  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg>', false],
+                        ['Gov\'t ID Front',  $bakerRecord?->gov_id_front, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg>', true],
+                        ['Gov\'t ID Back',   $bakerRecord?->gov_id_back,  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="14" y2="14"/></svg>', true],
+                        ['Selfie with ID',   $bakerRecord?->id_selfie,    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>', true],
+                        ['Food Safety Cert', $bakerRecord?->food_safety_cert, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', true],
                     ] as [$label, $value, $icon, $isFile])
                     <div class="info-item">
-                        <div class="info-label">{{ $icon }} {{ $label }}</div>
+                        <div class="info-label">{!! $icon !!} {{ $label }}</div>
                         <div class="info-value">
                             @if($value)
                                 @if($isFile)
@@ -701,13 +700,13 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
             <div class="section-card">
                 <div class="section-card-header">
-                    <div class="section-card-title"><div class="section-card-icon">📍</div> Bakery Location</div>
+       <div class="section-card-title"><div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div> Bakery Location</div>
                 </div>
                 <div class="section-card-body">
                     <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.6;">Pin your exact bakery location on the map so customers can see how far you are when reviewing your bids.</p>
 
-                    <button type="button" class="btn-locate" onclick="locateMe()">🎯 Use My Current Location</button>
-                    <div class="map-coords" id="map-coords">📍 Pinned: <span id="coords-display"></span></div>
+              <button type="button" class="btn-locate" onclick="locateMe()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Use My Current Location</button>
+              <div class="map-coords" id="map-coords" style="display:flex;align-items:center;gap:0.3rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Pinned: <span id="coords-display"></span></div>
 
                     <div id="profile-map" style="margin-bottom:1rem;"></div>
 
@@ -724,7 +723,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             </div>
 
             <div style="display:flex;justify-content:flex-end;">
-                <button type="submit" class="btn-save">💾 Save Location</button>
+             <button type="submit" class="btn-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Location</button>
             </div>
         </form>
     </div>
@@ -737,7 +736,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
             <div class="section-card">
                 <div class="section-card-header">
-                    <div class="section-card-title"><div class="section-card-icon">🎂</div> Cake Designs</div>
+                   <div class="section-card-title"><div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg></div> Cake Designs</div>
                     <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;" id="portfolio-count-label"></span>
                 </div>
                 <div class="section-card-body">
@@ -771,7 +770,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             </div>
 
           <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
-                <button type="button" class="btn-save" onclick="submitPortfolioForm()">💾 Save Cake Designs</button>
+             <button type="button" class="btn-save" onclick="submitPortfolioForm()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Cake Designs</button>
             </div>
         </form>
 
@@ -794,7 +793,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
     <div class="section-card" style="margin-bottom:1.5rem;">
         <div class="section-card-header">
             <div class="section-card-title">
-                <div class="section-card-icon">⭐</div>
+                      <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
                 Customer Reviews
             </div>
             <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">{{ $reviews->count() }} total review{{ $reviews->count() !== 1 ? 's' : '' }}</span>

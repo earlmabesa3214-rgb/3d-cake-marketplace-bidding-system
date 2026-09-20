@@ -123,7 +123,9 @@
     padding: 0.85rem 0.75rem;
     text-align: center;
     border-right: 1px solid var(--border, #EAE0D0);
+    transition: background 0.2s;
 }
+.stat-cell:hover { background: var(--cream, #F5EFE6); }
 .stat-cell:nth-child(even)  { border-right: none; }
 .stat-cell:nth-child(n+3)   { border-top: 1px solid var(--border, #EAE0D0); }
 .stat-num {
@@ -160,14 +162,15 @@
 .pm-label { color: var(--text-muted, #9A7A5A); }
 .pm-value { font-weight: 600; color: var(--brown-deep, #3B1F0F); }
 
-/* ── RIGHT COLUMN CARDS ── */
 .profile-card {
     background: var(--warm-white, #FFFDF9);
     border: 1px solid var(--border, #EAE0D0);
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 1.5rem;
+    transition: box-shadow 0.25s;
 }
+.profile-card:hover { box-shadow: 0 8px 24px rgba(59,31,15,0.06); }
 .profile-card:last-child { margin-bottom: 0; }
 
 .pc-header {
@@ -184,6 +187,17 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+.pc-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    background: rgba(192,120,64,0.1);
+    color: var(--caramel, #C07840);
+    flex-shrink: 0;
 }
 .pc-header-meta {
     font-size: 0.72rem;
@@ -236,11 +250,11 @@
     border: 1.5px solid var(--border, #EAE0D0);
     border-radius: 14px;
     padding: 1rem 1.1rem;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
     background: white;
     position: relative;
 }
-.addr-card:hover { border-color: var(--caramel, #C07840); }
+.addr-card:hover { border-color: var(--caramel, #C07840); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59,31,15,0.08); }
 .addr-card.is-default {
     border-color: var(--caramel, #C07840);
     background: linear-gradient(135deg, #FFF8F2, #FEF3E8);
@@ -264,7 +278,8 @@
     border-radius: 7px;
     background: var(--cream, #F5EFE6);
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; flex-shrink: 0;
+    color: var(--text-mid, #6B4A2A);
+    flex-shrink: 0;
 }
 .addr-card.is-default .addr-type-icon { background: rgba(192,120,64,0.12); }
 .addr-label-text {
@@ -329,7 +344,7 @@
     text-align: center;
     color: var(--text-muted, #9A7A5A);
 }
-.addr-empty-icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.4; display: block; }
+.addr-empty-icon { display: flex; justify-content: center; margin-bottom: 0.65rem; opacity: 0.35; }
 .addr-empty-text { font-size: 0.82rem; }
 
 /* ── ADD ADDRESS ── */
@@ -420,6 +435,9 @@
 }
 .form-actions { display: flex; gap: 0.5rem; }
 .btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.65rem 1.4rem;
     background: var(--brown-deep, #3B1F0F);
     color: white;
@@ -466,6 +484,11 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    animation: modalPop 0.22s ease;
+}
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.96) translateY(6px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-header {
     padding: 1.25rem 1.5rem;
@@ -525,11 +548,16 @@
             <div class="panel-body">
                 <div class="panel-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</div>
                 <div class="panel-email">{{ auth()->user()->email }}</div>
-
-                @if(auth()->user()->is_verified)
-                    <div class="panel-badge verified">✓ Verified Account</div>
+@if(auth()->user()->is_verified)
+                    <div class="panel-badge verified">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Verified Account
+                    </div>
                 @else
-                    <div class="panel-badge unverified">⚠ Unverified</div>
+                    <div class="panel-badge unverified">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path></svg>
+                        Unverified
+                    </div>
                 @endif
 
                 <div class="panel-stats">
@@ -560,11 +588,14 @@
                         <span class="pm-label">Member since</span>
                         <span class="pm-value">{{ auth()->user()->created_at->format('M Y') }}</span>
                     </div>
-                    <div class="panel-meta-row">
+        <div class="panel-meta-row">
                         <span class="pm-label">Status</span>
                         <span class="pm-value">
                             @if(auth()->user()->is_verified)
-                                <span style="color:#1A7A40;">✓ Verified</span>
+                                <span style="display:inline-flex;align-items:center;gap:0.3rem;color:#1A7A40;">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Verified
+                                </span>
                             @else
                                 <span style="color:#9B7A10;">Unverified</span>
                             @endif
@@ -575,11 +606,12 @@
 
             {{-- Single edit button only here --}}
             <div style="padding: 1.25rem 1.5rem; border-top: 1px solid var(--border, #EAE0D0);">
-                <a href="{{ route('customer.profile.edit') }}"
-                   style="display:flex; align-items:center; justify-content:center; gap:0.4rem; width:100%; padding:0.7rem 1rem; border-radius:10px; background:var(--brown-deep,#3B1F0F); color:white; font-size:0.82rem; font-weight:700; text-decoration:none; transition:all 0.2s;"
+<a href="{{ route('customer.profile.edit') }}"
+                   style="display:flex; align-items:center; justify-content:center; gap:0.45rem; width:100%; padding:0.7rem 1rem; border-radius:10px; background:var(--brown-deep,#3B1F0F); color:white; font-size:0.82rem; font-weight:700; text-decoration:none; transition:all 0.2s;"
                    onmouseover="this.style.background='var(--caramel,#C07840)'"
                    onmouseout="this.style.background='var(--brown-deep,#3B1F0F)'">
-                    ✏️ Edit Profile
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+                    Edit Profile
                 </a>
             </div>
         </div>
@@ -590,8 +622,8 @@
             {{-- ACCOUNT INFO --}}
             <div class="profile-card">
                 <div class="pc-header">
-                    <div class="pc-header-title">
-                        <span>👤</span> Account Information
+              <div class="pc-header-title">
+                        <span class="pc-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span> Account Information
                     </div>
                     <a href="{{ route('customer.profile.edit') }}" class="pc-header-link">Edit →</a>
                 </div>
@@ -622,8 +654,8 @@
             {{-- DELIVERY ADDRESSES --}}
             <div class="profile-card">
                 <div class="pc-header">
-                    <div class="pc-header-title">
-                        <span>📍</span> Delivery Addresses
+           <div class="pc-header-title">
+                        <span class="pc-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg></span> Delivery Addresses
                     </div>
                     <span class="pc-header-meta">{{ $addresses->count() }} saved</span>
                 </div>
@@ -631,13 +663,19 @@
                 @if($addresses->count())
                 <div class="addr-grid">
                     @foreach($addresses as $addr)
-                    @php
-                        $icons = ['Home'=>'🏠','Work'=>'💼','Office'=>'🏢','School'=>'🏫'];
-                        $icon  = $icons[$addr->label] ?? '📍';
+                 @php
+                        $addrIcons = [
+                            'Home' => '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
+                            'Work' => '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
+                            'Office' => '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v18"></path><path d="M6 12H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h2"></path><path d="M18 9h2a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-2"></path><path d="M10 6h.01M14 6h.01M10 10h.01M14 10h.01M10 14h.01M14 14h.01"></path></svg>',
+                            'School' => '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"></path></svg>',
+                        ];
+                        $addrIconDefault = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
+                        $icon = $addrIcons[$addr->label] ?? $addrIconDefault;
                     @endphp
                     <div class="addr-card {{ $addr->is_default ? 'is-default' : '' }}">
                         <div class="addr-type-row">
-                            <div class="addr-type-icon">{{ $icon }}</div>
+                      <div class="addr-type-icon">{!! $icon !!}</div>
                             <span class="addr-label-text">{{ $addr->label }}</span>
                             @if($addr->is_default)
                                 <span class="addr-default-tag">Default</span>
@@ -651,30 +689,43 @@
                             @if(!$addr->is_default)
                             <form method="POST" action="{{ route('customer.addresses.setDefault', $addr->id) }}" style="margin:0;">
                                 @csrf @method('PATCH')
-                                <button type="submit" class="addr-btn ghost">⭐ Set Default</button>
+                       <button type="submit" class="addr-btn ghost">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                    Set Default
+                                </button>
                             </form>
                             @endif
-                            <button onclick="openEditAddress({{ $addr->id }}, '{{ $addr->label }}', '{{ addslashes($addr->street) }}', '{{ addslashes($addr->city) }}', '{{ addslashes($addr->province) }}', '{{ $addr->zip_code }}')"
-                                    class="addr-btn ghost">✏️ Edit</button>
+                       <button onclick="openEditAddress({{ $addr->id }}, '{{ $addr->label }}', '{{ addslashes($addr->street) }}', '{{ addslashes($addr->city) }}', '{{ addslashes($addr->province) }}', '{{ $addr->zip_code }}')"
+                                    class="addr-btn ghost">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+                                Edit
+                            </button>
                             <form method="POST" action="{{ route('customer.addresses.destroy', $addr->id) }}"
                                   onsubmit="return confirm('Remove this address?')" style="margin:0;">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="addr-btn danger">🗑 Remove</button>
+                             <button type="submit" class="addr-btn danger">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    Remove
+                                </button>
                             </form>
                         </div>
                     </div>
                     @endforeach
                 </div>
                 @else
-                <div class="addr-empty">
-                    <span class="addr-empty-icon">📍</span>
+          <div class="addr-empty">
+                    <span class="addr-empty-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </span>
                     <div class="addr-empty-text">No saved addresses yet. Add one below.</div>
                 </div>
                 @endif
 
                 <div class="add-addr-section">
-                    <button class="add-addr-toggle" onclick="toggleAddForm(this)">
-                        <span id="add-toggle-icon">＋</span>
+          <button class="add-addr-toggle" onclick="toggleAddForm(this)">
+                        <span id="add-toggle-icon" style="display:flex;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+                        </span>
                         <span id="add-toggle-text">Add New Address</span>
                     </button>
 
@@ -715,7 +766,10 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button type="submit" class="btn-save">✓ Save Address</button>
+                         <button type="submit" class="btn-save">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Save Address
+                                </button>
                                 <button type="button" class="btn-cancel-form" onclick="toggleAddForm(document.querySelector('.add-addr-toggle'))">Cancel</button>
                             </div>
                         </form>
@@ -731,7 +785,10 @@
 <div id="editModal" class="modal-overlay">
     <div class="modal-box">
         <div class="modal-header">
-            <div class="modal-title">✏️ Edit Address</div>
+      <div class="modal-title" style="display:flex;align-items:center;gap:0.5rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+                Edit Address
+            </div>
             <button class="modal-close" onclick="closeEditModal()">✕</button>
         </div>
         <div class="modal-body">
@@ -762,7 +819,10 @@
                     <input type="text" name="zip_code" id="edit_zip" class="form-input">
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="btn-save">✓ Update Address</button>
+       <button type="submit" class="btn-save">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Update Address
+                    </button>
                     <button type="button" class="btn-cancel-form" onclick="closeEditModal()">Cancel</button>
                 </div>
             </form>
@@ -779,7 +839,9 @@ function toggleAddForm(btn) {
     const icon = document.getElementById('add-toggle-icon');
     const text = document.getElementById('add-toggle-text');
     const isOpen = form.classList.toggle('open');
-    icon.textContent = isOpen ? '−' : '＋';
+    icon.innerHTML = isOpen
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path></svg>'
+        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>';
     text.textContent = isOpen ? 'Cancel' : 'Add New Address';
 }
 function openEditAddress(id, label, street, city, province, zip) {

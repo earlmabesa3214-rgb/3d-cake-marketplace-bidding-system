@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,8 +36,8 @@
     --teal:      #1F7A6C;
     --teal-soft: #E4F2EF;
     --rail-w:    84px;
-    --studio-w:  428px;
-    --ticket-w:  392px;
+    --studio-w:  380px;
+    --ticket-w:  350px;
     --nav-h:     60px;
     --radius:    18px;
     --radius-sm: 12px;
@@ -347,7 +347,7 @@ input[type=range].size-range::-webkit-slider-thumb:hover { transform: scale(1.12
 .a-icon { font-size: 1rem; flex-shrink: 0; line-height: 1; color: var(--brown-mid); transition: color var(--transition); }
 .addon-opt.active .a-icon { color: var(--accent-dk); }
 .a-info { flex: 1; min-width: 0; overflow: hidden; }
-.a-name { font-size: .74rem; font-weight: 700; color: var(--text); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); }
+.a-name { font-size: .74rem; font-weight: 700; color: var(--text); display: block; white-space: normal; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-display); line-height: 1.28; word-break: normal; overflow-wrap: break-word; }
 .addon-opt.active .a-name { color: var(--accent-dk); }
 .a-price { font-size: .62rem; color: var(--text-muted); display: block; margin-top: 1px; font-family: var(--font-mono); white-space: nowrap; }
 .addon-check { width: 17px; height: 17px; border: 1.5px solid var(--border-dk); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all var(--transition-md); background: var(--surface); }
@@ -370,6 +370,11 @@ input[type=range].size-range::-webkit-slider-thumb:hover { transform: scale(1.12
 .addon-opt.active { border-color: var(--caramel); background: var(--accent-lt); box-shadow: var(--shadow-glow); }
 .addon-opt.active .a-name { color: var(--caramel); }
 .addon-opt.active .addon-check { background: var(--caramel); border-color: var(--caramel); }
+.addon-opt.coming-soon:not(.active) { opacity: .55; filter: grayscale(.55); pointer-events: none; }
+.addon-opt.coming-soon:not(.active) .a-icon,
+.addon-opt.coming-soon:not(.active) .a-name,
+.addon-opt.coming-soon:not(.active) .a-price { color: var(--text-muted); }
+.addon-opt.coming-soon:not(.active):hover { opacity: .82; filter: grayscale(.2); }
 
 /* ================= DRIP FLAVOR SUB-PANEL ================= */
 .drip-flavor-panel { display: none; margin-top: 9px; background: var(--bg); border: 1.5px solid rgba(31,122,108,.22); border-radius: 14px; padding: 11px 12px; }
@@ -405,7 +410,13 @@ input[type=range].size-range::-webkit-slider-thumb:hover { transform: scale(1.12
 .frosting-combo-sub { color: rgba(31,122,108,.75); font-size: .67rem; }
 
 .frosting-opt.frosting-locked { opacity: .38; pointer-events: none; filter: grayscale(.6); position: relative; }
-.frosting-opt.frosting-locked::after { content: '🚫'; position: absolute; top: 5px; right: 6px; font-size: .6rem; opacity: .75; pointer-events: none; }
+.frosting-opt.frosting-locked::after { content: ''; position: absolute; top: 5px; right: 6px; width: 12px; height: 12px; opacity: .85; pointer-events: none; background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewbox='0 0 24 24' fill='none' stroke='%23c03020' stroke-width='2.4' stroke-linecap='round'%3e%3ccircle cx='12' cy='12' r='9'/%3e%3cpath d='m5.6 5.6l12.8 12.8'/%3e%3c/svg%3e") center/contain no-repeat; }
+/* ── svg icon system (replaces emojis) ── */
+i.ic { display: inline-flex; align-items: center; justify-content: center; width: 1.1em; height: 1.1em; vertical-align: -0.18em; font-style: normal; flex-shrink: 0; }
+i.ic > svg { width: 100%; height: 100%; display: block; }
+svg.ic { width: 1.1em; height: 1.1em; vertical-align: -0.18em; flex-shrink: 0; }
+.fruit-draggable, .ferrero-draggable, .kitkat-draggable, .oreo-draggable, .bar-shard-draggable, .toblerone-draggable, .candle-draggable { color: #f0d090; }
+.orient-btn-icon { display: inline-flex; align-items: center; }
 .frosting-opt.active[data-val="Fondant Smooth"] { border-color: var(--gold) !important; background: var(--gold-lt) !important; box-shadow: 0 0 0 3px rgba(196,154,60,.14); }
 .frosting-opt.active[data-val="Fondant Smooth"] .a-name { color: #7A5C10 !important; }
 .frosting-opt.active[data-val="Fondant Smooth"] .addon-check { background: var(--gold) !important; border-color: var(--gold) !important; }
@@ -552,6 +563,29 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance: none; wi
 .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(160,100,30,0.14); border-top-color: rgba(180,120,40,0.92); border-radius: 50%; animation: spin .85s linear infinite; box-shadow: 0 4px 14px rgba(160,100,30,0.14); }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: .76rem; color: rgba(120,70,20,0.75); font-family: var(--font-body); font-weight: 600; letter-spacing: 0.01em; }
+/* cake-silhouette loading state — shows a shimmering outline of the cake
+   shaped to match how many tiers are actually loading (single/two/three),
+   so the user sees "a cake is forming" instead of a generic spinner. */
+.loading-cake { position: relative; display: flex; flex-direction: column-reverse; align-items: center; gap: 4px; margin-bottom: 4px; }
+.loading-cake-tier {
+    border-radius: 10px 10px 6px 6px;
+    background: linear-gradient(100deg, rgba(200,137,74,0.16) 0%, rgba(232,176,122,0.46) 35%, rgba(200,137,74,0.16) 60%, rgba(200,137,74,0.16) 100%);
+    background-size: 200% 100%;
+    animation: cakeshimmer 1.5s ease-in-out infinite;
+    box-shadow: 0 3px 10px rgba(160,100,30,0.16);
+    display: none;
+}
+.loading-cake-tier-1 { width: 78px; height: 32px; display: block; }
+.loading-cake-tier-2 { width: 58px; height: 25px; }
+.loading-cake-tier-3 { width: 40px; height: 20px; }
+.loading-cake.tier-two .loading-cake-tier-2 { display: block; }
+.loading-cake.tier-three .loading-cake-tier-2,
+.loading-cake.tier-three .loading-cake-tier-3 { display: block; }
+.loading-cake-plate { width: 96px; height: 8px; border-radius: 50%; background: rgba(160,100,30,0.16); margin-top: 2px; }
+@keyframes cakeshimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
 
 .viewer-badge {
     position: absolute; bottom: 16px; left: 16px; top: auto;
@@ -583,6 +617,26 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance: none; wi
     font-family: var(--font-display);
     transition: top .2s ease, opacity .3s;
 }
+.slice-toggle-wrap {
+    position: absolute; top: 56px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0;
+    background: rgba(20,10,4,0.72);
+    backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border: 1px solid rgba(232,176,122,0.28);
+    border-radius: var(--radius-pill);
+    padding: 3px; z-index: 10;
+    box-shadow: 0 4px 14px rgba(20,10,4,0.45);
+}
+.slice-toggle-btn {
+    border: none; background: transparent; cursor: pointer;
+    padding: 6px 14px; font-size: .68rem; font-weight: 700;
+    font-family: var(--font-display); color: #fff;
+    border-radius: var(--radius-pill); transition: all .18s;
+    white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.55);
+}
+.slice-toggle-btn:hover { background: rgba(255,255,255,0.12); }
+.slice-toggle-btn.active { background: var(--caramel); color: #fff; box-shadow: 0 2px 8px rgba(160,103,58,0.40); text-shadow: none; }
 .viewer-controls { position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 7px; z-index: 10; }
 .view-btn {
     width: 36px; height: 36px;
@@ -699,6 +753,22 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance: none; wi
     padding: .4rem 0 .25rem; display: flex; align-items: center; gap: 6px; font-family: var(--font-display);
 }
 .addon-section-lbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.addon-section-lbl.addon-collapse-toggle {
+    cursor: pointer; user-select: none;
+    margin: 0 0 8px; padding: 12px 14px;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    transition: background .15s, border-color .15s;
+}
+.addon-section-lbl.addon-collapse-toggle::after { content: none; display: none; }
+.addon-section-lbl.addon-collapse-toggle:hover { background: var(--accent-lt); border-color: var(--caramel); }
+.addon-section-lbl.addon-collapse-toggle.open { background: var(--accent-lt); border-color: var(--caramel); border-radius: 12px 12px 0 0; margin-bottom: 0; }
+.addon-section-lbl .addon-collapse-arrow { margin-left: auto; font-size: .68rem; color: var(--caramel); transition: transform .2s ease; flex-shrink: 0; }
+.addon-section-lbl.open .addon-collapse-arrow { transform: rotate(90deg); }
+.addon-collapse-body { display: none; overflow: hidden; margin: 0 0 8px; padding: 14px; background: var(--warm-white); border: 1.5px solid var(--caramel); border-top: none; border-radius: 0 0 12px 12px; }
+.addon-collapse-body.open { display: flex; flex-direction: column; gap: var(--sp-3); animation: addoncollapsein .18s ease; }
+@keyframes addoncollapsein { from { opacity: 0; transform: translatey(-4px); } to { opacity: 1; transform: translatey(0); } }
 
 .fruits-drag-notice { margin-top: 9px; padding: 10px 12px; background: var(--accent-lt); border: 1.5px dashed var(--caramel); border-radius: 12px; font-size: .74rem; color: var(--accent-dk); font-weight: 600; font-family: var(--font-body); line-height: 1.55; align-items: center; gap: 8px; }
 .fruits-drag-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px; }
@@ -911,7 +981,7 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance: none; wi
     .tut-step-layout .tut-shot-frame .tut-icon-img{height:340px;}
 }
 /* ================= RESPONSIVE ================= */
-@media (max-width: 1300px) { :root { --studio-w: 380px; --ticket-w: 340px; } }
+@media (max-width: 1300px) { :root { --studio-w: 280px; --ticket-w: 280px; } }
 
 @media (max-width: 980px) {
     :root { --studio-w: 320px; }
@@ -1050,8 +1120,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </div>
                 </div>
                            <div style="margin-top:18px;padding:12px 16px;background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;font-size:.86rem;color:#6B4C08;font-family:var(--font-body);line-height:1.65;display:flex;align-items:flex-start;gap:10px;">
-                    <span style="font-size:1.15rem;flex-shrink:0;margin-top:1px;">⚠️</span>
-                    <span><strong>Note:</strong> Some cake components may not be compatible or suitable for combination in an actual cake. The 3D Cake Designer is intended only for visualization purposes, so certain combinations may appear in the 3D preview even though they may not be practically applicable or accurately represent the final cake design.</span>
+                    <span style="font-size:1.15rem;flex-shrink:0;margin-top:1px;"><i class="ic" data-ic="warn"></i></span>                    <span><strong>Note:</strong> Some cake components may not be compatible or suitable for combination in an actual cake. The 3D Cake Designer is intended only for visualization purposes, so certain combinations may appear in the 3D preview even though they may not be practically applicable or accurately represent the final cake design.</span>
                 </div>
             </div>     <div class="tut-slide" data-step="2">
                 <div class="tut-step-layout">
@@ -1172,18 +1241,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
         </div>
         <div class="panel-body">
 
-    {{-- CAKE TYPE --}}
-            <div>
-                <div class="section-label">Cake Type <span class="section-req">required</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose your cake base or specialty cake.</p>
-     <div class="opts" id="opts-cake-type" style="margin-bottom:2px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px;">
-                    <div class="opt active" data-cake-type="Sponge Cake">Sponge Cake</div>
-                    <div class="opt" data-cake-type="Chiffon Cake">Chiffon Cake</div>
-                    <div class="opt" data-cake-type="Cheesecake">Cheesecake</div>
-                </div>
-            </div>
-
-            {{-- SHAPE --}}
+    {{-- 1. SHAPE --}}
             <div>
         <div class="section-label">Cake Shape <span class="section-req">required</span></div>
                 <div class="shape-grid" id="opts-shape">
@@ -1199,16 +1257,6 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <path d="M8 14 Q8 10 12 10 Q16 10 16 14"/>
                     </svg>
                     <span class="sh-name">Bundt</span>
-                </div>
-                </div>
-             <div id="cakeTierSection">
-                         <div class="section-label" style="margin-top:14px;">Cake Tier <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional · Round, Square &amp; Heart only</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Applies to <strong>Round</strong>, <strong>Square</strong> and <strong>Heart</strong> as of now.</p>
-                <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
-                    <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
-                    <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
-                 <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
-        
                 </div>
                 </div>
                 <div class="size-slider-wrap visible" id="sizeSliderWrap">
@@ -1278,47 +1326,37 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </div>
                 </div>
             </div>
-{{-- FLAVOUR --}}
-            <div id="flavourSection">
-                <div class="section-label">Flavor <span class="section-req">required</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose a flavor for your selected cake type.</p>
-           <div class="opts" id="opts-flavor" style="margin-bottom:2px;">
-                    <div class="opt active" data-val="Vanilla"    data-price="0">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F2C96A;border:1px solid #E0B040;"></span>Vanilla</span></div>
-                    <div class="opt"        data-val="Chocolate"  data-price="80">  <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#5C2D0E;"></span>Chocolate</span></div>
-                    <div class="opt"        data-val="Red Velvet" data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#8B1111;"></span>Red Velvet</span></div>
-                    <div class="opt"        data-val="Strawberry" data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#D94070;"></span>Strawberry</span></div>
-                    <div class="opt"        data-val="Blueberry"  data-price="110"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#3A4A8A;"></span>Blueberry</span></div>
-                    <div class="opt"        data-val="Ube"        data-price="130"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#6B3FA0;"></span>Ube</span></div>
-                    <div class="opt"        data-val="Mocha"      data-price="100"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#4A2810;"></span>Mocha</span></div>
-                    <div class="opt"        data-val="Mango"      data-price="120"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F5A623;border:1px solid #E09010;"></span>Mango</span></div>
-                    <div class="opt"        data-val="Biscoff"    data-price="140"><span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#C8752A;border:1px solid #A85A18;"></span>Biscoff</span></div>
-                    <div class="opt"        data-val="Carrot"     data-price="80"> <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#E8791E;"></span>Carrot</span></div>
-                    <div class="opt"        data-val="Banana"     data-price="60"> <span style="display:flex;align-items:center;gap:6px;"><span class="flavor-dot" style="background:#F0DE7A;border:1px solid #D8C450;"></span>Banana</span></div>
-                </div>
-            </div>
-{{-- FILLING --}}
+
+    {{-- 2. CAKE TYPE (Textured now lives here too) --}}
             <div>
-                <div class="section-label">Filling <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose what goes between the cake layers.</p>
-                <div class="opts" id="opts-filling" style="margin-bottom:2px;">
-                    <div class="opt active" data-filling="No Filling">No Filling</div>
-                    <div class="opt" data-filling="Vanilla Cream">Vanilla Cream</div>
-                    <div class="opt" data-filling="Chocolate Ganache">Chocolate Ganache</div>
-                    <div class="opt" data-filling="Cream Cheese">Cream Cheese</div>
-                    <div class="opt" data-filling="Strawberry">Strawberry</div>
-                    <div class="opt" data-filling="Blueberry">Blueberry</div>
-                    <div class="opt" data-filling="Biscoff">Biscoff</div>
+                <div class="section-label">Cake Type <span class="section-req">required</span></div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose your cake base or specialty cake.</p>
+        <div class="opts" id="opts-cake-type" style="margin-bottom:2px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px;">
+                    @foreach($components->get('cake_type', collect()) as $i => $c)
+                    <div class="opt {{ $i === 0 ? 'active' : '' }}" data-cake-type="{{ $c->name }}">{{ $c->name }}</div>
+                    @endforeach
                 </div>
             </div>
 
-            {{-- CAKE STYLE --}}
+    {{-- 3. CAKE TIER --}}
+            <div id="cakeTierSection">
+                <div class="section-label">Cake Tier</div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Applies to <strong>Round</strong>, <strong>Square</strong> and <strong>Heart</strong> as of now.</p>
+                <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
+                    <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
+                    <div class="shape-opt" data-tier="Two-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="19" rx="8" ry="2.5"/><rect x="4" y="14" width="16" height="5" rx="1"/><ellipse cx="12" cy="13" rx="5" ry="1.8"/><rect x="7" y="9" width="10" height="4" rx="1"/><path d="M9 9c0-2 1-3 3-3s3 1 3 3"/></svg><span class="sh-name">Two-tier</span></div>
+                    <div class="shape-opt" data-tier="Three-tier"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="21" rx="8" ry="2"/><rect x="4" y="17" width="16" height="4" rx="1"/><ellipse cx="12" cy="16" rx="5.5" ry="1.5"/><rect x="6.5" y="12" width="11" height="4" rx="1"/><ellipse cx="12" cy="11" rx="3.5" ry="1.2"/><rect x="8.5" y="8" width="7" height="3" rx="1"/><path d="M10.5 8c0-1.5.8-2.5 1.5-2.5s1.5 1 1.5 2.5"/></svg><span class="sh-name">Three-tier</span></div>
+                </div>
+            </div>
+
+            {{-- 4. CAKE STYLE --}}
             <div>
                 <div class="section-label">Cake Style <span class="section-req">required</span></div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose the<strong> overall finish</strong> or look of your cake.</p>
                 <div class="addon-grid" id="opts-cake-style">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="style">
                       <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="17" rx="9" ry="4"/><rect x="3" y="10" width="18" height="7" rx="1"/><path d="M5 10c0-4 2-7 7-7s7 3 7 7"/></svg></div>
-                        <div class="a-info"><span class="a-name">Smooth BC</span><span class="a-price">Default · Included</span></div>
+                        <div class="a-info"><span class="a-name">ButterCream</span><span class="a-price">Default · Included</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
                     <div class="addon-opt frosting-opt" data-val="Semi-naked Style" data-price="200" data-group="style">
@@ -1339,14 +1377,13 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </div>
                 </div>
           <div class="fondant-notice" id="fondantNotice">
-                    <span class="fondant-notice-icon">⬜</span>
-                    <div>
+                    <span class="fondant-notice-icon"><i class="ic" data-ic="square"></i></span>                    <div>
                         <span class="fondant-notice-title">Fondant selected — solo only</span>
                         <span class="fondant-notice-sub">Fondant replaces all frosting/icing options. Tap Fondant again to deselect.</span>
                     </div>
                 </div>
           <div class="icing-panel" id="ombreColorPanel" style="background:linear-gradient(135deg,#FDF0F5 0%,#F2ECFB 100%);border-color:rgba(179,157,219,.35);">
-    <div class="icing-header" style="color:#6B4A8A;">🎨 Choose your ombre colors</div>
+    <div class="icing-header" style="color:#6B4A8A;"><i class="ic" data-ic="palette"></i> Choose your ombre colors</div>
    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#8A6AA8;margin-bottom:6px;font-family:var(--font-body);">Top color</div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
         <div class="ombre-custom-swatch" id="ombreTopCustomSwatch" title="Pick any color" style="position:relative;width:48px;height:48px;border-radius:10px;flex-shrink:0;background:conic-gradient(from 0deg,#FF0000,#FFFF00,#00FF00,#00FFFF,#0000FF,#FF00FF,#FF0000);overflow:hidden;border:2px solid rgba(0,0,0,.08);box-shadow:0 0 0 3px rgba(179,157,219,.20);">
@@ -1367,12 +1404,56 @@ body.preview-mode #model-container canvas { background: transparent !important; 
     </div>
 </div>
             </div>
-            {{-- FROSTING / ICING --}}
-            <div>
-                <div class="section-label">Frosting / Icing <span class="section-req">required</span></div>
-                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose the <strong>icing</strong>used underneath or alongside <strong>your</strong> selected <strong>cake </strong> style.</p>
 
-                <div class="frosting-section-label">🎨 Base Icing <span class="section-req">required</span></div>
+    {{-- 5. LAYER (Filling always visible, locked until 2+ layers) --}}
+            <div id="cakeLayersSection">
+                <div class="section-label">Cake Layers</div>
+                <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Choose how many layers each tier has. Lines on the side of the cake show the layers.</p>
+                <div id="tierLayerRows" style="display:flex;flex-direction:column;gap:8px;"></div>
+                <div id="fillingSection" style="margin-top:14px;transition:opacity .2s;">
+                    <div class="frosting-section-label" style="margin-top:0;"><i class="ic" data-ic="cake"></i> Filling</div>
+                    <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 6px;font-family:var(--font-display);">Choose what goes between the layers of any tier with 2 or more layers.</p>
+                    <div id="fillingLockNote" style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:7px 10px;background:var(--cream);border:1px dashed var(--border-dk);border-radius:8px;font-size:.66rem;color:var(--text-muted);font-family:var(--font-display);">
+                      <span><i class="ic" data-ic="lock"></i></span><span>Choose 2 or more layers on a tier above to unlock filling</span>
+                    </div>
+                    <div class="opts" id="opts-filling" style="margin-bottom:2px;">
+                        @php
+                            $fillingFlavorDots = [
+                                'Vanilla'=>'#F2C96A','Chocolate'=>'#5C2D0E','Red Velvet'=>'#8B1111','Strawberry'=>'#D94070',
+                                'Blueberry'=>'#3A4A8A','Ube'=>'#6B3FA0','Mocha'=>'#4A2810','Mango'=>'#F5A623',
+                                'Biscoff'=>'#C8752A','Carrot'=>'#E8791E','Banana'=>'#F0DE7A',
+                            ];
+                            $fillingFlavorComponents = $components->get('flavor', collect());
+                        @endphp
+                        <div class="opt active" data-filling="No Filling">No Filling</div>
+                        @foreach($fillingFlavorComponents as $c)
+                        <div class="opt" data-filling="{{ $c->name }}">
+                            <span style="display:flex;align-items:center;gap:6px;">
+                                <span class="flavor-dot" style="background:{{ $fillingFlavorDots[$c->name] ?? '#C89860' }};"></span>{{ $c->name }}
+                            </span>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+{{-- Flavor data still needed by the per-tier pickers in Cake Layers below --}}
+@php
+    $flavorDots = [
+        'Vanilla'=>'#F2C96A','Chocolate'=>'#5C2D0E','Red Velvet'=>'#8B1111','Strawberry'=>'#D94070',
+        'Blueberry'=>'#3A4A8A','Ube'=>'#6B3FA0','Mocha'=>'#4A2810','Mango'=>'#F5A623',
+        'Biscoff'=>'#C8752A','Carrot'=>'#E8791E','Banana'=>'#F0DE7A',
+    ];
+    $flavorComponents = $components->get('flavor', collect());
+    $firstFlavor = $flavorComponents->first();
+@endphp
+
+            {{-- ADD-ONS --}}
+            <div>
+                <div class="section-label">Add-ons <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
+
+                <div class="addon-section-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="5" r="2.6"/><circle cx="12" cy="19" r="2.6"/><circle cx="5" cy="12" r="2.6"/><circle cx="19" cy="12" r="2.6"/></svg> Icing Decorations</div>
+
                 <div class="addon-grid" id="opts-frosting-base">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="base">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2c0 0 4 4 4 10s-4 10-4 10"/><path d="M2 12h20"/></svg></div>
@@ -1389,6 +1470,15 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <div class="a-info"><span class="a-name">Rosettes</span><span class="a-price">+₱100 · add-on</span></div>
                         <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                     </div>
+                    <div class="addon-opt" id="leafToggleBtn" data-group="leaves" data-val="Leaf" data-price="50">
+                        <div class="a-icon"><i class="ic" data-ic="leaf"></i></div>
+                        <div class="a-info"><span class="a-name">Leaf</span><span class="a-price">+₱50/pc · drag</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                    </div>
+                    <div id="leafDragNotice" style="display:none;grid-column:1 / -1;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
+                        <span style="font-size:1.1rem;"><i class="ic" data-ic="leaf"></i></span>
+                        <span><strong>Drag a leaf from the tray</strong> onto the cake. Tap a placed leaf to rotate or remove it.</span>
+                    </div>
                 </div>
 
                 <div class="icing-panel" id="icingPanel">
@@ -1404,16 +1494,9 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     <div class="icing-color-label" id="icingColorLabel">White</div>
                 </div>
 
-             <div class="frosting-section-label" style="margin-top:10px;">🖌️ Texture <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;white-space:nowrap;">(OPTIONAL)</span></div>
-                <div class="addon-grid" id="opts-frosting-special">
-                           <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
-                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-4 3 3 5-6 6 7H3z"/><path d="M3 7h18"/><path d="M3 12h18"/></svg></div>
-                        <div class="a-info"><span class="a-name">Textured</span><span class="a-price">+₱150 · add-on</span></div>
-                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                    </div>
-                </div>
+
          <div class="candle-picker-panel" id="rosettePlacementPanel" style="background:linear-gradient(135deg,#FDF0F5 0%,#FBEAF0 100%);border-color:rgba(216,120,150,.32);">
-       <div class="candle-picker-header">🌹 Rosette placement <span id="rosetteNumberDigitNotice" style="display:none;font-size:.58rem;font-weight:400;margin-left:6px;color:#B02040;">(rosettes only available for single-digit Number cakes)</span></div>
+       <div class="candle-picker-header"><i class="ic" data-ic="rose"></i> Rosette placement <span id="rosetteNumberDigitNotice" style="display:none;font-size:.58rem;font-weight:400;margin-left:6px;color:#B02040;">(rosettes only available for single-digit Number cakes)</span></div>
                                    <div class="candle-num-grid" id="opts-rosette-placement" style="grid-template-columns:repeat(3,1fr);">
                         <div class="candle-num-opt active" data-rosette-placement="Border" style="font-size:.58rem;">Border</div>
                         <div class="candle-num-opt" data-rosette-placement="Full Top" style="font-size:.58rem;">Full</div>
@@ -1422,8 +1505,8 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <div class="candle-num-opt" data-rosette-placement="Cluster Left" style="font-size:.54rem;">Cluster L</div>
                     </div>
                   <div class="candle-active-badge" id="rosettePlacementBadge">Selected: Border</div>
-
-                    <div class="frosting-section-label" style="margin-top:10px;">✨ Combo placements <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(pick one, optional)</span></div>
+ 
+                    <div class="frosting-section-label" style="margin-top:10px;"><i class="ic" data-ic="sparkles"></i> Combo placements <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(pick one, optional)</span></div>
                                    <div class="candle-num-grid" id="opts-rosette-combo" style="grid-template-columns:1fr;gap:6px;">
                         <div class="candle-num-opt" data-rosette-placement="Border+Sides" style="font-size:.68rem;text-align:left;padding:8px 10px;">Border + Sides</div>
                         <div class="candle-num-opt" data-rosette-placement="Full Top+Sides" style="font-size:.68rem;text-align:left;padding:8px 10px;">Full Top + Sides</div>
@@ -1436,7 +1519,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <div class="candle-num-opt" data-rosette-placement="Middle+Sides" data-requires-middle="1" style="font-size:.68rem;text-align:left;padding:8px 10px;">Middle + Sides</div>
                     </div>
 
-                    <div class="icing-header" style="margin-top:10px;">🎨 Rosette color</div>
+                    <div class="icing-header" style="margin-top:10px;"><i class="ic" data-ic="palette"></i> Rosette color</div>
                     <div class="icing-color-grid" id="rosetteColorGrid" style="grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;">
                         <div class="icing-color-opt light-color active" data-rosette-color="#FFFFFF" data-rosette-color-name="White"    style="background:#FFFFFF;border-color:#D5C8B8;"></div>
                         <div class="icing-color-opt light-color"        data-rosette-color="#FFCCE0" data-rosette-color-name="Pink"     style="background:#FFCCE0;"></div>
@@ -1448,20 +1531,25 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     <div class="icing-color-label" id="rosetteColorLabel">White</div>
                 </div>
 
+                <div class="frosting-section-label" style="margin-top:10px;">Texture <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:6px;">optional add-on</span></div>
+                <div class="addon-grid" id="opts-frosting-special">
+                    <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
+                        <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M4 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M4 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg></div>
+                        <div class="a-info"><span class="a-name">Textured</span><span class="a-price">+₱150</span></div>
+                        <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                    </div>
+                </div>
+
                 <div class="frosting-combo-hint" id="frostingComboHint">
-                    <span class="frosting-combo-hint-icon">✨</span>
-                    <div>
+                    <span class="frosting-combo-hint-icon"><i class="ic" data-ic="sparkles"></i></span>                    <div>
                         <span class="frosting-combo-label" id="frostingComboLabel"></span>
                         <span class="frosting-combo-sub">Baker will apply all selected styles to your cake</span>
                     </div>
                 </div>
-            </div>
 
-            {{-- ADD-ONS --}}
-            <div>
-                <div class="section-label">Add-ons <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
 
-                <div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 10a7 7 0 1 1-14 0L12 2z"/></svg> Drip</div>
+
+                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 10a7 7 0 1 1-14 0L12 2z"/></svg> Drip</div>
                 <div class="addon-grid" style="margin-bottom:6px;">
                     <div class="addon-opt" data-group="drips" data-val="Drip" data-price="180" id="dripToggleBtn">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 10a7 7 0 1 1-14 0L12 2z"/></svg></div>
@@ -1486,127 +1574,184 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <div class="drip-flavor-opt"        data-drip-flavor="Raspberry"     data-drip-color="#C01858"><span class="drip-color-dot" style="background:#C01858;"></span>Raspberry</div>
                     </div>
                 </div>
-<div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/></svg> Fruits</div>
+<div class="addon-section-lbl" style="margin-top:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/></svg> Fruits</div>
               <div style="background:var(--accent-lt);border:1px solid rgba(200,137,74,.25);border-radius:12px;padding:10px 12px;">
-                    <p style="font-size:.72rem;font-weight:700;color:#7A4A1E;margin:0 0 10px;font-family:var(--font-display);">🖱️ Drag a fruit straight onto the cake below</p>
+                <div class="frosting-section-label" style="margin-top:0;"><i class="ic" data-ic="pointer"></i> By piece — drag onto the cake</div>
                     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="opts-fruits">
-                <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                <div class="addon-opt fruit-tile" data-group="fruits" data-val="Strawberry" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 6 5 10c0 5 4 10 7 12 3-2 7-7 7-12 0-4-3-8-7-8z"/><path d="M12 2c0 0 2-3 5-1"/><circle cx="10" cy="10" r=".5" fill="currentColor"/><circle cx="14" cy="8" r=".5" fill="currentColor"/><circle cx="11" cy="14" r=".5" fill="currentColor"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Strawberry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                  <div class="addon-opt fruit-tile" data-group="fruits" data-val="Blueberry" data-price="25" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                  <div class="addon-opt fruit-tile" data-group="fruits" data-val="Blueberry" data-price="25" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="14" r="5"/><circle cx="15" cy="11" r="4"/><circle cx="14" cy="17" r="3.5"/><path d="M9 4c0 0 1-2 3-2s3 2 3 2"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Blueberry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱25/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                    <div class="addon-opt fruit-tile" data-group="fruits" data-val="Raspberry" data-price="55" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                    <div class="addon-opt fruit-tile" data-group="fruits" data-val="Raspberry" data-price="55" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="14" r="3"/><circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M12 4V2"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Raspberry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                     <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                     <div class="addon-opt fruit-tile" data-group="fruits" data-val="Cherry" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="17" r="4"/><circle cx="17" cy="15" r="4"/><path d="M8 13C8 8 12 4 16 3"/><path d="M17 11C17 7 15 4 12 3"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Cherry</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Mango Slice" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 18 Q5 6 12 4 Q19 6 19 18 Q15 21 12 21 Q9 21 5 18z"/><path d="M12 4 Q12 12 12 21"/><path d="M5 18 Q12 15 19 18"/><path d="M6 13 Q12 11 18 13"/></svg>
-                            <span class="a-name" style="font-size:.68rem;text-align:center;">Mango Cube</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40/pc</span>
-                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                        </div>
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Kiwi Slice" data-price="30" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8.5" y2="8.5"/><line x1="15.5" y1="15.5" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="15.5" y2="8.5"/><line x1="8.5" y1="15.5" x2="5.6" y2="18.4"/></svg>
-                            <span class="a-name" style="font-size:.68rem;text-align:center;">Kiwi Slice</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30/pc</span>
-                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                        </div>
-                   <div class="addon-opt fruit-tile" data-group="fruits" data-val="Peach Slice" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 Q18 3 20 9 Q22 15 18 19 Q15 22 12 22 Q9 22 6 19 Q2 15 4 9 Q6 3 12 3z"/><path d="M12 3 Q12 8 11 13 Q10 18 12 22"/><path d="M12 3 Q13 6 12 9"/></svg>
-                            <span class="a-name" style="font-size:.68rem;text-align:center;">Peach Slice</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
-                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                        </div>
-                        <div class="addon-opt fruit-tile" data-group="fruits" data-val="Banana Slice" data-price="35" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4c-1 5-1 10 2 14 3 3 8 3 11-1 1-1.5 1.5-3 1-4-1 2-3 3-5 3-4 0-7-3-8-8-.3-1.5-.5-3-1-4z"/><circle cx="18" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>
-                            <span class="a-name" style="font-size:.68rem;text-align:center;">Banana Slice</span>
-                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35/pc</span>
-                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
-                        </div>
                     </div>
                     <div id="fruitsDragNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
-                        <span style="font-size:1.1rem;">👆</span>
-                        <span><strong>Now tap the cake preview</strong> to place your fruit. Tap a placed fruit to move it.</span>
+                        <span style="font-size:1.1rem;"><i class="ic" data-ic="pointer"></i></span>                        <span><strong>Now tap the cake preview</strong> to place your fruit. Tap a placed fruit to move it.</span>
                     </div>
-            
-                </div>
 
-<div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="8" y1="6" x2="8" y2="20"/><line x1="16" y1="6" x2="16" y2="20"/><line x1="2" y1="13" x2="22" y2="13"/></svg> Chocolate Decorations</div>
+                    <div class="frosting-section-label" style="margin-top:14px;"><i class="ic" data-ic="scale"></i> By weight — sold per gram</div>
+                    <p style="font-size:.66rem;color:var(--text-muted);margin:0 0 6px;font-family:var(--font-display);">These are mixed and arranged by the baker — choose how many grams you want.</p>
+                    <div id="gramFruitTierHint" style="display:none;margin:0 0 8px;padding:7px 10px;background:rgba(31,122,108,.08);border:1px dashed rgba(31,122,108,.30);border-radius:8px;font-size:.64rem;color:var(--teal);font-family:var(--font-display);line-height:1.5;">
+                        <i class="ic" data-ic="cake"></i> For a fruit <strong>border on a tier</strong>, use the <strong>"Border Fruit — Per Tier"</strong> section below instead. The tiles above are only for a middle pile or a full-top scatter.
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;" id="opts-fruits-grams">
+                        <div class="addon-opt fruit-gram-tile" data-group="fruits-grams" data-val="Mango Slice" style="flex-direction:column;align-items:center;padding:10px 6px;gap:4px;border-radius:12px;">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 18 Q5 6 12 4 Q19 6 19 18 Q15 21 12 21 Q9 21 5 18z"/><path d="M12 4 Q12 12 12 21"/><path d="M5 18 Q12 15 19 18"/><path d="M6 13 Q12 11 18 13"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Mango Cube</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40 / 100g</span>
+                            <div class="gram-stepper" style="display:none;align-items:center;gap:6px;margin-top:4px;">
+                                <button type="button" class="gram-minus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">−</button>
+                                <span style="font-family:var(--font-mono);font-size:.74rem;font-weight:700;color:var(--accent-dk);min-width:44px;text-align:center;"><span class="gram-val">100</span>g</span>
+                                <button type="button" class="gram-plus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">+</button>
+                            </div>
+                            <div class="gram-place-toggle" style="display:none;gap:0;border:1.5px solid var(--border-dk);border-radius:7px;overflow:hidden;margin-top:4px;width:100%;">
+                                <button type="button" class="gram-place-btn active" data-placement="middle" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Middle</button>
+                                <button type="button" class="gram-place-btn" data-placement="border" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Border</button>
+                                <button type="button" class="gram-place-btn" data-placement="full" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Full</button>
+                            </div>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-gram-tile" data-group="fruits-grams" data-val="Kiwi Slice" style="flex-direction:column;align-items:center;padding:10px 6px;gap:4px;border-radius:12px;">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="21"/><line x1="3" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="8.5" y2="8.5"/><line x1="15.5" y1="15.5" x2="18.4" y2="18.4"/><line x1="18.4" y1="5.6" x2="15.5" y2="8.5"/><line x1="8.5" y1="15.5" x2="5.6" y2="18.4"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Kiwi Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30 / 100g</span>
+                            <div class="gram-stepper" style="display:none;align-items:center;gap:6px;margin-top:4px;">
+                                <button type="button" class="gram-minus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">−</button>
+                                <span style="font-family:var(--font-mono);font-size:.74rem;font-weight:700;color:var(--accent-dk);min-width:44px;text-align:center;"><span class="gram-val">100</span>g</span>
+                                <button type="button" class="gram-plus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">+</button>
+                            </div>
+                            <div class="gram-place-toggle" style="display:none;gap:0;border:1.5px solid var(--border-dk);border-radius:7px;overflow:hidden;margin-top:4px;width:100%;">
+                                <button type="button" class="gram-place-btn active" data-placement="middle" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Middle</button>
+                                <button type="button" class="gram-place-btn" data-placement="border" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Border</button>
+                                <button type="button" class="gram-place-btn" data-placement="full" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Full</button>
+                            </div>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-gram-tile" data-group="fruits-grams" data-val="Peach Slice" style="flex-direction:column;align-items:center;padding:10px 6px;gap:4px;border-radius:12px;">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 Q18 3 20 9 Q22 15 18 19 Q15 22 12 22 Q9 22 6 19 Q2 15 4 9 Q6 3 12 3z"/><path d="M12 3 Q12 8 11 13 Q10 18 12 22"/><path d="M12 3 Q13 6 12 9"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Peach Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35 / 100g</span>
+                            <div class="gram-stepper" style="display:none;align-items:center;gap:6px;margin-top:4px;">
+                                <button type="button" class="gram-minus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">−</button>
+                                <span style="font-family:var(--font-mono);font-size:.74rem;font-weight:700;color:var(--accent-dk);min-width:44px;text-align:center;"><span class="gram-val">100</span>g</span>
+                                <button type="button" class="gram-plus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">+</button>
+                            </div>
+                            <div class="gram-place-toggle" style="display:none;gap:0;border:1.5px solid var(--border-dk);border-radius:7px;overflow:hidden;margin-top:4px;width:100%;">
+                                <button type="button" class="gram-place-btn active" data-placement="middle" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Middle</button>
+                                <button type="button" class="gram-place-btn" data-placement="border" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Border</button>
+                                <button type="button" class="gram-place-btn" data-placement="full" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Full</button>
+                            </div>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                        <div class="addon-opt fruit-gram-tile" data-group="fruits-grams" data-val="Banana Slice" style="flex-direction:column;align-items:center;padding:10px 6px;gap:4px;border-radius:12px;">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4c-1 5-1 10 2 14 3 3 8 3 11-1 1-1.5 1.5-3 1-4-1 2-3 3-5 3-4 0-7-3-8-8-.3-1.5-.5-3-1-4z"/><circle cx="18" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg>
+                            <span class="a-name" style="font-size:.68rem;text-align:center;">Banana Slice</span>
+                            <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35 / 100g</span>
+                            <div class="gram-stepper" style="display:none;align-items:center;gap:6px;margin-top:4px;">
+                                <button type="button" class="gram-minus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">−</button>
+                                <span style="font-family:var(--font-mono);font-size:.74rem;font-weight:700;color:var(--accent-dk);min-width:44px;text-align:center;"><span class="gram-val">100</span>g</span>
+                                <button type="button" class="gram-plus" style="width:24px;height:24px;border:1.5px solid var(--border-dk);border-radius:7px;background:var(--surface);color:var(--brown-mid);font-size:.85rem;font-weight:700;cursor:pointer;line-height:1;">+</button>
+                            </div>
+                            <div class="gram-place-toggle" style="display:none;gap:0;border:1.5px solid var(--border-dk);border-radius:7px;overflow:hidden;margin-top:4px;width:100%;">
+                                <button type="button" class="gram-place-btn active" data-placement="middle" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Middle</button>
+                                <button type="button" class="gram-place-btn" data-placement="border" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Border</button>
+                                <button type="button" class="gram-place-btn" data-placement="full" style="flex:1;padding:5px 2px;font-size:.58rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Full</button>
+                            </div>
+                            <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
+                        </div>
+                    </div>
+                    <div id="fruitGramsTotalNote" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
+                        <span style="font-size:1.1rem;"><i class="ic" data-ic="scale"></i></span>                        <span id="fruitGramsTotalText"></span>
+                    </div>
+
+                    <div id="tierFruitBorderSection" style="display:none;margin-top:14px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:12px 13px;">
+                        <div class="frosting-section-label" style="margin-top:0;"><i class="ic" data-ic="cake"></i> Border Fruit — Per Tier</div>
+                        <p style="font-size:.66rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Pick a different border fruit for each tier — or leave a tier plain.</p>
+                        <div id="tierFruitBorderRows" style="display:flex;flex-direction:column;gap:10px;"></div>
+                    </div>
+
+                    <button type="button" id="btnAllFruits" style="width:100%;margin-top:12px;padding:12px;border:1.5px solid var(--caramel);border-radius:12px;background:var(--surface);color:var(--accent-dk);font-size:.80rem;font-weight:700;font-family:var(--font-display);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s;">
+                        <span style="font-size:1.05rem;"><i class="ic" data-ic="grapes"></i></span>                        <span>All Fruits — Assorted Full Top</span>
+                    </button>
+                </div>
+<div class="addon-section-lbl" style="margin-top:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="8" y1="6" x2="8" y2="20"/><line x1="16" y1="6" x2="16" y2="20"/><line x1="2" y1="13" x2="22" y2="13"/></svg> Chocolate Decorations</div>
                 <div style="background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;padding:10px 12px;">
                     <p style="font-size:.72rem;font-weight:700;color:#6B4C08;margin:0 0 10px;font-family:var(--font-display);">Tap a decoration to add it — then tap the cake preview to place it</p>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="opts-choco">
-                   <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball" data-price="55" id="ferreroToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                   <div class="addon-opt" data-group="choco" data-val="Ferrero-style Ball" data-price="55" id="ferreroToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/><path d="M7 7l2 2M15 15l2 2M17 7l-2 2M9 15l-2 2"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Ferrero</span>
                  <span class="a-price" style="font-size:.60rem;text-align:center;">+₱55/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="30" id="kitkatToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                        <div class="addon-opt" data-group="choco" data-val="Kitkat Sticks" data-price="30" id="kitkatToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="8" width="18" height="8" rx="2"/><line x1="9" y1="8" x2="9" y2="16"/><line x1="15" y1="8" x2="15" y2="16"/><path d="M3 12h18"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">KitKat</span>
                  <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-            <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="20" id="oreoToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+            <div class="addon-opt" data-group="choco" data-val="Oreo Cookie" data-price="20" id="oreoToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/><path d="M8 9h8M8 12h8M8 15h8"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Oreo</span>
                          <span class="a-price" style="font-size:.60rem;text-align:center;">+₱20/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                      <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                      <div class="addon-opt" data-group="choco" data-val="Chocolate Bar Shard" data-price="40" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l18 3-4 10L3 7z"/><line x1="8" y1="8" x2="6" y2="14"/><line x1="13" y1="9" x2="11" y2="15"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Bar Shard</span>
                        <span class="a-price" style="font-size:.60rem;text-align:center;">+₱40/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                        <div class="addon-opt" data-group="choco" data-val="Chocolate Curls" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                        <div class="addon-opt" data-group="choco" data-val="Chocolate Curls" data-price="45" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 12c0-3 2-5 4-4s3 4 1 6-6 3-8 1-2-6 1-8 8-2 9 2-1 8-5 9-9-2-9-6 3-8 7-8"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Curls</span>
                       <span class="a-price" style="font-size:.60rem;text-align:center;">+₱45</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                  <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="80" id="plaqueToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                  <div class="addon-opt" data-group="choco" data-val="Chocolate Plaque" data-price="80" id="plaqueToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="9" y1="6" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="18"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Plaque</span>
                        <span class="a-price" style="font-size:.60rem;text-align:center;">+₱80</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                       <div class="addon-opt" data-group="choco" data-val="Toblerone Triangle" data-price="50" id="tobleroneToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                       <div class="addon-opt" data-group="choco" data-val="Toblerone Triangle" data-price="50" id="tobleroneToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 L22 20 L2 20 Z"/><path d="M12 3 L17 20"/><path d="M12 3 L7 20"/><line x1="5" y1="14" x2="19" y2="14"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Toblerone</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱50/pc</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                                           <div class="addon-opt" data-group="choco" data-val="Chocolate Sprinkles" data-price="30" id="chocoSprinkleToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
+                                           <div class="addon-opt" data-group="choco" data-val="Chocolate Sprinkles" data-price="30" id="chocoSprinkleToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="1.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Choco Sprinkles</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱30</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
-                                        <div class="addon-opt" data-group="choco" data-val="Crushed Peanuts" data-price="35" id="peanutsToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:5px;border-radius:12px;">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="2.4"/><circle cx="15" cy="8" r="2"/><circle cx="17" cy="14" r="1.8"/><circle cx="10" cy="15" r="2.2"/><circle cx="6" cy="16" r="1.6"/></svg>
+                                        <div class="addon-opt" data-group="choco" data-val="Crushed Peanuts" data-price="35" id="peanutsToggleBtn" style="flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;">                           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="2.4"/><circle cx="15" cy="8" r="2"/><circle cx="17" cy="14" r="1.8"/><circle cx="10" cy="15" r="2.2"/><circle cx="6" cy="16" r="1.6"/></svg>
                             <span class="a-name" style="font-size:.68rem;text-align:center;">Crushed Peanuts</span>
                             <span class="a-price" style="font-size:.60rem;text-align:center;">+₱35</span>
                             <div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                     </div>
                 <div class="candle-picker-panel" id="plaqueShapePanel" style="background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%);border-color:rgba(196,154,60,.32);">
-                        <div class="candle-picker-header">🍫 Choose plaque shape</div>
+                        <div class="candle-picker-header"><i class="ic" data-ic="chocbar"></i> Choose plaque shape</div>
                         <div class="candle-num-grid" id="opts-plaque-shape" style="grid-template-columns:repeat(5,1fr);">
                             <div class="candle-num-opt active" data-plaque-shape="Square" style="font-size:.60rem;">Square</div>
                             <div class="candle-num-opt" data-plaque-shape="Rectangle" style="font-size:.60rem;">Rect.</div>
@@ -1621,16 +1766,13 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         </div>
                     </div>
                     <div class="candle-picker-panel" id="tobleroneFlavorPanel" style="background:linear-gradient(135deg,#FBF5E6 0%,#F5EDD8 100%);border-color:rgba(196,154,60,.32);">
-                        <div class="candle-picker-header">🔺 Choose Toblerone flavor</div>
+                        <div class="candle-picker-header"><i class="ic" data-ic="toblerone"></i> Choose Toblerone flavor</div>
                         <div class="candle-num-grid" id="opts-toblerone-flavor" style="grid-template-columns:repeat(2,1fr);">
-                            <div class="candle-num-opt active" data-toblerone-flavor="Chocolate" style="font-size:.62rem;">🍫 Chocolate</div>
-                            <div class="candle-num-opt" data-toblerone-flavor="White" style="font-size:.62rem;">🤍 White</div>
-                        </div>
+                            <div class="candle-num-opt active" data-toblerone-flavor="Chocolate" style="font-size:.62rem;"><i class="ic" data-ic="chocbar"></i> Chocolate</div>                            <div class="candle-num-opt" data-toblerone-flavor="White" style="font-size:.62rem;"><i class="ic" data-ic="heart"></i> White</div>                        </div>
                         <div class="candle-active-badge" id="tobleroneFlavorBadge">Selected: Chocolate · with hazelnut bits</div>
                     </div>
                     <div id="chocoPlaceNotice" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(196,154,60,.18);border-radius:8px;font-size:.70rem;color:#6B4C08;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
-                        <span style="font-size:1.1rem;">👆</span>
-                        <span><strong>Now tap the cake preview</strong> to place it. Tap a placed piece to move it.</span>
+                        <span style="font-size:1.1rem;"><i class="ic" data-ic="pointer"></i></span>                        <span><strong>Now tap the cake preview</strong> to place it. Tap a placed piece to move it.</span>
                     </div>
                     {{-- CHOCO ROTATION PANEL --}}
                     <div class="rot-panel rot-gold" id="chocoRotPanel">
@@ -1659,7 +1801,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 </div>
 
                 <div id="chocoCurlsPlacementPanel" style="display:none;margin-top:9px;background:var(--gold-lt);border:1.5px solid rgba(196,154,60,.32);border-radius:12px;padding:9px 11px;">
-                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#6B4C08;margin-bottom:8px;font-family:var(--font-display);">🍫 Choco Curls placement</div>
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#6B4C08;margin-bottom:8px;font-family:var(--font-display);"><i class="ic" data-ic="chocbar"></i> Choco Curls placement</div>
                     <div style="display:flex;gap:0;border:1.5px solid rgba(196,154,60,.36);border-radius:9px;overflow:hidden;">
                         <button class="choco-curls-place-btn active" data-placement="middle" style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--gold);color:#fff;transition:all .15s;">Middle</button>
                         <button class="choco-curls-place-btn"        data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides</button>
@@ -1669,21 +1811,20 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 </div>
 
                 <div class="ferrero-drag-notice" id="ferreroDragNotice" style="display:none;flex-direction:row;">
-                    <span class="ferrero-drag-icon">🟤</span>
-                    <div>
+                    <span class="ferrero-drag-icon"><i class="ic" data-ic="ferrero"></i></span>                    <div>
                         <span class="ferrero-drag-label">Drag Ferrero Balls onto your cake!</span>
                         <span class="ferrero-drag-sub">Use the golden tray at the bottom of the preview. Click a placed ball to pick it up and move it.</span>
                     </div>
                 </div>
 
                 <div class="orient-panel" id="kitkatOrientPanel">
-                    <div class="orient-panel-header">🍬 KitKat orientation</div>
+                    <div class="orient-panel-header"><i class="ic" data-ic="kitkat"></i> KitKat orientation</div>
                     <div class="orient-toggle">
                         <button class="orient-btn active" id="btnKitkatStanding">
-                            <span class="orient-btn-icon">📏</span> Standing
+                            <span class="orient-btn-icon"><i class="ic" data-ic="ruler"></i></span> Standing
                         </button>
                         <button class="orient-btn" id="btnKitkatLying">
-                            <span class="orient-btn-icon">📐</span> Lying Flat
+                            <span class="orient-btn-icon"><i class="ic" data-ic="angle"></i></span> Lying Flat
                         </button>
                     </div>
                     <div class="orient-hint">
@@ -1692,21 +1833,20 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </div>
                 </div>
                 <div class="kitkat-drag-notice" id="kitkatDragNotice" style="display:none;flex-direction:row;">
-                    <span class="kitkat-drag-icon">🍬</span>
-                    <div>
+                    <span class="kitkat-drag-icon"><i class="ic" data-ic="kitkat"></i></span>                    <div>
                         <span class="kitkat-drag-label">Drag KitKat sticks onto your cake!</span>
                         <span class="kitkat-drag-sub">Use the red tray below the preview. Toggle Standing / Lying above to switch orientation before placing.</span>
                     </div>
                 </div>
 
                 <div class="orient-panel" id="oreoOrientPanel">
-                    <div class="orient-panel-header">⚫ Oreo orientation</div>
+                    <div class="orient-panel-header"><i class="ic" data-ic="oreo"></i> Oreo orientation</div>
                     <div class="orient-toggle">
                         <button class="orient-btn" id="btnOreoStanding">
-                            <span class="orient-btn-icon">🔘</span> Standing
+                            <span class="orient-btn-icon"><i class="ic" data-ic="circledot"></i></span> Standing
                         </button>
                         <button class="orient-btn active" id="btnOreoLying">
-                            <span class="orient-btn-icon">⚫</span> Lying Flat
+                            <span class="orient-btn-icon"><i class="ic" data-ic="oreo"></i></span> Lying Flat
                         </button>
                     </div>
                     <div class="orient-hint">
@@ -1715,30 +1855,28 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </div>
                 </div>
                 <div class="oreo-drag-notice" id="oreoDragNotice" style="display:none;flex-direction:row;">
-                    <span class="oreo-drag-icon">⚫</span>
-                    <div>
+                    <span class="oreo-drag-icon"><i class="ic" data-ic="oreo"></i></span>                    <div>
                         <span class="oreo-drag-label">Drag Oreo cookies onto your cake!</span>
                         <span class="oreo-drag-sub">Use the dark tray below the preview. Toggle Standing / Lying above to switch orientation before placing.</span>
                     </div>
                 </div>
 
                 <div class="bar-shard-drag-notice" id="barShardDragNotice" style="display:none;flex-direction:row;">
-                    <span class="bar-shard-drag-icon">🍫</span>
-                    <div>
+                    <span class="bar-shard-drag-icon"><i class="ic" data-ic="chocbar"></i></span>                    <div>
                         <span class="bar-shard-drag-label">Drag Chocolate Bar Shards onto your cake!</span>
                         <span class="bar-shard-drag-sub">Use the brown tray below the preview. Click a placed shard to pick it up and move it.</span>
                     </div>
                 </div>
 
-                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg> Sprinkles</div>
+                <div class="addon-section-lbl" style="margin-top:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg> Sprinkles</div>
           <div class="addon-grid" id="opts-sprinkles" style="margin-bottom:10px;">
-                    <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
+                     <div class="addon-opt" data-group="sprinkles" data-val="Cylinder Sprinkles" data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></div><div class="a-info"><span class="a-name">Cylinder Mix</span><span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                <div class="addon-opt" data-group="sprinkles" data-val="Sphere Sprinkles"   data-price="30"><div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg></div><div class="a-info"><span class="a-name">Pearl Mix</span>   <span class="a-price">+₱30</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                 </div>
 
                 <!-- Cylinder placement panel -->
                 <div id="cylinderPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
-                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">✨ Cylinder placement</div>
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);"><i class="ic" data-ic="sparkles"></i> Cylinder placement</div>
                     <div style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
                         <button class="sprinkle-place-btn active" data-type="cylinder" data-placement="top"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;transition:all .15s;">Top only</button>
                         <button class="sprinkle-place-btn"        data-type="cylinder" data-placement="sides" style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
@@ -1747,7 +1885,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 </div>
                 <!-- Pearl placement panel -->
                 <div id="pearlPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
-                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">🔮 Pearl placement</div>
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);"><i class="ic" data-ic="crystal"></i> Pearl placement</div>
                     <div style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
                         <button class="sprinkle-place-btn active" data-type="pearl" data-placement="top"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;transition:all .15s;">Top only</button>
                         <button class="sprinkle-place-btn"        data-type="pearl" data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
@@ -1757,7 +1895,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
                 <!-- Chocolate Sprinkles placement panel -->
                 <div id="chocoSprinklePlacementPanel" style="display:none;margin-top:6px;background:var(--gold-lt);border:1.5px solid rgba(196,154,60,.30);border-radius:12px;padding:9px 11px;">
-                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#6B4C08;margin-bottom:8px;font-family:var(--font-display);">🍫 Choco Sprinkles placement</div>
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#6B4C08;margin-bottom:8px;font-family:var(--font-display);"><i class="ic" data-ic="chocbar"></i> Choco Sprinkles placement</div>
                     <div style="display:flex;gap:0;border:1.5px solid rgba(196,154,60,.36);border-radius:9px;overflow:hidden;">
                         <button class="sprinkle-place-btn active" data-type="chocoSprinkle" data-placement="top"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--gold);color:#fff;transition:all .15s;">Top only</button>
                         <button class="sprinkle-place-btn"        data-type="chocoSprinkle" data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
@@ -1767,14 +1905,14 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
                 <!-- Crushed Peanuts placement panel -->
                 <div id="peanutsPlacementPanel" style="display:none;margin-top:6px;background:var(--cream);border:1.5px solid rgba(200,137,74,.28);border-radius:12px;padding:9px 11px;">
-                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);">🥜 Crushed Peanuts placement</div>
+                    <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--brown-mid);margin-bottom:8px;font-family:var(--font-display);"><i class="ic" data-ic="peanut"></i> Crushed Peanuts placement</div>
                     <div style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
                         <button class="sprinkle-place-btn active" data-type="peanuts" data-placement="top"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;transition:all .15s;">Top only</button>
                         <button class="sprinkle-place-btn"        data-type="peanuts" data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides only</button>
                         <button class="sprinkle-place-btn"        data-type="peanuts" data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
                     </div>
                 </div>
-                <div class="addon-section-lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="8" width="6" height="14" rx="1"/><path d="M12 8V4"/><path d="M10 4c0-1.5 1-3 2-3s2 1.5 2 3"/></svg> Candles &amp; Toppers</div>
+                <div class="addon-section-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="8" width="6" height="14" rx="1"/><path d="M12 8V4"/><path d="M10 4c0-1.5 1-3 2-3s2 1.5 2 3"/></svg> Candles &amp; Toppers</div>
           <div class="addon-grid" id="opts-candles" style="margin-bottom:10px;">
                     <div class="addon-opt" data-group="candles" data-val="Number Candles"        data-price="20"> <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="4" height="13" rx="1"/><path d="M10 8V5"/><path d="M9 5c0-1.5.5-3 1-3s1 1.5 1 3"/><rect x="14" y="8" width="4" height="13" rx="1"/><path d="M16 8V5"/><path d="M15 5c0-1.5.5-3 1-3s1 1.5 1 3"/></svg></div><div class="a-info"><span class="a-name">Number Candle</span><span class="a-price">+₱20/pc</span></div><div class="addon-check"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div></div>
                <div class="addon-opt" data-group="candles" data-val="Character Topper" data-price="150" id="characterToggleBtn">
@@ -1785,7 +1923,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
               </div>
 
            <div class="candle-picker-panel" id="candlePickerPanel">
-                    <div class="candle-picker-header">🕯️ Select candle number to place</div>
+                    <div class="candle-picker-header"><i class="ic" data-ic="candle"></i> Select candle number to place</div>
                    <div class="candle-num-grid" id="opts-candle-nums">
                         <div class="candle-num-opt" data-candle-num="0">0</div>
                         <div class="candle-num-opt active" data-candle-num="1">1</div>
@@ -1801,8 +1939,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     <div class="candle-active-badge" id="candleActiveBadge">Selected: Candle #1 — drag to place</div>
                 </div>
     <div class="candle-drag-notice" id="candleDragNotice" style="display:none;flex-direction:row;">
-                    <span class="candle-drag-icon">🕯️</span>
-                    <div>
+                    <span class="candle-drag-icon"><i class="ic" data-ic="candle"></i></span>                 <div>
                         <span class="candle-drag-label">Drag candles onto your cake!</span>
                         <span class="candle-drag-sub">Pick a number above, then drag from the tray at the bottom of the preview. Click a placed candle to move it.</span>
                     </div>
@@ -1810,6 +1947,14 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
        <div class="candle-picker-panel" id="characterPickerPanel">
                     <div class="candle-picker-header"> Choose your character topper</div>
+                    <div class="frosting-section-label" style="margin-top:0;"><i class="ic" data-ic="ruler"></i> Character Height</div>
+                    <div class="candle-num-grid" id="opts-character-size" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px;">
+                        <div class="candle-num-opt" data-character-size="3">3"</div>
+                        <div class="candle-num-opt active" data-character-size="4">4"</div>
+                        <div class="candle-num-opt" data-character-size="5">5"</div>
+                        <div class="candle-num-opt" data-character-size="6">6"</div>
+                    </div>
+                    <div class="candle-active-badge" id="characterSizeBadge" style="margin-bottom:10px;">Selected: 4" — applies to the next character you place</div>
                         <div id="characterCategoryList" style="display:flex;flex-direction:column;">
 
                   <div class="char-cat-group" data-cat-group="spongebob">
@@ -1923,13 +2068,19 @@ body.preview-mode #model-container canvas { background: transparent !important; 
         </div>
     </div>
 
+
     {{-- CENTER: VIEWER --}}
     <div class="viewer" id="viewerEl">
         <div id="model-container"></div>
            <canvas id="fruitCanvas"></canvas>
         <div class="icing-anim-overlay" id="icingAnimOverlay"></div>
         <div class="model-loading" id="modelLoading">
-            <div class="loading-spinner"></div>
+            <div class="loading-cake" id="loadingCake">
+                <div class="loading-cake-tier loading-cake-tier-3" id="loadingCakeTier3"></div>
+                <div class="loading-cake-tier loading-cake-tier-2" id="loadingCakeTier2"></div>
+                <div class="loading-cake-tier loading-cake-tier-1" id="loadingCakeTier1"></div>
+                <div class="loading-cake-plate"></div>
+            </div>
             <div class="loading-text" id="loadingText">Building 3D preview…</div>
         </div>
         <div class="viewer-badge">
@@ -1945,21 +2096,22 @@ body.preview-mode #model-container canvas { background: transparent !important; 
             </button>
         </div>
       <div id="brightnessControl" style="display:none;"></div>
-          <div class="viewer-hint" id="viewerHint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom</div>
+          <div class="viewer-hint" id="viewerHint"><i class="ic" data-ic="pointer"></i> Drag to rotate &nbsp;·&nbsp; Scroll to zoom</div>
+        <div class="slice-toggle-wrap" id="sliceToggleWrap">
+            <button class="slice-toggle-btn active" id="btnSliceOff" type="button">Without Slice</button>
+            <button class="slice-toggle-btn" id="btnSliceOn" type="button">With Slice</button>
+        </div>
         <div id="fruitCoordLiveBadge" style="display:none;position:absolute;top:16px;left:50%;transform:translateX(-50%);background:rgba(20,10,4,0.85);color:#F5D090;font-family:'DM Mono',monospace;font-size:.78rem;font-weight:700;padding:8px 16px;border-radius:10px;border:1.5px solid rgba(245,208,144,0.4);z-index:60;pointer-events:none;white-space:nowrap;"></div>
         <div class="model-status hidden" id="modelStatus">Ready</div>
 
       {{-- FRUIT TRAY --}}
         <div class="fruit-tray" id="fruitTray">
             <span class="fruit-tray-label">Drag:</span>
-            <div class="fruit-draggable" data-fruit="Strawberry" data-emoji="🍓" draggable="true" id="trayStrawberry">🍓<span class="fruit-tip">Strawberry</span></div>
-            <div class="fruit-draggable" data-fruit="Blueberry"  data-emoji="🫐" draggable="true" id="trayBlueberry">🫐<span class="fruit-tip">Blueberry</span></div>
-            <div class="fruit-draggable" data-fruit="Raspberry"  data-emoji="🍇" draggable="true" id="trayRaspberry">🍇<span class="fruit-tip">Raspberry</span></div>
-            <div class="fruit-draggable" data-fruit="Cherry"     data-emoji="🍒" draggable="true" id="trayCherry">🍒<span class="fruit-tip">Cherry</span></div>
-            <div class="fruit-draggable" data-fruit="Mango Slice" data-emoji="🥭" draggable="true" id="trayMango">🥭<span class="fruit-tip">Mango</span></div>
-            <div class="fruit-draggable" data-fruit="Kiwi Slice"  data-emoji="🥝" draggable="true" id="trayKiwi">🥝<span class="fruit-tip">Kiwi</span></div>
-           <div class="fruit-draggable" data-fruit="Peach Slice" data-emoji="🍑" draggable="true" id="trayPeach">🍑<span class="fruit-tip">Peach</span></div>
-            <div class="fruit-draggable" data-fruit="Banana Slice" data-emoji="🍌" draggable="true" id="trayBanana">🍌<span class="fruit-tip">Banana</span></div>
+            <div class="fruit-draggable" data-fruit="Strawberry" data-emoji="🍓" draggable="true" id="trayStrawberry"><i class="ic" data-ic="strawberry"></i><span class="fruit-tip">Strawberry</span></div>
+            <div class="fruit-draggable" data-fruit="Blueberry"  data-emoji="🫐" draggable="true" id="trayBlueberry"><i class="ic" data-ic="blueberry"></i><span class="fruit-tip">Blueberry</span></div>
+            <div class="fruit-draggable" data-fruit="Raspberry"  data-emoji="🍇" draggable="true" id="trayRaspberry"><i class="ic" data-ic="grapes"></i><span class="fruit-tip">Raspberry</span></div>
+            <div class="fruit-draggable" data-fruit="Cherry"     data-emoji="🍒" draggable="true" id="trayCherry"><i class="ic" data-ic="cherry"></i><span class="fruit-tip">Cherry</span></div>
+            <div class="fruit-draggable" data-fruit="Leaf" data-emoji="🍃" draggable="true" id="trayLeaf" style="display:none;"><i class="ic" data-ic="leaf"></i><span class="fruit-tip">Leaf</span></div>
             <div class="fruit-tray-sep"></div>
             <button class="fruit-clear-btn" id="btnClearFruits">Clear all</button>
         </div>
@@ -1967,22 +2119,20 @@ body.preview-mode #model-container canvas { background: transparent !important; 
         {{-- CHOCO DECORATION TRAY --}}
         <div class="choco-tray" id="chocoTray">
             <span class="choco-tray-label">Choco:</span>
-            <div class="ferrero-draggable" data-ferrero="Ferrero-style Ball" data-emoji="🟤" draggable="true" id="trayFerrero" style="display:none;">🟤<span class="ferrero-tip">Ferrero</span></div>
-            <div class="kitkat-draggable" data-kitkat="Kitkat Sticks" data-emoji="🍬" draggable="true" id="trayKitkat" style="display:none;">🍬<span class="kitkat-tip">KitKat</span></div>
-            <div class="oreo-draggable" data-oreo="Oreo Cookie" data-emoji="⚫" draggable="true" id="trayOreo" style="display:none;">⚫<span class="oreo-tip">Oreo</span></div>
-           <div class="bar-shard-draggable" data-bar-shard="Chocolate Bar Shard" data-emoji="🍫" draggable="true" id="trayBarShard" style="display:none;">🍫<span class="bar-shard-tip">Bar Shard</span></div>
-            <div class="toblerone-draggable" data-toblerone="Toblerone Triangle" data-emoji="🔺" draggable="true" id="trayToblerone" style="display:none;">🔺<span class="toblerone-tip">Toblerone</span></div>
+            <div class="ferrero-draggable" data-ferrero="Ferrero-style Ball" data-emoji="🟤" draggable="true" id="trayFerrero" style="display:none;"><i class="ic" data-ic="ferrero"></i><span class="ferrero-tip">Ferrero</span></div>
+            <div class="kitkat-draggable" data-kitkat="Kitkat Sticks" data-emoji="🍬" draggable="true" id="trayKitkat" style="display:none;"><i class="ic" data-ic="kitkat"></i><span class="kitkat-tip">KitKat</span></div>
+            <div class="oreo-draggable" data-oreo="Oreo Cookie" data-emoji="⚫" draggable="true" id="trayOreo" style="display:none;"><i class="ic" data-ic="oreo"></i><span class="oreo-tip">Oreo</span></div>
+           <div class="bar-shard-draggable" data-bar-shard="Chocolate Bar Shard" data-emoji="🍫" draggable="true" id="trayBarShard" style="display:none;"><i class="ic" data-ic="chocbar"></i><span class="bar-shard-tip">Bar Shard</span></div>
+            <div class="toblerone-draggable" data-toblerone="Toblerone Triangle" data-emoji="🔺" draggable="true" id="trayToblerone" style="display:none;"><i class="ic" data-ic="toblerone"></i><span class="toblerone-tip">Toblerone</span></div>
             <div class="choco-tray-sep" id="chocoTraySep" style="display:none;"></div>
-            <span style="font-size:.6rem;color:rgba(255,130,110,.7);font-family:var(--font-body);display:none;" id="kitkatOrientBadge">📏 Standing</span>
-            <span style="font-size:.6rem;color:rgba(230,220,200,.7);font-family:var(--font-body);display:none;" id="oreoOrientBadge">⚫ Lying Flat</span>
-            <div class="choco-tray-sep" id="chocoTraySep2" style="display:none;"></div>
+            <span style="font-size:.6rem;color:rgba(255,130,110,.7);font-family:var(--font-body);display:none;" id="kitkatOrientBadge"><i class="ic" data-ic="ruler"></i> Standing</span>
+            <span style="font-size:.6rem;color:rgba(230,220,200,.7);font-family:var(--font-body);display:none;" id="oreoOrientBadge"><i class="ic" data-ic="oreo"></i> Lying Flat</span>            <div class="choco-tray-sep" id="chocoTraySep2" style="display:none;"></div>
             <button class="choco-clear-btn" id="btnClearAllChoco" style="display:none;">Clear all</button>
         </div>
 
 {{-- CANDLE TRAY --}}
         <div class="fruit-tray" id="candleTray" style="background:rgba(38,22,4,0.88);border:1px solid rgba(196,154,60,0.45);">
-            <span class="fruit-tray-label" style="color:rgba(220,180,80,0.85);">🕯️ Candle:</span>
-                       <div class="candle-draggable" id="trayCandle" draggable="true" style="border-color:rgba(196,154,60,0.45);background:rgba(60,35,5,0.70);">🕯️<span class="fruit-tip" id="trayCandleLabel">Candle #1</span></div>
+            <span class="fruit-tray-label" style="color:rgba(220,180,80,0.85);"><i class="ic" data-ic="candle"></i> Candle:</span>                       <div class="candle-draggable" id="trayCandle" draggable="true" style="border-color:rgba(196,154,60,0.45);background:rgba(60,35,5,0.70);"><i class="ic" data-ic="candle"></i><span class="fruit-tip" id="trayCandleLabel">Candle #1</span></div>
             <div class="fruit-tray-sep" style="background:rgba(196,154,60,0.25);"></div>
             <button class="fruit-clear-btn" id="btnClearCandles">Clear all</button>
         </div>
@@ -2077,9 +2227,74 @@ body.preview-mode #model-container canvas { background: transparent !important; 
     <input type="hidden" name="config" id="saveDraftConfigInput">
     <input type="hidden" name="preview_image" id="saveDraftPreviewInput">
 </form>
-
-<script type="module">
-import * as THREE        from '/js/three/three.module.js';
+<script>
+const bs_icon_paths = {
+      leaf:       '<path d="M5 19C5 10 10 4 20 4c0 10-6 16-15 15z"/><path d="M5 19L14 10"/>',
+    strawberry: '<path d="M12 6c-4 0-6 3-6 6 0 4 3.5 8 6 9.5 2.5-1.5 6-5.5 6-9.5 0-3-2-6-6-6z"/><path d="M12 6c0-2 1.5-3 3.5-3"/><path d="M9 3.5c1 .5 2 1.5 3 2.5"/>',
+    blueberry:  '<circle cx="12" cy="13" r="7"/><path d="M9.5 8.5l2.5 2 2.5-2"/>',
+    grapes:     '<circle cx="9" cy="10" r="3"/><circle cx="15" cy="10" r="3"/><circle cx="12" cy="15.5" r="3"/><path d="M12 7v3"/>',
+    cherry:     '<circle cx="8" cy="17" r="3.5"/><circle cx="17" cy="15.5" r="3.5"/><path d="M8 13.5C8 8 12 5 16 4"/><path d="M17 12C17 8 16 5.5 16 4"/>',
+    ferrero:    '<circle cx="12" cy="12" r="8"/><path d="M8 9l2 2M14 8l2 2M9 15l2 1M14 14l2 2"/>',
+    kitkat:     '<rect x="3" y="8" width="18" height="8" rx="2"/><path d="M9 8v8M15 8v8"/>',
+    oreo:       '<circle cx="12" cy="12" r="8" fill="currentColor"/>',
+    chocbar:    '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 9h14M5 15h14M12 3v18"/>',
+    toblerone:  '<path d="M12 4l9 16H3z"/><path d="M12 4l4 16M12 4l-4 16"/>',
+    candle:     '<rect x="9" y="10" width="6" height="11" rx="1"/><path d="M12 10v7"/><path d="M12 2c-1.5 1.5-1.5 3 0 4 1.5-1 1.5-2.5 0-4z"/>',
+    character:  '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>',
+    trash:      '<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/>',
+    scale:      '<path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/>',
+    cake:       '<path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 21h16M12 3v6M8 11c0-2 1-3 4-3s4 1 4 3"/>',
+    warn:       '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/>',
+    lock:       '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    palette:    '<circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10" r="1"/><path d="M12 21c-2 0-2-2-1-3s1-2-1-2"/>',
+    rose:       '<circle cx="12" cy="12" r="3"/><path d="M12 9c-3-3-1-6 0-6s3 3 0 6zM15 12c3-3 6-1 6 0s-3 3-6 0zM12 15c3 3 1 6 0 6s-3-3 0-6zM9 12c-3 3-6 1-6 0s3-3 6 0z"/>',
+    sparkles:   '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+    crystal:    '<circle cx="12" cy="12" r="8"/><path d="M8 9a5 5 0 0 1 3-3"/>',
+    peanut:     '<ellipse cx="12" cy="12" rx="4" ry="8" transform="rotate(35 12 12)"/><path d="M10 12h4"/>',
+    pointer:    '<path d="M5 3l14 7-6 2-2 6z"/>',
+    droplet:    '<path d="M12 2l7 10a7 7 0 1 1-14 0z"/>',
+    heart:      '<path d="M12 21s-9-6-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12z"/>',
+    ruler:      '<rect x="2" y="9" width="20" height="6" rx="1"/><path d="M6 9v3M10 9v3M14 9v3M18 9v3"/>',
+    angle:      '<path d="M3 21V3l18 18z"/>',
+    circledot:  '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor"/>',
+    square:     '<rect x="4" y="4" width="16" height="16" rx="2"/>'
+};
+function bsIcon(name){
+    const p = bs_icon_paths[name];
+    if(!p) return '';
+    return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+}
+const bs_emoji_map = {
+    '🍃':'leaf',
+    '🍓':'strawberry','🫐':'blueberry','🍇':'grapes','🍒':'cherry',
+    '🟤':'ferrero','🍬':'kitkat','⚫':'oreo','🍫':'chocbar','🔺':'toblerone',
+    '🕯':'candle','🎭':'character','🗑':'trash','⚖':'scale','🍰':'cake','🎂':'cake',
+    '⚠':'warn','🔒':'lock','🎨':'palette','🌹':'rose','✨':'sparkles','🔮':'crystal',
+    '🥜':'peanut','🖱':'pointer','👆':'pointer','💧':'droplet','🤍':'heart',
+    '📏':'ruler','📐':'angle','🔘':'circledot','⬜':'square'
+};
+const bs_emoji_re = new RegExp(Object.keys(bs_emoji_map).join('|'), 'g');
+// turns any emoji inside a string into an inline svg. safe to run on html strings.
+function emojiToSvg(str){
+    if(str === null || str === undefined) return '';
+    return String(str).replace(/\uFE0F/g, '').replace(bs_emoji_re, m => bsIcon(bs_emoji_map[m]));
+}
+// makes an element's .textContent setter render svg icons instead of emoji text.
+function bindIconText(el){
+    if(!el) return el;
+    Object.defineProperty(el, 'textContent', {
+        configurable: true,
+        get(){ return this.dataset.emoji || ''; },
+        set(v){ this.dataset.emoji = v; this.innerHTML = emojiToSvg(v); }
+    });
+    return el;
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('i.ic[data-ic]').forEach(el => { el.innerHTML = bsIcon(el.dataset.ic); });
+    ['kitkatOrientBadge', 'oreoOrientBadge'].forEach(id => bindIconText(document.getElementById(id)));
+});
+</script>
+<script type="module">import * as THREE        from '/js/three/three.module.js';
 import { GLTFLoader }    from '/js/three/GLTFLoader.js';
 import { OrbitControls } from '/js/three/OrbitControls.js';
 
@@ -2099,7 +2314,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.outputEncoding      = THREE.sRGBEncoding;
 renderer.toneMapping         = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 0.82;
 renderer.shadowMap.enabled    = true;
 renderer.shadowMap.type       = THREE.PCFShadowMap;
 renderer.shadowMap.autoUpdate = false;
@@ -2108,20 +2323,50 @@ renderer.setClearColor(0x000000, 0); // transparent — CSS background shows thr
 // Dynamic clear color will be set per flavor via _applyFlavorTheme
 container.appendChild(renderer.domElement);
 const scene  = new THREE.Scene();
+// ── Slice-aware scene.add: any object added while a slice is active gets the
+// wedge clipping planes in the same tick, so it never renders unclipped. ──
+(function(){
+    const _origSceneAdd = scene.add.bind(scene);
+    scene.add = function(...objs){
+        const result = _origSceneAdd(...objs);
+        if(typeof window._applySliceToNewObject === 'function'){
+            objs.forEach(o=>window._applySliceToNewObject(o));
+        }
+        return result;
+    };
+})();
 const camera = new THREE.PerspectiveCamera(36, container.clientWidth / container.clientHeight, 0.01, 100);
 camera.position.set(0, 1.8, 8.5);
 const controls = new OrbitControls(camera, renderer.domElement);
 const _basePixelRatio = Math.min(window.devicePixelRatio, 1.5);
 let _interactionLowResTimer = null;
+let _isOrbiting = false;
+// Kiwi (and Banana) place real loaded GLB models per piece, unlike Mango/Peach
+// which are cheap procedural shapes — a "Full" pile of ~80-90 Kiwi pieces pushes
+// far more geometry through the renderer during orbit/drag than any other fruit.
+// This flags that specific heavy case so we can trade quality/fps for smoothness
+// only when it's actually needed.
+function isHeavyDecorLoad(){
+    const kiwiCount = (window._gramFruitGroups && window._gramFruitGroups['Kiwi Slice']) ? window._gramFruitGroups['Kiwi Slice'].length : 0;
+    const bananaCount = (window._gramFruitGroups && window._gramFruitGroups['Banana Slice']) ? window._gramFruitGroups['Banana Slice'].length : 0;
+    return (kiwiCount + bananaCount) > 40;
+}
+window._isHeavyDecorLoad = isHeavyDecorLoad;
 controls.addEventListener('start', ()=>{
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
+    _isOrbiting = true;
+    const heavy = isHeavyDecorLoad();
+    renderer.setPixelRatio(heavy ? Math.min(window.devicePixelRatio, 0.65) : Math.min(window.devicePixelRatio, 1));
     if(_interactionLowResTimer) clearTimeout(_interactionLowResTimer);
+    if(typeof window._requestRender==='function') window._requestRender(1000);
 });
 controls.addEventListener('end', ()=>{
+    _isOrbiting = false;
     if(_interactionLowResTimer) clearTimeout(_interactionLowResTimer);
     _interactionLowResTimer = setTimeout(()=>{
         renderer.setPixelRatio(_basePixelRatio);
         renderer.shadowMap.needsUpdate = true;
+        if(window.CakeSlice) window.CakeSlice.reapply();
+        if(typeof window._requestRender==='function') window._requestRender(400);
     }, 120);
 });
 const pmrem  = new THREE.PMREMGenerator(renderer);
@@ -2189,13 +2434,15 @@ window._setSpotBrightness = function(val) {
 const bounceFill = new THREE.PointLight(0xE8C870, 0.45);
 bounceFill.position.set(0, -0.8, 0);
 scene.add(bounceFill);
-const fillLight = new THREE.DirectionalLight(0xF0C878, 0.06);
+const fillLight = new THREE.DirectionalLight(0xF0C878, 0.22);
 fillLight.position.set(-5, 5, 3); scene.add(fillLight);
-const tableBouce = new THREE.DirectionalLight(0xD4904A, 0.08);
+const fillLightRight = new THREE.DirectionalLight(0xF0C878, 0.22);
+fillLightRight.position.set(5, 5, 3); scene.add(fillLightRight);
+const tableBouce = new THREE.DirectionalLight(0xD4904A, 0.18);
 tableBouce.position.set(0, -2, 2); scene.add(tableBouce);
-const backWall = new THREE.DirectionalLight(0xE8C870, 0.04);
+const backWall = new THREE.DirectionalLight(0xE8C870, 0.14);
 backWall.position.set(1, 3, -8); scene.add(backWall);
-scene.add(new THREE.AmbientLight(0xC89840, 0.12));
+scene.add(new THREE.AmbientLight(0xC89840, 0.08));
 if(!isPreview){
 // ── Soft circular glow behind/under the cake ──
 (function buildAtmosphere(){
@@ -2224,7 +2471,7 @@ if(!isPreview){
     scene.add(innerMesh);
 
 })();
-const tableMat = new THREE.MeshStandardMaterial({ color: 0x7A6040, roughness: 0.55, metalness: 0.0, envMapIntensity: 0.50 });
+const tableMat = new THREE.MeshStandardMaterial({ color: 0x7A6040, roughness: 0.92, metalness: 0.0, envMapIntensity: 0.08 });
 const tableTop = new THREE.Mesh(new THREE.PlaneGeometry(22, 22), tableMat);
 tableTop.rotation.x=-Math.PI/2; tableTop.position.y=-1.20;
 tableTop.receiveShadow=true; tableTop.userData.isBackgroundProp = true; scene.add(tableTop);
@@ -2245,7 +2492,7 @@ tableTop.receiveShadow=true; tableTop.userData.isBackgroundProp = true; scene.ad
     const ttex=new THREE.DataTexture(tdata,S,S,THREE.RGBAFormat);
     ttex.needsUpdate=true; ttex.wrapS=ttex.wrapT=THREE.RepeatWrapping;
     ttex.repeat.set(8,8);
-    const tileMat=new THREE.MeshStandardMaterial({ map:ttex, roughness:0.48, metalness:0.02, envMapIntensity:0.45 });
+    const tileMat=new THREE.MeshStandardMaterial({ map:ttex, roughness:0.92, metalness:0.0, envMapIntensity:0.08 });
     const tileMesh=new THREE.Mesh(new THREE.PlaneGeometry(20,20),tileMat);
     tileMesh.rotation.x=-Math.PI/2; tileMesh.position.y=-1.195;
     tileMesh.receiveShadow=true; tileMesh.userData.isBackgroundProp = true; scene.add(tileMesh);
@@ -2513,10 +2760,25 @@ window._requestRender = function(durationMs){
     const target = performance.now() + (durationMs || 500);
     if (target > _renderUntil) _renderUntil = target;
 };
+// Declared HERE (not just at its original later spot) because animate()
+// below reads it every frame. let/const bindings are inaccessible until the
+// line that declares them actually executes — typeof does NOT protect
+// against this — so if the module ever errored before reaching the original
+// later declaration, animate() would throw on every frame forever, which is
+// exactly what happened. Declaring it up here guarantees it's always ready.
+let isLoading = false;
 function animate(){
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
     const elapsed = clock.elapsedTime;
+
+    // Keep rendering continuously while the scene is actively (re)building —
+    // GLB fetches can legitimately take 20-30s under retry backoff on a slow
+    // dev server, far longer than any fixed render budget. Without this, the
+    // scene silently stops drawing new frames once the budget expires, so a
+    // freshly-arrived mesh never appears until the user rotates the camera
+    // (which forces one more frame via controls.update()).
+    if (isLoading) window._requestRender(600);
 
     const hasFlames = candleModels.length > 0;
     const isDraggingDecoration =
@@ -2535,6 +2797,14 @@ function animate(){
 
     if (performance.now() >= _renderUntil) {
         return;
+    }
+    // While actively orbiting/zooming with a heavy Kiwi/Banana "Full" load,
+    // render at effectively half frame rate — the reduced pixel ratio above
+    // already cuts fill cost, but skipping alternate frames here also halves
+    // the per-frame draw-call/geometry cost, which is where the real lag was.
+    if (_isOrbiting && isHeavyDecorLoad()) {
+        window._heavyFrameSkip = !window._heavyFrameSkip;
+        if (window._heavyFrameSkip) return;
     }
     if(candleModels.length){
         for(let ci=0; ci<candleModels.length; ci++){
@@ -2779,7 +3049,7 @@ function shouldLoadFrostingGLB(arr){
 function isFondantOnly(arr){ return arr.includes('Fondant Smooth'); }
 
 const FLAVORS={
-  'Vanilla':   {sponge:{hex:'#C8822A',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#9A5A14',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F5E6B8',roughness:.46,metalness:.02,envMapIntensity:.65},top:{hex:'#FBF0CE',roughness:.36,metalness:.03,envMapIntensity:.72},drip:{hex:'#E8D9A0',roughness:.14,metalness:.04}},
+  'Vanilla':   {sponge:{hex:'#F0DDA0',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#D9BE7A',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F5E6B8',roughness:.46,metalness:.02,envMapIntensity:.65},top:{hex:'#FBF0CE',roughness:.36,metalness:.03,envMapIntensity:.72},drip:{hex:'#E8D9A0',roughness:.14,metalness:.04}},
     'Chocolate': {sponge:{hex:'#361004',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#200802',roughness:.92,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#5A1E0E',roughness:.38,metalness:.06,envMapIntensity:.70},top:{hex:'#6C2610',roughness:.30,metalness:.08,envMapIntensity:.78},drip:{hex:'#320E06',roughness:.10,metalness:.10}},
    'Red Velvet':{sponge:{hex:'#880E0E',roughness:.84,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#680606',roughness:.88,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F7DCE0',roughness:.36,metalness:.01,envMapIntensity:.70},top:{hex:'#FFF6F2',roughness:.28,metalness:.01,envMapIntensity:.78},drip:{hex:'#BE0E0E',roughness:.14,metalness:.02}},
     'Strawberry':{sponge:{hex:'#CC2454',roughness:.82,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#A4163C',roughness:.86,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FF4474',roughness:.40,metalness:.01,envMapIntensity:.62},top:{hex:'#FF5680',roughness:.32,metalness:.01,envMapIntensity:.70},drip:{hex:'#DE2454',roughness:.12,metalness:.02}},
@@ -2789,7 +3059,7 @@ const FLAVORS={
   'Biscoff':   {sponge:{hex:'#C8682A',roughness:.86,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#A04E18',roughness:.90,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#D4844A',roughness:.42,metalness:.03,envMapIntensity:.64},top:{hex:'#E09060',roughness:.34,metalness:.03,envMapIntensity:.72},drip:{hex:'#8A3A10',roughness:.14,metalness:.04}},
     'Blueberry': {sponge:{hex:'#2E3E7A',roughness:.83,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#20295E',roughness:.87,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#B8C4E8',roughness:.40,metalness:.02,envMapIntensity:.66},top:{hex:'#C8D2F0',roughness:.32,metalness:.02,envMapIntensity:.74},drip:{hex:'#3A1878',roughness:.12,metalness:.04}},
     'Carrot':    {sponge:{hex:'#B8631E',roughness:.85,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#8E4A12',roughness:.89,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F5EAD0',roughness:.40,metalness:.01,envMapIntensity:.66},top:{hex:'#FBF4E2',roughness:.32,metalness:.01,envMapIntensity:.74},drip:{hex:'#A0611C',roughness:.13,metalness:.03}},
-    'Banana':    {sponge:{hex:'#E8D078',roughness:.83,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#C8A84C',roughness:.87,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#F7EEC8',roughness:.42,metalness:.01,envMapIntensity:.64},top:{hex:'#FDF8E4',roughness:.34,metalness:.01,envMapIntensity:.72},drip:{hex:'#D8B858',roughness:.14,metalness:.03}},
+    'Banana':    {sponge:{hex:'#E8C468',roughness:.83,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#C9A052',roughness:.87,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FBF5D0',roughness:.42,metalness:.01,envMapIntensity:.64},top:{hex:'#FEFBE8',roughness:.34,metalness:.01,envMapIntensity:.72},drip:{hex:'#EDD978',roughness:.14,metalness:.03}},
    'Blueberry Cheesecake': {sponge:{hex:'#F0EAD8',roughness:.70,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#C8B888',roughness:.80,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#E8E0F0',roughness:.36,metalness:.02,envMapIntensity:.68},top:{hex:'#F4EEFA',roughness:.28,metalness:.02,envMapIntensity:.76},drip:{hex:'#4A2E78',roughness:.12,metalness:.04}},
     'Strawberry Cheesecake': {sponge:{hex:'#F0E4D0',roughness:.68,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#D8B888',roughness:.78,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FCDCE4',roughness:.36,metalness:.01,envMapIntensity:.68},top:{hex:'#FFEAF0',roughness:.28,metalness:.01,envMapIntensity:.76},drip:{hex:'#D8395E',roughness:.12,metalness:.02}},
     'Mango Cheesecake':      {sponge:{hex:'#F0E4C8',roughness:.68,metalness:.0,emissive:'#000000',emissiveIntensity:.0},crust:{hex:'#D8B868',roughness:.78,metalness:.0,emissive:'#000000',emissiveIntensity:.0},frosting:{hex:'#FCE8B8',roughness:.36,metalness:.01,envMapIntensity:.68},top:{hex:'#FFF2D0',roughness:.28,metalness:.01,envMapIntensity:.76},drip:{hex:'#F0A020',roughness:.12,metalness:.02}},
@@ -2811,14 +3081,14 @@ const FONDANT_FLAVOR_COLORS={
 };
 // Sugar icing colors — richer mid-tone versions
 const SUGAR_ICING_COLORS={
-    '#FFFFFF':'#F8F6F2',
-    '#FFF0C8':'#F5E8B0',
-    '#FFCCE0':'#F0A0BC',
-    '#C8E6FF':'#90C8F0',
-    '#D4C8FF':'#B0A0E8',
-    '#C8FFD8':'#90DCA8',
-    '#FFD8A8':'#F0B870',
-    '#F5C842':'#E8B020',
+    '#FFFFFF':'#F5F0E6',
+    '#FFF0C8':'#F0D878',
+    '#FFCCE0':'#E8628C',
+    '#C8E6FF':'#4FA0E8',
+    '#D4C8FF':'#8560E0',
+    '#C8FFD8':'#4CC888',
+    '#FFD8A8':'#E89030',
+    '#F5C842':'#D89A08',
 };
 const FROSTING_STYLES={
     'Smooth Buttercream':  {roughness:.42,metalness:.01,envBoost:.12},
@@ -2843,7 +3113,10 @@ function _disposeDecorGroup(g, keepGeometry){
         if(!keepGeometry && obj.geometry && obj.geometry !== window._peanutBaseGeo){
             obj.geometry.dispose();
         }
-        if(obj.material){
+        // Skip disposal for meshes reusing a shared template material
+        // (Kiwi/Banana fast-merge output) — disposing it would break the
+        // template cache for every future rebuild of that fruit.
+        if(obj.material && !obj.userData.sharedTemplateMaterial){
             const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
             mats.forEach(m=>disposeMaterial(m));
         }
@@ -2867,6 +3140,7 @@ function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapInten
 // popping in instantly. Uses THREE's local clipping planes — works on any
 // mesh regardless of its material, and cleans itself up when done. ──
 function revealIcingWithWipe(group, duration){
+    if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()){ window.CakeSlice.reapply(); return; }
     if(!group) return;
     duration = duration || 1800;
     renderer.localClippingEnabled = true;
@@ -2905,6 +3179,7 @@ window._triggerIcingReveal = function(duration){ revealIcingWithWipe(currentIcin
 // icing mesh is created/colored, in the same tick, so it never renders fully
 // visible even for a single frame before the reveal animation takes over.
 function hideGroupInstantly(group){
+    if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()) return;
     if(!group) return;
     renderer.localClippingEnabled = true;
     group.updateMatrixWorld(true);
@@ -2934,9 +3209,19 @@ function revealShellCircular(group, duration){
         const cx = (bb.min.x + bb.max.x) * 0.5;
         const cz = (bb.min.z + bb.max.z) * 0.5;
         const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-             mats.forEach(mat=>{
+                         mats.forEach(mat=>{
             if(!mat) return;
-            mat.clippingPlanes = []; // clear any full-hide plane left by hideGroupInstantly
+            // Restore whatever the permanent slice wedge currently has set
+            // (instead of wiping to fully-visible) — this animation's own
+            // sweep discard then layers on top of the wedge cut, so the
+            // sliced-away area stays blank the WHOLE time it plays, not
+            // just once it finishes.
+            if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled() && typeof window.CakeSlice.getActivePlanes === 'function'){
+                mat.clippingPlanes = window.CakeSlice.getActivePlanes() || [];
+                mat.clipIntersection = true;
+            } else {
+                mat.clippingPlanes = [];
+            }
             mat.onBeforeCompile = (shader)=>{
                 shader.uniforms.uCenterXZ   = { value: new THREE.Vector2(cx, cz) };
                 shader.uniforms.uSweepAngle = { value: 0.0001 }; // starts fully hidden
@@ -2996,6 +3281,7 @@ window._triggerShellHideAndReveal = function(duration){
 // top of the cake to the bottom, so the fondant skin appears to be draped
 // over the cake and smoothed downward into place, instead of popping in. ──
 function revealFondantDrape(group, duration){
+    if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()){ window.CakeSlice.reapply(); return; }
     if(!group) return;
     duration = duration || 2400;
     renderer.localClippingEnabled = true;
@@ -3044,6 +3330,7 @@ window._triggerFondantHideAndReveal = function(duration){
 // ── Drip "piping bag" reveal — sweeps top-to-bottom just like fondant drape,
 // which reads as the drip being squeezed out at the top and running down.
 function revealDripFlow(group, duration){
+    if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()){ window.CakeSlice.reapply(); return; }
     if(!group) return;
     duration = duration || 1600;
     renderer.localClippingEnabled = true;
@@ -3086,6 +3373,10 @@ window._triggerDripReveal = function(duration){ revealDripFlow(currentDrip, dura
 // place piece by piece, like shavings being shredded onto the cake, instead
 // of popping in all at once. ──
 function revealChocoCurlsShred(pieces, duration){
+    if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()){
+        (pieces||[]).forEach(p=>{ if(typeof window._applySliceToNewObject==='function') window._applySliceToNewObject(p); });
+        return;
+    }
     duration = duration || 1400;
     if(!pieces || !pieces.length) return;
     const meshes = [];
@@ -3330,6 +3621,17 @@ if(currentBase && !hasSemiNakedR && !frostingsArr.includes('Fondant Smooth')){
         // matte pal.crust values — matte roughness (.88) was scattering light hard
         // under the warm stage lighting and washing the picked colors out to pale.
         applyOmbreGradient(currentBase, ombreTopColor||'#F7A8C4', ombreBottomColor||'#8A6AC8', style.roughness, style.metalness, 1.0, frostEnv);
+    } else if(typeof state !== 'undefined' && state.tier !== 'Single' && Array.isArray(state.tierFrostings)){
+        const _tierGroupsForFrost = (typeof getTierGroups === 'function') ? getTierGroups(currentBase) : [];
+        if(_tierGroupsForFrost.length > 1){
+            _tierGroupsForFrost.forEach((tg, idx)=>{
+                const tName = state.tierFrostings[idx] || flavorName;
+                const tPal = FLAVORS[tName] || pal;
+                applyGLBMaterial(tg, tPal.crust.hex, tPal.crust.roughness, tPal.crust.metalness??0, 1.0, .45, tPal.sponge.emissive??'#000');
+            });
+        } else {
+            applyGLBMaterial(currentBase,  pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
+        }
     } else {
         applyGLBMaterial(currentBase,  pal.crust.hex, pal.crust.roughness, pal.crust.metalness??0, 1.0, .45, pal.sponge.emissive??'#000');
     }
@@ -3398,52 +3700,52 @@ const fondantHex = pal.crust.hex;
         // ── Per-flavor texture profile ──
         const FONDANT_PROFILES = {
             'Vanilla': {
-                roughness: 0.25, envMapIntensity: 0.60,
-                // Smooth with faint silk-like sheen — very fine grain
+                roughness: 0.72, envMapIntensity: 0.12,
+                // Matte, clay-like surface — very fine grain
                 normalStrength: 0.08,
                 roughnessVariance: 0.04,
                 pattern: 'silk',       // fine horizontal ripple
-                emissiveIntensity: 0.05,
+                emissiveIntensity: 0.0,
             },
             'Chocolate': {
-                roughness: 0.38, envMapIntensity: 0.42,
-                // Cocoa fondant is slightly matte, faint grainy texture
+                roughness: 0.80, envMapIntensity: 0.10,
+                // Cocoa fondant — matte, faint grainy texture
                 normalStrength: 0.18,
                 roughnessVariance: 0.12,
                 pattern: 'cocoa',      // fine random grain
-                emissiveIntensity: 0.03,
+                emissiveIntensity: 0.0,
             },
             'Red Velvet': {
-                roughness: 0.28, envMapIntensity: 0.52,
-                // Cream cheese hue — very smooth, slight velvet micro-texture
+                roughness: 0.75, envMapIntensity: 0.11,
+                // Cream cheese hue — matte, slight velvet micro-texture
                 normalStrength: 0.12,
                 roughnessVariance: 0.06,
                 pattern: 'velvet',     // tiny diamond micro-pattern
-                emissiveIntensity: 0.06,
+                emissiveIntensity: 0.0,
             },
             'Strawberry': {
-                roughness: 0.22, envMapIntensity: 0.65,
-                // Fruit fondant — smooth and slightly glossy, tiny pore pattern
+                roughness: 0.70, envMapIntensity: 0.13,
+                // Fruit fondant — matte, tiny pore pattern
                 normalStrength: 0.10,
                 roughnessVariance: 0.05,
                 pattern: 'pore',       // scattered micro-dots
-                emissiveIntensity: 0.07,
+                emissiveIntensity: 0.0,
             },
             'Ube': {
-                roughness: 0.30, envMapIntensity: 0.58,
-                // Ube fondant — slightly starchy, subtle swirl pattern
+                roughness: 0.76, envMapIntensity: 0.11,
+                // Ube fondant — matte, slightly starchy, subtle swirl pattern
                 normalStrength: 0.15,
                 roughnessVariance: 0.08,
                 pattern: 'swirl',      // soft wave swirls
-                emissiveIntensity: 0.05,
+                emissiveIntensity: 0.0,
             },
             'Mocha': {
-                roughness: 0.35, envMapIntensity: 0.45,
+                roughness: 0.80, envMapIntensity: 0.10,
                 // Coffee fondant — matte with fine espresso grain
                 normalStrength: 0.20,
                 roughnessVariance: 0.14,
                 pattern: 'espresso',   // coarse random grain
-                emissiveIntensity: 0.03,
+                emissiveIntensity: 0.0,
             },
         };
 
@@ -3576,9 +3878,9 @@ const normalMap    = window._fondantTexCache[_fCacheKey].normal;
 const roughnessMap = window._fondantTexCache[_fCacheKey].rough;
 child.material = new THREE.MeshStandardMaterial({
             color:             new THREE.Color(fondantHex),
-            roughness:         0.35,
+            roughness:         0.78,
             metalness:         0.00,
-            envMapIntensity:   0.55,
+            envMapIntensity:   0.12,
             normalMap:         normalMap,
             normalScale:       new THREE.Vector2(profile.normalStrength * 2.5, profile.normalStrength * 2.5),
             roughnessMap:      roughnessMap,
@@ -3606,9 +3908,16 @@ if(window._pendingFondantReveal){
             const useShellColor  = hasSmooth && !isNakedOrOmbre && icingColorHex;
             const SHELL_BORDER_DEFAULT = '#F5EFE2';
                        const frostColorHex  = useShellColor ? (SUGAR_ICING_COLORS[icingColorHex] || icingColorHex) : SHELL_BORDER_DEFAULT;
-            applyGLBMaterial(currentFrost, frostColorHex, style.roughness, style.metalness, style.opacity??1.0, frostEnv);
+applyGLBMaterial(currentFrost, frostColorHex, style.roughness, style.metalness, style.opacity??1.0, frostEnv);
             if(window._pendingShellReveal) hideGroupInstantly(currentFrost);
         }
+    }
+    if(currentTexture){
+        const texStyle = FROSTING_STYLES['Textured Buttercream'];
+        const texEnv = Math.max(.20,(pal.top.envMapIntensity??0.6)+texStyle.envBoost);
+        // Textured now uses the flavor's true cake color (crust) instead of the pale frosting tint,
+        // so it visually matches the selected flavor (e.g. chocolate looks chocolate-colored).
+        applyGLBMaterialKeepMaps(currentTexture, pal.crust.hex, texStyle.roughness, texStyle.metalness, 1.0, texEnv, pal.sponge.emissive??'#000');
     }
  if(currentIcing){
         const icingRich = SUGAR_ICING_COLORS[icingColorHex] || icingColorHex || '#F8F6F2';
@@ -3680,7 +3989,10 @@ const sceneRoot=new THREE.Group();
 scene.add(sceneRoot);
 let loadedKey='', currentBase=null, currentFrost=null, currentDrip=null, currentIcing=null, currentTexture=null, currentRosette=null, currentCheesecakeCrust=null, currentChocoCurls=[], currentChocoCurlsPlacement=null, currentChocoCurlsTier='Single', currentChocoCurlsShape='Round';
 let _isBundtActive=false;
-let isLoading=false, pendingState=null;
+// isLoading is now declared earlier (right before animate()) so the render
+// loop can safely read it on every frame — do NOT re-declare it here, that
+// would throw "Identifier 'isLoading' has already been declared".
+let pendingState=null;
 const fruitModels=[];
 const ferreroModels=[];
 const kitkatModels=[];
@@ -3702,6 +4014,20 @@ function deepCloneObject3D(obj){
     return clone;
 }
 function stripOutlierMeshes(group, label){
+    // Skip cleanup entirely for base_round.glb — this heuristic was
+    // misidentifying the newly re-exported cake's own tiers/geometry as a
+    // stray outlier mesh and deleting the whole cake before it ever rendered.
+    // also skip all rosette files — multi-tier "sides"/"border" rings legitimately
+    // contain ring segments of very different sizes per tier (the top tier's
+    // ring is naturally much smaller than the bottom tier's), which trips this
+    // heuristic's median-based check and silently deletes valid ring meshes.
+    // because loadglb caches the loaded scene by url, a single bad strip here
+    // permanently corrupts that file's cache entry for the rest of the session —
+    // every later tier switch that reuses the same rosette file then clones the
+    // already-stripped, mesh-less scene and logs "[rosette] missing", even
+    // though the file itself loaded fine over the network.
+    if(label && (label.includes('base_round') || label.includes('rosette'))) return;
+
     const meshes = [];
     group.traverse(c => { if(c.isMesh) meshes.push(c); });
     if(meshes.length <= 1) return;
@@ -3716,13 +4042,29 @@ function stripOutlierMeshes(group, label){
     const horiz = infos.map(i => Math.max(i.size.x, i.size.z)).sort((a,b)=>a-b);
     const medianHoriz = horiz[Math.floor(horiz.length/2)] || 1;
 
+    const toRemove = [];
     infos.forEach(info => {
         const tallRatio = info.size.y / Math.max(medianHoriz, 0.0001);
         const tinyFootprint = Math.max(info.size.x, info.size.z) < medianHoriz * 0.4;
         if(tallRatio > 4 || (info.size.y > medianHoriz * 3 && tinyFootprint)){
-            console.warn(`[GLB cleanup] Removing outlier mesh "${info.mesh.name}" in ${label} — size:`, info.size);
-            if(info.mesh.parent) info.mesh.parent.remove(info.mesh);
+            toRemove.push(info.mesh);
         }
+    });
+
+    // Safety net: never let this heuristic strip EVERY mesh out of a file.
+    // If it did, loadGLB's cache would permanently hold a mesh-less scene for
+    // that URL — every future clone from cache would be empty too, turning a
+    // one-time false positive into a decoration that's "missing" for the rest
+    // of the session. If removing the flagged meshes would leave nothing
+    // behind, skip the cleanup entirely instead of gutting the file.
+    if(toRemove.length >= meshes.length){
+        console.warn(`[GLB cleanup] Skipped — would have removed all ${meshes.length} mesh(es) in ${label}`);
+        return;
+    }
+
+    toRemove.forEach(mesh=>{
+        console.warn(`[GLB cleanup] Removing outlier mesh "${mesh.name}" in ${label}`, mesh);
+        if(mesh.parent) mesh.parent.remove(mesh);
     });
 }
 // Removes any mesh that sits floating, disconnected, above the main body of
@@ -3766,7 +4108,7 @@ function prefetchRosetteModels(shape){
     Object.values(fileMap).forEach(file=>{
         const url = `/models/${file}.glb`;
         if(!glbCache[url]){
-            loadGLB(url).catch(()=>{}); // silent — real load will retry/log if it actually fails
+            loadGLB(url, {prefetch:true}).catch(()=>{}); // silent — real load will retry/log if it actually fails
         }
     });
 }
@@ -3783,7 +4125,11 @@ function buildFullPreloadQueue(){
         }
     }
     // Small, cheap, and used by the majority of customers regardless of choices.
-    ['ferrero','kitkat','oreo_cookie','Toblerone','flame'].forEach(f=>urls.add(`/models/${f}.glb`));
+    // NOTE: 'flame' intentionally excluded — /models/flame.glb currently
+    // returns 404 on this server. Add it back once the file is actually
+    // uploaded; until then it was burning ~6s of a 1-2 slot queue on every
+    // page load for a request that could never succeed.
+    ['ferrero','kitkat','oreo_cookie','Toblerone'].forEach(f=>urls.add(`/models/${f}.glb`));
     ['Strawberry','Blueberry','Raspberry','Cherry','kiwi','banana'].forEach(f=>urls.add(`/models/${f}.glb`));
     return Array.from(urls);
 }
@@ -3796,7 +4142,7 @@ function preloadAllDecorationAssets(){
         const slice = queue.slice(i, i+BATCH);
         i += BATCH;
         slice.forEach(url=>{
-            if(!glbCache[url]) loadGLB(url).catch(()=>{}); // silent — missing files just won't warm the cache
+            if(!glbCache[url]) loadGLB(url, {prefetch:true}).catch(()=>{}); // silent — missing files just won't warm the cache
         });
         const schedule = window.requestIdleCallback || (fn=>setTimeout(fn, 120));
         schedule(runBatch);
@@ -3805,21 +4151,219 @@ function preloadAllDecorationAssets(){
 }
 window._preloadAllDecorationAssets = preloadAllDecorationAssets;
 const glbLoadingPromises = {};
-function loadGLB(url){
-    if(glbCache[url]) return Promise.resolve(deepCloneObject3D(glbCache[url]));
-    if(glbLoadingPromises[url]) return glbLoadingPromises[url].then(scene=>deepCloneObject3D(scene));
-    const p = new Promise((resolve,reject)=>{
-        new GLTFLoader().load(url, gltf=>{
-            stripOutlierMeshes(gltf.scene, url);
-            glbCache[url]=gltf.scene;
-            delete glbLoadingPromises[url];
-            resolve(gltf.scene);
-        },
-            xhr=>{if(xhr.total>0)loadingTx.textContent=`Loading… ${Math.round(xhr.loaded/xhr.total*100)}%`;},
-            err=>{ delete glbLoadingPromises[url]; reject(err); });
+// Tracks {loaded,total} PER URL currently in flight so the loading text shows
+// combined progress across every file loading at once, instead of each file's
+// xhr progress event overwriting the last one and making the % jump backward.
+const _glbLoadProgress = {};
+// Tracks bytes already fully downloaded by files that FINISHED earlier in
+// this same scene-load batch, so the percentage keeps climbing across the
+// whole set of files instead of resetting to 0% every time one file
+// completes and the next one starts (which is what made the bar look like
+// it was "looping" on three-tier / combo loads under MAX_CONCURRENT=1).
+let _glbBatchCompletedBytes = 0;
+let _glbBatchTotalFilesExpected = 0;
+let _glbBatchFilesCompleted = 0;
+function _resetGLBBatchProgress(expectedFileCount){
+    _glbBatchCompletedBytes = 0;
+    _glbBatchFilesCompleted = 0;
+    _glbBatchTotalFilesExpected = expectedFileCount || 0;
+}
+function _updateAggregateLoadProgress(){
+    let inFlightLoaded=0, inFlightTotal=0, anyTotal=false;
+    Object.values(_glbLoadProgress).forEach(p=>{
+        inFlightLoaded += p.loaded;
+        if(p.total>0){ inFlightTotal += p.total; anyTotal = true; }
+    });
+    if(_glbBatchTotalFilesExpected > 0){
+        // File-count-based progress: each finished file counts as one whole
+        // "unit," and the current in-flight file contributes its own
+        // fractional progress toward the next unit. This stays monotonic
+        // (always increases) across an entire multi-file batch.
+        const perFileFraction = anyTotal && inFlightTotal>0
+            ? Math.min(1, inFlightLoaded/inFlightTotal)
+            : 0;
+        const overallFraction = (_glbBatchFilesCompleted + perFileFraction) / _glbBatchTotalFilesExpected;
+        const pct = Math.min(100, Math.round(overallFraction*100));
+        loadingTx.textContent = `Loading… ${pct}%`;
+    } else if(anyTotal && inFlightTotal>0){
+        const pct = Math.min(100, Math.round((inFlightLoaded/inFlightTotal)*100));
+        loadingTx.textContent = `Loading… ${pct}%`;
+    }
+}
+// ── Concurrency-limited GLB loading ──
+// A Three-tier cake with Rosettes/Drip active can fire 6-9 GLB requests at
+// once (base + frost/icing + texture + drip + rosette pieces). Browsers cap
+// concurrent connections per host at ~6, so firing them all at once causes
+// some requests to get starved/re-queued by the browser — which looked like
+// a piece "loading 0-100% three times then never appearing" and also caused
+// general lag/stutter while a Three-tier cake was building. Routing every
+// load through a small queue keeps only a handful of requests in flight at
+// once, so nothing gets starved and the browser/GPU aren't hit with a huge
+// simultaneous decode spike.
+// Lowered from 4 to 2. The dev server (php artisan serve) is single-threaded
+// and handles one request at a time — firing 4+ GLB requests at it caused
+// connection resets that burned through every retry, which surfaced as
+// "[Rosette] Missing" on a file that exists and returns 200 in isolation.
+// Three-tier + combo rosettes (Border+Sides, etc.) fire the heaviest, most
+// numerous simultaneous requests the app makes. php artisan serve is
+// single-threaded and can't reliably stream that many large binary files
+// at once — it truncates responses mid-transfer, which shows up client-side
+// as "RangeError: Array buffer allocation failed" or
+// "SyntaxError: Unexpected end of JSON input" (a corrupted/truncated GLB),
+// NOT a real missing-file or parsing bug. Dropping concurrency to 1 for
+// three-tier cakes trades a bit of load speed for actually succeeding.
+function getMaxConcurrentGLBLoads(){
+    return (typeof state !== 'undefined' && state.tier === 'Three-tier') ? 1 : 2;
+}
+let _activeGLBLoads = 0;
+// TWO queues, not one. Files the cake needs to render RIGHT NOW must never
+// wait behind speculative prefetches — including stale prefetches queued by a
+// shape/tier the user has already navigated away from. With a single FIFO
+// queue, cycling through six tier configurations left ~30 dead prefetches
+// sitting in front of the rosette piece the current cake was waiting on.
+const _glbLoadQueue = [];      // high priority — needed for the visible cake
+const _glbPrefetchQueue = [];  // low priority  — speculative cache warming
+function _runNextQueuedGLBLoad(){
+    if(_activeGLBLoads >= getMaxConcurrentGLBLoads()) return;
+    const next = _glbLoadQueue.shift() || _glbPrefetchQueue.shift();
+    if(!next) return;
+    _activeGLBLoads++;
+    next();
+}
+function _queueGLBLoad(loadFn, isPrefetch){
+    return new Promise((resolve, reject)=>{
+        const task = ()=>{
+            loadFn().then(res=>{
+                _activeGLBLoads--; _runNextQueuedGLBLoad(); resolve(res);
+            }).catch(err=>{
+                _activeGLBLoads--; _runNextQueuedGLBLoad(); reject(err);
+            });
+        };
+        (isPrefetch ? _glbPrefetchQueue : _glbLoadQueue).push(task);
+        _runNextQueuedGLBLoad();
+    });
+}
+// Called whenever the user changes shape/tier — throws away prefetches queued
+// for a configuration that's no longer on screen, so they can't crowd out the
+// files the new configuration actually needs. Anything already in flight is
+// left alone; it'll just land in the cache harmlessly.
+window._clearGLBPrefetchQueue = function(){ _glbPrefetchQueue.length = 0; };
+function _loadGLBAttemptQueued(url, isPrefetch){
+    return _queueGLBLoad(()=> new Promise((resolve,reject)=>{
+        // Use fetch + arrayBuffer instead of GLTFLoader's own XHR path first,
+        // so we can see the real HTTP status. A genuine 404 (file truly
+        // doesn't exist) should NEVER be retried — retrying it just burns
+        // one of our 1-2 concurrent load slots for several seconds on a
+        // request that can never succeed, which starves whatever the
+        // three-tier cake is actually waiting on.
+        fetch(url).then(res=>{
+            if(!res.ok){
+                const err = new Error(`HTTP ${res.status} for ${url}`);
+                err._httpStatus = res.status;
+                err._isNotFound = res.status === 404;
+                throw err;
+            }
+            return res.arrayBuffer();
+        }).then(buf=>{
+            new GLTFLoader().parse(buf, '', gltf=>{
+                stripOutlierMeshes(gltf.scene, url);
+                delete _glbLoadProgress[url];
+                resolve(gltf.scene);
+            }, err=>{
+                delete _glbLoadProgress[url];
+                // A parse failure here on a 200 response means the bytes we
+                // received were truncated/corrupted mid-transfer (single-
+                // threaded dev server choking under concurrent load), not a
+                // bad file. Mark it so the retry logic backs off hard instead
+                // of treating it like a normal transient network blip.
+                err._isCorruptedTransfer = true;
+                reject(err);
+            });
+        }).catch(err=>{
+            delete _glbLoadProgress[url];
+            if(err._isCorruptedTransfer === undefined && err._isNotFound === undefined){
+                err._isCorruptedTransfer = (err instanceof RangeError || err instanceof SyntaxError);
+            }
+            reject(err);
+        });
+    }), isPrefetch);
+}
+function _loadGLBRaw(url, attempt, isPrefetch){
+    // Each retry attempt is its OWN independent queued slot (not nested inside
+    // the previous one), so a failing file doesn't hold up the queue for
+    // everything else waiting behind it.
+    return _loadGLBAttemptQueued(url, isPrefetch).catch(err=>{
+        if(err && err._isNotFound){
+            // Real 404 — the file genuinely isn't on the server. No amount of
+            // retrying fixes that; fail fast so the queue slot frees up
+            // immediately instead of stalling for ~6 seconds.
+            console.error(`[GLB] 404 Not Found — not retrying: ${url}`);
+            throw err;
+        }
+        const isCorrupted = !!err._isCorruptedTransfer;
+        const maxAttempts = isCorrupted ? 8 : 5;
+        if(attempt < maxAttempts){
+            // Corrupted/truncated transfers (single-threaded dev server under
+            // load) need real recovery time, not a quick retry that just hits
+            // the same overloaded server again. Exponential backoff instead
+            // of linear, and more attempts allowed.
+            const delay = isCorrupted
+                ? Math.min(6000, 700 * Math.pow(1.7, attempt))
+                : 400 * attempt;
+            return new Promise((resolve,reject)=>{
+                setTimeout(()=>{ _loadGLBRaw(url, attempt+1, isPrefetch).then(resolve).catch(reject); }, delay);
+            });
+        }
+        console.error(`[GLB] Gave up on ${url} after ${attempt} attempts`, err);
+        throw err;
+    });
+}
+// Clones can transiently fail with "RangeError: Array buffer allocation
+// failed" under memory pressure. This wrapper (a) never lets
+// deepCloneObject3D's synchronous throw escape uncaught — the old code's
+// Promise.resolve(deepCloneObject3D(...)) still calls deepCloneObject3D
+// synchronously and rethrows if it fails, which is what aborted updateScene()
+// entirely instead of just failing that one piece — and (b) retries the
+// clone a couple of times with a short pause so the browser gets a chance to
+// garbage-collect before trying again.
+function safeCloneObject3D(scene, attempt){
+    attempt = attempt || 1;
+    return new Promise((resolve, reject)=>{
+        try{
+            resolve(deepCloneObject3D(scene));
+        } catch(err){
+            const isAllocErr = err instanceof RangeError;
+            if(isAllocErr && attempt < 4){
+                console.warn(`[GLB clone] Allocation failed — retrying clone (attempt ${attempt+1})`, err);
+                setTimeout(()=>{
+                    safeCloneObject3D(scene, attempt+1).then(resolve).catch(reject);
+                }, 200 * attempt);
+            } else {
+                reject(err);
+            }
+        }
+    });
+
+}
+function loadGLB(url, opts){
+    const isPrefetch = !!(opts && opts.prefetch);
+    if(glbCache[url]){
+        if(!isPrefetch) _glbBatchFilesCompleted++, _updateAggregateLoadProgress();
+        return safeCloneObject3D(glbCache[url]);
+    }
+    if(glbLoadingPromises[url]) return glbLoadingPromises[url].then(scene=>safeCloneObject3D(scene));
+    const p = _loadGLBRaw(url, 1, isPrefetch).then(scene=>{
+        glbCache[url]=scene;
+        delete glbLoadingPromises[url];
+        if(!isPrefetch){ _glbBatchFilesCompleted++; _updateAggregateLoadProgress(); }
+        return scene;
+    }).catch(err=>{
+        delete glbLoadingPromises[url];
+        if(!isPrefetch){ _glbBatchFilesCompleted++; _updateAggregateLoadProgress(); } // count failures too, or the bar can never reach 100%
+        throw err;
     });
     glbLoadingPromises[url] = p;
-    return p.then(scene=>deepCloneObject3D(scene));
+    return p.then(scene=>safeCloneObject3D(scene));
 }
 function glbHasMesh(group){let f=false;group.traverse(c=>{if(c.isMesh)f=true;});return f;}
 
@@ -4175,7 +4719,10 @@ function updateCheesecakeCrust(cakeType){
 
 async function updateScene(state){
 const {shape,flavor,frostings,hasDrip,dripFlavor,icingColor,ombreTopColor,ombreBottomColor,rosettePlacement,rosetteColor}=state;
-    const frostingsArr=(frostings&&frostings.length>0)?frostings:['Smooth Buttercream'];
+    // Bundt is allowed to be genuinely bare (no base icing at all) — every
+    // other shape still falls back to Smooth Buttercream if its frostings
+    // list is somehow empty, since they always require one active base icing.
+    const frostingsArr=frostings||[];
     const isNumber   =(shape==='Number');
     const isSugarIcing=frostingsArr.includes('Sugar Icing');
     const frostSuffix =getFrostingFileSuffix(frostingsArr);
@@ -4191,10 +4738,10 @@ if(isNumber){
         newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}_${numStyleKey}${numTexKey}${numRosetteKey}`;
 } else {
  const slug=shape==='Two-tier Square'?'two-tier_square':shape==='Three-tier Square'?'three-tier_square':shape==='Two-tier Heart'?'two-tier_heart':shape==='Three-tier Heart'?'three-tier_heart':(SHAPE_SLUG[shape]||'round');
-      const sizeKey=(shape==='Round')?`_${state.roundSize||6}in`:'';
+      const sizeKey=(shape==='Round'||shape==='Square'||shape==='Two-tier Square'||shape==='Three-tier Square'||shape==='Heart'||shape==='Two-tier Heart'||shape==='Three-tier Heart')?`_${state.roundSize||6}in`:'';
 const shellBorderKey = (frostingsArr.includes('Semi-naked Style') && frostingsArr.includes('Smooth Buttercream')) ? '_withshell' : '_noshell';
 const _cakeStyleKey = frostingsArr.includes('Semi-naked Style') ? 'sn' : frostingsArr.includes('Fondant Smooth') ? 'fn' : 'bc';
-const _texturedKey = frostingsArr.includes('Textured Buttercream') ? '_tx' : '_ntx';
+const _texturedKey = frostingsArr.includes('Textured Buttercream') ? '_tx' : '_ntx'; 
 const _rosetteOn  = frostingsArr.includes('Rosettes') && !frostingsArr.includes('Fondant Smooth');
 const _rosetteKey = _rosetteOn ? `_rosette_${(rosettePlacement||'Border').replace(/\s+/g,'')}_${rosetteColor||'ni'}` : '_norosette';
 newKey=`${slug}${sizeKey}_${flavor}_${_cakeStyleKey}_${needFrostGLB?frostSuffix:'nobc'}${shellBorderKey}${_texturedKey}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}${_rosetteKey}`;
@@ -4218,6 +4765,16 @@ if(prevKeyNoFlavor===newKeyNoFlavor&&sceneRoot.children.length>0){
     if(isLoading){pendingState=state;return;}
     isLoading=true; sceneRoot.visible=false;
     loadingEl.style.cssText='display:flex;opacity:1;'; loadingTx.textContent='Building 3D preview…'; statusEl.classList.add('hidden');
+    // Show the correct number of tiers on the loading silhouette so it
+    // visually matches the cake actually being built (Single/Two/Three-tier).
+    (function(){
+        const _lc = document.getElementById('loadingCake');
+        if(_lc){
+            _lc.classList.remove('tier-two','tier-three');
+            if(state.tier === 'Two-tier') _lc.classList.add('tier-two');
+            else if(state.tier === 'Three-tier') _lc.classList.add('tier-three');
+        }
+    })();
 
 let usedGLB=false;
     try {
@@ -4631,10 +5188,21 @@ sceneRoot.add(baseWrapper);
                         const rosettePlacementListSD = rosettePlacement.split('+').map(s=>s.trim());
                         const rosettePiecesSD = [];
                         for(const pl of rosettePlacementListSD){
-                            const fileSD = rMapSD[pl] || rMapSD['Border'];
-                            const gSD = await loadGLB(`/models/${fileSD}.glb`).catch(()=>null);
-                            if(gSD && glbHasMesh(gSD)) rosettePiecesSD.push({ glb:gSD, placement:pl });
-                        }
+    const fileSD = rMapSD[pl] || rMapSD['Border'];
+    const urlSD = `/models/${fileSD}.glb`;
+    let gSD = null, attemptsSD = 0;
+    while(!gSD && attemptsSD < 3){
+        attemptsSD++;
+        try{ gSD = await loadGLB(urlSD); }
+        catch(err){
+            console.warn(`[Rosette] Number combo retry ${attemptsSD} threw for ${urlSD}`, err);
+            gSD = null;
+            await new Promise(res=>setTimeout(res, 200 * attemptsSD));
+        }
+    }
+    if(gSD && glbHasMesh(gSD)) rosettePiecesSD.push({ glb:gSD, placement:pl });
+    else console.error(`[Rosette] Missing (number combo): ${urlSD}`);
+}
                         if(rosettePiecesSD.length > 0){
                             function fitSingleDigitRosettePiece(rosetteGLB, placement){
                                 rosetteGLB.position.set(0,0,0); rosetteGLB.rotation.set(0,0,0); rosetteGLB.scale.set(1,1,1);
@@ -4816,11 +5384,23 @@ const idxDrip  = dripURL                  ? (urlList.push(dripURL) -1) : -1;
 const idxTexture = textureURL             ? (urlList.push(textureURL)-1) : -1;
 const idxRosetteStart = rosetteURLs.length ? urlList.length : -1;
 rosetteURLs.forEach(u=>urlList.push(u));
+_resetGLBBatchProgress(urlList.length); // so the % bar climbs across ALL files in this load, not per-file
+
+// Free the OUTGOING cake's geometry/materials before fetching the new one —
+// previously this happened only after every new asset (base/frost/icing/
+// drip/rosette) had already finished loading AND cloning, so for a moment
+// both the old cake and the new one were fully allocated at once. For
+// Three-tier cakes (the heaviest meshes, and the only ones that can combine
+// two full rosette pieces for a placement like "Border+Sides") that doubled
+// peak memory and caused the transient
+// "RangeError: Array buffer allocation failed" that aborted updateScene()
+// mid-way and left pieces like "Sides" missing after a tier switch.
+clearScene(true);
 
 const results  = await Promise.allSettled(urlList.map(u=>loadGLB(u)));
 const baseGLB  = results[0]?.status==='fulfilled' ? results[0].value : null;
 const frostGLB = idxFrost>=0 && results[idxFrost]?.status==='fulfilled' ? results[idxFrost].value : null;
-if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${fondantslugoverride}.glb`);
+if(hasFondant && !frostGLB) console.error(`[Fondant] Missing: /models/fondant_${fondantSlugOverride}.glb`);
 const icingGLB = idxIcing>=0 && results[idxIcing]?.status==='fulfilled' ? results[idxIcing].value : null;
 const dripGLB  = idxDrip >=0 && results[idxDrip] ?.status==='fulfilled' ? results[idxDrip].value  : null;
 const textureGLB = idxTexture>=0 && results[idxTexture]?.status==='fulfilled' ? results[idxTexture].value : null;
@@ -4828,15 +5408,35 @@ if(hasTextured && !textureGLB) console.error(`[Textured] Missing: ${textureURL}`
 // Each entry: { glb, placement } — one per piece in the combo (or a single entry for non-combos)
 const rosettePieces = [];
 if(idxRosetteStart >= 0){
-    rosettePlacementList.forEach((pl, i)=>{
+    // Sequential (not forEach) so later retries can await. A combo like
+    // "Border+Sides" loads two separate files; losing either one leaves the
+    // cake looking half-decorated, so each piece gets a few isolated retries
+    // with a short pause in between — Three-tier rosette files are the
+    // heaviest meshes in the app and are the ones most likely to hit a
+    // transient allocation failure right after a tier switch.
+    for(let i=0; i<rosettePlacementList.length; i++){
+        const pl = rosettePlacementList[i];
         const r = results[idxRosetteStart + i];
-        const g = r?.status==='fulfilled' ? r.value : null;
+        let g = r?.status==='fulfilled' ? r.value : null;
+        let attempts = 0;
+        while((!g || !glbHasMesh(g)) && attempts < 3){
+            attempts++;
+            console.warn(`[Rosette] Attempt ${attempts} failed for ${rosetteURLs[i]} — retrying`);
+            try{
+                g = await loadGLB(rosetteURLs[i]);
+            } catch(err){
+                console.warn(`[Rosette] Retry ${attempts} threw for ${rosetteURLs[i]}`, err);
+                g = null;
+                await new Promise(res=>setTimeout(res, 250 * attempts));
+            }
+        }
         if(g && glbHasMesh(g)) rosettePieces.push({ glb:g, placement:pl });
-        else console.error(`[Rosette] Missing: ${rosetteURLs[i]}`);
-    });
+        else {
+            console.error(`[Rosette] Missing: ${rosetteURLs[i]}`);
+            if(typeof showToast === 'function') showToast(`⚠ "${pl}" rosette couldn't load — try switching tiers again`, 3200);
+        }
+    }
 }
-
-clearScene(true);
 
 const toPos = [];
 if(hasFondant){
@@ -4851,7 +5451,21 @@ if(hasFondant){
     if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
 }
 if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
-if(dripGLB  && glbHasMesh(dripGLB))  { currentDrip  = dripGLB;  sceneRoot.add(currentDrip);  toPos.push(currentDrip);  }
+if(dripGLB  && glbHasMesh(dripGLB))  {
+    currentDrip = dripGLB; sceneRoot.add(currentDrip);
+    // Single-tier Round ONLY: do NOT push into toPos. drip_round.glb's raw
+    // geometry has very different proportions from the cake body, and folding
+    // it into positionMultiGroup's COMBINED bounding box was throwing off the
+    // scale for the whole group (including the drip itself), producing an
+    // invisible/mis-scaled result. It still loads into the scene here; its
+    // actual sizing/position is computed independently further below
+    // (diameter-match + top-align against the already-sized cake) — the same
+    // technique already used successfully for heart-tier drip.
+    // Every other shape/tier (Square, Heart, Bundt, Two-tier, Three-tier,
+    // etc.) keeps the old behavior untouched — still pushed into toPos.
+    const _isSingleTierRoundDrip = (slug === 'round' && !hasFondant && !hasSemiNakedR);
+    if(!_isSingleTierRoundDrip) toPos.push(currentDrip);
+}
 if(textureGLB && glbHasMesh(textureGLB)) { currentTexture = textureGLB; sceneRoot.add(currentTexture); toPos.push(currentTexture); }
 const rosetteIsCombo = rosettePieces.length > 1;
 if(rosettePieces.length === 1) {
@@ -4965,7 +5579,9 @@ function fitRosetteToCake(cakeRef){
         // visually swallow them. When Drip is active, nudge those placements slightly
         // wider so the rosette ring sits proud of the drip instead of being covered by it.
         const DRIP_CLEARANCE_MULT = { 'Border': 1.06, 'Sides': 1.05 };
-        const roseDiamMultFinal = (hasDrip && DRIP_CLEARANCE_MULT[placement])
+        const DRIP_WIDEN_SKIP_SLUGS = ['two-tier', 'three-tier', 'three-tier_square', 'two-tier_heart', 'three-tier_heart'];
+        const skipDripWiden = (placement === 'Sides') || (placement === 'Border' && DRIP_WIDEN_SKIP_SLUGS.includes(slug));
+        const roseDiamMultFinal = (hasDrip && DRIP_CLEARANCE_MULT[placement] && !skipDripWiden)
             ? roseDiamMult * DRIP_CLEARANCE_MULT[placement]
             : roseDiamMult;
         const roseScale = rawRoseDiam > 0.0001 ? (cakeDiamNow*roseDiamMultFinal)/rawRoseDiam : 1.0;
@@ -5063,7 +5679,10 @@ function nudgeRosetteBorderPerTier(rosetteGroup, cakeRef, tierCount, nudgeFracti
 }
 if(toPos.length > 0 || hasFondant){
             sceneRoot.updateMatrixWorld(true);
-const _inches = (shape==='Round') ? (state.roundSize||6) : (shape==='Heart' || shape==='Two-tier Heart' || shape==='Three-tier Heart') ? 7.5 : (shape==='Number') ? 5 : 6;
+const _inches = (shape==='Round') ? (state.roundSize||6)
+    : (shape==='Square' || shape==='Two-tier Square' || shape==='Three-tier Square') ? (state.roundSize||6)
+    : (shape==='Heart' || shape==='Two-tier Heart' || shape==='Three-tier Heart') ? ((state.roundSize||6) * 1.25)
+    : (shape==='Number') ? 5 : 6;
 if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                 // ── FONDANT: use positionGroup for consistent sizing ──
                          currentFrost.position.set(0,0,0); currentFrost.rotation.set(0,0,0); currentFrost.scale.set(1,1,1);
@@ -5487,25 +6106,34 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                     }
                         [currentBase, ...overlays, ...(currentDrip?[currentDrip]:[])].forEach(g => { g.visible = true; });
                                        fitRosetteToCake(currentBase);
-                 if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Border' && (slug === 'two-tier_heart' || slug === 'three-tier_heart' || slug === 'two-tier' || slug === 'three-tier' || slug === 'two-tier_square' || slug === 'three-tier_square')){
-    const _tierCountHB = (slug === 'three-tier_heart' || slug === 'three-tier' || slug === 'three-tier_square') ? 3 : 2;
-    const _nudgeMap = {
-        'two-tier_heart':    [-0.04, 0],
-        'three-tier_heart':  [-0.07, -0.035, 0],
-        'two-tier':          [1.01, 0],
-        'three-tier':        [-0.05, -0.02, 0],
-        'two-tier_square':   [-0.03, 0],
-        'three-tier_square': [-0.05, -0.02, 0],
-    };
-    const _nudgeHB = _nudgeMap[slug] || [0, 0];
-    nudgeRosetteBorderPerTier(currentRosette, toPos[0], _tierCountHB, _nudgeHB);
+                 if(currentRosette && (slug === 'two-tier_heart' || slug === 'three-tier_heart')){
+    // Match the smooth-buttercream (non-semi-naked) path exactly — only the
+    // Heart tiers need this extra per-tier correction, since their tier
+    // proportions are irregular enough that the general fitRosetteToCake fit
+    // alone isn't precise. Round and Square two-/three-tier already land
+    // correctly from fitRosetteToCake alone (same as smooth BC) — the extra
+    // nudge that used to run for them here was what pushed semi-naked
+    // Round/Square rosettes out of position. Dropping it makes semi-naked
+    // sit exactly like smooth BC for every tiered shape.
+    const _rosetteUnitsHB = rosetteIsCombo
+        ? currentRosette.children.map((c,i)=>({ obj:c, placement: rosettePieces[i].placement }))
+        : [{ obj: currentRosette, placement: rosettePieces[0].placement }];
+    _rosetteUnitsHB.forEach(({obj:_rUnit, placement:_rPlacement})=>{
+        if(_rPlacement === 'Border'){
+            const _tierCountHB = slug === 'three-tier_heart' ? 3 : 2;
+            const _nudgeHB = slug === 'three-tier_heart' ? [-0.07, -0.035, 0] : [-0.04, 0];
+            nudgeRosetteBorderPerTier(_rUnit, toPos[0], _tierCountHB, _nudgeHB);
+        }
+        if(_rPlacement === 'Sides' && slug === 'three-tier_heart'){
+            // Copied to match the smooth-buttercream value exactly (was -0.01) —
+            // semi-naked now sits in the same spot as smooth BC for this placement.
+            nudgeRosetteBorderPerTier(_rUnit, currentBase, 3, [0.01, 0.03, 0.015]);
+        }
+        if(_rPlacement === 'Sides' && slug === 'two-tier_heart'){
+            nudgeRosetteBorderPerTier(_rUnit, toPos[0], -0.01, [0.09, -0.03]);
+        }
+    });
 }
-                                        if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'three-tier_heart'){
-                        nudgeRosetteBorderPerTier(currentRosette, currentBase, 3, [-0.01, 0.03, 0.015]);
-                    }
-                                                                 if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'two-tier_heart'){
-                 nudgeRosetteBorderPerTier(currentRosette, toPos[0], -0.01, [0.09, -0.03]); 
-                    }
                 }else {
        if(!hasFondant){
                                    if(slug === 'bundt' && toPos.length >= 2){
@@ -5533,8 +6161,29 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                             if(currentFrost && currentFrost !== currentBase){ currentFrost.position.y += nudgeUp; currentFrost.updateMatrixWorld(true); }
                             if(currentIcing){ currentIcing.position.y += nudgeUp; currentIcing.updateMatrixWorld(true); }
                         }
-                                 } else if(toPos.length >= 2){
+                                  } else if(toPos.length >= 2){
                         positionMultiGroup(_inches, HEART_HEIGHT_MULT, ...toPos);
+                                                 if(currentBase && slug === 'round'){
+                            const _baseTopBox = new THREE.Box3().setFromObject(currentBase);
+                            // Textured Buttercream is a full side-wall sleeve, not a thin rim
+                            // ring — it's already correctly aligned by positionMultiGroup.
+                            // Shell Border and Sugar Icing each need their own nudge amount —
+                            // they're different piece shapes/heights, not interchangeable.
+                            const _ROUND_RIM_NUDGE = {
+                                frost: 0.08,   // Shell Border
+                                icing: 0.14,   // Sugar Icing
+                            };
+                            [
+                                { g: currentFrost, nudge: _ROUND_RIM_NUDGE.frost },
+                                { g: currentIcing, nudge: _ROUND_RIM_NUDGE.icing },
+                            ].forEach(({g, nudge})=>{
+                                if(!g || g === currentBase) return;
+                                const _gBox = new THREE.Box3().setFromObject(g);
+                                const _deltaY = (_baseTopBox.max.y - _gBox.max.y) + nudge;
+                                g.position.y += _deltaY;
+                                g.updateMatrixWorld(true);
+                            });
+                        }
                     } else if(toPos.length === 1){
                         positionGroup(toPos[0], _inches, HEART_HEIGHT_MULT);
                     }
@@ -5547,19 +6196,61 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         const yDelta = toPos[0].position.y - yBefore;
                         if(yDelta !== 0) toPos.slice(1).forEach(g=>{ g.position.y+=yDelta; g.updateMatrixWorld(true); });
 fitRosetteToCake(toPos[0]);
-                        // Border rosette on tiered hearts: fix lower-tier drift (top tier
-                        // already lands correctly from fitRosetteToCake above).
-                        if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Border' && (slug === 'two-tier_heart' || slug === 'three-tier_heart')){
-                            const _tierCountHB = slug === 'three-tier_heart' ? 3 : 2;
-                            // bottom-to-top; tune these — start small and adjust sign/size per tier.
-                            const _nudgeHB = slug === 'three-tier_heart' ? [-0.07, -0.035, 0] : [-0.04, 0];
-                            nudgeRosetteBorderPerTier(currentRosette, toPos[0], _tierCountHB, _nudgeHB);
+                        // Single-tier Round drip: fit it INDEPENDENTLY to the cake's actual
+                        // final diameter/top edge — same diameter-match + top-align technique
+                        // used successfully elsewhere in this file (e.g. heart-tier drip,
+                        // rosette fitting) — instead of folding it into positionMultiGroup's
+                        // combined bounding box (which produced a shrunk/disconnected floating
+                        // disc, since drip_round.glb's raw geometry size skews the combined
+                        // box) or blindly copying currentFrost's transform (which also left the
+                        // drip floating separately, as seen in testing). Scoped to slug==='round'
+                        // single-tier only — Two-tier/Three-tier Round already work correctly
+                        // via positionMultiGroup and are untouched.
+                                              if(currentDrip && slug === 'round' && !hasFondant && !hasSemiNakedR && !frostingsArr.includes('Ombre Style')){
+                            const _dripRefMeshSR = currentBase || currentFrost;
+                            if(_dripRefMeshSR){
+                                currentDrip.position.set(0,0,0); currentDrip.rotation.set(0,0,0); currentDrip.scale.set(1,1,1);
+                                currentDrip.updateMatrixWorld(true);
+                                const _refBoxSR  = new THREE.Box3().setFromObject(_dripRefMeshSR);
+                                const _refDiamSR = Math.max(_refBoxSR.max.x-_refBoxSR.min.x, _refBoxSR.max.z-_refBoxSR.min.z);
+                                const _rawDripBoxSR  = new THREE.Box3().setFromObject(currentDrip);
+                                const _rawDripDiamSR = Math.max(_rawDripBoxSR.max.x-_rawDripBoxSR.min.x, _rawDripBoxSR.max.z-_rawDripBoxSR.min.z);
+                                const _dripScaleSR = _rawDripDiamSR > 0.0001 ? (_refDiamSR * 1.02) / _rawDripDiamSR : 1.0;
+                                currentDrip.scale.setScalar(_dripScaleSR);
+                                currentDrip.updateMatrixWorld(true);
+                                const _scaledDripBoxSR = new THREE.Box3().setFromObject(currentDrip);
+                                const _scaledDripCenterSR = _scaledDripBoxSR.getCenter(new THREE.Vector3());
+                                const _refCenterSR = _refBoxSR.getCenter(new THREE.Vector3());
+                                                             const _dripRoundYNudge = _refDiamSR * 0.008;
+                                currentDrip.position.set(
+                                    _refCenterSR.x - _scaledDripCenterSR.x,
+                                    (_refBoxSR.max.y - _scaledDripBoxSR.max.y) + _dripRoundYNudge,
+                                    _refCenterSR.z - _scaledDripCenterSR.z
+                                );
+                                currentDrip.updateMatrixWorld(true);
+                            }
                         }
-                                            if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'three-tier_heart'){
-                      nudgeRosetteBorderPerTier(currentRosette, currentBase, 3, [0.01, 0.03, 0.015]);
-                        }
-                                                             if(currentRosette && !rosetteIsCombo && rosettePieces[0] && rosettePieces[0].placement === 'Sides' && slug === 'two-tier_heart'){
-                            nudgeRosetteBorderPerTier(currentRosette, toPos[0], -0.01, [0.09, -0.03]);
+                        // Border/Sides rosette on tiered hearts: fix lower-tier drift (top tier
+                        // already lands correctly from fitRosetteToCake above). Applied to EVERY
+                        // piece of the rosette — solo or combo — so combo placements (e.g.
+                        // "Border+Sides") land in the same spot as picking either one alone.
+                        if(currentRosette && (slug === 'two-tier_heart' || slug === 'three-tier_heart')){
+                            const _rosetteUnitsHB2 = rosetteIsCombo
+                                ? currentRosette.children.map((c,i)=>({ obj:c, placement: rosettePieces[i].placement }))
+                                : [{ obj: currentRosette, placement: rosettePieces[0].placement }];
+                            _rosetteUnitsHB2.forEach(({obj:_rUnit2, placement:_rPlacement2})=>{
+                                if(_rPlacement2 === 'Border'){
+                                    const _tierCountHB = slug === 'three-tier_heart' ? 3 : 2;
+                                    const _nudgeHB = slug === 'three-tier_heart' ? [-0.07, -0.035, 0] : [-0.04, 0];
+                                    nudgeRosetteBorderPerTier(_rUnit2, toPos[0], _tierCountHB, _nudgeHB);
+                                }
+                                if(_rPlacement2 === 'Sides' && slug === 'three-tier_heart'){
+                                    nudgeRosetteBorderPerTier(_rUnit2, currentBase, 3, [0.01, 0.03, 0.015]);
+                                }
+                                if(_rPlacement2 === 'Sides' && slug === 'two-tier_heart'){
+                                    nudgeRosetteBorderPerTier(_rUnit2, toPos[0], -0.01, [0.09, -0.03]);
+                                }
+                            });
                         }
                     }
                 }
@@ -5574,6 +6265,30 @@ fitRosetteToCake(toPos[0]);
   if(!usedGLB){ showNoPreview(shape); }
         updateCheesecakeCrust(state.cakeType);
     }
+// Rebuild the slice wedge/clip planes on the freshly-built meshes BEFORE the
+// cake is made visible. Previously this ran a frame later (in a deferred
+// requestAnimationFrame callback after sceneRoot.visible=true), which let the
+// whole unsliced cake flash on screen for a moment on every tier/shape/
+// add-on change. Doing it here means the cake is always already-sliced the
+// instant it appears — no more glitch/flash.
+if(window.CakeSlice){
+    try{
+        if(state.sliceEnabled === false){
+            window.CakeSlice.disable();
+        } else {
+            window.CakeSlice.update({
+                flavor: (typeof getEffectiveInnerFlavorKey==='function') ? getEffectiveInnerFlavorKey() : (state.innerFlavor||state.flavor),
+                filling: (state.tierFillings && state.tierFillings[0]) || state.filling,
+                rotationDeg: (typeof window._getEffectiveSliceRotation==='function' ? window._getEffectiveSliceRotation() : state.sliceRotation),
+                spanDeg: 40,
+                tier: state.tier,
+                tierLayers: state.tierLayers,
+                tierFlavors: state.tierFlavors,
+                tierFillings: state.tierFillings,
+            });
+        }
+    }catch(e){ console.warn('[CakeSlice] pre-visible rebuild failed', e); }
+}
 loadedKey=newKey; sceneRoot.visible=true;
     invalidateCakeMeshesCache();
 isLoading=false;
@@ -5620,11 +6335,24 @@ if(isPreview){
 requestAnimationFrame(()=>{
         if(typeof window._reprojectAllToppings==='function') window._reprojectAllToppings();
         if(typeof window._reapplySprinkles==='function') window._reapplySprinkles();
+             if(typeof state !== 'undefined' && state.allFruitsAssorted && typeof window.buildAllFruitsAssorted==='function'){
+            window.buildAllFruitsAssorted();
+        } else if(typeof window._reapplyGramFruits==='function'){
+            window._reapplyGramFruits();
+        }
+        if(typeof window._reapplyTierFruitBorders==='function') window._reapplyTierFruitBorders();
         if(typeof window._reapplyChocoCurls==='function') window._reapplyChocoCurls(state.tier, state.baseShape || state.shape);
         if(typeof window._reapplyPlaque==='function') window._reapplyPlaque();
         if(typeof window._reapplyCharacterTopper==='function') window._reapplyCharacterTopper();
-              if(window._pendingIcingReveal && currentIcing){
+        // The slice wedge was already rebuilt synchronously above, before the
+        // cake was made visible — just make sure clipping survives any
+        // reveal-animation cleanup that ran in between.
+        if(window.CakeSlice && state.sliceEnabled !== false){
+            try{ window.CakeSlice.reapply(); }catch(e){ console.warn('[CakeSlice] reapply after load failed', e); }
+        }
+        if(window._pendingIcingReveal && currentIcing){
             window._pendingIcingReveal = false;
+            hideGroupInstantly(currentIcing);
             revealIcingWithWipe(currentIcing, 1800);
         }
               if(window._pendingShellReveal && currentFrost){
@@ -5637,17 +6365,10 @@ requestAnimationFrame(()=>{
         }
         if(window._pendingFondantReveal && currentFrost){
             window._pendingFondantReveal = false;
-            revealFondantDrape(currentFrost, 2400);
         }
                 if(window._pendingDripReveal && currentDrip){
             window._pendingDripReveal = false;
-            revealDripFlow(currentDrip, 1600);
         }
-        // Re-fit the rosette one more time after everything (stand, matrices) has
-        // fully settled — fixes cases where Rosettes is the ONLY base icing (no
-        // Shell Border/Sugar Icing layer loaded alongside it), which changes
-        // which code path positions the cake and can leave the rosette's scale
-        // stale from before the stand/offset was applied.
         if(typeof currentRosette !== 'undefined' && currentRosette && typeof fitRosetteToCake === 'function'){
             const cakeRefNow = (typeof currentBase !== 'undefined' && currentBase) ? currentBase
                               : (typeof currentFrost !== 'undefined' && currentFrost) ? currentFrost
@@ -6108,6 +6829,1382 @@ window.buildChocoSprinkles    = buildChocoSprinkles;
 window.buildCrushedPeanuts    = buildCrushedPeanuts;
 window.clearSprinkles         = clearSprinkles;
 
+// Merges many static decorative pieces (Kiwi/Banana GLB clones) into ONE mesh,
+// so a large "Full" pile costs a single draw call instead of one per piece —
+// this is the actual fix for the Kiwi/Banana lag, not just a resolution/fps
+// trick. All pieces are baked to one shared material (visually fine for tiny
+// decorative fruit slices) since merging per-original-material would still
+// leave one draw call per piece (each GLB clone gets its own cloned material).
+function mergeStaticMeshGroupsSingleMaterial(groups){
+    // IMPORTANT: a fruit model like Kiwi is made of several sub-meshes each
+    // with its OWN material (e.g. green skin ring, white flesh, black seeds).
+    // Taking only the first material and applying it to everything was what
+    // turned the merged pile into one flat green blob. Instead, every
+    // sub-mesh's vertices are appended with a geometry "group" pointing at
+    // its own material index, so the final mesh keeps all the original
+    // colors/textures — still just a handful of draw calls (one per unique
+    // material used across the whole pile), not one per piece.
+    const positions = [], normals = [], uvs = [];
+    const materials = [];
+    const materialGroups = []; // {start, count, materialIndex}
+    const v = new THREE.Vector3(), n = new THREE.Vector3();
+    groups.forEach(group=>{
+        group.updateMatrixWorld(true);
+        group.traverse(node=>{
+            if(!node.isMesh) return;
+            const geo = node.geometry;
+            if(!geo || !geo.attributes || !geo.attributes.position) return;
+            const nodeMat = Array.isArray(node.material) ? node.material[0] : node.material;
+            if(!nodeMat) return;
+            const materialIndex = materials.length;
+            materials.push(nodeMat.clone());
+
+            const nonIndexed = geo.index ? geo.toNonIndexed() : geo;
+            const posAttr = nonIndexed.attributes.position;
+            const normAttr = nonIndexed.attributes.normal;
+            const uvAttr = nonIndexed.attributes.uv;
+            const matWorld = node.matrixWorld;
+            const normalMat = new THREE.Matrix3().getNormalMatrix(matWorld);
+
+            const startVertex = positions.length / 3;
+            for(let i=0;i<posAttr.count;i++){
+                v.fromBufferAttribute(posAttr, i).applyMatrix4(matWorld);
+                positions.push(v.x, v.y, v.z);
+                if(normAttr){ n.fromBufferAttribute(normAttr, i).applyMatrix3(normalMat).normalize(); }
+                else { n.set(0,1,0); }
+                normals.push(n.x, n.y, n.z);
+                if(uvAttr){ uvs.push(uvAttr.getX(i), uvAttr.getY(i)); } else { uvs.push(0,0); }
+            }
+            const vertexCount = posAttr.count;
+            materialGroups.push({ start: startVertex, count: vertexCount, materialIndex });
+            if(geo.index) nonIndexed.dispose();
+        });
+    });
+    if(materials.length===0 || positions.length===0) return null;
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+    geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals,3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs,2));
+    materialGroups.forEach(g=>geo.addGroup(g.start, g.count, g.materialIndex));
+    const mesh = new THREE.Mesh(geo, materials);
+    mesh.castShadow = false; mesh.receiveShadow = false;
+    const wrapper = new THREE.Group();
+    wrapper.add(mesh);
+    return wrapper;
+}
+
+// ── GRAM-BASED FRUITS (Mango Cube / Kiwi / Peach / Banana) — placement & scatter ──
+window._gramFruitGroups = window._gramFruitGroups || {};
+window._gramFruitGrams = window._gramFruitGrams || {};
+window._gramFruitPlacement = window._gramFruitPlacement || {
+    'Mango Slice':'middle', 'Kiwi Slice':'middle', 'Peach Slice':'middle', 'Banana Slice':'middle',
+};
+// Same raycast the sprinkles system uses, but also returns the surface
+// normal at the hit point — needed so a placed piece can be tilted to lie
+// flush against a curved/sloped cake surface instead of always sitting
+// perfectly flat (which is what made the mango cubes look like they were
+// floating above the frosting instead of resting in it).
+function _snapToSurfaceWithNormal(x, z){
+    _sharedSurfaceRaycaster.set(
+        new THREE.Vector3(x, 20, z),
+        new THREE.Vector3(0, -1, 0)
+    );
+    const meshes = getSprinkleTargetMeshes();
+    const hits = _sharedSurfaceRaycaster.intersectObjects(meshes, false);
+    if (hits.length === 0) return null;
+    hits.sort((a, b) => b.point.y - a.point.y);
+    const hit = hits[0];
+    let normal = new THREE.Vector3(0,1,0);
+    if(hit.face){
+        normal = hit.face.normal.clone();
+        if(hit.object && hit.object.matrixWorld){
+            const nm = new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld);
+            normal.applyMatrix3(nm).normalize();
+        }
+        if(normal.y < 0) normal.negate();
+    }
+    return { point: hit.point, normal };
+}
+// Uses the real cake mesh (not the plate/stand) so radius/center are accurate.
+function _getCakeMetricsForFruits(){
+    const ref = currentBase || currentFrost || currentIcing;
+    let box;
+    if(ref){
+        ref.updateMatrixWorld(true);
+        box = new THREE.Box3().setFromObject(ref);
+    } else {
+        sceneRoot.updateMatrixWorld(true);
+        box = new THREE.Box3().setFromObject(sceneRoot);
+    }
+    const cx=(box.min.x+box.max.x)*0.5, cz=(box.min.z+box.max.z)*0.5;
+    const r=Math.max(box.max.x-box.min.x, box.max.z-box.min.z)*0.5;
+    return {cx,cz,r:r>0.001?r:1.0};
+}
+
+// If a target angle/radius happens to miss the cake surface (e.g. near a
+// square/heart corner), shrink inward a few times instead of dropping the point.
+function _raycastFruitPointAt(cx, cz, angle, radius){
+    let rr = radius;
+    for(let attempt=0; attempt<7; attempt++){
+        const wx = cx + Math.cos(angle)*rr;
+        const wz = cz + Math.sin(angle)*rr;
+        const hit = _snapToSurfaceWithNormal(wx, wz);
+        if(hit) return hit;
+        rr *= 0.86;
+    }
+    return null;
+}
+
+
+function _findCakeEdgeRadiusAtAngle(cx, cz, angle){
+    // Horizontal raycast toward the center at this angle, just under the
+    // cake's top edge, to find the REAL distance to the cake surface — this
+    // lets a "Border" ring hug the actual shape (round, square, heart, etc.)
+    // instead of always tracing a circle.
+    const ref = currentBase || currentFrost || currentIcing;
+    if(!ref) return _getCakeMetricsForFruits().r;
+    ref.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(ref);
+    const yTop = box.max.y - (box.max.y - box.min.y) * 0.06;
+    const dirX = Math.cos(angle), dirZ = Math.sin(angle);
+    const FAR = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) * 1.6 + 2.0;
+    const origin = new THREE.Vector3(cx + dirX * FAR, yTop, cz + dirZ * FAR);
+    const rayDir = new THREE.Vector3(-dirX, 0, -dirZ);
+    const rc = new THREE.Raycaster(origin, rayDir, 0, FAR * 2);
+    const meshes = getSprinkleTargetMeshes();
+    const hits = rc.intersectObjects(meshes, false);
+    if (hits.length === 0) return _getCakeMetricsForFruits().r;
+    hits.sort((a, b) => a.distance - b.distance);
+    const hp = hits[0].point;
+    return Math.sqrt((hp.x - cx) * (hp.x - cx) + (hp.z - cz) * (hp.z - cz));
+}
+// ── BUNDT ONLY: top row = one piece on each ridge crest, lower row = one piece between every two crests ──
+function _buildBundtLobePoints(cx, cz, r){
+    const SAMPLES = 360;          // 1° per sample
+    const RING_FRAC = 0.74;       // TOP ROW: ring radius as a fraction of the cake radius
+    const LOWER_RING_FRAC = 0.70; // LOWER ROW: higher = lower down the outside of the Bundt, lower = closer to the top
+    const FALLBACK_LOBES = 12;    // used only if the ridges can't be detected
+    const SMOOTH = 3;             // moving-average half-width (samples)
+    const PEAK_WINDOW = 12;       // a crest must be the highest within ±12°
+
+    const hits = new Array(SAMPLES).fill(null);
+    let validCount = 0, validSum = 0;
+    for(let i=0;i<SAMPLES;i++){
+        const angle = (i/SAMPLES)*Math.PI*2;
+        const hit = _raycastFruitPointAt(cx, cz, angle, r*RING_FRAC);
+        if(hit){ hits[i] = hit; validCount++; validSum += hit.point.y; }
+    }
+    if(validCount < SAMPLES*0.8) return [];
+    const meanY = validSum / validCount;
+    const rawY = hits.map(h => h ? h.point.y : meanY);
+
+    const ys = rawY.map((_, i)=>{
+        let s = 0, n = 0;
+        for(let k=-SMOOTH;k<=SMOOTH;k++){ s += rawY[(i+k+SAMPLES)%SAMPLES]; n++; }
+        return s/n;
+    });
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+
+    let peaks = [];
+    if(maxY - minY > 0.008){
+        for(let i=0;i<SAMPLES;i++){
+            let isPeak = true;
+            for(let k=1;k<=PEAK_WINDOW && isPeak;k++){
+                if(ys[(i-k+SAMPLES)%SAMPLES] >= ys[i]) isPeak = false;
+                if(ys[(i+k)%SAMPLES] > ys[i])          isPeak = false;
+            }
+            if(isPeak) peaks.push(i);
+        }
+    }
+    if(peaks.length < 4 || peaks.length > 24){
+        peaks = [];
+        for(let l=0;l<FALLBACK_LOBES;l++) peaks.push(Math.round((l/FALLBACK_LOBES)*SAMPLES) % SAMPLES);
+    }
+
+    // point on the surface at a given sample index / radius fraction
+    function pointAt(sampleIdx, radiusFrac){
+        const angle = (sampleIdx/SAMPLES)*Math.PI*2;
+        const hit = _raycastFruitPointAt(cx, cz, angle, r*radiusFrac);
+        return hit ? {x:hit.point.x, y:hit.point.y, z:hit.point.z, normal:hit.normal, angle:angle} : null;
+    }
+    // face each piece along its own ring (used by Peach Slice's fan orientation)
+    function orientAlongRing(ring){
+        for(let i=0;i<ring.length;i++){
+            const prev = ring[(i-1+ring.length)%ring.length];
+            const next = ring[(i+1)%ring.length];
+            ring[i].angle = Math.atan2(next.z-prev.z, next.x-prev.x);
+        }
+    }
+
+    // TOP ROW: on every crest
+    const topRing = [];
+    peaks.forEach(i=>{
+        const p = pointAt(i, RING_FRAC);
+        if(p) topRing.push(p);
+    });
+    orientAlongRing(topRing);
+
+    // LOWER ROW: halfway between each pair of neighbouring crests, further down the side
+    const lowerRing = [];
+    for(let n=0;n<peaks.length;n++){
+        const a = peaks[n];
+        const b = peaks[(n+1)%peaks.length];
+        let gap = b - a;
+        if(gap <= 0) gap += SAMPLES;                       // wrap around past 360°
+        const midIdx = Math.round(a + gap/2) % SAMPLES;
+        const p = pointAt(midIdx, LOWER_RING_FRAC);
+        if(p && p.normal.y > 0.55) lowerRing.push(p);   // only keep spots that face mostly upward
+    }
+    orientAlongRing(lowerRing);
+
+    lowerRing.forEach(p => { p.lower = true; });   // tag lower-row points so Kiwi can be lifted
+return topRing.concat(lowerRing);
+}
+// ── BUNDT ONLY: "Full" covers just the ring of top surface around the center hole ──
+function _buildBundtFullPoints(cx, cz, r, fruitName, fullDensityMult){
+    const INNER_OVERRIDE = null;  // set e.g. 0.42 to force the hole edge instead of auto-detecting
+    const INNER_MARGIN   = 0.05;  // gap kept between the pieces and the hole edge
+    const OUTER_FRAC     = 0.86;  // outer limit of the covered area (higher = closer to the outside edge)
+    const FALLBACK_INNER = 0.42;  // used if the hole edge can't be detected
+
+    const ref = currentBase || currentFrost;
+    let cakeH = 0.8;
+    if(ref){
+        ref.updateMatrixWorld(true);
+        const b = new THREE.Box3().setFromObject(ref);
+        cakeH = Math.max(0.2, b.max.y - b.min.y);
+    }
+
+    // 1. median surface height at each radius, sampled around the cake
+    const ANGLES = 12, prof = [];
+    for(let f=0.06; f<=0.96; f+=0.03){
+        const ys = [];
+        for(let a=0;a<ANGLES;a++){
+            const ang = (a/ANGLES)*Math.PI*2;
+            const h = _snapToSurfaceWithNormal(cx+Math.cos(ang)*r*f, cz+Math.sin(ang)*r*f);
+            if(h) ys.push(h.point.y);
+        }
+        ys.sort((p,q)=>p-q);
+        prof.push({ f, y: ys.length >= ANGLES*0.6 ? ys[Math.floor(ys.length/2)] : null });
+    }
+
+    // 2. find where the hole ends: walk inward from the highest point until the surface drops off
+    let peakIdx = -1;
+    prof.forEach((p,i)=>{
+        if(p.y!==null && p.f<=OUTER_FRAC+0.05 && (peakIdx<0 || p.y>prof[peakIdx].y)) peakIdx = i;
+    });
+    let innerFrac = FALLBACK_INNER;
+    if(INNER_OVERRIDE !== null){
+        innerFrac = INNER_OVERRIDE;
+    } else if(peakIdx >= 0){
+        const peakY = prof[peakIdx].y, DROP = cakeH*0.20;
+        let i = peakIdx;
+        while(i>0 && prof[i-1].y!==null && prof[i-1].y >= peakY-DROP) i--;
+        if(i>0) innerFrac = prof[i].f + INNER_MARGIN;
+    }
+    innerFrac = Math.min(0.65, Math.max(0.2, innerFrac));
+
+    // 3. concentric rings between the hole edge and the outer limit
+    const footprint = ((typeof getFruitBorderFootprint==='function') ? getFruitBorderFootprint(fruitName) : 0.105) * (fullDensityMult || 1);
+    const ringGap = footprint*1.05;
+    const bandW = (OUTER_FRAC - innerFrac)*r;
+    const numRings = Math.max(1, Math.round(bandW/ringGap)+1);
+    const points = [];
+    for(let k=0;k<numRings;k++){
+        const frac = numRings===1 ? (innerFrac+OUTER_FRAC)/2 : OUTER_FRAC - (OUTER_FRAC-innerFrac)*k/(numRings-1);
+        const circ = 2*Math.PI*r*frac;
+        const cap = Math.max(6, Math.round(circ/footprint));
+        const off = Math.random()*Math.PI*2;
+        for(let i=0;i<cap;i++){
+            const ang = off + (i/cap)*Math.PI*2;
+            const jit = footprint*0.08*(Math.random()-0.5)*2;
+            const hit = _snapToSurfaceWithNormal(cx+Math.cos(ang)*(r*frac+jit), cz+Math.sin(ang)*(r*frac+jit));
+            if(hit) points.push({x:hit.point.x, y:hit.point.y, z:hit.point.z, normal:hit.normal, angle:ang});
+        }
+    }
+    console.log('[BundtFruit] full: hole edge ≈', innerFrac.toFixed(2), '· pieces:', points.length);
+    return points;
+}
+// ── NUMBER CAKES: trace the real outline of the digit(s) ──
+const NUMBER_FRUIT_BORDER_INSET = 0.07; // distance from the cake edge to the piece centers (raise = further inside)
+const NUMBER_MASK_STEP = 0.045;         // scan resolution
+function _getNumberCakeMask(){
+    const ref = currentBase || currentFrost;
+    if(!ref) return null;
+    ref.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(ref);
+    const S = NUMBER_MASK_STEP;
+    const key = [box.min.x,box.min.z,box.max.x,box.max.z].map(v=>v.toFixed(3)).join('|') + '|' + loadedKey;
+    if(window._numMaskCache && window._numMaskCache.key === key) return window._numMaskCache.mask;
+    const x0 = box.min.x - S*2, z0 = box.min.z - S*2;
+    const W = Math.ceil((box.max.x-box.min.x)/S) + 5, H = Math.ceil((box.max.z-box.min.z)/S) + 5;
+    const inside = new Uint8Array(W*H);
+    const d = new Float32Array(W*H);
+    for(let j=0;j<H;j++){
+        for(let i=0;i<W;i++){
+            const k = j*W+i;
+            inside[k] = _snapToSurface(x0+i*S, z0+j*S) !== null ? 1 : 0;
+            d[k] = inside[k] ? 1e6 : 0;
+        }
+    }
+    // distance (in cells) from every inside cell to the nearest outside cell
+    for(let j=0;j<H;j++) for(let i=0;i<W;i++){
+        const k=j*W+i; if(!d[k]) continue; let v=d[k];
+        if(i>0) v=Math.min(v,d[k-1]+1);
+        if(j>0) v=Math.min(v,d[k-W]+1);
+        if(i>0&&j>0) v=Math.min(v,d[k-W-1]+1.414);
+        if(i<W-1&&j>0) v=Math.min(v,d[k-W+1]+1.414);
+        d[k]=v;
+    }
+    for(let j=H-1;j>=0;j--) for(let i=W-1;i>=0;i--){
+        const k=j*W+i; if(!d[k]) continue; let v=d[k];
+        if(i<W-1) v=Math.min(v,d[k+1]+1);
+        if(j<H-1) v=Math.min(v,d[k+W]+1);
+        if(i<W-1&&j<H-1) v=Math.min(v,d[k+W+1]+1.414);
+        if(i>0&&j<H-1) v=Math.min(v,d[k+W-1]+1.414);
+        d[k]=v;
+    }
+    // flood-fill the empty space from the corner: anything empty that is NOT reached is a hole inside the number
+    const outside = new Uint8Array(W*H);
+    const _stack = [0]; outside[0] = 1;
+    while(_stack.length){
+        const k = _stack.pop(); const i = k % W, j = (k - i) / W;
+        const nb = [];
+        if(i>0) nb.push(k-1);
+        if(i<W-1) nb.push(k+1);
+        if(j>0) nb.push(k-W);
+        if(j<H-1) nb.push(k+W);
+        nb.forEach(n=>{ if(!inside[n] && !outside[n]){ outside[n] = 1; _stack.push(n); } });
+    }
+    // distance from the OUTER edge only (holes count as solid)
+    const dOuter = new Float32Array(W*H);
+    for(let k=0;k<W*H;k++) dOuter[k] = outside[k] ? 0 : 1e6;
+    for(let j=0;j<H;j++) for(let i=0;i<W;i++){
+        const k=j*W+i; if(!dOuter[k]) continue; let v=dOuter[k];
+        if(i>0) v=Math.min(v,dOuter[k-1]+1);
+        if(j>0) v=Math.min(v,dOuter[k-W]+1);
+        if(i>0&&j>0) v=Math.min(v,dOuter[k-W-1]+1.414);
+        if(i<W-1&&j>0) v=Math.min(v,dOuter[k-W+1]+1.414);
+        dOuter[k]=v;
+    }
+    for(let j=H-1;j>=0;j--) for(let i=W-1;i>=0;i--){
+        const k=j*W+i; if(!dOuter[k]) continue; let v=dOuter[k];
+        if(i<W-1) v=Math.min(v,dOuter[k+1]+1);
+        if(j<H-1) v=Math.min(v,dOuter[k+W]+1);
+        if(i<W-1&&j<H-1) v=Math.min(v,dOuter[k+W+1]+1.414);
+        if(i>0&&j<H-1) v=Math.min(v,dOuter[k+W-1]+1.414);
+        dOuter[k]=v;
+    }
+    const mask = { inside, d, dOuter, W, H, x0, z0 };
+    window._numMaskCache = { key, mask };
+    return mask;
+}
+function _numberMaskDistWorldAt(mask, x, z){
+    const S = NUMBER_MASK_STEP;
+    const i = Math.round((x-mask.x0)/S), j = Math.round((z-mask.z0)/S);
+    if(i<0||j<0||i>=mask.W||j>=mask.H) return 0;
+    const k = j*mask.W+i;
+    return mask.inside[k] ? Math.max(0,(mask.d[k]-0.5)*S) : 0;
+}
+function _buildNumberFruitPoints(mode, fruitName, fullDensityMult){
+    const mask = _getNumberCakeMask();
+    if(!mask) return [];
+    const S = NUMBER_MASK_STEP;
+    const footprint = getFruitBorderFootprint(fruitName);
+    const inset = NUMBER_FRUIT_BORDER_INSET;
+    const seat = (x,z)=>{
+        const h = _snapToSurfaceWithNormal(x,z);
+        return h ? {x:h.point.x, y:h.point.y, z:h.point.z, normal:h.normal, angle:Math.random()*Math.PI*2} : null;
+    };
+
+    if(mode === 'full'){
+        const xMin = mask.x0, xMax = mask.x0 + mask.W*S, zMin = mask.z0, zMax = mask.z0 + mask.H*S;
+        const lattice = (fp)=>{
+            const out = []; const rowGap = fp*0.87; let r = 0;
+            for(let z=zMin; z<=zMax; z+=rowGap, r++){
+                for(let x=xMin+(r%2)*fp*0.5; x<=xMax; x+=fp){
+                    if(_numberMaskDistWorldAt(mask,x,z) >= inset*0.9) out.push({x,z});
+                }
+            }
+            return out;
+        };
+        let fp = footprint * (fullDensityMult || 1);
+        let cells = lattice(fp);
+        let guard = 0;
+        while(cells.length > 110 && guard++ < 8){ fp *= 1.12; cells = lattice(fp); } // keep it light
+        const pts = [];
+        cells.forEach(c=>{
+            const p = seat(c.x+(Math.random()-0.5)*fp*0.12, c.z+(Math.random()-0.5)*fp*0.12);
+            if(p) pts.push(p);
+        });
+        return pts;
+    }
+        // make sure the outer-only distance exists (holes count as solid)
+    if(!mask.dOuter){
+        const _W = mask.W, _H = mask.H, _in = mask.inside;
+        const _out = new Uint8Array(_W*_H);
+        const _st = [0]; _out[0] = 1;
+        while(_st.length){
+            const q = _st.pop(); const qi = q % _W, qj = (q - qi) / _W;
+            const nbs = [];
+            if(qi>0) nbs.push(q-1);
+            if(qi<_W-1) nbs.push(q+1);
+            if(qj>0) nbs.push(q-_W);
+            if(qj<_H-1) nbs.push(q+_W);
+            nbs.forEach(n=>{ if(!_in[n] && !_out[n]){ _out[n] = 1; _st.push(n); } });
+        }
+        const _dO = new Float32Array(_W*_H);
+        for(let q=0;q<_W*_H;q++) _dO[q] = _out[q] ? 0 : 1e6;
+        for(let jj=0;jj<_H;jj++) for(let ii=0;ii<_W;ii++){
+            const q=jj*_W+ii; if(!_dO[q]) continue; let v=_dO[q];
+            if(ii>0) v=Math.min(v,_dO[q-1]+1);
+            if(jj>0) v=Math.min(v,_dO[q-_W]+1);
+            if(ii>0&&jj>0) v=Math.min(v,_dO[q-_W-1]+1.414);
+            if(ii<_W-1&&jj>0) v=Math.min(v,_dO[q-_W+1]+1.414);
+            _dO[q]=v;
+        }
+        for(let jj=_H-1;jj>=0;jj--) for(let ii=_W-1;ii>=0;ii--){
+            const q=jj*_W+ii; if(!_dO[q]) continue; let v=_dO[q];
+            if(ii<_W-1) v=Math.min(v,_dO[q+1]+1);
+            if(jj<_H-1) v=Math.min(v,_dO[q+_W]+1);
+            if(ii<_W-1&&jj<_H-1) v=Math.min(v,_dO[q+_W+1]+1.414);
+            if(ii>0&&jj<_H-1) v=Math.min(v,_dO[q+_W-1]+1.414);
+            _dO[q]=v;
+        }
+        mask.dOuter = _dO;
+    }
+    // BORDER: cells sitting at `inset` from the OUTER edge = a ring that follows the outline only
+    const cand = [];
+    for(let j=0;j<mask.H;j++) for(let i=0;i<mask.W;i++){
+        const k = j*mask.W+i;
+        if(!mask.inside[k]) continue;
+        const dw = (mask.dOuter[k]-0.5)*S;
+        if(Math.abs(dw-inset) <= S*0.5) cand.push({x:mask.x0+i*S, z:mask.z0+j*S});
+    }
+    if(!cand.length) return [];
+    // smooth the staircase of the grid so the line follows the shell border evenly
+    const sm = cand.map(c=>{
+        let sx=0, sz=0, n=0;
+        cand.forEach(o=>{ if(Math.abs(o.x-c.x)<=S*1.6 && Math.abs(o.z-c.z)<=S*1.6){ sx+=o.x; sz+=o.z; n++; } });
+        return {x:sx/n, z:sz/n};
+    });
+    const visited = new Uint8Array(sm.length);
+    const placed = [];
+    const tooClose = (x,z)=>placed.some(p=>Math.hypot(p.x-x,p.z-z) < footprint*0.75);
+    let cur = 0; visited[0] = 1;
+    placed.push({x:sm[0].x, z:sm[0].z});
+    let acc = 0;
+    for(let step=1; step<sm.length; step++){
+        let nn=-1, dmin=Infinity;
+        for(let i=0;i<sm.length;i++){
+            if(visited[i]) continue;
+            const dd = Math.hypot(sm[i].x-sm[cur].x, sm[i].z-sm[cur].z);
+            if(dd<dmin){ dmin=dd; nn=i; }
+        }
+        if(nn<0) break;
+        visited[nn] = 1;
+        const jump = dmin > S*2.5; // moved to another contour (e.g. the hole edge)
+        acc = jump ? footprint : acc + dmin;
+        if(acc >= footprint && !tooClose(sm[nn].x, sm[nn].z)){
+            placed.push({x:sm[nn].x, z:sm[nn].z});
+            acc = jump ? 0 : acc - footprint;
+        }
+        cur = nn;
+    }
+    const pts = [];
+    placed.forEach(p=>{ const s = seat(p.x,p.z); if(s){ s.sx=p.x; s.sz=p.z; pts.push(s); } });
+    // face each piece along the outline (used by Peach's fan orientation)
+    for(let i=0;i<pts.length;i++){
+        let prev = pts[i-1], next = pts[i+1];
+        if(!prev || Math.hypot(prev.x-pts[i].x, prev.z-pts[i].z) > footprint*2) prev = pts[i];
+        if(!next || Math.hypot(next.x-pts[i].x, next.z-pts[i].z) > footprint*2) next = pts[i];
+        pts[i].angle = (prev===next) ? 0 : Math.atan2(next.z-prev.z, next.x-prev.x);
+    }
+    return pts;
+}
+function _buildGramFruitPoints(mode, countTarget, fruitName, angleOffset, fullDensityMult){
+    const {cx, cz, r} = _getCakeMetricsForFruits();
+    const points=[];
+    const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5)); // ~2.399963 rad
+    countTarget = Math.max(1, countTarget);
+    angleOffset = angleOffset || 0;
+    // Same tight footprint for every fruit so pieces cluster close together
+    // (overlapping/touching, like the mango pile) regardless of how big each
+    // piece's own mesh is — a bigger footprint value here would actually
+    // SPREAD pieces further apart, which is the opposite of what we want.
+    const CUBE_FOOTPRINT = 0.105;
+
+      if((mode === 'border' || mode === 'full') && typeof state !== 'undefined' && state.shape === 'Number'){
+        return _buildNumberFruitPoints(mode, fruitName, fullDensityMult);
+    }
+    if(mode === 'border' && typeof state !== 'undefined' && state.shape === 'Bundt'){
+        let _bundtPts = _buildBundtLobePoints(cx, cz, r);
+        if(!_bundtPts.length){
+            // ridge detection failed: use an evenly spaced ring of 12, never the messy generic border
+            for(let l=0;l<12;l++){
+                const a = (l/12)*Math.PI*2;
+                const h = _raycastFruitPointAt(cx, cz, a, r*0.74);
+                if(h) _bundtPts.push({x:h.point.x, y:h.point.y, z:h.point.z, normal:h.normal, angle:a});
+            }
+        }
+        console.log('[BundtFruit] pieces placed:', _bundtPts.length);
+        return _bundtPts;
+    }
+    if(mode === 'full' && typeof state !== 'undefined' && state.shape === 'Bundt'){
+        return _buildBundtFullPoints(cx, cz, r, fruitName, fullDensityMult);
+    }
+    if(mode === 'border'){
+        // Border pieces need their OWN spacing footprint, sized to the real
+        const BORDER_FOOTPRINT = (typeof getFruitBorderFootprint === 'function')
+            ? getFruitBorderFootprint(fruitName)
+            : CUBE_FOOTPRINT;
+        // Build a lookup of points around the cake's ACTUAL outline (round,
+        // square, heart, etc.), then space border pieces by equal ARC
+        // LENGTH walked along that outline — not equal angle. Equal-angle
+        // spacing on a non-round shape puts pieces too close together near
+        // the flat sides (causing overlap/clipping) and too far apart near
+        // the corners; arc-length spacing keeps every piece evenly "beside"
+        // its neighbors all the way around, just like on a round cake.
+        const SAMPLE_COUNT = 240;
+        // Heart's piped Shell Border sits closer to the fruit ring than on
+        // Round (its curves and center cleft eat into the clearance), and
+        // Square's sharp 90° corners cause the edge-raycast to fluctuate
+        // fast enough that pieces can clip the border right at the corners
+        // — so both get pulled in a bit further. Round keeps its original
+        // tight fit.
+        const BORDER_CLEARANCE_FRAC = (function(){
+            const shp = (typeof state !== 'undefined') ? state.shape : null;
+            if(!shp) return 0.86;
+            if(shp.indexOf('Heart') !== -1)  return 0.76;
+            if(shp.indexOf('Square') !== -1) return 0.80;
+            return 0.86;
+        })();
+        const rawPts = [];
+        for(let s=0; s<SAMPLE_COUNT; s++){
+            const angle = (s / SAMPLE_COUNT) * Math.PI * 2;
+            const edgeR = _findCakeEdgeRadiusAtAngle(cx, cz, angle);
+            const ringR = edgeR * BORDER_CLEARANCE_FRAC;
+            rawPts.push({ angle, x: cx + Math.cos(angle)*ringR, z: cz + Math.sin(angle)*ringR });
+        }
+        const cum = [0];
+        for(let s=1; s<=SAMPLE_COUNT; s++){
+            const a = rawPts[s-1], b = rawPts[s % SAMPLE_COUNT];
+            cum.push(cum[s-1] + Math.hypot(b.x-a.x, b.z-a.z));
+        }
+        const perimeter = cum[SAMPLE_COUNT];
+        function _angleAtArcLength(target){
+            let t = ((target % perimeter) + perimeter) % perimeter;
+            let i = 0;
+            while(i < SAMPLE_COUNT && cum[i+1] < t) i++;
+            const segLen = cum[i+1] - cum[i];
+            const localT = segLen > 0.0001 ? (t - cum[i]) / segLen : 0;
+            const a = rawPts[i], b = rawPts[(i+1) % SAMPLE_COUNT];
+            let da = b.angle - a.angle;
+            if(da < -Math.PI) da += Math.PI*2;
+            if(da > Math.PI) da -= Math.PI*2;
+            return a.angle + da * localT;
+        }
+
+        const bandDepth = BORDER_FOOTPRINT * 1.1; // how far in/out a row can sit
+        const capacityPerRow = Math.max(8, Math.round(perimeter / BORDER_FOOTPRINT));
+        // Never place fewer than a full single ring's worth — this is what
+        // keeps a small gram amount (e.g. 100g) looking like a complete,
+        // continuous border instead of a handful of scattered cubes.
+        const totalToPlace = Math.max(countTarget, capacityPerRow);
+        const rowsNeeded = Math.max(1, Math.ceil(totalToPlace / capacityPerRow));
+        let placed = 0;
+        for(let row=0; row<rowsNeeded && placed<totalToPlace; row++){
+            const rowInset = (row - (rowsNeeded-1)/2) * bandDepth;
+            const perRow = Math.min(totalToPlace - placed, capacityPerRow);
+            const rowArcStep = perimeter / perRow;
+            const rowOffset = Math.random()*rowArcStep;
+            const rowPoints = [];
+            for(let i=0;i<perRow;i++){
+                const arcPos = rowArcStep*i + rowOffset;
+                const angle = _angleAtArcLength(arcPos);
+                const edgeR = _findCakeEdgeRadiusAtAngle(cx, cz, angle);
+                const rowRadius = edgeR * BORDER_CLEARANCE_FRAC - rowInset;
+                const radialJitter = BORDER_FOOTPRINT*0.10*(Math.random()-0.5)*2;
+                const hit = _raycastFruitPointAt(cx, cz, angle, rowRadius + radialJitter);
+                if(hit) rowPoints.push({x:hit.point.x, y:hit.point.y, z:hit.point.z, normal:hit.normal, angle:angle});
+                placed++;
+            }
+            // Replace each point's angle with the TANGENT direction along this
+            // row's own path (from its neighbors), instead of the raw polar
+            // angle from the cake center. On a circle these are equivalent,
+            // but on a Square/Heart a straight edge keeps the same tangent
+            // the whole way along it even though the polar angle keeps
+            // changing — using the polar angle was what made fan-oriented
+            // pieces (Peach Slice) drift diagonally across a flat side
+            // instead of lining up straight with it.
+            for(let i=0;i<rowPoints.length;i++){
+                const prev = rowPoints[(i-1+rowPoints.length)%rowPoints.length];
+                const next = rowPoints[(i+1)%rowPoints.length];
+                rowPoints[i].angle = Math.atan2(next.z-prev.z, next.x-prev.x);
+            }
+            points.push(...rowPoints);
+        }
+    } else if(mode === 'full'){
+        // Full mode now reuses the SAME "border ring" format as mode==='border',
+        // just repeated at shrinking radii from the edge all the way to the
+        // center — so a full top reads as concentric border rings stacked
+        // inward, instead of a random sunflower scatter.
+        // fullDensityMult widens the footprint (fewer, more spread-out rings
+        // and pieces per ring) — used by "All Fruits — Assorted" so combining
+        // four fruit types on one cake stays light instead of each one
+        // independently producing a full-density covering, which is what
+        // caused the lag.
+        const FULL_FOOTPRINT = ((typeof getFruitBorderFootprint === 'function')
+            ? getFruitBorderFootprint(fruitName) : 0.105) * (fullDensityMult || 1);
+        const outerClearanceFull = (function(){
+            const shp = (typeof state !== 'undefined') ? state.shape : null;
+            let base = 0.86;
+            if(shp && shp.indexOf('Heart') !== -1)  base = 0.76;
+            else if(shp && shp.indexOf('Square') !== -1) base = 0.80;
+            // The "Full" pile always sits on the topmost surface — on a
+            // Three-tier cake that's tier 3, which is narrower and needs the
+            // whole pattern pulled inward (not just the outer ring) so it
+            // reads as compressed toward the center instead of overhanging.
+            // Single/Two-tier cakes keep the normal clearance untouched.
+            if(fruitName === 'Peach Slice' && typeof state !== 'undefined' && state.tier === 'Three-tier'){
+                base *= 0.80;
+            }
+            return base;
+        })();
+        // Two-tier / Three-tier: fit everything to the LAST (top) tier instead of the whole cake
+        const topInfo = (typeof state !== 'undefined' && state.tier !== 'Single' && typeof _getTierWorldInfo === 'function')
+            ? _getTierWorldInfo(tierCountFor(state.tier) - 1)
+            : null;
+        const fullCx = topInfo ? topInfo.cx : cx;
+        const fullCz = topInfo ? topInfo.cz : cz;
+        // small extra inset on the top tier so pieces never hang over its rim
+        const topTierClearMult = topInfo ? 0.94 : 1.0;
+        const SAMPLE_COUNT_FULL = 200;
+        const edgeSamplesFull = [];
+        for(let s=0; s<SAMPLE_COUNT_FULL; s++){
+            const angle = (s / SAMPLE_COUNT_FULL) * Math.PI * 2;
+            let _erFull = null;
+            if(topInfo) _erFull = _findTierEdgeRadiusAtAngle(topInfo.cx, topInfo.cz, topInfo.yTop, angle);
+            if(_erFull === null) _erFull = _findCakeEdgeRadiusAtAngle(fullCx, fullCz, angle);
+            edgeSamplesFull.push({ angle, edgeR: _erFull });
+        }
+        function _edgeRAtAngleFull(angle){
+            const norm = ((angle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+            const idx = Math.round((norm / (Math.PI*2)) * SAMPLE_COUNT_FULL) % SAMPLE_COUNT_FULL;
+            return edgeSamplesFull[idx].edgeR;
+        }
+        const avgEdgeRFull = edgeSamplesFull.reduce((s,p)=>s+p.edgeR,0) / edgeSamplesFull.length;
+        const ringGapFull = FULL_FOOTPRINT * 1.05; // radial distance between rings
+        const maxRingRadiusFull = avgEdgeRFull * outerClearanceFull * topTierClearMult;
+        const numRingsFull = Math.max(1, Math.round(maxRingRadiusFull / ringGapFull));
+        for(let ring=0; ring<numRingsFull; ring++){
+            // Only a small inward nudge on the outermost ring — just enough to
+            // keep it clear of a narrower upper tier's true edge on stacked
+            // cakes, without noticeably shrinking coverage on a single-tier cake.
+            const outerRingPullIn = (ring === 0) ? 0.97 : 1.0;
+            const ringFrac = outerClearanceFull * (1 - ring / numRingsFull) * outerRingPullIn * topTierClearMult;
+            const ringRadiusApprox = avgEdgeRFull * ringFrac;
+            const circumference = 2 * Math.PI * Math.max(ringRadiusApprox, ringGapFull * 0.5);
+            const capacityFull = Math.max(ring === numRingsFull - 1 ? 1 : 6, Math.round(circumference / FULL_FOOTPRINT));
+            const angleOffsetRing = Math.random() * Math.PI * 2 + angleOffset;
+            for(let i=0; i<capacityFull; i++){
+                const angle = angleOffsetRing + (i / capacityFull) * Math.PI * 2;
+                const localEdgeR = _edgeRAtAngleFull(angle);
+                const radius = localEdgeR * ringFrac;
+                const radialJitter = FULL_FOOTPRINT * 0.10 * (Math.random() - 0.5) * 2;
+                const hit = _raycastFruitPointAt(fullCx, fullCz, angle, radius + radialJitter);
+                if(hit) points.push({x:hit.point.x, y:hit.point.y, z:hit.point.z, normal:hit.normal, angle:angle});
+            }
+        }
+    } else {
+        // "Middle" now uses the same ring/fan layout as Border and Full —
+        // concentric rings of pieces, shrinking inward — just confined to a
+        // small cluster centered on the cake instead of tracing its outer
+        // edge, so it reads as a compact "border-style" pile in the middle.
+        const clusterRadius = Math.min(r*0.42, CUBE_FOOTPRINT * Math.sqrt(countTarget) * 0.62);
+        const ringGapMiddle = CUBE_FOOTPRINT * 1.05;
+        const numRingsMiddle = Math.max(1, Math.round(clusterRadius / ringGapMiddle));
+        for(let ring=0; ring<numRingsMiddle; ring++){
+            const ringRadius = clusterRadius * (1 - ring / numRingsMiddle);
+            const circumference = 2 * Math.PI * Math.max(ringRadius, ringGapMiddle * 0.5);
+            const capacityMiddle = Math.max(ring === numRingsMiddle - 1 ? 1 : 6, Math.round(circumference / CUBE_FOOTPRINT));
+            const angleOffsetRing = Math.random() * Math.PI * 2;
+            for(let i=0; i<capacityMiddle; i++){
+                const angle = angleOffsetRing + (i / capacityMiddle) * Math.PI * 2;
+                const radialJitter = CUBE_FOOTPRINT * 0.10 * (Math.random() - 0.5) * 2;
+                const hit = _raycastFruitPointAt(cx, cz, angle, ringRadius + radialJitter);
+                if(hit) points.push({x:hit.point.x, y:hit.point.y, z:hit.point.z, normal:hit.normal, angle:angle});
+            }
+        }
+    }
+    return points;
+}
+// Procedural fallback banana slice — a simple curved crescent, used only if
+// banana.glb's own bounding box turns out to be degenerate/unusable (e.g. a
+// stray far-off vertex in the export throws the scale-fit off completely,
+// which is what was making it render invisibly small or huge before).
+function buildBananaSliceFallbackMesh(){
+    const g=new THREE.Group();
+    const shape=new THREE.Shape();
+    const a=0.11, hTop=0.045, hBottom=0.015;
+    shape.moveTo(-a,0);
+    shape.quadraticCurveTo(0,hTop,a,0);
+    shape.quadraticCurveTo(0,-hBottom,-a,0);
+    const geo=new THREE.ExtrudeGeometry(shape,{depth:0.022,bevelEnabled:true,bevelThickness:0.006,bevelSize:0.006,bevelSegments:3,curveSegments:16});
+    geo.center();
+    geo.rotateX(-Math.PI/2);
+    geo.computeVertexNormals();
+    const mat=new THREE.MeshStandardMaterial({color:new THREE.Color('#F0E080'),roughness:0.30,metalness:0.02,envMapIntensity:1.1});
+    const mesh=new THREE.Mesh(geo,mat);
+    mesh.castShadow=mesh.receiveShadow=true;
+    g.add(mesh);
+    return g;
+}
+async function _makeGramFruitMesh(fruitName, sizeMult){
+    if(fruitName==='Mango Slice') return buildMangoCubeMesh(sizeMult);
+    if(fruitName==='Peach Slice') return buildPeachSliceMesh();
+    const urlMap  = {'Kiwi Slice':'/models/kiwi.glb','Banana Slice':'/models/banana.glb'};
+    const sizeMap = {'Kiwi Slice':0.15, 'Banana Slice':0.15};
+    const url = urlMap[fruitName];
+    if(!url) return null;
+
+    let fg;
+    let usedFallback = false;
+    try{
+        fg = await loadFruitGLB(url);
+        // Shadows off, matching Mango/Peach (which never cast shadows at all) —
+        // with 30-90+ pieces placed at once for a "Full" pile, computing shadow
+        // contribution per detailed GLB mesh on every drag/rotate is what was
+        // causing Kiwi (and Banana) to lag while the procedural fruits stayed smooth.
+        fg.traverse(c=>{ if(c.isMesh){ c.castShadow=false; c.receiveShadow=false; } });
+        fg.updateMatrixWorld(true);
+
+        const rb=new THREE.Box3().setFromObject(fg);
+        const sz=rb.getSize(new THREE.Vector3());
+        const maxAxis=Math.max(sz.x,sz.y,sz.z);
+        const T=sizeMap[fruitName]||0.15;
+        // Same degenerate-bounds guard used elsewhere in this file (fruit
+        // placement, character toppers) — a stray far-off vertex in the
+        // export can blow maxAxis up to something absurd, which silently
+        // scales the real geometry down to nothing. Catch that here instead
+        // of letting it render invisibly.
+        const MIN_SAFE_DIM = 0.005, MAX_SAFE_DIM = 200.0;
+        if(isFinite(maxAxis) && maxAxis>MIN_SAFE_DIM && maxAxis<MAX_SAFE_DIM){
+            fg.scale.setScalar(T/maxAxis);
+            fg.updateMatrixWorld(true);
+            // Verify the SCALED result actually landed at a sane size —
+            // if not, fall back rather than show something invisible/huge.
+            const checkBox=new THREE.Box3().setFromObject(fg);
+            const checkSize=checkBox.getSize(new THREE.Vector3());
+            const checkMax=Math.max(checkSize.x,checkSize.y,checkSize.z);
+            if(!isFinite(checkMax) || checkMax<0.03 || checkMax>T*3){
+                usedFallback = true;
+            }
+        } else {
+            usedFallback = true;
+        }
+    }catch(err){
+        console.warn('[GramFruit] Failed to load', fruitName, '— using fallback shape', err);
+        usedFallback = true;
+    }
+
+    if(usedFallback && fruitName==='Banana Slice'){
+        console.warn('[GramFruit] Banana Slice model bounds unusable — using procedural fallback shape');
+        fg = buildBananaSliceFallbackMesh();
+    }
+
+    fg.rotation.y = Math.random()*Math.PI*2;
+    fg.updateMatrixWorld(true);
+    const centerBox=new THREE.Box3().setFromObject(fg);
+    const centerXZ=centerBox.getCenter(new THREE.Vector3());
+    const wrapped=new THREE.Group();
+    fg.position.x -= centerXZ.x;
+    fg.position.z -= centerXZ.z;
+    wrapped.add(fg);
+    return wrapped;
+}
+// Orients a placed piece so its own "up" lies flush against the surface
+// normal at that point (like a real chunk resting/leaning on frosting),
+// adds a small random tumble so nothing looks perfectly axis-aligned, then
+// nudges it slightly INTO the surface so it reads as sitting in the
+// frosting rather than balanced on top of it.
+function _seatGramFruitPiece(mesh, point, normal, fruitName, borderAngle){
+    mesh.position.set(point.x, point.y, point.z);
+    mesh.updateMatrixWorld(true);
+    const upAxis = new THREE.Vector3(0,1,0);
+    const targetNormal = normal ? normal.clone() : upAxis.clone();
+    const alignQ = new THREE.Quaternion().setFromUnitVectors(upAxis, targetNormal);
+
+    let orientQ;
+    if(borderAngle !== undefined){
+        // Fan-blade border look: each slice sits at a consistent angular
+        // OFFSET from straight-radial (not pointing dead-center outward),
+        // like overlapping pinwheel/fan blades, and leans down to lie
+        // flatter against the cake instead of standing straight up.
+        const fanOffset = 0.9;  // ~39° offset from radial — the pinwheel/fan angle
+        const leanDown  = 0.2;  // ~53° forward lean — lying much flatter
+        const yawQ  = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -borderAngle + fanOffset, 0));
+        const leanQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(leanDown, 0, 0));
+        orientQ = alignQ.clone().multiply(yawQ).multiply(leanQ);
+    } else {
+        const tumbleX = (Math.random()-0.5) * 0.16; // up to ~±4.5° — pieces lie mostly flat
+        const tumbleZ = (Math.random()-0.5) * 0.16;
+        const spinY   = Math.random() * Math.PI * 2;
+        const tumbleQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(tumbleX, spinY, tumbleZ));
+        orientQ = alignQ.clone().multiply(tumbleQ);
+    }
+    mesh.quaternion.copy(orientQ);
+    const scaleJitter = borderAngle !== undefined ? (0.94 + Math.random()*0.10) : (0.86 + Math.random()*0.30);
+    mesh.scale.multiplyScalar(scaleJitter);
+    mesh.updateMatrixWorld(true);
+    const embedBox = new THREE.Box3().setFromObject(mesh);
+    const embedHeight = Math.max(0.01, embedBox.max.y - embedBox.min.y);
+       const embedFrac = fruitName === 'Banana Slice' ? -0.35 : 0.22;
+    const _bundtSitOnTop = (typeof state !== 'undefined' && state.shape === 'Bundt') && (fruitName === 'Kiwi Slice' || fruitName === 'Peach Slice');
+const _dripLiftFruit = (typeof state !== 'undefined' && state.hasDrip) && (fruitName === 'Kiwi Slice' || fruitName === 'Peach Slice');
+const _embedUsed = _bundtSitOnTop ? 0.05 : ((typeof state !== 'undefined' && state.shape === 'Bundt' && fruitName === 'Banana Slice') ? -0.12 : (_dripLiftFruit ? -0.15 : embedFrac)); // Banana on Bundt: -0.12 = sits on the surface like the mango
+mesh.position.addScaledVector(targetNormal, -embedHeight*_embedUsed);
+if(typeof state !== 'undefined' && state.shape === 'Bundt' && fruitName === 'Banana Slice'){
+    mesh.position.addScaledVector(targetNormal, 0); // no extra lift
+}
+}
+// ── Kiwi/Banana template: load the GLB ONE time, extract each submesh's
+// geometry (baked into a shared local space) and its ORIGINAL material
+// (never cloned). Every placed piece later just contributes transformed
+// vertices into a handful of buckets — one bucket per submesh-type — so
+// draw calls stay constant regardless of pile size.
+window._fruitGLBTemplateCache = window._fruitGLBTemplateCache || {};
+async function _getFruitTemplate(fruitName){
+    if(window._fruitGLBTemplateCache[fruitName] !== undefined) return window._fruitGLBTemplateCache[fruitName];
+    const urlMap  = {'Kiwi Slice':'/models/kiwi.glb','Banana Slice':'/models/banana.glb'};
+    const sizeMap = {'Kiwi Slice':0.15, 'Banana Slice':0.15};
+    const url = urlMap[fruitName];
+    if(!url){ window._fruitGLBTemplateCache[fruitName] = null; return null; }
+    try{
+        const raw = await loadFruitGLB(url); // independent clone, safe to mutate
+        raw.updateMatrixWorld(true);
+        const rb = new THREE.Box3().setFromObject(raw);
+        const sz = rb.getSize(new THREE.Vector3());
+        const maxAxis = Math.max(sz.x, sz.y, sz.z);
+        const T = sizeMap[fruitName] || 0.15;
+        if(!(isFinite(maxAxis) && maxAxis > 0.005 && maxAxis < 200.0)){
+            window._fruitGLBTemplateCache[fruitName] = null; return null;
+        }
+        raw.scale.setScalar(T / maxAxis);
+        raw.updateMatrixWorld(true);
+        const centerBox = new THREE.Box3().setFromObject(raw);
+        const centerXZ = centerBox.getCenter(new THREE.Vector3());
+        raw.position.x -= centerXZ.x;
+        raw.position.z -= centerXZ.z;
+        raw.updateMatrixWorld(true);
+
+        const submeshes = [];
+        raw.traverse(node=>{
+            if(!node.isMesh || !node.geometry || !node.geometry.attributes.position) return;
+            node.updateMatrixWorld(true);
+            const geo = node.geometry.index ? node.geometry.toNonIndexed() : node.geometry.clone();
+            geo.applyMatrix4(node.matrixWorld); // bake this submesh into template-local space
+            submeshes.push({ geometry: geo, material: node.material }); // material NOT cloned — shared on purpose
+        });
+        if(!submeshes.length){ window._fruitGLBTemplateCache[fruitName] = null; return null; }
+
+        const localBox = new THREE.Box3();
+        submeshes.forEach(s=>{ s.geometry.computeBoundingBox(); localBox.union(s.geometry.boundingBox); });
+
+        const template = { submeshes, localBox };
+        window._fruitGLBTemplateCache[fruitName] = template;
+        return template;
+    }catch(err){
+        console.warn('[GramFruit template] load failed for', fruitName, err);
+        window._fruitGLBTemplateCache[fruitName] = null;
+        return null;
+    }
+}
+
+// Replicates _seatGramFruitPiece's math (alignment to surface normal, tumble/
+// fan rotation, scale jitter, embed-into-frosting offset) but returns a plain
+// Matrix4 instead of mutating a real Object3D — no per-piece scene graph,
+// no per-piece Box3.setFromObject() vertex walk.
+const _seatTmpUp = new THREE.Vector3(0,1,0);
+function _computeSeatedMatrix(template, point, normal, fruitName, borderAngle){
+    const targetNormal = normal ? normal.clone() : _seatTmpUp.clone();
+    const alignQ = new THREE.Quaternion().setFromUnitVectors(_seatTmpUp, targetNormal);
+    let orientQ;
+    if(borderAngle !== undefined){
+        const fanOffset = 0.9, leanDown = 0.2;
+        const yawQ  = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -borderAngle + fanOffset, 0));
+        const leanQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(leanDown, 0, 0));
+        orientQ = alignQ.clone().multiply(yawQ).multiply(leanQ);
+    } else {
+        const tumbleX = (Math.random()-0.5) * 0.16;
+        const tumbleZ = (Math.random()-0.5) * 0.16;
+        const spinY   = Math.random() * Math.PI * 2;
+        const tumbleQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(tumbleX, spinY, tumbleZ));
+        orientQ = alignQ.clone().multiply(tumbleQ);
+    }
+    const scaleJitter = borderAngle !== undefined ? (0.94 + Math.random()*0.10) : (0.86 + Math.random()*0.30);
+    const scaleVec = new THREE.Vector3(scaleJitter, scaleJitter, scaleJitter);
+
+    // Approximate the oriented+scaled bounding-box height via an 8-corner
+    // transform of the precomputed template box — same technique Box3
+    // .applyMatrix4 uses internally, avoids a full vertex walk per piece.
+    const rotScaleMatrix = new THREE.Matrix4().compose(new THREE.Vector3(), orientQ, scaleVec);
+    const embedBox = template.localBox.clone().applyMatrix4(rotScaleMatrix);
+    const embedHeight = Math.max(0.01, embedBox.max.y - embedBox.min.y);
+    const embedFrac = fruitName === 'Banana Slice' ? -0.35 : 0.22;
+
+    const _bundtSitOnTop = (typeof state !== 'undefined' && state.shape === 'Bundt') && (fruitName === 'Kiwi Slice' || fruitName === 'Peach Slice');
+const _dripLiftFruit2 = (typeof state !== 'undefined' && state.hasDrip) && (fruitName === 'Kiwi Slice' || fruitName === 'Peach Slice');
+const _embedUsed = _bundtSitOnTop ? 0.05 : ((typeof state !== 'undefined' && state.shape === 'Bundt' && fruitName === 'Banana Slice') ? -0.12 : (_dripLiftFruit2 ? -0.15 : embedFrac)); // Banana on Bundt: -0.12 = sits on the surface like the mango
+const finalPos = new THREE.Vector3(point.x, point.y, point.z).addScaledVector(targetNormal, -embedHeight*_embedUsed);
+if(typeof state !== 'undefined' && state.shape === 'Bundt' && fruitName === 'Banana Slice'){
+    finalPos.addScaledVector(targetNormal, 0); // no extra lift
+}
+// Bundt lower row: raise Kiwi out of the groove so the neighbouring ridges don't bury it
+if(point.lower && fruitName === 'Kiwi Slice'){
+    const KIWI_BUNDT_LIFT = 0.0;   // ← tune this
+    finalPos.y += KIWI_BUNDT_LIFT;
+}
+    return new THREE.Matrix4().compose(finalPos, orientQ, scaleVec);
+}
+
+// Bakes every placed piece's transformed vertices into ONE mesh PER SUBMESH
+// (e.g. skin / flesh / seeds) instead of one mesh per piece. Draw calls =
+// number of submeshes in the source GLB, independent of pile size.
+async function buildMergedGramFruitMeshFast(fruitName, points, useAngleForBorder){
+    const template = await _getFruitTemplate(fruitName);
+    if(!template) return null;
+
+    const transforms = points.map(p=>{
+        const angle = useAngleForBorder ? p.angle : undefined;
+        return _computeSeatedMatrix(template, p, p.normal, fruitName, angle);
+    });
+
+    const group = new THREE.Group();
+    const _v = new THREE.Vector3(), _n = new THREE.Vector3();
+
+    template.submeshes.forEach(sub=>{
+        const srcPos  = sub.geometry.attributes.position;
+        const srcNorm = sub.geometry.attributes.normal;
+        const srcUv   = sub.geometry.attributes.uv;
+        const vertCount = srcPos.count;
+
+        const positions = new Float32Array(vertCount * transforms.length * 3);
+        const normals   = srcNorm ? new Float32Array(vertCount * transforms.length * 3) : null;
+        const uvs       = srcUv   ? new Float32Array(vertCount * transforms.length * 2) : null;
+
+        transforms.forEach((m, ti)=>{
+            const normalMat = new THREE.Matrix3().getNormalMatrix(m);
+            const base3 = ti * vertCount * 3;
+            const base2 = ti * vertCount * 2;
+            for(let i=0;i<vertCount;i++){
+                _v.fromBufferAttribute(srcPos, i).applyMatrix4(m);
+                positions[base3+i*3]=_v.x; positions[base3+i*3+1]=_v.y; positions[base3+i*3+2]=_v.z;
+                if(srcNorm){
+                    _n.fromBufferAttribute(srcNorm, i).applyMatrix3(normalMat).normalize();
+                    normals[base3+i*3]=_n.x; normals[base3+i*3+1]=_n.y; normals[base3+i*3+2]=_n.z;
+                }
+                if(srcUv){
+                    uvs[base2+i*2]=srcUv.getX(i); uvs[base2+i*2+1]=srcUv.getY(i);
+                }
+            }
+        });
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+        if(normals) geo.setAttribute('normal', new THREE.BufferAttribute(normals,3));
+        if(uvs) geo.setAttribute('uv', new THREE.BufferAttribute(uvs,2));
+
+        const mesh = new THREE.Mesh(geo, sub.material); // shared, un-cloned material
+        mesh.castShadow = false; mesh.receiveShadow = false;
+        mesh.userData.sharedTemplateMaterial = true; // tells disposal to skip this material
+        group.add(mesh);
+    });
+
+    return group;
+}
+window.buildGramFruitDecoration = async function(fruitName, grams, forcedCount, fullDensityMult){
+    if(window._gramFruitGroups[fruitName] && window._gramFruitGroups[fruitName].length){
+        window._gramFruitGroups[fruitName].forEach(g=>{ _disposeDecorGroup(g,false); scene.remove(g); });
+    }
+    window._gramFruitGroups[fruitName] = [];
+    if(!grams || grams<=0){ delete window._gramFruitGrams[fruitName]; return; }
+    window._gramFruitGrams[fruitName] = grams;
+    let mode = window._gramFruitPlacement[fruitName] || 'middle';
+    if(typeof state !== 'undefined' && (state.shape === 'Bundt' || state.shape === 'Number') && mode === 'middle') mode = 'border';
+    // More pieces per gram, with a higher floor, so even the 100g default
+    // reads as a real pile instead of a handful of scattered cubes.
+    // "Full" needs many more pieces since it has to reach all the way to
+    // the cake's edge instead of staying in a small center cluster.
+    // forcedCount/fullDensityMult (used by "All Fruits — Assorted") bypass
+    // the normal grams-derived amount — several fruit types are combined on
+    // one cake there, so each needs a much lighter density than a single
+    // dedicated fruit filling the whole cake.
+    const count = forcedCount
+        ? forcedCount
+        : mode === 'full'
+            ? Math.max(50, Math.min(90, Math.round(grams/6)))
+            : Math.max(10, Math.min(60, Math.round(grams/12)));
+    // Slightly different starting angle per fruit so, if more than one
+    // "Full" fruit ends up on the cake at once (e.g. via "All Fruits"),
+    // they interleave instead of landing on the exact same spots.
+    const GRAM_FRUIT_ANGLE_OFFSETS = {
+        'Mango Slice': 0,
+        'Kiwi Slice':  Math.PI*0.5,
+        'Peach Slice': Math.PI*1.0,
+        'Banana Slice':Math.PI*1.5,
+    };
+    const angleOffset = mode === 'full' ? (GRAM_FRUIT_ANGLE_OFFSETS[fruitName]||0) : 0;
+    const pts = _buildGramFruitPoints(mode, count, fruitName, angleOffset, fullDensityMult);
+    const useFastMerge = (fruitName === 'Kiwi Slice' || fruitName === 'Banana Slice') && pts.length > 12;
+
+    if(useFastMerge){
+        let merged = null;
+        try{
+            merged = await buildMergedGramFruitMeshFast(fruitName, pts, fruitName==='Peach Slice');
+        }catch(err){
+            console.error('[GramFruit] Fast-merge failed for', fruitName, err);
+        }
+        if(merged){
+            scene.add(merged);
+            window._gramFruitGroups[fruitName].push(merged);
+        } else {
+            for(const p of pts){
+                try{
+                    const mesh = await _makeGramFruitMesh(fruitName);
+                    if(!mesh) continue;
+                    const _borderAngle = fruitName==='Peach Slice' ? p.angle : undefined;
+                    _seatGramFruitPiece(mesh, p, p.normal, fruitName, _borderAngle);
+                    scene.add(mesh);
+                    window._gramFruitGroups[fruitName].push(mesh);
+                }catch(err){ console.error('[GramFruit]', fruitName, err); }
+            }
+        }
+    } else {
+        for(const p of pts){
+            try{
+                const mesh = await _makeGramFruitMesh(fruitName);
+                if(!mesh) continue;
+                const _borderAngle = fruitName==='Peach Slice' ? p.angle : undefined;
+                _seatGramFruitPiece(mesh, p, p.normal, fruitName, _borderAngle);
+                scene.add(mesh);
+                window._gramFruitGroups[fruitName].push(mesh);
+            }catch(err){ console.error('[GramFruit]', fruitName, err); }
+        }
+    }
+    if(window.cakeslice && typeof window.cakeslice.refreshdecorations==='function') window.cakeslice.refreshdecorations();
+    if(typeof window._requestRender==='function') window._requestRender(500);
+};
+window.clearGramFruitDecoration = function(fruitName){
+    if(window._gramFruitGroups[fruitName] && window._gramFruitGroups[fruitName].length){
+        window._gramFruitGroups[fruitName].forEach(g=>{ _disposeDecorGroup(g,false); scene.remove(g); });
+    }
+    window._gramFruitGroups[fruitName] = [];
+    delete window._gramFruitGrams[fruitName];
+};
+window.setGramFruitPlacement = function(fruitName, mode){
+    window._gramFruitPlacement[fruitName] = mode;
+};
+window._reapplyGramFruits = function(){
+    Object.keys(window._gramFruitGrams).forEach(name=>{
+        const placement = (window._gramFruitPlacement && window._gramFruitPlacement[name]) || 'middle';
+        const isTieredBorder = placement === 'border' && typeof state !== 'undefined' && state.tier !== 'Single';
+        if(isTieredBorder){
+            // Owned by the per-tier border system (_reapplyTierFruitBorders)
+            // on tiered cakes — rebuilding it here too would stack a second,
+            // duplicate ring on the same tier every time the model reloads.
+            if(typeof window.clearGramFruitDecoration==='function') window.clearGramFruitDecoration(name);
+            return;
+        }
+        window.buildGramFruitDecoration(name, window._gramFruitGrams[name]);
+    });
+};
+
+// ── PER-TIER FRUIT BORDER (Two-tier / Three-tier only) ──
+function _getTierWorldInfo(tierIdx){
+    const ref = currentBase || currentFrost || currentIcing;
+    if(!ref || typeof getTierGroups !== 'function') return null;
+    ref.updateMatrixWorld(true);
+    const tiers = getTierGroups(ref);
+    if(!tiers || !tiers[tierIdx]) return null;
+    const tierMesh = tiers[tierIdx];
+    const box = new THREE.Box3().setFromObject(tierMesh);
+    const cx = (box.min.x + box.max.x) * 0.5;
+    const cz = (box.min.z + box.max.z) * 0.5;
+    const yTop = box.max.y - (box.max.y - box.min.y) * 0.06;
+    return { cx, cz, yTop };
+}
+function _findTierEdgeRadiusAtAngle(cx, cz, yTop, angle){
+    const dirX = Math.cos(angle), dirZ = Math.sin(angle);
+    const FAR = 6.0;
+    const origin = new THREE.Vector3(cx + dirX * FAR, yTop, cz + dirZ * FAR);
+    const rayDir = new THREE.Vector3(-dirX, 0, -dirZ);
+    const rc = new THREE.Raycaster(origin, rayDir, 0, FAR * 2);
+    const meshes = getSprinkleTargetMeshes();
+    const hits = rc.intersectObjects(meshes, false);
+    if (hits.length === 0) return null;
+    hits.sort((a, b) => a.distance - b.distance);
+    const hp = hits[0].point;
+    return Math.sqrt((hp.x - cx) * (hp.x - cx) + (hp.z - cz) * (hp.z - cz));
+}
+// Real per-fruit footprint (world units) — used to space border pieces so
+// larger fruit (e.g. Peach Slice, a long randomly-rotated sliver) don't
+// overlap or poke past the ring the way a size tuned for the small Mango
+// Cube did.
+const FRUIT_BORDER_FOOTPRINT = {
+    'Mango Slice':  0.11,
+    'Kiwi Slice':   0.10,
+    'Peach Slice':  0.14,
+    'Banana Slice': 0.10,
+};
+function getFruitBorderFootprint(fruitName){
+    return FRUIT_BORDER_FOOTPRINT[fruitName] || 0.105;
+}
+function _buildTierBorderPoints(cx, cz, yTop, clearanceFrac, countTarget, fruitName, footprintMult){
+    const SAMPLE_COUNT = 180;
+    const rawPts = [];
+    for(let s=0; s<SAMPLE_COUNT; s++){
+        const angle = (s / SAMPLE_COUNT) * Math.PI * 2;
+        const edgeR = _findTierEdgeRadiusAtAngle(cx, cz, yTop, angle);
+        if(edgeR === null) continue;
+        const ringR = edgeR * clearanceFrac;
+        rawPts.push({ angle, x: cx + Math.cos(angle)*ringR, z: cz + Math.sin(angle)*ringR });
+    }
+    if(rawPts.length < 8) return [];
+    const N = rawPts.length;
+    const cum = [0];
+    for(let s=1; s<=N; s++){
+        const a = rawPts[s-1], b = rawPts[s % N];
+        cum.push(cum[s-1] + Math.hypot(b.x-a.x, b.z-a.z));
+    }
+    const perimeter = cum[N];
+    function angleAtArc(target){
+        let t = ((target % perimeter) + perimeter) % perimeter;
+        let i = 0;
+        while(i < N && cum[i+1] < t) i++;
+        const segLen = cum[i+1] - cum[i];
+        const localT = segLen > 0.0001 ? (t - cum[i]) / segLen : 0;
+        const a = rawPts[i], b = rawPts[(i+1) % N];
+        let da = b.angle - a.angle;
+        if(da < -Math.PI) da += Math.PI*2;
+        if(da > Math.PI) da -= Math.PI*2;
+        return a.angle + da * localT;
+    }
+    // Single, clean continuous ring — sized to exactly what fits around
+    // THIS tier's own edge, with no forced extra inward rows. Forcing extra
+    // rows whenever the requested count was bigger than what actually fits
+    // around a smaller tier is what stacked multiple messy rings and made
+    // pieces poke up / overlap instead of sitting flush in one tidy band,
+    // like the single-tier cake's border already does.
+    const CUBE_FOOTPRINT = getFruitBorderFootprint(fruitName) * (footprintMult || 1.0);
+    const capacity = Math.max(8, Math.round(perimeter / CUBE_FOOTPRINT));
+    const totalToPlace = capacity;
+    const rowArcStep = perimeter / totalToPlace;
+    const rowOffset = Math.random()*rowArcStep;
+    const points = [];
+    for(let i=0;i<totalToPlace;i++){
+        const arcPos = rowArcStep*i + rowOffset;
+        const angle = angleAtArc(arcPos);
+        const edgeR = _findTierEdgeRadiusAtAngle(cx, cz, yTop, angle);
+        if(edgeR === null) continue;
+        const ringRadius = edgeR * clearanceFrac;
+        const radialJitter = CUBE_FOOTPRINT*0.06*(Math.random()-0.5)*2;
+        const px = cx + Math.cos(angle)*(ringRadius+radialJitter);
+        const pz = cz + Math.sin(angle)*(ringRadius+radialJitter);
+        const hit = _snapToSurfaceWithNormal(px, pz);
+        if(hit) points.push({x:hit.point.x, y:hit.point.y, z:hit.point.z, normal:hit.normal, angle:angle});
+    }
+    // Same tangent-direction fix as the single-tier border builder: use each
+    // point's true neighbor-to-neighbor direction along the ring instead of
+    // its raw polar angle, so fan-oriented pieces (Peach Slice) follow the
+    // cake's actual outline — straight along a Square/Heart's flat sides,
+    // not diagonally drifting across them.
+    for(let i=0;i<points.length;i++){
+        const prev = points[(i-1+points.length)%points.length];
+        const next = points[(i+1)%points.length];
+        points[i].angle = Math.atan2(next.z-prev.z, next.x-prev.x);
+    }
+    return points;
+}
+window._tierFruitBorderGroups = window._tierFruitBorderGroups || {};
+window.buildTierFruitBorder = async function(tierIdx, fruitName){
+    if(window._tierFruitBorderGroups[tierIdx] && window._tierFruitBorderGroups[tierIdx].length){
+        window._tierFruitBorderGroups[tierIdx].forEach(g=>{ _disposeDecorGroup(g,false); scene.remove(g); });
+    }
+    window._tierFruitBorderGroups[tierIdx] = [];
+    if(!fruitName || fruitName === 'None') return;
+
+    const info = _getTierWorldInfo(tierIdx);
+    if(!info) return;
+    const shp = (typeof state !== 'undefined') ? state.shape : null;
+    let clearanceFrac = 0.86;
+    if(shp && shp.indexOf('Heart') !== -1) clearanceFrac = 0.76;
+    else if(shp && shp.indexOf('Square') !== -1) clearanceFrac = 0.80;
+    const isThreeTierLowerTierForClearance = (typeof state !== 'undefined')
+        && state.tier === 'Three-tier'
+        && tierIdx < (tierCountFor(state.tier) - 1);
+    if(fruitName === 'Peach Slice' && (tierIdx === 0 || isThreeTierLowerTierForClearance)){
+        clearanceFrac = shp && shp.indexOf('Heart') !== -1 ? 0.76 : (shp && shp.indexOf('Square') !== -1 ? 0.80 : 0.86);
+        if(state.tier === 'Two-tier' || state.tier === 'Three-tier'){
+            clearanceFrac += 0.05;
+        }
+    }
+
+    const isThreeTierTopTierOnly = (typeof state !== 'undefined')
+        && state.tier === 'Three-tier'
+        && tierIdx === (tierCountFor(state.tier) - 1);
+    if(isThreeTierTopTierOnly){
+        clearanceFrac *= 0.97;
+    }
+
+    const _borderFootprintForClearance = (typeof getFruitBorderFootprint === 'function')
+        ? getFruitBorderFootprint(fruitName)
+        : 0.105;
+    const _fruitClearanceAdjust = Math.min(1, 0.105 / _borderFootprintForClearance);
+    clearanceFrac *= (0.72 + 0.28 * _fruitClearanceAdjust);
+
+    const isThreeTierTopTier = (typeof state !== 'undefined') && state.tier === 'Three-tier' && tierIdx === (tierCountFor(state.tier) - 1);
+    const mangoSizeMult = (fruitName === 'Mango Slice' && isThreeTierTopTier) ? 0.75
+        : (fruitName === 'Peach Slice' && isThreeTierTopTier) ? 0.82
+        : 1.0;
+
+    const count = 40; // fixed, generous coverage — matches a ~100g-equivalent single-ring border
+    const isThreeTierLowerTier = (typeof state !== 'undefined')
+        && state.tier === 'Three-tier'
+        && tierIdx < (tierCountFor(state.tier) - 1);
+    const footprintMult = (fruitName === 'Peach Slice' && isThreeTierLowerTier) ? 1.35 : 1.0;
+    const pts = _buildTierBorderPoints(info.cx, info.cz, info.yTop, clearanceFrac, count, fruitName, footprintMult);
+
+    // Kiwi/Banana are real GLB models (skin/flesh/seeds submeshes) — placing 40
+    // separate instances PER TIER (120 total on a Three-tier cake) is what causes
+    // the lag: each instance is its own Object3D with its own geometry/material
+    // and its own Box3 fit. Bake all of this tier's pieces into one merged mesh
+    // per submesh (shared template + material, same technique already used for
+    // "Full" gram-fruit piles) so a whole tier's Kiwi/Banana ring costs only a
+    // handful of draw calls instead of dozens of separate objects.
+    const useFastMergeForBorder = (fruitName === 'Kiwi Slice' || fruitName === 'Banana Slice') && pts.length > 8;
+    if(useFastMergeForBorder){
+        let merged = null;
+        try{
+            merged = await buildMergedGramFruitMeshFast(fruitName, pts, fruitName==='Peach Slice');
+        }catch(err){
+            console.error('[TierFruitBorder] Fast-merge failed for', fruitName, tierIdx, err);
+        }
+        if(merged){
+            scene.add(merged);
+            window._tierFruitBorderGroups[tierIdx].push(merged);
+            if(typeof window._requestRender==='function') window._requestRender(500);
+            return;
+        }
+        // Fast merge failed (template load error) — fall back to the per-piece
+        // loop below so the border still renders, just without the optimization.
+    }
+
+    for(const p of pts){
+        try{
+            const mesh = await _makeGramFruitMesh(fruitName, mangoSizeMult);
+            if(!mesh) continue;
+            const _borderAngle = fruitName==='Peach Slice' ? p.angle : undefined;
+            _seatGramFruitPiece(mesh, p, p.normal, fruitName, _borderAngle);
+            scene.add(mesh);
+            window._tierFruitBorderGroups[tierIdx].push(mesh);
+        }catch(err){ console.error('[TierFruitBorder]', fruitName, tierIdx, err); }
+    }
+    if(window.cakeslice && typeof window.cakeslice.refreshdecorations==='function') window.cakeslice.refreshdecorations();
+    if(typeof window._requestRender==='function') window._requestRender(500);
+};
+window.clearTierFruitBorder = function(tierIdx){
+    if(window._tierFruitBorderGroups[tierIdx] && window._tierFruitBorderGroups[tierIdx].length){
+        window._tierFruitBorderGroups[tierIdx].forEach(g=>{ _disposeDecorGroup(g,false); scene.remove(g); });
+    }
+    window._tierFruitBorderGroups[tierIdx] = [];
+};
+window.clearAllTierFruitBorders = function(){
+    Object.keys(window._tierFruitBorderGroups).forEach(k=>window.clearTierFruitBorder(k));
+};
+window._reapplyTierFruitBorders = function(){
+    if(typeof state === 'undefined' || !state.tierFruitBorders) return;
+    if(state.tier === 'Single') return;
+    state.tierFruitBorders.forEach((f,idx)=>{
+        if(f && f !== 'None') window.buildTierFruitBorder(idx, f);
+    });
+};
+
+// ── "All Fruits" — an assorted mix of every fruit (4 piece-based + 4 gram-
+// based) covering the whole top surface, reusing each fruit's own "Full"
+// placement logic so it stays consistent with the individual buttons. ──
+window.buildAllFruitsAssorted = async function(){
+    const _runId = (window._allFruitsRunId = (window._allFruitsRunId || 0) + 1);
+    // Start from a clean plate so results are consistent instead of stacking
+    // on top of whatever fruit was already placed.
+    if(typeof window.clearFruitModels === 'function') window.clearFruitModels();
+
+    // "Full" placement normally covers the ENTIRE top surface at full
+    // density for ONE fruit — stacking four of those on the same cake
+    // (Mango + Kiwi + Peach + Banana all independently covering the top) is
+    // what caused the lag and read as "too much fruit" instead of a light
+    // assorted scatter. fullDensityMult spreads each fruit's rings further
+    // apart, so the four types interleave into one lighter, genuinely mixed
+    // covering that only lightly dresses the surface.
+    const GRAM_FRUITS = ['Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
+    const ASSORTED_FULL_DENSITY_MULT = 2.6;
+    for(const name of GRAM_FRUITS){
+        if(typeof window.setGramFruitPlacement === 'function') window.setGramFruitPlacement(name, 'full');
+        await window.buildGramFruitDecoration(name, window._gramFruitGrams[name] || 150, null, ASSORTED_FULL_DENSITY_MULT);
+        if(_runId !== window._allFruitsRunId) return;
+    }
+
+    const PIECE_FRUITS = ['Strawberry','Blueberry','Raspberry','Cherry'];
+    const PIECE_ANGLE_OFFSETS = {
+        'Strawberry': Math.PI*0.25,
+        'Blueberry':  Math.PI*0.75,
+        'Raspberry':  Math.PI*1.25,
+        'Cherry':     Math.PI*1.75,
+    };
+    // Each of these is a real, separately-loaded GLB instance (not merged
+    // into one draw call like Kiwi/Banana) — this count matters most for
+    // lag, so it's kept low since four fruit types are placed together.
+    const PIECE_COUNT_EACH = 5;
+    const {cx, cz, r} = getCakeCenterAndRadius();
+    for(const fruitType of PIECE_FRUITS){
+        const pts = _buildGramFruitPoints('full', PIECE_COUNT_EACH, null, PIECE_ANGLE_OFFSETS[fruitType]||0, ASSORTED_FULL_DENSITY_MULT);
+        for(const p of pts){
+            const xFrac = (p.x-cx)/r, zFrac = (p.z-cz)/r;
+            if(_runId !== window._allFruitsRunId) return;
+            try{
+                let _idx = await window.placeFruitAtFraction(fruitType, xFrac, zFrac);
+                if(_idx < 0){
+                    await new Promise(r => setTimeout(r, 150));
+                    _idx = await window.placeFruitAtFraction(fruitType, xFrac, zFrac);
+                }
+                if(_idx >= 0 && typeof state !== 'undefined' && state.shape === 'Bundt'){
+                    // Bundt has a center hole: drop any piece that missed its spot or landed in the hole
+                    const _bm = window.getFruitModels()[_idx];
+                    const _cm = _getCakeMetricsForFruits();
+                    if(_bm){
+                        const _off  = Math.hypot(_bm.group.position.x - p.x, _bm.group.position.z - p.z);
+                        const _fromCenter = Math.hypot(_bm.group.position.x - _cm.cx, _bm.group.position.z - _cm.cz);
+                        if(_off > 0.12 || _fromCenter < _cm.r * 0.45){
+                            window.removeFruitModel(_idx);
+                            _idx = -1;
+                        }
+                    }
+                }
+                if(_idx >= 0 && window._placedFruitRecord) window._placedFruitRecord[_idx] = { fruit: fruitType, emoji: '' };
+            }
+            catch(err){ console.error('[AllFruits piece]', fruitType, err); }
+        }
+    }
+    if(window.cakeslice && typeof window.cakeslice.refreshdecorations==='function') window.cakeslice.refreshdecorations();
+    if(typeof window._requestRender==='function') window._requestRender(800);
+};
+window.clearAllFruitsAssorted = function(){
+    if(typeof window.clearFruitModels === 'function') window.clearFruitModels();
+    ['Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'].forEach(name=>{
+        if(typeof window.clearGramFruitDecoration === 'function') window.clearGramFruitDecoration(name);
+    });
+};
+
 document.querySelectorAll('.sprinkle-place-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const type      = btn.dataset.type;      // 'cylinder' or 'pearl'
@@ -6271,7 +8368,7 @@ const CHOCO_CURLS_CONFIG_BUNDT = {
     sides:  [ { file:'chococurls_bundt_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 } ],
     both:   [
         { file:'chococurls_bundt_center', diamMult:0.50, sitOnTop:true, sinkFrac:0.57, yNudge:-0.01 },
-        { file:'chococurls_bundt_around',  mMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 },
+        { file:'chococurls_bundt_around', diamMult:0.9, sitOnTop:true, sinkFrac:0.42, yNudge:0.1 },
     ]
 };
 // Digits with no dedicated "center" (middle) model — Middle and Both get hidden
@@ -6711,8 +8808,9 @@ const CHARACTER_ROTATION_Y = {
     'My Melody': Math.PI,
 };
 
-window.placeCharacterOnCake = async function(characterKey, cx, cy){
+window.placeCharacterOnCake = async function(characterKey, cx, cy, sizeInches){
     const file = CHARACTER_FILE_MAP[characterKey] || 'mickeymouse';
+    const _charSizeScale = (sizeInches || 4) / 4; // 4" = baseline, matches previously tuned CHARACTER_SIZE_MULT values
     try{
         const cakeRef = currentBase || currentFrost;
         if(!cakeRef) return -1;
@@ -6735,7 +8833,7 @@ window.placeCharacterOnCake = async function(characterKey, cx, cy){
         // their vertical size lines up with the standing character figures.
         const rawDiam = sizeMode === 'height' ? rawSize.y : Math.max(rawSize.x, rawSize.y, rawSize.z);
         const sizeMult = CHARACTER_SIZE_MULT[characterKey] ?? 1.0;
-        const targetDiam = cakeDiameter * 0.30 * sizeMult;
+        const targetDiam = cakeDiameter * 0.30 * sizeMult * _charSizeScale;
         const MIN_SAFE_DIM = 0.01;
         const MAX_SAFE_DIM = 500.0;
         let scale = 1.0;
@@ -6779,7 +8877,8 @@ window.placeCharacterOnCake = async function(characterKey, cx, cy){
 
         scene.add(fg);
         const idx = characterModels.length;
-        characterModels.push({ group: fg, key: characterKey, bottomOffset });
+        characterModels.push({ group: fg, key: characterKey, bottomOffset, sizeInches: sizeInches || 4, rawDiam, sizeMode });
+        window._lastPlacedCharacterIdx = idx;
         return idx;
     }catch(err){
         console.error('[CharacterTopper]', characterKey, err);
@@ -6787,10 +8886,61 @@ window.placeCharacterOnCake = async function(characterKey, cx, cy){
         return -1;
     }
 };
+window.resizeCharacterModel = function(idx, sizeInches){
+    const m = characterModels[idx];
+    if(!m || !m.rawDiam) return false;
+    const cakeRef = currentBase || currentFrost;
+    if(!cakeRef) return false;
+    cakeRef.updateMatrixWorld(true);
+    const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+    const cakeDiameter = Math.max(cakeBox.max.x - cakeBox.min.x, cakeBox.max.z - cakeBox.min.z);
+    const sizeMult = CHARACTER_SIZE_MULT[m.key] ?? 1.0;
+    const charSizeScale = (sizeInches || 4) / 4;
+    const targetDiam = cakeDiameter * 0.30 * sizeMult * charSizeScale;
+
+    const fg = m.group;
+    // Remember exactly where the character sits BEFORE resizing
+    fg.updateMatrixWorld(true);
+    const oldBox    = new THREE.Box3().setFromObject(fg);
+    const oldSize   = oldBox.getSize(new THREE.Vector3());
+    const oldCenter = oldBox.getCenter(new THREE.Vector3());
+    // Cake surface contact point (placement sinks the model 6% of its height into the cake)
+    const surfaceY  = oldBox.min.y + oldSize.y * 0.06;
+
+    let scale = m.rawDiam > 0.0001 ? targetDiam / m.rawDiam : 1.0;
+    fg.scale.setScalar(scale);
+    fg.updateMatrixWorld(true);
+
+    const checkBox = new THREE.Box3().setFromObject(fg);
+    const checkSize = checkBox.getSize(new THREE.Vector3());
+    const checkMax = m.sizeMode === 'height' ? checkSize.y : Math.max(checkSize.x, checkSize.y, checkSize.z);
+    if(!isFinite(checkMax) || checkMax > targetDiam * 2.5){
+        const fixScale = checkMax > 0.0001 ? (targetDiam / checkMax) * scale : scale;
+        fg.scale.setScalar(fixScale);
+        fg.updateMatrixWorld(true);
+    }
+
+    const scaledBox  = new THREE.Box3().setFromObject(fg);
+    const scaledSize = scaledBox.getSize(new THREE.Vector3());
+    // Keep the same X/Z footprint center and the same cake-surface contact point
+    const newCenter = scaledBox.getCenter(new THREE.Vector3());
+    fg.position.x += oldCenter.x - newCenter.x;
+    fg.position.z += oldCenter.z - newCenter.z;
+    fg.position.y += (surfaceY - scaledSize.y * 0.06) - scaledBox.min.y;
+    fg.updateMatrixWorld(true);
+    const newBottomOffset = fg.position.y - surfaceY;
+
+    m.bottomOffset = newBottomOffset;
+    m.sizeInches = sizeInches || 4;
+    if(fg._targetPos) fg._targetPos.copy(fg.position);
+    if(typeof window._requestRender==='function') window._requestRender(500);
+    return true;
+};
 window.clearCharacterModels = function() {
     characterModels.forEach(m=>{_disposeDecorGroup(m.group,true); scene.remove(m.group);});
     characterModels.length = 0;
     _draggingCharacterIdx = -1;
+    window._lastPlacedCharacterIdx = -1;
 };
 window.removeCharacterModel = function(idx) {
     if(idx<0||idx>=characterModels.length) return false;
@@ -6893,6 +9043,12 @@ function getSprinkleTargetMeshes(){
             // crushed peanuts should only land on the plain cake body/frosting,
             // not on top of the decorative piping.
             if(currentIcing && node===currentIcing){isExcluded=true;break;}
+            // Exclude Drip — its curtain overhangs down past the tier edge, so a
+            // straight-down raycast near the rim can hit the drip's sloped
+            // surface instead of the flat cake top, which is what was making
+            // border fruit (e.g. Mango Cube) look embedded deep in the drip
+            // instead of sitting flat on the top surface.
+            if(currentDrip && node===currentDrip){isExcluded=true;break;}
             node=node.parent;
         }
         if(!isExcluded) m.push(c);
@@ -6930,9 +9086,9 @@ function loadFruitGLB(url){
 let _draggingFruitIdx=-1;
 
 // Procedural mango — a small shiny yellow/orange cube (no GLB needed)
-function buildMangoCubeMesh(){
+function buildMangoCubeMesh(sizeMult){
     const g=new THREE.Group();
-    const size=0.10;
+    const size=0.10 * (sizeMult || 1.0);
     const mat=new THREE.MeshStandardMaterial({
         color:new THREE.Color('#F7A927'),
         roughness:0.10, metalness:0.30, envMapIntensity:1.5,
@@ -7013,9 +9169,56 @@ const cCenter=new THREE.Color('#FFCB6B');
     g.updateMatrixWorld(true);
     return g;
 }
+function buildLeafMesh(){
+    const g=new THREE.Group();
+    const a=0.13, b=0.058;                 // half-length, half-width
+    const archY = x => -1.2*x*x;           // tips droop slightly, like a leaf resting on frosting
+    const shape=new THREE.Shape();
+    shape.moveTo(-a,0);
+    shape.bezierCurveTo(-a*0.55,  b*1.25, a*0.35,  b*1.15, a, 0);
+    shape.bezierCurveTo( a*0.35, -b*1.15, -a*0.55, -b*1.25, -a, 0);
+    const geo=new THREE.ExtrudeGeometry(shape,{depth:0.008,bevelEnabled:true,bevelThickness:0.004,bevelSize:0.004,bevelSegments:2,curveSegments:24});
+    geo.center();
+
+    // Cup the blade across its width, arch it along its length, and paint a dark-edge → light-center gradient
+    const pos=geo.attributes.position;
+    const colors=new Float32Array(pos.count*3);
+    const cEdge=new THREE.Color('#2E7D32'), cMid=new THREE.Color('#66BB4A');
+    for(let i=0;i<pos.count;i++){
+        const x=pos.getX(i), y=pos.getY(i), z=pos.getZ(i);
+        pos.setZ(i, z + 4.0*y*y + archY(x));
+        const t=Math.min(1, Math.abs(y)/b);
+        const c=cMid.clone().lerp(cEdge, t*t);
+        colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
+    }
+    geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+    geo.rotateX(-Math.PI/2);               // lay it flat
+    geo.computeVertexNormals();
+
+    const leaf=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.42,metalness:0.02,envMapIntensity:0.9,side:THREE.DoubleSide}));
+    leaf.castShadow=leaf.receiveShadow=true;
+    g.add(leaf);
+
+    // Midrib + short stem
+    const veinPts=[];
+    for(let i=0;i<=12;i++){
+        const x=-a-0.03 + (i/12)*(2*a+0.01);
+        veinPts.push(new THREE.Vector3(x, 0.010+archY(x), 0));
+    }
+    const vein=new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(veinPts),16,0.0045,6,false),
+        new THREE.MeshStandardMaterial({color:new THREE.Color('#8ED67A'),roughness:0.5,metalness:0.0})
+    );
+    vein.castShadow=true;
+    g.add(vein);
+
+    g.rotation.y=Math.random()*Math.PI*2;
+    g.updateMatrixWorld(true);
+    return g;
+}
 window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
     const map={'Strawberry':'/models/Strawberry.glb','Blueberry':'/models/Blueberry.glb','Raspberry':'/models/Raspberry.glb','Cherry':'/models/Cherry.glb','Kiwi Slice':'/models/kiwi.glb','Banana Slice':'/models/banana.glb'};
-    const proceduralFruits=['Mango Slice','Peach Slice'];
+    const proceduralFruits=['Mango Slice','Peach Slice','Leaf'];
     const isProcedural=proceduralFruits.includes(fruitName);
     const url=map[fruitName];
     if(!url && !isProcedural) return -1;
@@ -7026,7 +9229,9 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
             const sb=new THREE.Box3().setFromObject(fg);fh=(sb.max.y-sb.min.y)*.5;
         }else{
             if(isProcedural){
-                fg = fruitName==='Mango Slice' ? buildMangoCubeMesh() : buildPeachSliceMesh();
+                fg = fruitName==='Mango Slice' ? buildMangoCubeMesh()
+                   : fruitName==='Leaf' ? buildLeafMesh()
+                   : buildPeachSliceMesh();
                 fg.updateMatrixWorld(true);
             } else {
                 fg=await loadFruitGLB(url);
@@ -7124,6 +9329,11 @@ window.placeFruitOnCake=async function(fruitName,cx,cy,ei){
 };
 window.clearFruitModels=function(){fruitModels.forEach(m=>{_disposeDecorGroup(m.group,true);scene.remove(m.group);});fruitModels.length=0;_draggingFruitIdx=-1;};
 window.removeFruitModel=function(idx){if(idx<0||idx>=fruitModels.length)return false;_disposeDecorGroup(fruitModels[idx].group,true);scene.remove(fruitModels[idx].group);fruitModels.splice(idx,1);if(window._placedFruitRecord)window._placedFruitRecord.splice(idx,1);return true;};
+window.removeFruitModelsByName=function(name){
+    for(let i=fruitModels.length-1;i>=0;i--){
+        if(fruitModels[i].fruit===name) window.removeFruitModel(i);
+    }
+};
 window.getFruitIndexAtScreen=function(cx,cy){const rect=document.getElementById('viewerEl').getBoundingClientRect(),ndc=new THREE.Vector2(((cx-rect.left)/rect.width)*2-1,-((cy-rect.top)/rect.height)*2+1),rc=new THREE.Raycaster();rc.setFromCamera(ndc,camera);for(let i=fruitModels.length-1;i>=0;i--){const t=[];fruitModels[i].group.traverse(c=>{if(c.isMesh)t.push(c);});if(rc.intersectObjects(t,false).length>0)return i;}return -1;};
 window.moveDraggingFruit=function(cx,cy){if(_draggingFruitIdx<0||!fruitModels[_draggingFruitIdx])return;const e=fruitModels[_draggingFruitIdx];fruitModels.forEach(m=>m.group.visible=false);const h=raycastCakeTop(cx,cy);fruitModels.forEach(m=>m.group.visible=true);if(h){e.group.position.set(h.x,h.y+e.bottomOffset,h.z);if(window._fruitCoordDebug && typeof getCakeCenterAndRadius === 'function'){const c=getCakeCenterAndRadius();const fracX=((h.x-c.cx)/c.r).toFixed(4);const fracZ=((h.z-c.cz)/c.r).toFixed(4);const spinDeg=Math.round((e.group.rotation.y*180/Math.PI+360)%360);const badge=document.getElementById('fruitCoordLiveBadge');if(badge){badge.style.display='block';badge.textContent=e.fruit+'  →  x: '+fracX+'   z: '+fracZ+'   spin: '+spinDeg+'°';}}}};
 window.setDraggingFruitIdx=function(idx){_draggingFruitIdx=idx;};
@@ -7903,7 +10113,7 @@ window.placeFruitAtFraction = async function(fruitName, xFrac, zFrac, spinDeg){
     }
     return idx;
 };
-window.placeCharacterAtFraction = async function(characterKey, xFrac, zFrac){
+window.placeCharacterAtFraction = async function(characterKey, xFrac, zFrac, sizeInches){
     const {cx,cz,r} = getCakeCenterAndRadius();
     const targetX = cx + xFrac*r;
     const targetZ = cz + zFrac*r;
@@ -7920,7 +10130,7 @@ window.placeCharacterAtFraction = async function(characterKey, xFrac, zFrac){
     const rect = document.getElementById('viewerEl').getBoundingClientRect();
     const screenX = (vector.x * 0.5 + 0.5) * rect.width + rect.left;
     const screenY = (-vector.y * 0.5 + 0.5) * rect.height + rect.top;
-    return await window.placeCharacterOnCake(characterKey, screenX, screenY);
+    return await window.placeCharacterOnCake(characterKey, screenX, screenY, sizeInches);
 };
 window.placeCandleAtFraction = async function(candleNum, xFrac, zFrac){
     const {cx,cz,r} = getCakeCenterAndRadius();
@@ -7990,18 +10200,726 @@ window.resetCamera=()=>{
     controls.update();
     if(typeof window._requestRender==='function') window._requestRender();   // ← ADD THIS LINE
 };
+let _sliceActive = false;
+let _sliceClipPlanes = null;
+let _sliceFaceGroup = null;
+let _sliceHiddenToppings = [];
+let _sliceLastRotationDeg = 0;
+let _sliceLastSpanDeg = 40;
+
+const SLICE_FILLING_COLORS = {
+    'Vanilla':'#E8C878', 'Chocolate':'#3A1A0A', 'Red Velvet':'#8B1111',
+    'Strawberry':'#D8305C', 'Blueberry':'#3A1878', 'Ube':'#6B3FA0',
+    'Mocha':'#4A2810', 'Mango':'#E8920A', 'Biscoff':'#B06B2C',
+    'Carrot':'#C8681C', 'Banana':'#D9B84A',
+};
+// Punches up the filling color a bit so it reads clearly as a distinct band
+// under the cake viewer's warm spotlighting, instead of blending toward the
+// sponge color when the raw hex is pale or desaturated.
+function boostFillingSeamColor(hex){
+    const c = new THREE.Color(hex);
+    const hsl = {h:0,s:0,l:0};
+    c.getHSL(hsl);
+    if(hsl.s < 0.04) return hex; // near-white/cream fillings (Vanilla, Cream Cheese) stay as-is
+    const boostedS = Math.min(1, hsl.s * 1.25 + 0.06);
+    c.setHSL(hsl.h, boostedS, hsl.l);
+    return '#' + c.getHexString();
+}
+
+function _sliceGetCakeBox(){
+    const ref = currentBase || currentFrost || currentIcing;
+    if(!ref) return null;
+    ref.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(ref);
+    const cx = (box.min.x+box.max.x)*0.5, cz=(box.min.z+box.max.z)*0.5;
+    // NOTE: uses ONE global radius for the whole cake — accurate for
+    // Round/Bundt, an approximation for Square/Heart/Number, and rough
+    // for multi-tier cakes (each tier has a different real radius).
+    const radius = Math.max(box.max.x-box.min.x, box.max.z-box.min.z)*0.5;
+    return { cx, cz, radius, yMin: box.min.y, yMax: box.max.y };
+}
+
+function buildSliceClipPlanes(rotationDeg, spanDeg){
+    const info = _sliceGetCakeBox();
+    if(!info) return null;
+    const a = rotationDeg * Math.PI/180;
+    const b = (rotationDeg+spanDeg) * Math.PI/180;
+    // Two half-space planes through the cake's vertical center axis.
+    // clipIntersection=true on the material keeps a fragment if EITHER
+    // plane keeps it, so only the wedge between angle a and b (kept by
+    // neither) is discarded. If the WRONG piece disappears when you
+    // test this, swap the two normal signs below.
+    const planeA = new THREE.Plane(new THREE.Vector3(Math.sin(a),0,-Math.cos(a)), 0);
+    const planeB = new THREE.Plane(new THREE.Vector3(-Math.sin(b),0,Math.cos(b)), 0);
+    planeA.constant = -(planeA.normal.x*info.cx + planeA.normal.z*info.cz);
+    planeB.constant = -(planeB.normal.x*info.cx + planeB.normal.z*info.cz);
+    return [planeA, planeB];
+}
+
+function _sliceApplyClippingToGroup(group, planes){
+    if(!group) return;
+    group.traverse(c=>{
+        if(!c.isMesh) return;
+        const mats = Array.isArray(c.material) ? c.material : [c.material];
+        mats.forEach(m=>{
+            if(!m) return;
+            m.clippingPlanes = planes || [];
+            m.clipIntersection = !!planes;
+            m.needsUpdate = true;
+        });
+    });
+}
+
+function applySliceClipping(planes){
+    renderer.localClippingEnabled = true;
+    _sliceClipExtraDecor(planes);
+    [currentBase, currentFrost, currentIcing, currentTexture, currentDrip, currentRosette, currentCheesecakeCrust]
+        .forEach(g=>_sliceApplyClippingToGroup(g, planes));
+
+    // Gram-based fruits (Mango Cube, Kiwi Slice, Peach Slice, Banana Slice) and
+    // per-tier fruit borders live directly in `scene` as their own groups/merged
+    // meshes — they were never part of the wedge-hide system, so they kept
+    // floating over the cut-away area. Clip them with the SAME wedge planes
+    // as the cake so any piece sitting in the removed wedge disappears with it.
+    if(window._gramFruitGroups){
+        Object.values(window._gramFruitGroups).forEach(arr=>{
+            (arr||[]).forEach(g=>_sliceApplyClippingToGroup(g, planes));
+        });
+    }
+    if(window._tierFruitBorderGroups){
+        Object.values(window._tierFruitBorderGroups).forEach(arr=>{
+            (arr||[]).forEach(g=>_sliceApplyClippingToGroup(g, planes));
+        });
+    }
+
+    // shadowMap.autoUpdate is OFF for performance — without this, the shadow
+    // cast by a fruit piece keeps rendering on the plate/cake surface for a
+    // couple seconds AFTER the piece's geometry has already been clipped away,
+    // making the removal look slow/delayed even though it's actually instant.
+    // Flagging needsUpdate here makes the shadow catch up on the very next frame.
+    renderer.shadowMap.needsUpdate = true;
+}
+
+// Clips everything that lives directly in `scene` (not sceneRoot) and was
+// never part of the wedge system: sprinkles, peanuts, choco curls, plaque,
+// plaque text, and every individually placed topper.
+function _sliceClipExtraDecor(planes){
+    Object.values(sprinklesMeshes).forEach(g=>_sliceApplyClippingToGroup(g, planes));
+    (currentChocoCurls||[]).forEach(g=>_sliceApplyClippingToGroup(g, planes));
+    _sliceApplyClippingToGroup(currentPlaque, planes);
+    _sliceApplyClippingToGroup(currentPlaqueText, planes);
+    [fruitModels, ferreroModels, kitkatModels, oreoModels, barShardModels, tobleroneModels, candleModels, characterModels].forEach(arr=>{
+        (arr||[]).forEach(m=>_sliceApplyClippingToGroup(m.group, planes));
+    });
+}
+// Called by the scene.add hook (Edit 1) for every object added to the scene.
+window._applySliceToNewObject = function(obj){
+    if(!_sliceActive || !_sliceClipPlanes || !obj) return;
+    if(obj.userData && obj.userData.noSliceClip) return; // the cut-face walls must never be clipped
+    _sliceApplyClippingToGroup(obj, _sliceClipPlanes);
+    if(renderer) renderer.shadowMap.needsUpdate = true;
+};
+// Fixes the lowercase calls in buildGramFruitDecoration / buildTierFruitBorder /
+// buildAllFruitsAssorted that were silently doing nothing.
+window.cakeslice = {
+    refreshdecorations(){ if(window.CakeSlice) window.CakeSlice.refreshDecorations(); }
+};
+
+function _sliceDarken(hex, amt){
+    const c = new THREE.Color(hex);
+    c.multiplyScalar(1-amt);
+    return '#'+c.getHexString();
+}
+
+function getSliceBands(flavor, filling){
+    const pal = (typeof FLAVORS!=='undefined' && FLAVORS[flavor]) ? FLAVORS[flavor] : {sponge:{hex:'#C8822A'}};
+    const spongeHex = pal.sponge.hex;
+    const hasFilling = filling && filling !== 'No Filling';
+    const seamHex = hasFilling ? _sliceDarken(spongeHex, 0.30) : spongeHex;
+    return [
+        {frac0:0.00, frac1:0.29, colorHex:spongeHex},
+        {frac0:0.29, frac1:0.33, colorHex:seamHex},
+        {frac0:0.33, frac1:0.61, colorHex:spongeHex},
+        {frac0:0.61, frac1:0.65, colorHex:seamHex},
+        {frac0:0.65, frac1:0.94, colorHex:spongeHex},
+        {frac0:0.94, frac1:1.00, colorHex:'#F5EFE2'},
+    ];
+}
+
+// Instead of guessing one flat radius (only ever correct for a single-tier
+// round cake), cast a horizontal ray at this exact angle at many heights and
+// find where it actually hits the rendered cake surface. This makes the wall
+// hug ANY shape (round/square/heart/bundt) flush with no gap, and naturally
+// produces a stepped/staircase wall wherever a tier is narrower than the one
+// below it — no per-shape or per-tier special-casing needed.
+function _sliceGetProfileMeshes(){
+    const groups = [currentBase, currentFrost, currentIcing].filter(Boolean);
+    const meshes = [];
+    groups.forEach(g=>g.traverse(c=>{ if(c.isMesh) meshes.push(c); }));
+    return meshes;
+}
+function _sliceSampleRadiusProfile(thetaRad, cx, cz, yMin, yMax, samples){
+    const dirX = Math.cos(thetaRad), dirZ = Math.sin(thetaRad);
+    const FAR = 6.0;
+    const raycaster = new THREE.Raycaster();
+    const meshes = _sliceGetProfileMeshes();
+    const profile = [];
+    for(let i=0;i<=samples;i++){
+        const t = i/samples;
+        const y = yMin + t*(yMax-yMin);
+        const origin = new THREE.Vector3(cx + dirX*FAR, y, cz + dirZ*FAR);
+        const rdir = new THREE.Vector3(-dirX, 0, -dirZ);
+        raycaster.set(origin, rdir);
+        raycaster.far = FAR*2;
+        const hits = meshes.length ? raycaster.intersectObjects(meshes, false) : [];
+        let r = 0;
+        if(hits.length){
+            hits.sort((a,b)=>a.distance-b.distance);
+            const hp = hits[0].point;
+            r = Math.sqrt((hp.x-cx)*(hp.x-cx) + (hp.z-cz)*(hp.z-cz));
+        }
+        profile.push({ y, r });
+    }
+    // Some heights — most often right at a tier seam where the overlay mesh
+    // doesn't quite overlap the base mesh — miss every raycast and come back
+    // with r=0, which is what shows up as hollow "empty space" in the cut.
+    // Interpolate those from the nearest valid samples above/below so the
+    // wall stays a single solid surface, no holes.
+    for(let i=0;i<profile.length;i++){
+        if(profile[i].r >= 0.001) continue;
+        let below=-1, above=-1;
+        for(let j=i-1;j>=0;j--){ if(profile[j].r>=0.001){ below=j; break; } }
+        for(let j=i+1;j<profile.length;j++){ if(profile[j].r>=0.001){ above=j; break; } }
+        if(below>=0 && above>=0){
+            const span = profile[above].y - profile[below].y;
+            const frac = span>0.0001 ? (profile[i].y - profile[below].y)/span : 0;
+            profile[i].r = profile[below].r + (profile[above].r - profile[below].r)*frac;
+        } else if(below>=0){
+            profile[i].r = profile[below].r;
+        } else if(above>=0){
+            profile[i].r = profile[above].r;
+        }
+    }
+    return profile;
+}
+function _sliceDetectTierSegments(profile){
+    const segments = [];
+    let segStart = 0;
+    for(let i=1;i<profile.length;i++){
+        const prevR = profile[i-1].r, curR = profile[i].r;
+        if(prevR > 0.01 && curR > 0.01 && (curR/prevR) < 0.82){
+            segments.push({ start: segStart, end: i-1 });
+            segStart = i;
+        }
+    }
+    segments.push({ start: segStart, end: profile.length-1 });
+    return segments;
+}
+function buildRadialWallGeometryFromProfile(profile, thetaRad, flavor, filling, tierYBoundaries, tierLayersArr, tierFlavorsArr, tierFillingsArr){
+    const dirX = Math.cos(thetaRad), dirZ = Math.sin(thetaRad);
+    function spongeHexForTier(tierIdx){
+        const fname = (tierFlavorsArr && tierFlavorsArr[tierIdx]) || flavor;
+        const p = (typeof FLAVORS!=='undefined' && FLAVORS[fname]) ? FLAVORS[fname] : {sponge:{hex:'#C8822A'}};
+        return p.sponge.hex;
+    }
+    function fillingForTier(tierIdx){
+        return (tierFillingsArr && tierFillingsArr[tierIdx]) || filling || 'No Filling';
+    }
+    const pal = (typeof FLAVORS!=='undefined' && FLAVORS[flavor]) ? FLAVORS[flavor] : {sponge:{hex:'#C8822A'}};
+    const spongeHex = spongeHexForTier(0);
+    const topIcingHex = '#F5EFE2';
+    const dividerHex = '#EFE6D2'; // cake board / separator between stacked tiers
+    // How many seam lines a tier shows, based on ITS OWN layer count:
+    // 1 layer -> 0 seams, 2 layers -> 1 seam, 3 layers -> 2 seams (evenly spaced).
+    function seamFracsForTier(tierIdx){
+        const L = Math.max(1, Math.min(3, (tierLayersArr && tierLayersArr[tierIdx]) || 1));
+        const fracs = [];
+        for(let s=1; s<L; s++) fracs.push(s/L);
+        return fracs;
+    }
+    const SEAM_HALF_THICKNESS_FRAC = 0.065; // fraction of THIS tier's own height — thick, creamy filling band like a real photo reference
+    // A thin board sits between every pair of stacked tiers — one divider for
+    // Two-tier, two for Three-tier — never on top of the topmost tier or
+    // under the bottom one. Its Y is fixed at the real seam between the two
+    // tiers, independent of either tier's own layer-line fractions.
+    const dividerYs = [];
+    for(let i=0;i<tierYBoundaries.length-1;i++){
+        dividerYs.push((tierYBoundaries[i].y1 + tierYBoundaries[i+1].y0) / 2);
+    }
+    const DIVIDER_HALF_THICKNESS = 0.010; // fixed world-unit thickness, consistent regardless of tier size
+function seamJitterFrac(rPos, y){
+    // Filling seams stay flat/level (no wave in the line's vertical path) —
+    // real filling doesn't snake up and down between layers, it sits at a
+    // consistent height with just its own thickness varying (see below).
+    return 0;
+}
+function seamThicknessFrac(rPos, y){
+    // Gentle, smooth thickness variation — the cream band breathes in and
+    // out slightly as it wraps the cake, like it was piped by hand, without
+    // any harsh randomness or spiky lumps.
+    const wave = Math.sin(rPos*3.2 + y*4.0)*0.5 + Math.sin(rPos*5.7 - y*1.5)*0.3;
+    return SEAM_HALF_THICKNESS_FRAC * (0.90 + wave*0.18);
+}
+    function colorForY(y, tierIdx, y0, y1, rPos){
+        for(const dy of dividerYs){ if(Math.abs(y-dy) <= DIVIDER_HALF_THICKNESS) return new THREE.Color(dividerHex); }
+        const tierSpongeHex = spongeHexForTier(tierIdx);
+        const tierFillingName = fillingForTier(tierIdx);
+        const tierHasFilling = tierFillingName && tierFillingName !== 'No Filling';
+        const fillingBaseHex = tierHasFilling ? (SLICE_FILLING_COLORS[tierFillingName] || tierSpongeHex) : tierSpongeHex;
+        const seamHex = tierHasFilling ? boostFillingSeamColor(fillingBaseHex) : tierSpongeHex;
+        const span = Math.max(0.0001, y1-y0);
+        const frac = Math.min(1, Math.max(0, (y-y0)/span));
+        if(tierIdx === (tierYBoundaries.length-1) && frac >= 0.94) return new THREE.Color(topIcingHex);
+        const jitteredFrac = frac + seamJitterFrac(rPos||0, y);
+        const localThickness = seamThicknessFrac(rPos||0, y);
+        const seams = seamFracsForTier(tierIdx);
+        for(const sf of seams){ if(Math.abs(jitteredFrac-sf) <= localThickness) return new THREE.Color(seamHex); }
+        return new THREE.Color(tierSpongeHex);
+    }
+    // Classify a height into a tier using the SAME fixed boundaries passed in
+    // from buildSliceFaces (computed once, shared by both cut walls) — this is
+    // what keeps the seam lines level between the two faces, instead of each
+    // wall detecting its own slightly-different tier heights (which happens
+    // on Square/Heart where the two cut angles hit different corner geometry).
+    function tierIdxForY(y){
+        for(let i=0;i<tierYBoundaries.length;i++){
+            if(y >= tierYBoundaries[i].y0 - 0.001 && y <= tierYBoundaries[i].y1 + 0.001) return i;
+        }
+        let best=0, bestDist=Infinity;
+        tierYBoundaries.forEach((b,i)=>{ const mid=(b.y0+b.y1)/2, d=Math.abs(y-mid); if(d<bestDist){bestDist=d;best=i;} });
+        return best;
+    }
+function seamGeometricOffset(y, tierIdx, y0, y1, rFrac){
+    const tierFillingName = fillingForTier(tierIdx);
+    if(!tierFillingName || tierFillingName === 'No Filling') return 0;
+    const span = Math.max(0.0001, y1 - y0);
+    const frac = Math.min(1, Math.max(0, (y - y0) / span));
+    const seams = seamFracsForTier(tierIdx);
+    let offset = 0;
+    seams.forEach(sf=>{
+        const dist = Math.abs(frac - sf);
+        const WAVE_WINDOW = SEAM_HALF_THICKNESS_FRAC * 2.6;
+        if(dist > WAVE_WINDOW) return;
+
+             const seedShift = sf * 37.1;
+        const waveFalloff = 1 - (dist / WAVE_WINDOW);
+        const waveEase = waveFalloff * waveFalloff * (3 - 2 * waveFalloff);
+        // Subtle, low-amplitude ripple — just enough to soften the line
+        // without a big arching bulge like a mountain peak.
+        const wave = Math.sin(rFrac*6.0  + seedShift*2.1) * 0.60
+                   + Math.sin(rFrac*11.0 - seedShift*3.4) * 0.40;
+        offset += waveEase * wave * span * 0.03;
+    });
+    return offset;
+}
+
+    // Where a tier has an active filling, the crumb/sponge texture shouldn't
+    // show through the filling band — filling is a smooth, saucy layer, not
+    // more sponge. isSeamY flags a height as "inside the filling band" using
+    // the same seam fractions/thickness colorForY keys its filling color
+    // off, with a little extra margin to cover the wave/drip jitter.
+    function isSeamY(y){
+        const tIdx = tierIdxForY(y);
+        const b = tierYBoundaries[tIdx];
+        const tierFillingName = fillingForTier(tIdx);
+        if(!tierFillingName || tierFillingName === 'No Filling') return false;
+        const span = Math.max(0.0001, b.y1 - b.y0);
+        const frac = Math.min(1, Math.max(0, (y - b.y0) / span));
+        const seams = seamFracsForTier(tIdx);
+        // Match the color band width exactly (with a hair of overlap to avoid
+        // sub-pixel gaps) so the crumb-textured sponge material stops flush
+        // against the filling color, instead of bleeding a wide margin into it.
+        for(const sf of seams){ if(Math.abs(frac - sf) <= SEAM_HALF_THICKNESS_FRAC * 1.6) return true; }
+        return false;
+    }
+
+    const positions=[], colors=[], uvs=[], indices=[];
+    const geoGroups=[]; // {start,count,materialIndex} — splits sponge vs. filling so the filling band renders without the crumb bump/roughness texture
+    let vIndex = 0;
+    // Subdividing across the radial axis (center → crust) is what gives the
+    // wave/drip room to actually show — the old code only had 2 points per
+    // row (center, edge), so there was nothing in between to displace.
+    const RADIAL_SEGS = 8;
+    let groupStartIdx = 0, groupMatIdx = 0, groupOpen = false;
+    for(let i=0;i<profile.length-1;i++){
+        const p0=profile[i], p1=profile[i+1];
+        if(p0.r<0.001 && p1.r<0.001) continue; // still no cake at this height even after gap-fill — genuinely outside the cake
+        const t0 = tierIdxForY(p0.y), t1 = tierIdxForY(p1.y);
+        const b0 = tierYBoundaries[t0], b1 = tierYBoundaries[t1];
+        const rowIsFilling = isSeamY(p0.y) || isSeamY(p1.y);
+        const rowMatIdx = rowIsFilling ? 1 : 0;
+        if(!groupOpen){ groupStartIdx = indices.length; groupMatIdx = rowMatIdx; groupOpen = true; }
+        else if(rowMatIdx !== groupMatIdx){
+            geoGroups.push({start:groupStartIdx, count:indices.length-groupStartIdx, materialIndex:groupMatIdx});
+            groupStartIdx = indices.length; groupMatIdx = rowMatIdx;
+        }
+
+        const rowBase = vIndex;
+        for(let s=0; s<=RADIAL_SEGS; s++){
+            const rFrac = s / RADIAL_SEGS;
+            const r0 = p0.r * rFrac, r1 = p1.r * rFrac;
+
+            // Colors still come from the UNCHANGED colorForY(), using the
+            // true (undisplaced) height — filling selection/colors/thresholds
+            // are completely untouched.
+            const c0 = colorForY(p0.y, t0, b0.y0, b0.y1, r0);
+            const c1 = colorForY(p1.y, t1, b1.y0, b1.y1, r1);
+
+            // The actual mesh displacement — this is the new part. It's
+            // centered on the same seam fractions colorForY uses, so the
+            // bulge lines up with the filling-colored band.
+            const y0v = p0.y + seamGeometricOffset(p0.y, t0, b0.y0, b0.y1, rFrac);
+            const y1v = p1.y + seamGeometricOffset(p1.y, t1, b1.y0, b1.y1, rFrac);
+
+            positions.push(dirX*r0, y0v, dirZ*r0);
+            colors.push(c0.r, c0.g, c0.b);
+            uvs.push(r0, y0v);
+
+            positions.push(dirX*r1, y1v, dirZ*r1);
+            colors.push(c1.r, c1.g, c1.b);
+            uvs.push(r1, y1v);
+        }
+        for(let s=0; s<RADIAL_SEGS; s++){
+            const a = rowBase + s*2, b = a+1, c = a+2, d = a+3;
+            indices.push(a,b,c, b,d,c);
+        }
+        vIndex += (RADIAL_SEGS+1)*2;
+    }
+    if(groupOpen) geoGroups.push({start:groupStartIdx, count:indices.length-groupStartIdx, materialIndex:groupMatIdx});
+
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs,2));
+    geo.setIndex(indices);
+    geoGroups.forEach(g=>geo.addGroup(g.start, g.count, g.materialIndex));
+    geo.computeVertexNormals();
+    return geo;
+}
+function makeSpongeCrumbNormalMap(size=512){
+    const canvas=document.createElement('canvas');
+    canvas.width=canvas.height=size;
+    const ctx=canvas.getContext('2d');
+    const imgData=ctx.createImageData(size,size);
+    const d=imgData.data;
+    for(let i=0;i<size*size;i++){ d[i*4]=128; d[i*4+1]=128; d[i*4+2]=255; d[i*4+3]=255; }
+    // Two passes: a field of larger, irregularly-shaped air pockets (elongated,
+    // randomly rotated ellipses — real crumb holes, not uniform round nodules
+    // that read like a Ferrero shell), plus a finer secondary layer of tiny pores.
+    const passes = [
+        { count: Math.round(size*size*0.007), rMin:2.2, rMax:6.5, depthMin:0.40, depthMax:0.68, elongate:true },
+        { count: Math.round(size*size*0.022), rMin:0.6, rMax:1.9, depthMin:0.18, depthMax:0.36, elongate:false },
+    ];
+    passes.forEach(cfg=>{
+        for(let b=0;b<cfg.count;b++){
+            const bx=Math.random()*size, by=Math.random()*size;
+            const rBase=cfg.rMin+Math.random()*(cfg.rMax-cfg.rMin);
+            const aspect = cfg.elongate ? (1.1+Math.random()*1.6) : (1.0+Math.random()*0.35);
+            const angle = Math.random()*Math.PI;
+            const cosA=Math.cos(angle), sinA=Math.sin(angle);
+            const rx=rBase, ry=rBase/aspect;
+            const depth=cfg.depthMin+Math.random()*(cfg.depthMax-cfg.depthMin);
+            const rMax=Math.max(rx,ry);
+            const minX=Math.max(0,Math.floor(bx-rMax-1)), maxX=Math.min(size-1,Math.ceil(bx+rMax+1));
+            const minY=Math.max(0,Math.floor(by-rMax-1)), maxY=Math.min(size-1,Math.ceil(by+rMax+1));
+            for(let y=minY;y<=maxY;y++){
+                for(let x=minX;x<=maxX;x++){
+                    const dx0=x-bx, dy0=y-by;
+                    const dx=dx0*cosA+dy0*sinA;
+                    const dy=-dx0*sinA+dy0*cosA;
+                    const dist=Math.sqrt((dx/rx)*(dx/rx)+(dy/ry)*(dy/ry));
+                    if(dist>1) continue;
+                    const t=1-dist;
+                    const i=(y*size+x)*4;
+                    const nx=128 - (dx/rx)*depth*140*t;
+                    const ny=128 - (dy/ry)*depth*140*t;
+                    const nz=255 - depth*120*t;
+                    d[i]=Math.max(0,Math.min(255,nx));
+                    d[i+1]=Math.max(0,Math.min(255,ny));
+                    d[i+2]=Math.max(0,Math.min(255,nz));
+                }
+            }
+        }
+    });
+    ctx.putImageData(imgData,0,0);
+    const tex=new THREE.CanvasTexture(canvas);
+    tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+    tex.repeat.set(1.4,1.4);
+    return tex;
+}
+function makeSpongeCrumbRoughnessMap(size=512){
+    const canvas=document.createElement('canvas');
+    canvas.width=canvas.height=size;
+    const ctx=canvas.getContext('2d');
+    const imgData=ctx.createImageData(size,size);
+    const d=imgData.data;
+    for(let i=0;i<size*size;i++){
+        const noise=(Math.sin(i*0.19)*0.5+Math.random()*0.5);
+        const val=Math.round(165+noise*55);
+        d[i*4]=val; d[i*4+1]=val; d[i*4+2]=val; d[i*4+3]=255;
+    }
+    const passes = [
+        { count: Math.round(size*size*0.007), rMin:2.2, rMax:6.5, dark:75, elongate:true },
+        { count: Math.round(size*size*0.022), rMin:0.6, rMax:1.9, dark:50, elongate:false },
+    ];
+    passes.forEach(cfg=>{
+        for(let b=0;b<cfg.count;b++){
+            const bx=Math.random()*size, by=Math.random()*size;
+            const rBase=cfg.rMin+Math.random()*(cfg.rMax-cfg.rMin);
+            const aspect = cfg.elongate ? (1.1+Math.random()*1.6) : (1.0+Math.random()*0.35);
+            const angle = Math.random()*Math.PI;
+            const cosA=Math.cos(angle), sinA=Math.sin(angle);
+            const rx=rBase, ry=rBase/aspect;
+            const rMax=Math.max(rx,ry);
+            const minX=Math.max(0,Math.floor(bx-rMax-1)), maxX=Math.min(size-1,Math.ceil(bx+rMax+1));
+            const minY=Math.max(0,Math.floor(by-rMax-1)), maxY=Math.min(size-1,Math.ceil(by+rMax+1));
+            for(let y=minY;y<=maxY;y++){
+                for(let x=minX;x<=maxX;x++){
+                    const dx0=x-bx, dy0=y-by;
+                    const dx=dx0*cosA+dy0*sinA;
+                    const dy=-dx0*sinA+dy0*cosA;
+                    const dist=Math.sqrt((dx/rx)*(dx/rx)+(dy/ry)*(dy/ry));
+                    if(dist>1) continue;
+                    const i=(y*size+x)*4;
+                    const t=1-dist;
+                    const val=Math.max(0,d[i]-cfg.dark*t);
+                    d[i]=val; d[i+1]=val; d[i+2]=val;
+                }
+            }
+        }
+    });
+    ctx.putImageData(imgData,0,0);
+    const tex=new THREE.CanvasTexture(canvas);
+    tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+    tex.repeat.set(1.4,1.4);
+    return tex;
+}
+function makeSpongeCrumbAOMap(size=512){
+    const canvas=document.createElement('canvas');
+    canvas.width=canvas.height=size;
+    const ctx=canvas.getContext('2d');
+    const imgData=ctx.createImageData(size,size);
+    const d=imgData.data;
+    for(let i=0;i<size*size;i++){ d[i*4]=240; d[i*4+1]=240; d[i*4+2]=240; d[i*4+3]=255; }
+    const passes = [
+        { count: Math.round(size*size*0.007), rMin:2.2, rMax:6.5, dark:90, elongate:true },
+        { count: Math.round(size*size*0.022), rMin:0.6, rMax:1.9, dark:60, elongate:false },
+    ];
+    passes.forEach(cfg=>{
+        for(let b=0;b<cfg.count;b++){
+            const bx=Math.random()*size, by=Math.random()*size;
+            const rBase=cfg.rMin+Math.random()*(cfg.rMax-cfg.rMin);
+            const aspect = cfg.elongate ? (1.1+Math.random()*1.6) : (1.0+Math.random()*0.35);
+            const angle = Math.random()*Math.PI;
+            const cosA=Math.cos(angle), sinA=Math.sin(angle);
+            const rx=rBase, ry=rBase/aspect;
+            const rMax=Math.max(rx,ry);
+            const minX=Math.max(0,Math.floor(bx-rMax-1)), maxX=Math.min(size-1,Math.ceil(bx+rMax+1));
+            const minY=Math.max(0,Math.floor(by-rMax-1)), maxY=Math.min(size-1,Math.ceil(by+rMax+1));
+            for(let y=minY;y<=maxY;y++){
+                for(let x=minX;x<=maxX;x++){
+                    const dx0=x-bx, dy0=y-by;
+                    const dx=dx0*cosA+dy0*sinA;
+                    const dy=-dx0*sinA+dy0*cosA;
+                    const dist=Math.sqrt((dx/rx)*(dx/rx)+(dy/ry)*(dy/ry));
+                    if(dist>1) continue;
+                    const i=(y*size+x)*4;
+                    const t=1-dist;
+                    const val=Math.max(0,d[i]-cfg.dark*t);
+                    d[i]=val; d[i+1]=val; d[i+2]=val;
+                }
+            }
+        }
+    });
+    ctx.putImageData(imgData,0,0);
+    const tex=new THREE.CanvasTexture(canvas);
+    tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+    tex.repeat.set(1.4,1.4);
+    return tex;
+}
+function getSpongeCrumbMaps(){
+    if(!window._spongeCrumbMapsCache){
+        window._spongeCrumbMapsCache = {
+            normal: makeSpongeCrumbNormalMap(),
+            rough: makeSpongeCrumbRoughnessMap(),
+            ao: makeSpongeCrumbAOMap(),
+        };
+    }
+    return window._spongeCrumbMapsCache;
+}
+function removeSliceFaces(){
+    if(_sliceFaceGroup){
+        _disposeDecorGroup(_sliceFaceGroup, false);
+        scene.remove(_sliceFaceGroup);
+        _sliceFaceGroup = null;
+    }
+}
+// Perturbs the sampled radius profile with layered noise so the cut face's
+// outer silhouette reads as a rough, torn edge instead of a razor-straight
+// cut line — like a real slice pulled from the cake, not a laser-cut wedge.
+function applyEdgeJaggedness(profile){
+    // Outward-only bump so the torn edge never dips BELOW the cake's real
+    // surface radius — a shrink would open a visible gap/hole behind the
+    // cut face, since the two clip planes only cut by angle, not radius.
+    const AMP_FRAC = 0.035;
+    for(let i=0;i<profile.length;i++){
+        const r = profile[i].r;
+        if(r < 0.001) continue;
+        const n1 = Math.sin(i*0.55)*0.5 + Math.sin(i*1.7+1.3)*0.3 + Math.sin(i*3.9+0.4)*0.2;
+        const hashSeed = Math.sin(i*12.9898)*43758.5453;
+        const rnd = hashSeed - Math.floor(hashSeed);
+        const combined = Math.abs(n1*0.5 + (rnd-0.5)*1.0);
+        profile[i].r = r + combined*r*AMP_FRAC;
+    }
+}
+function buildSliceFaces(flavor, filling, rotationDeg, spanDeg, tierLayersArr, tierFlavorsArr, tierFillingsArr){
+    removeSliceFaces();
+    const ref = currentBase || currentFrost || currentIcing;
+    if(!ref) return;
+    ref.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(ref);
+    const cx = (box.min.x+box.max.x)*0.5, cz=(box.min.z+box.max.z)*0.5;
+    const yMin = box.min.y, yMax = box.max.y;
+    const SAMPLES = 90;
+
+    // Compute ONE fixed set of tier height boundaries from a single reference
+    // angle, then reuse them for BOTH cut walls below — this is what keeps
+    // the seam lines level between the two faces instead of each wall
+    // detecting slightly different tier heights on its own.
+    const referenceProfile = _sliceSampleRadiusProfile(0, cx, cz, yMin, yMax, SAMPLES);
+    const referenceSegments = _sliceDetectTierSegments(referenceProfile);
+    const tierYBoundaries = referenceSegments.map(seg=>({
+        y0: referenceProfile[seg.start].y,
+        y1: referenceProfile[seg.end].y,
+    }));
+    const crumbMaps = getSpongeCrumbMaps();
+    const spongeMat = new THREE.MeshStandardMaterial({ vertexColors:true, side:THREE.DoubleSide, roughness:0.94, metalness:0.0, envMapIntensity:0.28, normalMap:crumbMaps.normal, normalScale:new THREE.Vector2(0.75,0.75), roughnessMap:crumbMaps.rough, aoMap:crumbMaps.ao, aoMapIntensity:0.55, polygonOffset:true, polygonOffsetFactor:-4, polygonOffsetUnits:-4 });
+    // Filling band gets NO crumb normal/roughness/AO map — it's a smooth,
+    // moist layer, not more sponge — but kept matte like the rest of the
+    // slice rather than glossy/wet-looking.
+    const fillingMat = new THREE.MeshStandardMaterial({ vertexColors:true, side:THREE.DoubleSide, roughness:0.70, metalness:0.0, envMapIntensity:0.20 });
+    const group = new THREE.Group();
+    group.userData.noSliceClip = true;
+    [rotationDeg, rotationDeg+spanDeg].forEach(deg=>{
+        const thetaRad = deg*Math.PI/180;
+        const profile = _sliceSampleRadiusProfile(thetaRad, cx, cz, yMin, yMax, SAMPLES);
+        applyEdgeJaggedness(profile);
+        const geo = buildRadialWallGeometryFromProfile(profile, thetaRad, flavor, filling, tierYBoundaries, tierLayersArr || [1,1,1], tierFlavorsArr || [flavor,flavor,flavor], tierFillingsArr || [filling,filling,filling]);
+        if(!geo.attributes.position || geo.attributes.position.count===0) return;
+            if(geo.attributes.uv) geo.setAttribute('uv2', geo.attributes.uv); // aoMap requires a uv2 channel
+        // Single continuous material for the whole wall — using two separate
+        // materials (sponge vs filling) created a hard lighting seam right at
+        // their boundary. Color still comes from vertex colors either way, so
+        // the filling reads correctly without any visible dividing line.
+        const mesh = new THREE.Mesh(geo, spongeMat.clone());
+        mesh.position.set(cx, 0, cz);
+        mesh.castShadow = mesh.receiveShadow = true;
+        group.add(mesh);
+    });
+    scene.add(group);
+    _sliceFaceGroup = group;
+}
+
+function _sliceAngleOf(x, z, cx, cz){
+    let deg = Math.atan2(z-cz, x-cx) * 180/Math.PI;
+    if(deg < 0) deg += 360;
+    return deg;
+}
+
+function _sliceHideToppingsInWedge(rotationDeg, spanDeg){
+    _sliceRestoreToppings();
+    const info = _sliceGetCakeBox();
+    if(!info) return;
+    const allModelArrays = [fruitModels, ferreroModels, kitkatModels, oreoModels];
+    if(typeof barShardModels!=='undefined') allModelArrays.push(barShardModels);
+    if(typeof tobleroneModels!=='undefined') allModelArrays.push(tobleroneModels);
+    allModelArrays.push(candleModels);
+    if(typeof characterModels!=='undefined') allModelArrays.push(characterModels);
+    const a = ((rotationDeg%360)+360)%360;
+    const b = ((rotationDeg+spanDeg)%360+360)%360;
+    allModelArrays.forEach(arr=>{
+        arr.forEach(m=>{
+            const deg = _sliceAngleOf(m.group.position.x, m.group.position.z, info.cx, info.cz);
+            const inWedge = a<b ? (deg>=a && deg<=b) : (deg>=a || deg<=b);
+            if(inWedge && m.group.visible){
+                m.group.visible = false;
+                _sliceHiddenToppings.push(m.group);
+            }
+        });
+    });
+}
+
+function _sliceRestoreToppings(){
+    _sliceHiddenToppings.forEach(g=>{ g.visible = true; });
+    _sliceHiddenToppings = [];
+}
+
+window.CakeSlice = {
+    getActivePlanes(){ return _sliceActive ? _sliceClipPlanes : null; },
+    // Cheap per-frame update used while animating the wedge sweep — only
+    // recomputes the two clip planes (plain math) and reapplies them to the
+    // existing meshes. Skips the expensive cut-face mesh rebuild (raycasting
+    // + geometry generation), which is what was causing the animation lag.
+    updateClipOnly(rotationDeg, spanDeg){
+        if(!_sliceActive){
+            renderer.localClippingEnabled = true;
+            _sliceActive = true;
+        }
+        _sliceClipPlanes = buildSliceClipPlanes(rotationDeg, spanDeg);
+        applySliceClipping(_sliceClipPlanes);
+        if(typeof window._requestRender==='function') window._requestRender(200);
+    },
+    enable(ctx){
+        _sliceActive = true;
+        const rotationDeg = (ctx && ctx.rotationDeg) || 0;
+        const spanDeg = (ctx && ctx.spanDeg) || 40;
+        _sliceLastRotationDeg = rotationDeg;
+        _sliceLastSpanDeg = spanDeg;
+        _sliceClipPlanes = buildSliceClipPlanes(rotationDeg, spanDeg);
+        applySliceClipping(_sliceClipPlanes);
+        const _flavorFallback = (ctx&&ctx.flavor)||'Vanilla';
+        const _tierFillingsArr = (ctx&&ctx.tierFillings)||[(ctx&&ctx.filling)||'No Filling',(ctx&&ctx.filling)||'No Filling',(ctx&&ctx.filling)||'No Filling'];
+        buildSliceFaces(_flavorFallback, (ctx&&ctx.filling)||'No Filling', rotationDeg, spanDeg, (ctx&&ctx.tierLayers)||[1,1,1], (ctx&&ctx.tierFlavors)||[_flavorFallback,_flavorFallback,_flavorFallback], _tierFillingsArr);
+        _sliceHideToppingsInWedge(rotationDeg, spanDeg);
+        if(typeof window._requestRender==='function') window._requestRender(500);
+    },
+       update(ctx){
+        _sliceActive = true;
+        this.enable(ctx);
+    },
+    reapply(){
+        if(!_sliceActive || !_sliceClipPlanes) return;
+        applySliceClipping(_sliceClipPlanes);
+    },
+    // Call this any time a fruit/decoration is added or rebuilt WHILE slicing
+    // is already active (e.g. the customer changes grams or clicks "All
+    // Fruits" without touching the Slice toggle). No-op when not sliced.
+    refreshDecorations(){
+        if(!_sliceActive) return;
+        applySliceClipping(_sliceClipPlanes);
+        _sliceHideToppingsInWedge(_sliceLastRotationDeg, _sliceLastSpanDeg);
+    },
+    disable(){
+        _sliceActive = false;
+        _sliceClipPlanes = null;
+        applySliceClipping(null);
+        removeSliceFaces();
+        _sliceRestoreToppings();
+        if(typeof window._requestRender==='function') window._requestRender(500);
+    },
+    isEnabled(){ return _sliceActive; },
+};
+
 window._viewerReady=true;
 (function(){
     let activeFruitPanelIdx = -1;
-   const FRUIT_EMOJI = { Strawberry:'🍓', Blueberry:'🫐', Raspberry:'🍇', Cherry:'🍒', 'Mango Slice':'🥭', 'Kiwi Slice':'🥝', 'Peach Slice':'🍑', 'Banana Slice':'🍌' };
+   const FRUIT_EMOJI = { Strawberry:'🍓', Blueberry:'🫐', Raspberry:'🍇', Cherry:'🍒', Leaf:'🍃' };
     // Rotation axis per fruit — Strawberry/Raspberry use X for placement so we rotate Y instead
-  const FRUIT_ROT_AXIS = { Strawberry:'z', Raspberry:'z', Blueberry:'z', Cherry:'z', 'Mango Slice':'z', 'Kiwi Slice':'z', 'Peach Slice':'z', 'Banana Slice':'z' };
+  const FRUIT_ROT_AXIS = { Strawberry:'z', Raspberry:'z', Blueberry:'z', Cherry:'z' };
     const panel    = document.getElementById('fruitRotPanel');
     const range    = document.getElementById('fruitRotPanelRange');
     const degLabel = document.getElementById('fruitRotPanelDeg');
-    const preview  = document.getElementById('fruitRotPanelPreview');
-    const emojiEl  = document.getElementById('fruitRotPanelEmoji');
-    const nameEl   = document.getElementById('fruitRotPanelName');
+    const preview  = bindIconText(document.getElementById('fruitRotPanelPreview'));    const emojiEl  = bindIconText(document.getElementById('fruitRotPanelEmoji'));    const nameEl   = document.getElementById('fruitRotPanelName');
 
     // Move panel into the viewer, anchored below the brightness control
     const viewer = document.getElementById('viewerEl');
@@ -8131,9 +11049,7 @@ document.getElementById('fruitRotPanelReset').addEventListener('click', () => {
     const panel    = document.getElementById('chocoRotInlinePanel');
     const range    = document.getElementById('chocoRotInlineRange');
     const degLabel = document.getElementById('chocoRotInlineDeg');
-    const preview  = document.getElementById('chocoRotInlinePreview');
-    const emojiEl  = document.getElementById('chocoRotInlineEmoji');
-    const nameEl   = document.getElementById('chocoRotInlineName');
+    const preview  = bindIconText(document.getElementById('chocoRotInlinePreview'));    const emojiEl  = bindIconText(document.getElementById('chocoRotInlineEmoji'));    const nameEl   = document.getElementById('chocoRotInlineName');
 
     const viewer = document.getElementById('viewerEl');
     if(viewer) viewer.appendChild(panel);
@@ -8268,15 +11184,37 @@ window._showChocoRotatePanel = showChocoPanel;
         range.value = d;
         degLabel.textContent = d + '°';
     }
+    function refreshSizeButtons(){
+        const models = typeof window.getCharacterModels==='function' ? window.getCharacterModels() : [];
+        const m = models[activeIdx];
+        const current = m ? (m.sizeInches || 4) : 4;
+        document.querySelectorAll('.character-move-size').forEach(btn=>{
+            const on = parseInt(btn.dataset.size) === current;
+            btn.style.background = on ? 'var(--caramel)' : 'var(--cream)';
+            btn.style.color = on ? '#fff' : 'var(--brown-mid)';
+        });
+    }
     function showPanel(idx){
         activeIdx = idx;
         const models = typeof window.getCharacterModels==='function' ? window.getCharacterModels() : [];
         const m = models[idx];
         nameEl.textContent = m ? m.key : 'character';
         refreshDeg();
+        refreshSizeButtons();
         panel.style.display = 'block';
+        window._lastPlacedCharacterIdx = idx;
     }
     function hidePanel(){ panel.style.display = 'none'; activeIdx = -1; }
+    document.querySelectorAll('.character-move-size').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const sz = parseInt(btn.dataset.size);
+            if(activeIdx>=0 && typeof window.resizeCharacterModel==='function' && window.resizeCharacterModel(activeIdx, sz)){
+                refreshSizeButtons();
+                if(typeof window._updateAll === 'function') window._updateAll();
+                if(typeof showToast === 'function') showToast(`📏 Resized to ${sz}"`, 1400);
+            }
+        });
+    });
 
     range.addEventListener('input', function(){
         const d = parseInt(this.value);
@@ -8299,6 +11237,7 @@ window._showChocoRotatePanel = showChocoPanel;
     });
     document.getElementById('characterMovePanelDelete').addEventListener('click', ()=>{
         if(activeIdx>=0 && typeof window.removeCharacterModel==='function') window.removeCharacterModel(activeIdx);
+        window._lastPlacedCharacterIdx = -1;
         hidePanel();
         if(typeof window.getCharacterModels==='function'){
             const remaining = window.getCharacterModels().length;
@@ -8356,30 +11295,38 @@ window._dumpScene = function(){
 <script>
 const TIER_INDEX = {'Single':0,'Two-tier':1,'Three-tier':2};
 function getTierIdx(){ return TIER_INDEX[state.tier] ?? 0; }
+const CAKE_STYLE_DB   = @json($tierPriceMaps['cake_style']);
+const BASE_ICING_DB   = @json($tierPriceMaps['base_icing']);
+const TEXTURE_DB      = @json($tierPriceMaps['texture']);
+const DRIP_DB         = @json($tierPriceMaps['drip']);
+const SPRINKLE_DB     = @json($tierPriceMaps['sprinkle']);
+const CHOCO_TIERED_DB = @json($tierPriceMaps['choco']);
 
-// Cake Style — priced against whichever style is currently ACTIVE
-const CAKE_STYLE_TIER_PRICES = {
+const CAKE_STYLE_TIER_PRICES = Object.assign({
     'Smooth Buttercream': [0,250,450],
     'Semi-naked Style':   [200,400,600],
     'Fondant Smooth':     [350,750,1100],
     'Ombre Style':        [250,500,750],
-};
-// Frosting section — Shell Border only charges this when it's layered as an
-// EXTRA overlay on top of Semi-naked/Ombre (when it IS the cake style itself,
-// it's already covered by CAKE_STYLE_TIER_PRICES above).
-const FROSTING_SHELL_TIER_PRICES   = [0,100,180];
-const FROSTING_SUGAR_TIER_PRICES   = [150,300,450];
-const FROSTING_TEXTURE_TIER_PRICES = [150,300,450];
-const FROSTING_ROSETTE_TIER_PRICES = [100,300,500];
-const ADDON_TIER_PRICES = {
-    'Drip':                [180,300,450],
-    'Cylinder Sprinkles':  [30,50,70],
-    'Sphere Sprinkles':    [30,50,70],
-    'Chocolate Curls':     [45,80,120],
-    'Chocolate Sprinkles': [30,50,75],
-    'Crushed Peanuts':     [35,60,90],
-};
+}, CAKE_STYLE_DB);
 
+// DB names this section, but the code refers to the same option as 'Smooth Buttercream'
+// (it's both the default cake style AND the Shell Border overlay toggle).
+const FROSTING_SHELL_TIER_PRICES   = BASE_ICING_DB['Shell Border'] || [0,100,180];
+const FROSTING_SUGAR_TIER_PRICES   = BASE_ICING_DB['Sugar Icing']  || [150,300,450];
+const FROSTING_ROSETTE_TIER_PRICES = BASE_ICING_DB['Rosettes']     || [100,300,500];
+const FROSTING_TEXTURE_TIER_PRICES = TEXTURE_DB['Textured Buttercream'] || [150,300,450];
+
+const ADDON_TIER_PRICES = {
+    'Drip':                DRIP_DB['Drip'] || [180,300,450],
+    'Cylinder Sprinkles':  SPRINKLE_DB['Cylinder Sprinkles'] || [30,50,70],
+    'Sphere Sprinkles':    SPRINKLE_DB['Sphere Sprinkles']   || [30,50,70],
+    'Chocolate Curls':     CHOCO_TIERED_DB['Chocolate Curls']     || [45,80,120],
+    'Chocolate Sprinkles': CHOCO_TIERED_DB['Chocolate Sprinkles'] || [30,50,75],
+    'Crushed Peanuts':     CHOCO_TIERED_DB['Crushed Peanuts']     || [35,60,90],
+};
+const CHOCO_PIECE_PRICES = Object.assign({'Ferrero-style Ball':55,'Kitkat Sticks':30,'Oreo Cookie':20,'Chocolate Bar Shard':40,'Toblerone Triangle':50},@json($priceMaps['choco']));
+const CANDLE_PRICE_MAP = @json($priceMaps['candle']);
+const CANDLE_PIECE_PRICE = CANDLE_PRICE_MAP['Number Candles'] || CANDLE_PRICE_MAP['Number Candles (0–9)'] || 20;
 // Keeps every priced button's visible text AND data-price in sync with the
 // currently selected tier, so click handlers that read dataset.price always
 // pick up the right tier-adjusted amount.
@@ -8422,7 +11369,174 @@ function refreshTierPriceLabels(){
         if(state.addons.has(k)) state.addons.set(k, ADDON_TIER_PRICES[k][ti]);
     });
 }
-const CHARACTER_PRICES = {
+function tierCountFor(tier){ return tier==='Three-tier'?3:tier==='Two-tier'?2:1; }
+const LAYER_LINE_LABEL = {1:'No lines',2:'1 line',3:'3 lines'};
+function renderTierLayerRows(){
+    const section = document.getElementById('cakeLayersSection');
+    const wrap = document.getElementById('tierLayerRows');
+    if(!wrap || !section) return;
+    section.style.display = state.shape==='Bundt' ? 'none' : '';
+    const count = tierCountFor(state.tier);
+    while(state.tierLayers.length < 3) state.tierLayers.push(1);
+    while(state.tierFlavors.length < 3) state.tierFlavors.push(state.flavor);
+    while(state.tierFrostings.length < 3) state.tierFrostings.push(state.flavor);
+    while(state.tierFillings.length < 3) state.tierFillings.push('No Filling');
+    const labels = ['Tier 1 (bottom)','Tier 2 (middle)','Tier 3 (top)'];
+    const flavorNames = FLAVOR_NAMES;
+    const fillingNames = Array.from(document.querySelectorAll('#opts-filling [data-filling]')).map(el => el.dataset.filling);
+    wrap.innerHTML = '';
+
+    const ICONS = {
+        base: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21 L12 3 L21 21 Z"/><line x1="7.5" y1="12" x2="16.5" y2="12"/></svg>',
+        frosting: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 21h16"/><path d="M12 3v6"/><path d="M8 11c0-2 1-3 4-3s4 1 4 3"/></svg>',
+        filling: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="3" rx="1"/><path d="M4 8c0-2 2-3 4-3h8c2 0 4 1 4 3"/><path d="M4 17c0 2 2 3 4 3h8c2 0 4-1 4-3"/></svg>',
+        lock: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px;"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+    };
+
+    function makeFieldRow(iconSvg, labelText, options, currentVal, onChange){
+        const field = document.createElement('div');
+        field.style.cssText = 'display:flex;flex-direction:column;gap:7px;';
+        const lblRow = document.createElement('div');
+        lblRow.style.cssText = 'display:flex;align-items:center;gap:7px;color:var(--brown-mid);';
+        lblRow.innerHTML = `<span style="display:flex;align-items:center;flex-shrink:0;">${iconSvg}</span><span style="font-size:.70rem;font-weight:700;color:var(--brown-mid);font-family:var(--font-display);text-transform:uppercase;letter-spacing:.05em;">${labelText}</span>`;
+        field.appendChild(lblRow);
+        const select = document.createElement('select');
+        select.style.cssText = 'width:100%;padding:11px 13px;border:1.5px solid var(--border-dk);border-radius:10px;background:var(--surface);color:var(--text);font-size:.80rem;font-weight:600;font-family:var(--font-display);cursor:pointer;transition:border-color .15s,box-shadow .15s;';
+        select.addEventListener('mouseenter', ()=>{ select.style.borderColor='var(--caramel)'; });
+        select.addEventListener('mouseleave', ()=>{ select.style.borderColor='var(--border-dk)'; });
+        select.addEventListener('focus', ()=>{ select.style.boxShadow='0 0 0 3px rgba(200,137,74,.18)'; });
+        select.addEventListener('blur', ()=>{ select.style.boxShadow=''; });
+        options.forEach(name=>{
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            if(currentVal === name) opt.selected = true;
+            select.appendChild(opt);
+        });
+        select.addEventListener('change', ()=> onChange(select.value));
+        field.appendChild(select);
+        return field;
+    }
+
+    for(let i=0;i<count;i++){
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;flex-direction:column;gap:18px;background:var(--warm-white);border:1.5px solid var(--border-dk);border-radius:16px;padding:18px 18px 20px;box-shadow:var(--shadow-xs);';
+
+        const topRow = document.createElement('div');
+        topRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:14px;border-bottom:1px dashed var(--border);';
+        const lbl = document.createElement('span');
+        lbl.style.cssText = 'font-size:.90rem;font-weight:800;color:var(--brown-deep);font-family:var(--font-display);letter-spacing:-0.01em;';
+        lbl.textContent = labels[i];
+        topRow.appendChild(lbl);
+        const btnGroup = document.createElement('div');
+        btnGroup.style.cssText = 'display:flex;gap:6px;';
+        [1,2,3].forEach(n=>{
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = n+(n>1?' layers':' layer');
+            const active = (state.tierLayers[i]||1) === n;
+            b.style.cssText = `padding:8px 13px;border-radius:10px;border:1.5px solid ${active?'var(--caramel)':'var(--border)'};background:${active?'var(--caramel)':'var(--surface)'};color:${active?'#fff':'var(--text-muted)'};font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;`;
+            b.title = LAYER_LINE_LABEL[n];
+            b.addEventListener('click',()=>{
+                state.tierLayers[i]=n;
+                if(n>1 && (!state.tierFillings[i] || state.tierFillings[i]==='No Filling')){
+                    state.tierFillings[i]='Chocolate';
+                    if(i===0) state.filling='Chocolate';
+                }
+                renderTierLayerRows();
+                updateAll();
+            });
+            btnGroup.appendChild(b);
+        });
+        topRow.appendChild(btnGroup);
+        row.appendChild(topRow);
+
+        const fieldsWrap = document.createElement('div');
+        fieldsWrap.style.cssText = 'display:flex;flex-direction:column;gap:16px;';
+
+        // Base Cake Flavour — colors the INSIDE crumb (only visible when sliced)
+        fieldsWrap.appendChild(makeFieldRow(ICONS.base, 'Base Cake Flavour', flavorNames, state.tierFlavors[i]||state.flavor, (val)=>{
+            state.tierFlavors[i] = val;
+            if(i===0) state.innerFlavor = val;
+            updateAll();
+        }));
+
+        // Filling — the line(s) BETWEEN this tier's own layers
+        const fillingField = makeFieldRow(ICONS.filling, 'Filling', fillingNames, state.tierFillings[i]||'No Filling', (val)=>{
+            state.tierFillings[i] = val;
+            if(i===0) state.filling = val;
+            updateAll();
+        });
+        const hasMultiLayer = (state.tierLayers[i]||1) > 1;
+        fillingField.style.opacity = hasMultiLayer ? '1' : '0.42';
+        fillingField.style.pointerEvents = hasMultiLayer ? '' : 'none';
+        if(!hasMultiLayer && state.tierFillings[i] !== 'No Filling') state.tierFillings[i] = 'No Filling';
+        fieldsWrap.appendChild(fillingField);
+        if(!hasMultiLayer){
+            const hint = document.createElement('div');
+            hint.style.cssText = 'font-size:.66rem;color:var(--text-muted);font-family:var(--font-display);margin-top:-8px;display:flex;align-items:center;';
+            hint.innerHTML = ICONS.lock + 'Set 2+ layers on this tier to unlock a filling';
+            fieldsWrap.appendChild(hint);
+        }
+
+        // Frosting — colors the OUTSIDE of this tier
+        fieldsWrap.appendChild(makeFieldRow(ICONS.frosting, 'Frosting', flavorNames, state.tierFrostings[i]||state.flavor, (val)=>{
+            state.tierFrostings[i] = val;
+            if(i===0) state.flavor = val; // keep tier 1 in sync with the rest of the app
+            updateAll();
+        }));
+
+        row.appendChild(fieldsWrap);
+        wrap.appendChild(row);
+    }
+
+    const fillingSection = document.getElementById('fillingSection');
+    if(fillingSection) fillingSection.style.display = 'none';
+}
+
+const TIER_FRUIT_BORDER_OPTIONS = ['None','Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
+function renderTierFruitBorderRows(){
+    const section = document.getElementById('tierFruitBorderSection');
+    const wrap = document.getElementById('tierFruitBorderRows');
+    if(!section || !wrap) return;
+    const isTiered = state.tier !== 'Single';
+    section.style.display = isTiered ? '' : 'none';
+    if(!isTiered) return;
+
+    while(state.tierFruitBorders.length < 3) state.tierFruitBorders.push('None');
+    const count = tierCountFor(state.tier);
+    const labels = ['Tier 1 (bottom)','Tier 2 (middle)','Tier 3 (top)'];
+    wrap.innerHTML = '';
+    for(let i=0;i<count;i++){
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;';
+        const lbl = document.createElement('span');
+        lbl.style.cssText = 'font-size:.72rem;font-weight:700;color:var(--brown-mid);font-family:var(--font-display);flex-shrink:0;';
+        lbl.textContent = labels[i];
+        row.appendChild(lbl);
+
+        const select = document.createElement('select');
+        select.style.cssText = 'flex:1;padding:8px 10px;border:1.5px solid var(--border-dk);border-radius:9px;background:var(--surface);color:var(--text);font-size:.74rem;font-weight:600;font-family:var(--font-display);cursor:pointer;';
+        TIER_FRUIT_BORDER_OPTIONS.forEach(name=>{
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name === 'None' ? 'No fruit border' : (GRAM_FRUIT_LABELS[name] || name);
+            if((state.tierFruitBorders[i]||'None') === name) opt.selected = true;
+            select.appendChild(opt);
+        });
+        select.addEventListener('change', ()=>{
+            state.tierFruitBorders[i] = select.value;
+            if(typeof window.buildTierFruitBorder==='function'){
+                window.buildTierFruitBorder(i, select.value === 'None' ? null : select.value);
+            }
+            updateAll();
+        });
+        row.appendChild(select);
+        wrap.appendChild(row);
+    }
+}
+
+const CHARACTER_PRICES = Object.assign({
     'SpongeBob':350,'Squidward':350,'Patrick Star':350,'Gary':350,
     "Squidward's House":500,"SpongeBob's House":500,"Patrick's House":500,
     'Ben 10':350,'Ben 10 RV':350,'Gwen':350,'Lolo Max':350,
@@ -8432,9 +11546,11 @@ const CHARACTER_PRICES = {
     'Lightning McQueen':350,'Sally':350,
     'Mickey Mouse':350,'Minnie Mouse':350,'Mickey Mouse Clubhouse':500,
     'Cocomelon':350,
-};
-// Final Cake Type list: Sponge Cake, Chiffon Cake, Cheesecake — Butter Cake removed completely.
-const CAKE_TYPE_GENERIC   = ['Sponge Cake','Chiffon Cake','Cheesecake'];
+}, @json($characterPrices));
+const CHARACTER_SIZE_OPTIONS = [3,4,5,6]; // inches (height)
+const CHARACTER_SIZE_PRICE_MULT = {3:0.75, 4:1.0, 5:1.3, 6:1.65};
+const CAKE_TYPE_GENERIC   = @json($components->get('cake_type', collect())->pluck('name'));
+const FLAVOR_NAMES        = @json($flavorComponents->pluck('name'));
 // No Cake Type auto-defines its own flavor anymore — Flavor is always a separate pick,
 // including for Cheesecake (Blueberry Cheesecake, Strawberry Cheesecake, etc. are now
 // Cake Type "Cheesecake" + Flavor, not standalone Cake Types). Left empty and referenced
@@ -8449,26 +11565,32 @@ const CHEESECAKE_FLAVOR_MAP = {
     'Strawberry': 'Strawberry Cheesecake',
     'Mango':      'Mango Cheesecake',
 };
-// Optional per-type upcharge — defaults to 0 so existing pricing is unaffected
-// unless a type is explicitly priced here. Tune freely.
-const CAKE_TYPE_PRICES = {
-    'Sponge Cake':0,'Chiffon Cake':0,'Cheesecake':150,
-};
+const CAKE_TYPE_PRICES = @json($priceMaps['cake_type']);
 const CAKE_TYPE_SHAPE_RESTRICTIONS = {
     'Cheesecake': ['Number','Bundt'],
 };
 
-// ── FILLING (between the cake layers — separate from Cake Type/Flavor) ──
-const FILLING_PRICES = {
-    'No Filling':0,'Vanilla Cream':40,'Chocolate Ganache':60,'Cream Cheese':60,
-    'Strawberry':50,'Blueberry':50,'Biscoff':70,
-};
+const FILLING_PRICES = @json($priceMaps['filling']);
 const FONDANT_VAL    ='Fondant Smooth';
 const SUGAR_ICING_VAL='Sugar Icing';
 const BASE_COAT_VALS =['Smooth Buttercream','Sugar Icing'];
-const SHAPE_PRICES   ={'Round':350,'Square':500,'Heart':520,'Bundt':480,'Sponge Cake':300,'Chiffon':320,'Two-tier Round':950,'Three-tier Round':1400,'Two-tier Heart':1400,'Three-tier Heart':2000,'Number':600};
-const ROUND_SIZE_PRICES={4:180,5:220,6:280,7:350,8:420,9:500,10:600};
-const FRUIT_KEYS=['Strawberry','Blueberry','Raspberry','Cherry','Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
+const _tierShapeDb = @json($tierShapePrices);
+const SHAPE_PRICES = Object.assign(
+    {'Round':350,'Square':500,'Heart':520,'Bundt':480,'Sponge Cake':300,'Chiffon':320,
+     'Two-tier Round':950,'Three-tier Round':1400,'Two-tier Square':1200,'Three-tier Square':1800,
+     'Two-tier Heart':1400,'Three-tier Heart':2000,'Number':600},
+    @json($priceMaps['shape']),
+    _tierShapeDb['Round']  ? {'Two-tier Round':_tierShapeDb['Round'].two,   'Three-tier Round':_tierShapeDb['Round'].three}   : {},
+    _tierShapeDb['Square'] ? {'Two-tier Square':_tierShapeDb['Square'].two, 'Three-tier Square':_tierShapeDb['Square'].three} : {},
+    _tierShapeDb['Heart']  ? {'Two-tier Heart':_tierShapeDb['Heart'].two,   'Three-tier Heart':_tierShapeDb['Heart'].three}   : {}
+);
+const ROUND_SIZE_PRICES=Object.assign({4:180,5:220,6:280,7:350,8:420,9:500,10:600},@json($roundSizePrices));
+const FRUIT_KEYS=['Strawberry','Blueberry','Raspberry','Cherry','Leaf'];
+// Sold by weight instead of per piece — no drag & drop, the baker arranges these.
+const FRUIT_GRAM_PRICES_PER_100G = {'Mango Slice':40,'Kiwi Slice':30,'Peach Slice':35,'Banana Slice':35};
+const GRAM_FRUIT_KEYS   = Object.keys(FRUIT_GRAM_PRICES_PER_100G);
+const GRAM_FRUIT_LABELS = {'Mango Slice':'Mango Cube','Kiwi Slice':'Kiwi Slice','Peach Slice':'Peach Slice','Banana Slice':'Banana Slice'};
+const GRAM_STEP = 50, GRAM_MIN = 50, GRAM_MAX = 1000, GRAM_DEFAULT = 100;
 const PLAQUE_SHAPE_FILES = {
     'Square':'plaque_square','Rectangle':'plaque_rectangle','Circle':'plaque_circle',
     'Heart':'plaque_heart','Oval':'plaque_oval',
@@ -8477,16 +11599,20 @@ const CAKE_STYLE_VALS_INIT = ['Smooth Buttercream','Semi-naked Style','Fondant S
 const state={
     shape:'Round', tier:'Single', roundSize:6,
     numberDigits:1, numberChoice:0, numberTens:1, numberUnits:0,
-    cakeType:'Sponge Cake',
-    flavor:'Vanilla',
+    cakeType:@json($components->get('cake_type', collect())->first()->name ?? 'Sponge Cake'),
+       flavor:@json($firstFlavor->name ?? 'Vanilla'),
+    innerFlavor:@json($firstFlavor->name ?? 'Vanilla'),
     filling:'No Filling',
-    frostings:new Set(['Smooth Buttercream']),
+    frostings:new Set(),
     addons:new Map(),
     hasDrip:false, dripFlavor:'Vanilla',
 icingColor:'#FFFFFF', icingColorName:'White', hasCustomIcingColor:false,
     rosettePlacement:'Border', rosetteColor:'#FFFFFF', rosetteColorName:'White',
     ombreTopColor:'#F7A8C4', ombreBottomColor:'#8A6AC8',
     placedFruits:[],
+    fruitGrams:{},
+    tierFruitBorders:['None','None','None'], // per-tier border fruit for Two-tier/Three-tier
+    allFruitsAssorted:false,
     placedFerrero:[],
     kitkatOrientation:'standing',
     placedKitkat:[],
@@ -8497,11 +11623,18 @@ placedBarShard:[],
     tobleroneFlavor:'Chocolate',
   placedCandles:[],
   chocoCurlsPlacement:'middle',
+  sliceEnabled:false,
+  sliceRotation:60,
+  tierLayers:[1,1,1], // index 0 = bottom tier, 1 = middle, 2 = top
+tierFlavors:[@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla')], // per-tier BASE CAKE FLAVOR (inside crumb color)
+tierFrostings:[@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla')], // per-tier FROSTING (outside color)
+tierFillings:['No Filling','No Filling','No Filling'], // per-tier FILLING (line between layers)
 plaqueShape: 'Square',
     plaqueMessage: '',
     characterTopper: 'Mickey Mouse',
+    characterSize: 4,
 };
-function showToast(msg,duration=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration);}
+function showToast(msg,duration=2800){const t=document.getElementById('toast');t.innerHTML=emojiToSvg(msg);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration);}
 
 function playIcingBagAnimation(){
     const viewer = document.getElementById('viewerEl');
@@ -8597,10 +11730,16 @@ state.shape = newShape;
         const lblMap = {'Round':'Round Size','Square':'Square Size','Heart':'Heart Size','Number':'Number Size'};
         const lbl = document.getElementById('sizeLabelText');
         if(lbl) lbl.textContent = lblMap[state.shape] || 'Cake Size';
-        document.getElementById('sizeSliderWrap').classList.toggle('visible', state.shape==='Round');
+        document.getElementById('sizeSliderWrap').classList.toggle('visible', state.shape==='Round'||state.shape==='Square'||state.shape==='Heart');
         document.getElementById('numberPickerWrap').classList.toggle('visible', state.shape==='Number');
         if(shapeChanged){
-            if(typeof window.clearFruitModels==='function')   window.clearFruitModels();
+            if(typeof window.clearAllTierFruitBorders==='function') window.clearAllTierFruitBorders();
+            state.tierFruitBorders=['None','None','None'];
+            // "All Fruits" is regenerated to fit the new outline, so don't keep the old round layout
+            if(state.allFruitsAssorted && typeof window.clearFruitModels==='function') window.clearFruitModels();
+            // Keep the fruits: remember each one's position as a fraction of the cake,
+            // then _reprojectAllToppings() re-seats them on the new shape after it loads.
+            if(typeof window._saveAllToppingNormals==='function') window._saveAllToppingNormals();
             if(typeof window.clearFerreroModels==='function') window.clearFerreroModels();
             if(typeof window.clearKitkatModels==='function')  window.clearKitkatModels();
             if(typeof window.clearOreoModels==='function')    window.clearOreoModels();
@@ -8629,6 +11768,10 @@ if(typeof window.setDraggingBarShardIdx==='function') window.setDraggingBarShard
         if(state.frostings.has('Smooth Buttercream') && !state.frostings.has('Fondant Smooth')) window._pendingShellReveal = true;
         if(state.frostings.has('Rosettes')) window._pendingRosetteReveal = true;
         if(state.frostings.has('Fondant Smooth')) window._pendingFondantReveal = true;
+        syncPlaqueAvailability();
+        renderTierLayerRows();
+        renderTierFruitBorderRows();
+        syncFruitGramUI();
         redrawFruits();
         updateAll();
         if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape);
@@ -8640,7 +11783,33 @@ document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
         state.tier = el.dataset.tier;
+        if(typeof window._clearGLBPrefetchQueue==='function') window._clearGLBPrefetchQueue();
+
+        const newTierCount = tierCountFor(state.tier);
+        for(let ti=newTierCount; ti<3; ti++){
+            if(state.tierFruitBorders[ti] && state.tierFruitBorders[ti] !== 'None'){
+                state.tierFruitBorders[ti] = 'None';
+                if(typeof window.clearTierFruitBorder==='function') window.clearTierFruitBorder(ti);
+            }
+        }
+        if(state.tier === 'Single'){
+            state.tierFruitBorders = ['None','None','None'];
+            if(typeof window.clearAllTierFruitBorders==='function') window.clearAllTierFruitBorders();
+        }
+
         refreshTierPriceLabels();
+        syncPlaqueAvailability();
+        renderTierLayerRows();
+        renderTierFruitBorderRows();
+        // Keep a "Border"-placement gram fruit following the cake's actual
+        // top tier — otherwise switching Two-tier ↔ Three-tier can leave it
+        // parked on what is now a middle tier instead of the new top.
+        GRAM_FRUIT_KEYS.forEach(k=>{
+            if(state.addons.has(k) && window._gramFruitPlacement && window._gramFruitPlacement[k]==='border'){
+                applyGramFruitVisual(k);
+            }
+        });
+        syncFruitGramUI();
         updateAll();
         showToast(`Prices updated for ${state.tier} cake`, 1800);
     });
@@ -8658,8 +11827,34 @@ document.getElementById('opts-tens').querySelectorAll('.num-opt-sm').forEach(el=
 document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-units').querySelectorAll('.num-opt-sm').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberUnits=parseInt(el.dataset.val);refreshDualPreview();updateAll();});});
 document.getElementById('btnSingleDigit').addEventListener('click',()=>{state.numberDigits=1;document.getElementById('btnSingleDigit').classList.add('active');document.getElementById('btnDualDigit').classList.remove('active');document.getElementById('singleDigitSection').style.display='';document.getElementById('dualDigitSection').classList.remove('visible');updateAll();});
 document.getElementById('btnDualDigit').addEventListener('click',()=>{state.numberDigits=2;document.getElementById('btnDualDigit').classList.add('active');document.getElementById('btnSingleDigit').classList.remove('active');document.getElementById('singleDigitSection').style.display='none';document.getElementById('dualDigitSection').classList.add('visible');refreshDualPreview();updateAll();});
-// ── FLAVOUR ──
-document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.flavor=el.dataset.val;updateAll();});});
+// ── FLAVOUR ── (legacy global picker — now handled per-tier in Cake Layers)
+const _optsFlavorEl = document.getElementById('opts-flavor');
+if(_optsFlavorEl){
+    _optsFlavorEl.querySelectorAll('[data-val]').forEach(el=>{
+        el.addEventListener('click',()=>{
+            _optsFlavorEl.querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));
+            el.classList.add('active');
+            state.flavor=el.dataset.val;
+            state.tierFlavors[0]=el.dataset.val;
+            state.tierFrostings[0]=el.dataset.val;
+            renderTierLayerRows();
+            updateAll();
+        });
+    });
+}
+
+// ── INNER FLAVOR — crumb/inside color only (optional element) ──
+const _optsInnerFlavorEl = document.getElementById('opts-inner-flavor');
+if(_optsInnerFlavorEl){
+    _optsInnerFlavorEl.querySelectorAll('[data-inner-flavor]').forEach(el=>{
+        el.addEventListener('click',()=>{
+            _optsInnerFlavorEl.querySelectorAll('[data-inner-flavor]').forEach(x=>x.classList.remove('active'));
+            el.classList.add('active');
+            state.innerFlavor = el.dataset.innerFlavor;
+            updateAll();
+        });
+    });
+}
 
 // ── CAKE TYPE ──
 function syncCakeTypeUI(){
@@ -8690,7 +11885,6 @@ document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').f
         state.cakeType = el.dataset.cakeType;
         if(state.cakeType === 'Cheesecake' && state.frostings.has(FONDANT_VAL)){
             state.frostings.delete(FONDANT_VAL);
-            state.frostings.add('Smooth Buttercream');
         }
         syncCakeTypeUI();
         syncFrostingUI();
@@ -8708,7 +11902,7 @@ document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEa
         updateAll();
     });
 });
-const CAKE_STYLE_VALS = ['Semi-naked Style','Ombre Style','Fondant Smooth','Smooth Buttercream'];
+const CAKE_STYLE_VALS = ['Semi-naked Style','Ombre Style','Fondant Smooth'];
 const CAKE_STYLE_VALS_ALL = ['Semi-naked Style','Ombre Style','Fondant Smooth','Smooth Buttercream'];
 document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').forEach(el=>{
     el.addEventListener('click',()=>{
@@ -8754,11 +11948,8 @@ document.getElementById('opts-cake-style').querySelectorAll('.frosting-opt').for
 // Don't blindly re-add 'Smooth Buttercream' when Rosettes is the active base icing —
 // Rosettes already occupies that slot, and re-adding it here was silently re-enabling
 // Shell Border underneath Rosettes, producing a "Rosettes + Smooth Buttercream" conflict.
-if(v === 'Smooth Buttercream' && state.frostings.has('Rosettes')){
-    // keep Rosettes as the base icing — just switch off Semi-naked/Ombre/Fondant (done above)
-} else {
-    state.frostings.add(v);
-}
+// Plain Buttercream = no style marker. 'Smooth Buttercream' in the set now means Shell Border only.
+if(v !== 'Smooth Buttercream') state.frostings.add(v);
 
 if(v===FONDANT_VAL){
     state.frostings.delete('Textured Buttercream');
@@ -8766,13 +11957,6 @@ if(v===FONDANT_VAL){
     state.frostings.delete('Smooth Buttercream');
     state.frostings.delete('Rosettes'); // Fondant replaces all base icing/texture options
     window._pendingFondantReveal = true;
-} else if(v==='Smooth Buttercream'){
-    // If Sugar Icing or Rosettes is already the active base icing, don't override it —
-    // just remove the 'Smooth Buttercream' that might have been added above
-    if(state.frostings.has(SUGAR_ICING_VAL) || state.frostings.has('Rosettes')){
-        state.frostings.delete('Smooth Buttercream');
-    }
-    // Textured and other add-ons stay as-is
 }
 // Semi-naked / Ombre: leave any existing Shell Border ('Smooth Buttercream') or Rosettes state untouched
         syncFrostingUI(); updateAll();
@@ -8782,75 +11966,33 @@ allFrostingOpts().forEach(el=>{
     if(el.closest('#opts-cake-style')) return;
     el.addEventListener('click',()=>{
         if(state.frostings.has(FONDANT_VAL)){showToast('Fondant is selected — deselect it first from Cake Style');return;}
-    const v = el.dataset.val;
+        const v = el.dataset.val;
         if(state.shape === 'Bundt' && (v === 'Textured Buttercream' || v === 'Rosettes')){
             showToast(v + ' is not available for Bundt cakes');
             return;
         }
-if(v === 'Smooth Buttercream'){
-            if(activeCakeStyleFn() === 'Semi-naked Style'){
-                // In semi-naked: toggle Shell Border on/off independently
-                // WITHOUT touching the cake style (Semi-naked stays selected)
-                             const shellOn = state.frostings.has('Smooth Buttercream');
-                if(shellOn){
-                    state.frostings.delete('Smooth Buttercream');
-                } else {
-                    // Shell Border, Sugar Icing, and Rosettes are mutually exclusive
-                    // base-icing choices — turning Shell Border on must clear both
-                    // of the others, or two base icings can end up active together.
-                    state.frostings.delete(SUGAR_ICING_VAL);
-                    state.frostings.delete('Rosettes');
-                    state.frostings.add('Smooth Buttercream');
-                    window._pendingShellReveal = true;
-                }
-                // Ensure Semi-naked Style stays as the cake style
-                state.frostings.delete('Fondant Smooth');
-                if(!state.frostings.has('Semi-naked Style')) state.frostings.add('Semi-naked Style');
-                syncFrostingUI(); updateAll();
-                return;
-     } else {
-    // Normal Smooth BC cake style — remove Sugar Icing / Rosettes, ensure Smooth BC is in frostings
-    state.frostings.delete(SUGAR_ICING_VAL);
-    state.frostings.delete('Rosettes');
-    if(!state.frostings.has('Smooth Buttercream')){
-        state.frostings.add('Smooth Buttercream');
-        window._pendingShellReveal = true;
-    }
-}
-        } else if(v === SUGAR_ICING_VAL){
-            if(state.frostings.has(SUGAR_ICING_VAL)){
-                // Already the active base icing — clicking it again does nothing.
-                // Pick a different base icing option (Shell Border / Rosettes) to switch away.
-                return;
-            } else {
-                state.frostings.delete('Smooth Buttercream');
-                state.frostings.delete('Rosettes');
-                state.frostings.add(SUGAR_ICING_VAL);
-                window._pendingIcingReveal = true;
-            }
-    } else if(v === 'Rosettes'){
-            // Rosettes replace the base icing entirely — no Shell Border / Sugar Icing underneath
-            if(state.frostings.has(v)){
-                // Already the active base icing — clicking it again does nothing.
-                // Pick a different base icing option (Shell Border / Sugar Icing) to switch away.
-                return;
-            } else {
+
+        const BASE_ICINGS = ['Smooth Buttercream', SUGAR_ICING_VAL, 'Rosettes'];
+        if(BASE_ICINGS.includes(v)){
+            // Click to select, click again to deselect. Only one base icing at a time.
+            const wasOn = state.frostings.has(v);
+            BASE_ICINGS.forEach(b => state.frostings.delete(b));
+            if(!wasOn){
                 state.frostings.add(v);
-                state.frostings.delete('Smooth Buttercream');
-                state.frostings.delete(SUGAR_ICING_VAL);
-                window._pendingRosetteReveal = true;
-                // If the stored placement collides with a decoration already on the
-                // cake, auto-switch to the first free placement instead of rendering
-                // a broken combo.
-                if(rosetteComboBlockedReason(state.rosettePlacement)){
-                    const ROSETTE_ORDER = ['Border','Full Top','Sides','Cluster Right','Cluster Left'];
-                    const free = ROSETTE_ORDER.find(pl => !addonBlocksRosettePlacement(pl));
-                    if(free){
-                        state.rosettePlacement = free;
-                        document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement===free));
-                        const badge = document.getElementById('rosettePlacementBadge');
-                        if(badge) badge.textContent = 'Selected: ' + free;
-                        showToast('⚠ Switched Rosette placement to '+free+' — the previous spot was taken by another decoration.', 3200);
+                if(v === 'Smooth Buttercream') window._pendingShellReveal = true;
+                else if(v === SUGAR_ICING_VAL) window._pendingIcingReveal = true;
+                else {
+                    window._pendingRosetteReveal = true;
+                    if(rosetteComboBlockedReason(state.rosettePlacement)){
+                        const ROSETTE_ORDER = ['Border','Full Top','Sides','Cluster Right','Cluster Left'];
+                        const free = ROSETTE_ORDER.find(pl => !addonBlocksRosettePlacement(pl));
+                        if(free){
+                            state.rosettePlacement = free;
+                            document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement===free));
+                            const badge = document.getElementById('rosettePlacementBadge');
+                            if(badge) badge.textContent = 'Selected: ' + free;
+                            showToast('⚠ Switched Rosette placement to '+free+' — the previous spot was taken by another decoration.', 3200);
+                        }
                     }
                 }
             }
@@ -8875,12 +12017,12 @@ function syncFrostingUI(){
         state.frostings.delete('Textured Buttercream');
         if(state.frostings.has('Rosettes')){
             state.frostings.delete('Rosettes');
-            if(![...state.frostings].some(f=>BASE_COAT_VALS.includes(f))) state.frostings.add('Smooth Buttercream');
+            
         }
     }
   if(state.cakeType === 'Cheesecake' && state.frostings.has(FONDANT_VAL)){
         state.frostings.delete(FONDANT_VAL);
-        if(![...state.frostings].some(f=>CAKE_STYLE_VALS.includes(f))) state.frostings.add('Smooth Buttercream');
+        
     }
     if(state.shape === 'Bundt' && state.frostings.has(FONDANT_VAL)){
         state.frostings.delete(FONDANT_VAL);
@@ -8916,7 +12058,7 @@ function syncFrostingUI(){
     const rosetteActiveState = state.frostings.has('Rosettes');
 
      if(fondantActive){
-        if(frostingBase)    { frostingBase.style.opacity='0.38'; frostingBase.style.pointerEvents='none'; }
+        if(frostingBase)    { frostingBase.querySelectorAll('.frosting-opt').forEach(el=>{ el.style.opacity='0.38'; el.style.pointerEvents='none'; }); }
         if(frostingSpecial) { frostingSpecial.style.opacity='0.38'; frostingSpecial.style.pointerEvents='none'; }
         if(icingLockOverlay) icingLockOverlay.style.display='flex';
     } else {
@@ -8961,7 +12103,7 @@ document.getElementById('opts-frosting-base').querySelectorAll('.frosting-opt').
         if(lockRosetteBundt && !state.frostings.has('Rosettes')){
             rosetteBaseBtn.style.opacity = '0.38';
             rosetteBaseBtn.style.pointerEvents = 'none';
-        } else {
+        } else if(!fondantActive){
             rosetteBaseBtn.style.opacity = '';
             rosetteBaseBtn.style.pointerEvents = '';
         }
@@ -9098,11 +12240,11 @@ const SPRINKLE_TYPE_LABEL = {
 // Border: Choco Curls loses sides+both, but Middle stays available.
 // Cluster Right/Left: no restrictions at all — everything stays available.
 const ROSETTE_FORWARD_RESTRICT = {
-    'Sides':         { textured:true, sprinkle:['sides','both'] },
-    'Full Top':      { chocoCurlsBlockAll:true, plaque:true, sprinkle:['top','both'] },
     'Border':        { chocoCurls:['sides','both'] },
-    'Cluster Right': {},
-    'Cluster Left':  {},
+    'Full Top':      { chocoCurlsBlockAll:true, plaque:true, characterTopper:true },
+    'Sides':         {},
+    'Cluster Right': { plaque:true, chocoCurls:['sides','both'] },
+    'Cluster Left':  { plaque:true, chocoCurls:['sides','both'] },
 };
 function activeRosettePlacementList(){
     if(!state.frostings.has('Rosettes')) return [];
@@ -9116,6 +12258,7 @@ function rosetteBlocksAddon(kind, value){
         if(!r) continue;
         if(kind==='textured' && r.textured) return `Rosette (${pl}) is active — Textured isn't available with it.`;
         if(kind==='plaque' && r.plaque) return `Rosette (${pl}) is active — Chocolate Plaque isn't available with it.`;
+        if(kind==='characterTopper' && r.characterTopper) return `Rosette (${pl}) is active — Character Toppers aren't available with it.`;
         if(kind==='chocoCurls'){
             if(r.chocoCurlsBlockAll) return `Rosette (${pl}) is active — Choco Curls isn't available with it.`;
             if(r.chocoCurls && r.chocoCurls.includes(value)) return `Rosette (${pl}) is active — Choco Curls (${value}) isn't available with it.`;
@@ -9130,6 +12273,7 @@ function addonBlocksRosettePlacement(pl){
     if(!r) return null;
     if(r.textured && state.frostings.has('Textured Buttercream')) return `Textured is active — remove it first to use Rosette (${pl}).`;
     if(r.plaque && state.addons.has('Chocolate Plaque')) return `Chocolate Plaque is active — remove it first to use Rosette (${pl}).`;
+    if(r.characterTopper && state.addons.has('Character Topper')) return `Character Topper is active — remove it first to use Rosette (${pl}).`;
     if(r.chocoCurlsBlockAll && state.addons.has('Chocolate Curls')) return `Choco Curls is active — remove it first to use Rosette (${pl}).`;
     if(r.chocoCurls && state.addons.has('Chocolate Curls') && r.chocoCurls.includes(state.chocoCurlsPlacement)) return `Choco Curls (${state.chocoCurlsPlacement}) is active — change or remove it first to use Rosette (${pl}).`;
     if(r.sprinkle){
@@ -9155,61 +12299,54 @@ function rosetteComboBlockedReason(comboPlacement){
 function syncRosetteAddonLocks(){
     const rosetteOn = state.frostings.has('Rosettes') && !state.frostings.has(FONDANT_VAL);
     const activePl = activeRosettePlacementList();
-    const lockTextured = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].textured);
-    const lockPlaque   = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].plaque);
+    const lockPlaque = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].plaque);
+    const lockCharacterTopper = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].characterTopper);
     const lockChocoCurlsAll = rosetteOn && activePl.some(pl => ROSETTE_FORWARD_RESTRICT[pl] && ROSETTE_FORWARD_RESTRICT[pl].chocoCurlsBlockAll);
-    const lockedCurls  = new Set();
-    const lockedSprinkle = new Set();
+    const lockedCurls = new Set();
     if(rosetteOn){
         activePl.forEach(pl=>{
             const r = ROSETTE_FORWARD_RESTRICT[pl];
             if(!r) return;
             (r.chocoCurls||[]).forEach(p=>lockedCurls.add(p));
-            (r.sprinkle||[]).forEach(p=>lockedSprinkle.add(p));
         });
     }
-    const texturedBtn = document.querySelector('#opts-frosting-special [data-val="Textured Buttercream"]');
-    if(texturedBtn && lockTextured && !texturedBtn.classList.contains('active')){
-        texturedBtn.style.opacity='0.35'; texturedBtn.style.pointerEvents='none';
-    }
+    const activePlLabel = activePl.join(' + ');
+
+    // Every button below stays fully clickable — never pointer-events:none.
+    // Dimming + a native title tooltip give a heads-up on hover, and the
+    // button's own click handler (Plaque, Choco Curls, Character Topper,
+    // rosette-placement) always shows a clear "why" toast if the action is
+    // actually blocked, so nothing feels broken or unexplained.
     const plaqueBtn = document.getElementById('plaqueToggleBtn');
-    if(plaqueBtn){
-        if(lockPlaque && !state.addons.has('Chocolate Plaque')){
-            plaqueBtn.style.opacity='0.35'; plaqueBtn.style.pointerEvents='none';
-        } else if(!state.addons.has('Chocolate Plaque')){
-            plaqueBtn.style.opacity=''; plaqueBtn.style.pointerEvents='';
-        }
+    if(plaqueBtn && !state.addons.has('Chocolate Plaque')){
+        plaqueBtn.style.opacity = lockPlaque ? '0.45' : '';
+        plaqueBtn.title = lockPlaque ? `Not available with Rosette (${activePlLabel})` : '';
     }
-    // Choco Curls master toggle — fully locked (grayed + unclickable), same
-    // treatment as the Chocolate Plaque button above, whenever the active
-    // rosette placement blocks Choco Curls entirely (e.g. Full Top).
+
+    const characterBtn = document.getElementById('characterToggleBtn');
+    if(characterBtn && !state.addons.has('Character Topper')){
+        characterBtn.style.opacity = lockCharacterTopper ? '0.45' : '';
+        characterBtn.title = lockCharacterTopper ? `Not available with Rosette (${activePlLabel})` : '';
+    }
+
     const chocoCurlsBtn = document.querySelector('#opts-choco .addon-opt[data-val="Chocolate Curls"]');
-    if(chocoCurlsBtn){
-        if(lockChocoCurlsAll && !state.addons.has('Chocolate Curls')){
-            chocoCurlsBtn.style.opacity='0.35'; chocoCurlsBtn.style.pointerEvents='none';
-        } else if(!state.addons.has('Chocolate Curls')){
-            chocoCurlsBtn.style.opacity=''; chocoCurlsBtn.style.pointerEvents='';
-        }
+    if(chocoCurlsBtn && !state.addons.has('Chocolate Curls')){
+        chocoCurlsBtn.style.opacity = lockChocoCurlsAll ? '0.45' : '';
+        chocoCurlsBtn.title = lockChocoCurlsAll ? `Not available with Rosette (${activePlLabel})` : '';
     }
     document.querySelectorAll('.choco-curls-place-btn').forEach(btn=>{
         const p = btn.dataset.placement;
         const locked = (lockChocoCurlsAll || lockedCurls.has(p)) && state.chocoCurlsPlacement!==p;
-        btn.style.opacity = locked ? '0.35' : '';
-        btn.style.pointerEvents = locked ? 'none' : '';
+        btn.style.opacity = locked ? '0.45' : '';
+        btn.title = locked ? `Not available with Rosette (${activePlLabel})` : '';
     });
-    document.querySelectorAll('.sprinkle-place-btn').forEach(btn=>{
-        const p = btn.dataset.placement, type = btn.dataset.type;
-        const isCurrent = window._sprinklePlacement && window._sprinklePlacement[type]===p;
-        const locked = lockedSprinkle.has(p) && !isCurrent;
-        btn.style.opacity = locked ? '0.35' : '';
-        btn.style.pointerEvents = locked ? 'none' : '';
-    });
-    document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(el=>{
+
+    document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement], #opts-rosette-combo-number [data-rosette-placement]').forEach(el=>{
         const target = el.dataset.rosettePlacement;
         const isCurrent = rosetteOn && state.rosettePlacement===target;
-        const locked = !isCurrent && !!rosetteComboBlockedReason(target);
-        el.style.opacity = locked ? '0.35' : '';
-        el.style.pointerEvents = locked ? 'none' : '';
+        const reason = !isCurrent && rosetteComboBlockedReason(target);
+        el.style.opacity = reason ? '0.45' : '';
+        el.title = reason || '';
     });
 }
 function bindRosettePlacementOpts(containerId){
@@ -9283,7 +12420,191 @@ document.getElementById('dripToggleBtn').addEventListener('click',()=>{
 });
 document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.dripFlavor=el.dataset.dripFlavor;updateAll();});});
 document.getElementById('opts-fruits').querySelectorAll('.addon-opt').forEach(el=>{
-    el.addEventListener('click',()=>{const v=el.dataset.val;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');if(typeof window.clearFruitModels==='function')window.clearFruitModels();placedFruitRecord.length=0;state.placedFruits=[];}else{state.addons.set(v,0);}el.classList.toggle('active',state.addons.has(v));updateFruitTray();updateAll();});
+    el.addEventListener('click',()=>{const v=el.dataset.val;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');if(typeof window.removeFruitModelsByName==='function')window.removeFruitModelsByName(v);}else{state.addons.set(v,0);}el.classList.toggle('active',state.addons.has(v));updateFruitTray();updateAll();});
+});
+
+function gramFruitPrice(name, grams){
+    return Math.round((FRUIT_GRAM_PRICES_PER_100G[name]||0) * (grams/100));
+}
+function syncFruitGramUI(){
+    let anyOn=false, parts=[], total=0;
+    const isTieredCake = state.tier !== 'Single';
+    const hint = document.getElementById('gramFruitTierHint');
+    if(hint) hint.style.display = isTieredCake ? 'block' : 'none';
+    document.querySelectorAll('#opts-fruits-grams .fruit-gram-tile').forEach(tile=>{
+        const name = tile.dataset.val;
+        const on   = state.addons.has(name);
+        const g    = state.fruitGrams[name] || GRAM_DEFAULT;
+        tile.classList.toggle('active', on);
+        const stepper = tile.querySelector('.gram-stepper');
+        if(stepper) stepper.style.display = on ? 'flex' : 'none';
+        const valEl = tile.querySelector('.gram-val');
+        if(valEl) valEl.textContent = g;
+        const placeToggle = tile.querySelector('.gram-place-toggle');
+        if(placeToggle) placeToggle.style.display = on ? 'flex' : 'none';
+        let currentPlacement = (window._gramFruitPlacement && window._gramFruitPlacement[name]) || 'middle';
+        // On tiered cakes, "Border" here would silently duplicate the
+        // dedicated "Border Fruit — Per Tier" dropdowns below — that section
+        // is the only place a tier border should be picked from. Hide the
+        // option and bounce anyone already on it back to Middle.
+        // Bundt has a center hole, so "Middle" doesn't apply: hide it and move to Border
+        const isBundtCake = state.shape === 'Bundt' || state.shape === 'Number';
+        const middleBtn = tile.querySelector('.gram-place-btn[data-placement="middle"]');
+        if(middleBtn) middleBtn.style.display = isBundtCake ? 'none' : '';
+        if(isBundtCake && currentPlacement === 'middle'){
+            currentPlacement = 'border';
+            if(typeof window.setGramFruitPlacement==='function') window.setGramFruitPlacement(name, 'border');
+        }
+        const borderBtn = tile.querySelector('.gram-place-btn[data-placement="border"]');
+        if(borderBtn) borderBtn.style.display = isTieredCake ? 'none' : '';
+        if(isTieredCake && currentPlacement === 'border'){
+            currentPlacement = 'middle';
+            if(typeof window.setGramFruitPlacement==='function') window.setGramFruitPlacement(name, 'middle');
+            if(on) applyGramFruitVisual(name);
+        }
+        tile.querySelectorAll('.gram-place-btn').forEach(btn=>{
+            const isActive = btn.dataset.placement === currentPlacement;
+            btn.classList.toggle('active', isActive);
+            btn.style.background = isActive ? 'var(--caramel)' : 'var(--surface)';
+            btn.style.color = isActive ? '#fff' : 'var(--text-muted)';
+        });
+        if(on){ anyOn=true; total += gramFruitPrice(name,g); parts.push(`${GRAM_FRUIT_LABELS[name]||name} ${g}g`); }
+    });
+    const note=document.getElementById('fruitGramsTotalNote'), txt=document.getElementById('fruitGramsTotalText');
+    if(note && txt){
+        note.style.display = anyOn ? 'flex' : 'none';
+        if(anyOn) txt.innerHTML = `<strong>${parts.join(' · ')}</strong> — ₱${total.toLocaleString()} total`;
+    }
+}
+function getLastTierIndex(){
+    return tierCountFor(state.tier) - 1;
+}
+function applyGramFruitVisual(name){
+    const grams = state.fruitGrams[name] || GRAM_DEFAULT;
+    const placement = (window._gramFruitPlacement && window._gramFruitPlacement[name]) || 'middle';
+    const isTiered = state.tier !== 'Single';
+
+    if(placement === 'border' && isTiered){
+        // Border placement on a tiered cake belongs to the per-tier border
+        // system only — routing it there (instead of the whole-cake border
+        // builder) is what stops the same ring from being drawn twice.
+        if(typeof window.clearGramFruitDecoration==='function') window.clearGramFruitDecoration(name);
+        state.tierFruitBorders.forEach((f,i)=>{
+            if(f === name){
+                state.tierFruitBorders[i] = 'None';
+                if(typeof window.clearTierFruitBorder==='function') window.clearTierFruitBorder(i);
+            }
+        });
+        const lastIdx = getLastTierIndex();
+        state.tierFruitBorders[lastIdx] = name;
+        if(typeof window.buildTierFruitBorder==='function') window.buildTierFruitBorder(lastIdx, name);
+        renderTierFruitBorderRows();
+        return;
+    }
+
+    // Not a tiered border — clear this fruit from any per-tier border slot
+    // it may have been left in (e.g. after switching placement away from
+    // Border, or after the tier count changed).
+    let clearedTierBorder = false;
+    state.tierFruitBorders.forEach((f,i)=>{
+        if(f === name){
+            state.tierFruitBorders[i] = 'None';
+            if(typeof window.clearTierFruitBorder==='function') window.clearTierFruitBorder(i);
+            clearedTierBorder = true;
+        }
+    });
+    if(clearedTierBorder) renderTierFruitBorderRows();
+
+    if(typeof window.buildGramFruitDecoration==='function') window.buildGramFruitDecoration(name, grams);
+}
+function clearGramFruitVisual(name){
+    if(typeof window.clearGramFruitDecoration==='function') window.clearGramFruitDecoration(name);
+    let clearedTierBorder = false;
+    state.tierFruitBorders.forEach((f,i)=>{
+        if(f === name){
+            state.tierFruitBorders[i] = 'None';
+            if(typeof window.clearTierFruitBorder==='function') window.clearTierFruitBorder(i);
+            clearedTierBorder = true;
+        }
+    });
+    if(clearedTierBorder) renderTierFruitBorderRows();
+}
+document.querySelectorAll('#opts-fruits-grams .fruit-gram-tile').forEach(tile=>{
+    const name = tile.dataset.val;
+    tile.addEventListener('click', ()=>{
+        if(state.addons.has(name)){
+            state.addons.delete(name); delete state.fruitGrams[name];
+            clearGramFruitVisual(name);
+        } else {
+            state.fruitGrams[name] = state.fruitGrams[name] || GRAM_DEFAULT;
+            state.addons.set(name, 0);
+            applyGramFruitVisual(name);
+        }
+        syncFruitGramUI(); updateAll();
+    });
+    tile.querySelector('.gram-minus').addEventListener('click', e=>{
+        e.stopPropagation();
+        state.fruitGrams[name] = Math.max(GRAM_MIN, (state.fruitGrams[name]||GRAM_DEFAULT) - GRAM_STEP);
+        if(state.addons.has(name)) applyGramFruitVisual(name);
+        syncFruitGramUI(); updateAll();
+    });
+    tile.querySelector('.gram-plus').addEventListener('click', e=>{
+        e.stopPropagation();
+        state.fruitGrams[name] = Math.min(GRAM_MAX, (state.fruitGrams[name]||GRAM_DEFAULT) + GRAM_STEP);
+        if(state.addons.has(name)) applyGramFruitVisual(name);
+        syncFruitGramUI(); updateAll();
+    });
+    tile.querySelectorAll('.gram-place-btn').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+            e.stopPropagation();
+            const placement = btn.dataset.placement;
+            if(typeof window.setGramFruitPlacement==='function') window.setGramFruitPlacement(name, placement);
+            if(state.addons.has(name)) applyGramFruitVisual(name);
+            syncFruitGramUI();
+        });
+    });
+});
+syncFruitGramUI();
+
+// ── ALL FRUITS (assorted, full top) ──
+document.getElementById('btnAllFruits').addEventListener('click', async ()=>{
+    const btn = document.getElementById('btnAllFruits');
+    const turningOn = !state.allFruitsAssorted;
+    state.allFruitsAssorted = turningOn;
+
+    const ALL_FRUIT_NAMES = ['Strawberry','Blueberry','Raspberry','Cherry','Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
+
+    if(turningOn){
+        btn.style.background = 'var(--caramel)';
+        btn.style.color = '#fff';
+        document.querySelectorAll('#opts-fruits .fruit-tile, #opts-fruits-grams .fruit-gram-tile').forEach(t=>t.classList.add('active'));
+        ALL_FRUIT_NAMES.forEach(k=>{ if(!state.addons.has(k)) state.addons.set(k, 0); });
+        ['Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'].forEach(k=>{ state.fruitGrams[k] = state.fruitGrams[k] || 150; });
+        showToast('🍇 Assorted fruits covering the top!', 2400);
+        if(typeof window.buildAllFruitsAssorted === 'function') await window.buildAllFruitsAssorted();
+    } else {
+        btn.style.background = 'var(--surface)';
+        btn.style.color = 'var(--accent-dk)';
+        document.querySelectorAll('#opts-fruits .fruit-tile, #opts-fruits-grams .fruit-gram-tile').forEach(t=>t.classList.remove('active'));
+        ALL_FRUIT_NAMES.forEach(k=>state.addons.delete(k));
+        ['Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'].forEach(k=>delete state.fruitGrams[k]);
+        if(typeof window.clearAllFruitsAssorted === 'function') window.clearAllFruitsAssorted();
+        showToast('Assorted fruits cleared', 1800);
+    }
+    updateFruitTray();
+    syncFruitGramUI();
+    updateAll();
+});
+
+document.getElementById('leafToggleBtn').addEventListener('click',()=>{
+    const v='Leaf';
+    if(state.addons.has(v)){
+        state.addons.delete(v);
+        if(typeof window.removeFruitModelsByName==='function') window.removeFruitModelsByName(v);
+    } else {
+        state.addons.set(v,0);
+    }
+    updateFruitTray();updateAll();
 });
 
 // ── TRAY STACKING ──
@@ -9322,11 +12643,16 @@ if(hint){let maxBottom=16;order2.forEach(id=>{const el=document.getElementById(i
         });});
     }
 }
-const FRUIT_TRAY_ID_MAP={'Strawberry':'trayStrawberry','Blueberry':'trayBlueberry','Raspberry':'trayRaspberry','Cherry':'trayCherry','Mango Slice':'trayMango','Kiwi Slice':'trayKiwi','Peach Slice':'trayPeach','Banana Slice':'trayBanana'};
+const FRUIT_TRAY_ID_MAP={'Strawberry':'trayStrawberry','Blueberry':'trayBlueberry','Raspberry':'trayRaspberry','Cherry':'trayCherry'};
 function updateFruitTray(){
     const hasFruits=FRUIT_KEYS.some(k=>state.addons.has(k));
     document.getElementById('fruitTray').classList.toggle('visible',hasFruits);
     document.getElementById('fruitsDragNotice').style.display=hasFruits?'flex':'none';
+    const _leafOn=state.addons.has('Leaf');
+    const _leafBtn=document.getElementById('leafToggleBtn');
+    if(_leafBtn) _leafBtn.classList.toggle('active',_leafOn);
+    const _leafNotice=document.getElementById('leafDragNotice');
+    if(_leafNotice) _leafNotice.style.display=_leafOn?'flex':'none';
     FRUIT_KEYS.forEach(k=>{const t=document.getElementById(FRUIT_TRAY_ID_MAP[k]||('tray'+k));if(t)t.style.display=state.addons.has(k)?'':'none';});
     document.querySelector('.fruit-tray-sep').style.display=hasFruits?'':'none';
     updateViewerHint();repositionTrays();
@@ -9524,7 +12850,7 @@ function updateViewerHint(){
     const hasF=state.addons.has('Ferrero-style Ball'),hasK=state.addons.has('Kitkat Sticks'),hasO=state.addons.has('Oreo Cookie'),hasB=state.addons.has('Chocolate Bar Shard'),hasT=state.addons.has('Toblerone Triangle');
     const parts=[];
  if(hasFruits)parts.push('🍓 Drag fruits');if(hasF)parts.push('🟤 Ferrero balls');if(hasK)parts.push('🍬 KitKat sticks');if(hasO)parts.push('⚫ Oreo cookies');if(hasB)parts.push('🍫 Bar shards');if(hasT)parts.push('🔺 Toblerone');if(state.addons.has('Number Candles'))parts.push('🕯️ Candles');
-    document.getElementById('viewerHint').textContent=parts.length>0?parts.join(' · ')+' — drag to place':'🖱 Drag to rotate · Scroll to zoom';
+    document.getElementById('viewerHint').innerHTML=emojiToSvg(parts.length>0?parts.join(' · ')+' — drag to place':'🖱 Drag to rotate · Scroll to zoom');
 }
 
 // ── FRUIT CANVAS ──
@@ -9534,8 +12860,7 @@ window.addEventListener('resize',resizeFruitCanvas);resizeFruitCanvas();
 function redrawFruits(){fctx.clearRect(0,0,fruitCanvas.width,fruitCanvas.height);state.placedFruits.forEach(f=>{fctx.font='28px serif';fctx.textAlign='center';fctx.textBaseline='middle';fctx.shadowColor='rgba(0,0,0,0.5)';fctx.shadowBlur=8;fctx.shadowOffsetY=4;fctx.fillText(f.emoji,f.x,f.y);fctx.shadowColor='transparent';fctx.shadowBlur=0;fctx.shadowOffsetY=0;});}
 
 window._lastDropTime = 0;
-const dragGhost=document.getElementById('dragGhost');
-const dropRing=document.getElementById('dropRing');
+const dragGhost=bindIconText(document.getElementById('dragGhost'));const dropRing=document.getElementById('dropRing');
 const ferreroDropRing=document.getElementById('ferreroDropRing');
 const kitkatDropRing=document.getElementById('kitkatDropRing');
 const oreoDropRing=document.getElementById('oreoDropRing');
@@ -9815,7 +13140,30 @@ document.getElementById('btnClearCandles').addEventListener('click',()=>{
 });
 document.getElementById('btnClearFruits').addEventListener('click',()=>{attachedFruitIdx=-1;touchAttachedIdx=-1;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);setCursorGrab(false);dragGhost.style.display='none';dropRing.style.display='none';state.placedFruits=[];placedFruitRecord.length=0;redrawFruits();if(typeof window.clearFruitModels==='function')window.clearFruitModels();showToast('Fruits cleared',1800);});
 // ── CHOCOLATE PLAQUE TOGGLE & SHAPE PICKER ──
+function isPlaqueAllowed(){
+    return state.tier === 'Single' && state.shape !== 'Number';
+}
+function syncPlaqueAvailability(){
+    const allowed = isPlaqueAllowed();  
+    const btn = document.getElementById('plaqueToggleBtn');
+    if(btn && !state.addons.has('Chocolate Plaque')){
+        btn.style.opacity = allowed ? '' : '0.38';
+        btn.style.pointerEvents = allowed ? '' : 'none';
+        btn.title = allowed ? '' : 'Only available for single-tier cakes';
+    }
+    if(!allowed && state.addons.has('Chocolate Plaque')){
+        state.addons.delete('Chocolate Plaque');
+        if(btn) btn.classList.remove('active');
+        document.getElementById('plaqueShapePanel').classList.remove('visible');
+        if(typeof window.clearPlaque==='function') window.clearPlaque();
+        showToast('🍫 Chocolate Plaque removed — only available for single-tier cakes', 2800);
+    }
+}
 document.getElementById('plaqueToggleBtn').addEventListener('click',()=>{
+    if(!isPlaqueAllowed()){
+        showToast('⚠ Chocolate Plaque is only available for single-tier cakes — not Two/Three-tier, Bundt, or Number cakes', 3200);
+        return;
+    }
     const v='Chocolate Plaque';
     if(state.addons.has(v)){
         state.addons.delete(v);
@@ -9883,6 +13231,8 @@ document.getElementById('characterToggleBtn').addEventListener('click',()=>{
         if(typeof window.clearCharacterModels==='function') window.clearCharacterModels();
         document.getElementById('characterActiveBadge').textContent = 'None placed yet — tap a character to add';
     } else {
+        const _ctReason = rosetteBlocksAddon('characterTopper');
+        if(_ctReason){ showToast('⚠ '+_ctReason, 2600); return; }
         state.addons.set(v,0);
         document.getElementById('characterToggleBtn').classList.add('active');
         document.getElementById('characterPickerPanel').classList.add('visible');
@@ -9892,6 +13242,7 @@ document.getElementById('characterToggleBtn').addEventListener('click',()=>{
 });
 document.getElementById('btnClearCharacters').addEventListener('click',()=>{
     if(typeof window.clearCharacterModels==='function') window.clearCharacterModels();
+    window._lastPlacedCharacterIdx = -1;
     state.addons.delete('Character Topper');
     document.getElementById('characterToggleBtn').classList.remove('active');
     document.getElementById('characterActiveBadge').textContent = 'None placed yet — tap a character to add';
@@ -9909,9 +13260,31 @@ document.querySelectorAll('#characterCategoryList .char-cat-toggle').forEach(btn
 
 // ── Character selection (works across all category groups) — every tap adds
 // another instance to the cake, so any quantity/mix of characters can be placed. ──
+document.getElementById('opts-character-size').querySelectorAll('[data-character-size]').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('opts-character-size').querySelectorAll('[data-character-size]').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.characterSize = parseInt(el.dataset.characterSize);
+        document.getElementById('characterSizeBadge').textContent = `Selected: ${state.characterSize}" — applies to the next character you place`;
+        // Live-resize whichever character was placed/selected most recently,
+        // right on the cake, instead of only affecting future placements.
+        const _liveIdx = window._lastPlacedCharacterIdx;
+        if(typeof _liveIdx === 'number' && _liveIdx >= 0 && typeof window.resizeCharacterModel==='function' && window.resizeCharacterModel(_liveIdx, state.characterSize)){
+            showToast(`📏 Resized to ${state.characterSize}"`, 1400);
+            updateAll();
+            return;
+        }
+        showToast(`📏 Next character will be ${state.characterSize}" tall`, 1600);
+    });
+});
 document.querySelectorAll('#characterCategoryList [data-character]').forEach(el=>{
     el.addEventListener('click',(e)=>{
         e.stopPropagation();
+        // Guard EVERY character placement, not just the first — Full Top
+        // rosette should keep blocking additional characters too, even after
+        // the master toggle is already on.
+        const _ctReason2 = rosetteBlocksAddon('characterTopper');
+        if(_ctReason2){ showToast('⚠ '+_ctReason2, 2600); return; }
         document.querySelectorAll('#characterCategoryList [data-character]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
         state.characterTopper = el.dataset.character;
@@ -9921,12 +13294,14 @@ document.querySelectorAll('#characterCategoryList [data-character]').forEach(el=
             document.getElementById('characterPickerPanel').classList.add('visible');
         }
         if(typeof window.placeCharacterOnCake==='function'){
-            window.placeCharacterOnCake(state.characterTopper).then(idx=>{
+            const _size = state.characterSize || 4;
+            window.placeCharacterOnCake(state.characterTopper, undefined, undefined, _size).then(idx=>{
                 if(idx>=0){
                     const count = typeof window.getCharacterModels==='function' ? window.getCharacterModels().length : 1;
-                    const price = CHARACTER_PRICES[state.characterTopper] || 350;
+                    const basePrice = CHARACTER_PRICES[state.characterTopper] || 350;
+                    const price = Math.round(basePrice * (CHARACTER_SIZE_PRICE_MULT[_size] || 1));
                     document.getElementById('characterActiveBadge').textContent = `${count} placed — tap any character again to add more`;
-                    showToast(`🎭 ${state.characterTopper} added! (₱${price})`,1600);
+                    showToast(`🎭 ${state.characterTopper} (${_size}") added! (₱${price})`,1800);
                     updateAll();
                 }
             });
@@ -9954,6 +13329,7 @@ document.getElementById('btnClearAllChoco').addEventListener('click',()=>{
  
         if(el.dataset.val==='Chocolate Plaque')return;
         if(el.dataset.val==='Character Topper')return;
+        if(el.dataset.val==='Number Candles')return;
         el.addEventListener('click',()=>{
             const v=el.dataset.val,p=parseInt(el.dataset.price)||0;
             if(state.addons.has(v)){
@@ -10002,7 +13378,20 @@ function getEffectiveShape(){
 
     return state.shape;
 }
-function getBasePrice(){const eff=getEffectiveShape();const shapeBase=eff==='Round'?(ROUND_SIZE_PRICES[state.roundSize]||350):(SHAPE_PRICES[eff]||350);return shapeBase+(CAKE_TYPE_PRICES[state.cakeType]||0);}
+function getBasePrice(){
+    const eff=getEffectiveShape();
+    let shapeBase;
+    if(eff==='Round'){
+        shapeBase = ROUND_SIZE_PRICES[state.roundSize]||350;
+    } else if(state.shape==='Square' || state.shape==='Heart'){
+        const base6 = SHAPE_PRICES[eff]||350;
+        const ratio = (ROUND_SIZE_PRICES[state.roundSize]||280) / (ROUND_SIZE_PRICES[6]||280);
+        shapeBase = Math.round(base6 * ratio);
+    } else {
+        shapeBase = SHAPE_PRICES[eff]||350;
+    }
+    return shapeBase+(CAKE_TYPE_PRICES[state.cakeType]||0);
+}
 function getFillingPrice(){return FILLING_PRICES[state.filling]||0;}
 function getFrostingExtraPrice(){
     const ti = getTierIdx();
@@ -10010,7 +13399,7 @@ function getFrostingExtraPrice(){
     const activeStyle = CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
     e += (CAKE_STYLE_TIER_PRICES[activeStyle] || [0,0,0])[ti];
     state.frostings.forEach(f=>{
-        if(f === activeStyle) return; // already priced above as the cake style itself
+        if(CAKE_STYLE_VALS.includes(f)) return; // cake styles are priced above
         if(f === 'Smooth Buttercream')      e += FROSTING_SHELL_TIER_PRICES[ti];
         else if(f === 'Sugar Icing')        e += FROSTING_SUGAR_TIER_PRICES[ti];
         else if(f === 'Textured Buttercream') e += FROSTING_TEXTURE_TIER_PRICES[ti];
@@ -10018,7 +13407,7 @@ function getFrostingExtraPrice(){
     });
     return e;
 }
-function getShapeLabel(){const eff=getEffectiveShape();if(eff==='Round')return `Round ${state.roundSize}"`;if(eff==='Number'){if(state.numberDigits===2)return `Number ${state.numberTens}${state.numberUnits}`;return `Number ${state.numberChoice}`;}return eff;}
+function getShapeLabel(){const eff=getEffectiveShape();if(eff==='Round')return `Round ${state.roundSize}"`;if(state.shape==='Square'||state.shape==='Heart')return `${eff} ${state.roundSize}"`;if(eff==='Number'){if(state.numberDigits===2)return `Number ${state.numberTens}${state.numberUnits}`;return `Number ${state.numberChoice}`;}return eff;}
 // Customer-friendly combined name, e.g. "Blueberry Cheesecake", "Ube Chiffon Cake", "Chocolate Sponge Cake"
 function getCombinedCakeTypeLabel(){
     const type=state.cakeType, flavor=state.flavor;
@@ -10027,19 +13416,29 @@ function getCombinedCakeTypeLabel(){
     if(type==='Sponge Cake') return `${flavor} Sponge Cake`;
     return `${flavor} ${type}`;
 }
-// Resolves the flavor key actually sent to the 3D preview — reuses the existing
-// Blueberry/Strawberry/Mango Cheesecake palette entries when Cake Type is Cheesecake,
-// otherwise passes the plain flavor through untouched.
 function getEffectiveFlavorKey(){
     if(state.cakeType==='Cheesecake' && CHEESECAKE_FLAVOR_MAP[state.flavor]) return CHEESECAKE_FLAVOR_MAP[state.flavor];
     return state.flavor;
 }
+function getEffectiveInnerFlavorKey(){
+    const inner = state.innerFlavor || state.flavor;
+    if(state.cakeType==='Cheesecake' && CHEESECAKE_FLAVOR_MAP[inner]) return CHEESECAKE_FLAVOR_MAP[inner];
+    return inner;
+}
+// Square and Heart have flat/pointed sides, so nudging the cut further
+// around (more to the right) keeps the wedge on a clean section instead of
+// straddling a corner or the point. Tune the degrees below if it's still off.
+const SLICE_ROTATION_SHIFT = { 'Square': 40, 'Heart': 40 };
+function getEffectiveSliceRotation(){
+    return state.sliceRotation + (SLICE_ROTATION_SHIFT[state.shape] || 0);
+}
+window._getEffectiveSliceRotation = getEffectiveSliceRotation;
 function updateAll(){
   syncRosetteAddonLocks();
   const base=getBasePrice(),frostExtra=getFrostingExtraPrice(),fillingPrice=getFillingPrice();
   const ti=getTierIdx();
 // These are priced per placed piece — exclude from flat addon sum
- const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Toblerone Triangle','Number Candles','Strawberry','Blueberry','Raspberry','Cherry','Character Topper']);
+ const PER_PIECE_KEYS=new Set(['Ferrero-style Ball','Kitkat Sticks','Oreo Cookie','Chocolate Bar Shard','Toblerone Triangle','Number Candles','Strawberry','Blueberry','Raspberry','Cherry','Leaf','Character Topper']);
     let addonTotal=0;
     state.addons.forEach((p,k)=>{
         if(PER_PIECE_KEYS.has(k)) return;
@@ -10047,27 +13446,39 @@ function updateAll(){
         // of what value was stored on it at the moment it was clicked.
         addonTotal += ADDON_TIER_PRICES[k] ? ADDON_TIER_PRICES[k][ti] : p;
     });
- const FRUIT_PRICES={'Strawberry':45,'Blueberry':25,'Raspberry':55,'Cherry':35,'Mango Slice':40,'Kiwi Slice':30,'Peach Slice':35};
+ const FRUIT_PRICES=Object.assign({'Strawberry':45,'Blueberry':25,'Raspberry':55,'Cherry':35,'Leaf':50},@json($priceMaps['fruit']));
     const fruitCounts={};
     if(typeof window.getFruitModels==='function'){window.getFruitModels().forEach(m=>{fruitCounts[m.fruit]=(fruitCounts[m.fruit]||0)+1;});}
     FRUIT_KEYS.forEach(k=>{addonTotal+=(fruitCounts[k]||0)*(FRUIT_PRICES[k]||0);});
+    GRAM_FRUIT_KEYS.forEach(k=>{ if(state.addons.has(k)) addonTotal += gramFruitPrice(k, state.fruitGrams[k] || GRAM_DEFAULT); });
+    if(state.tier !== 'Single' && Array.isArray(state.tierFruitBorders)){
+        const tCount = tierCountFor(state.tier);
+        for(let ti=0; ti<tCount; ti++){
+            const f = state.tierFruitBorders[ti];
+            if(f && f !== 'None') addonTotal += gramFruitPrice(f, 100);
+        }
+    }
     const ferreroCount=(typeof window.getFerreroModels==='function')?window.getFerreroModels().length:state.placedFerrero.length;
     const kitkatCount=(typeof window.getKitkatModels==='function')?window.getKitkatModels().length:state.placedKitkat.length;
     const oreoCount=(typeof window.getOreoModels==='function')?window.getOreoModels().length:state.placedOreo.length;
 const barShardCount2=(typeof window.getBarShardModels==='function')?window.getBarShardModels().length:0;
     const tobleroneCount2=(typeof window.getTobleroneModels==='function')?window.getTobleroneModels().length:0;
     const candleCount=(typeof window.getCandleModels==='function')?window.getCandleModels().length:state.placedCandles.length;
-if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*55;
-    if(state.addons.has('Kitkat Sticks'))addonTotal+=kitkatCount*30;
-    if(state.addons.has('Oreo Cookie'))addonTotal+=oreoCount*20;
-    if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*40;
-    if(state.addons.has('Toblerone Triangle'))addonTotal+=tobleroneCount2*50;
-if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
+if(state.addons.has('Ferrero-style Ball'))addonTotal+=ferreroCount*(CHOCO_PIECE_PRICES['Ferrero-style Ball']||55);
+    if(state.addons.has('Kitkat Sticks'))addonTotal+=kitkatCount*(CHOCO_PIECE_PRICES['Kitkat Sticks']||30);
+    if(state.addons.has('Oreo Cookie'))addonTotal+=oreoCount*(CHOCO_PIECE_PRICES['Oreo Cookie']||20);
+    if(state.addons.has('Chocolate Bar Shard'))addonTotal+=barShardCount2*(CHOCO_PIECE_PRICES['Chocolate Bar Shard']||40);
+    if(state.addons.has('Toblerone Triangle'))addonTotal+=tobleroneCount2*(CHOCO_PIECE_PRICES['Toblerone Triangle']||50);
+if(state.addons.has('Number Candles'))addonTotal+=candleCount*CANDLE_PIECE_PRICE;
     const characterModelsList=(typeof window.getCharacterModels==='function')?window.getCharacterModels():[];
     const characterCount=characterModelsList.length;
     let characterTotalPrice=0;
     if(state.addons.has('Character Topper')){
-        characterModelsList.forEach(m=>{ characterTotalPrice += (CHARACTER_PRICES[m.key] || 350); });
+        characterModelsList.forEach(m=>{
+            const base=(CHARACTER_PRICES[m.key] || 350);
+            const mult=CHARACTER_SIZE_PRICE_MULT[m.sizeInches||4] || 1.0;
+            characterTotalPrice += Math.round(base*mult);
+        });
         addonTotal += characterTotalPrice;
     }
     // Fruits: always count placed pieces regardless of addons map value
@@ -10081,8 +13492,9 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
     if(frostExtra>0){frostRow.style.display='';document.getElementById('priceFrosting').textContent='₱'+frostExtra.toLocaleString();}else frostRow.style.display='none';
       const shapeLabel=getShapeLabel();
     const activeCakeStyleForSummary = CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
-    const frostingExtras=[...state.frostings].filter(f=>f!==activeCakeStyleForSummary);
-    const frostingLabel = frostingExtras.length ? frostingExtras.join(' + ') : 'Default';
+    const FROSTING_LABELS = {'Smooth Buttercream':'Shell Border'};
+    const frostingExtras=[...state.frostings].filter(f=>!CAKE_STYLE_VALS.includes(f));
+    const frostingLabel = frostingExtras.length ? frostingExtras.map(f=>FROSTING_LABELS[f]||f).join(' + ') : 'None';
     document.getElementById('selCakeType').textContent=getCombinedCakeTypeLabel();
     document.getElementById('selFlavorRow').style.display='none';
     document.getElementById('selFillingRow').style.display='';
@@ -10091,10 +13503,14 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
         : 'No Filling';
     const isSugarIcing=state.frostings.has(SUGAR_ICING_VAL),isFondant=state.frostings.has(FONDANT_VAL);
     document.getElementById('selShape').textContent=shapeLabel;
-    document.getElementById('selFlavor').textContent=state.flavor;
+    const _tierCountForFlavor = tierCountFor(state.tier);
+    const _uniqueTierFlavors = [...new Set(state.tierFlavors.slice(0,_tierCountForFlavor))];
+    document.getElementById('selFlavor').textContent = _uniqueTierFlavors.length>1
+        ? state.tierFlavors.slice(0,_tierCountForFlavor).map((f,i)=>`Tier ${i+1}: ${f}`).join(' · ')
+        : state.flavor;
     document.getElementById('selCakeStyle').textContent=activeCakeStyleForSummary;
     document.getElementById('selFrosting').textContent=frostingLabel;
-    document.getElementById('badgeFlavor').textContent=state.flavor;
+    document.getElementById('badgeFlavor').textContent = _uniqueTierFlavors.length>1 ? 'Mixed Flavors' : state.flavor;
     document.getElementById('badgeShape').textContent=shapeLabel+' · '+activeCakeStyleForSummary;
     const icingRow=document.getElementById('selIcingRow');
     if(isSugarIcing){icingRow.style.display='';document.getElementById('selIcingColor').textContent=state.icingColorName;}else icingRow.style.display='none';
@@ -10107,8 +13523,20 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
     if(state.hasDrip)chips.push(`<span class="cfg-chip chip-teal">💧 ${state.dripFlavor} Drip</span>`);
     FRUIT_KEYS.forEach(k=>{
         const c = fruitCounts[k]||0;
-        if(c>0) chips.push(`<span class="cfg-chip chip-accent">🍓 ${k} ×${c}</span>`);
+        if(c>0) chips.push(`<span class="cfg-chip chip-accent">${k==='Leaf'?'🍃':'🍓'} ${k} ×${c}</span>`);
     });
+    GRAM_FRUIT_KEYS.forEach(k=>{
+        if(!state.addons.has(k)) return;
+        const g = state.fruitGrams[k] || GRAM_DEFAULT;
+        chips.push(`<span class="cfg-chip chip-accent">⚖️ ${GRAM_FRUIT_LABELS[k]||k} ${g}g</span>`);
+    });
+    if(state.tier !== 'Single' && Array.isArray(state.tierFruitBorders)){
+        const tCount = tierCountFor(state.tier);
+        for(let ti=0; ti<tCount; ti++){
+            const f = state.tierFruitBorders[ti];
+            if(f && f !== 'None') chips.push(`<span class="cfg-chip chip-accent">🍰 Tier ${ti+1}: ${GRAM_FRUIT_LABELS[f]||f} border</span>`);
+        }
+    }
     if(hasF)chips.push(`<span class="cfg-chip chip-gold">🟤 Ferrero${ferreroCount>0?' ×'+ferreroCount:''}</span>`);
     if(hasK)chips.push(`<span class="cfg-chip chip-accent">🍬 KitKat${kitkatCount>0?' ×'+kitkatCount:''} · ${state.kitkatOrientation==='standing'?'Standing':'Flat'}</span>`);
     if(hasO)chips.push(`<span class="cfg-chip chip-accent">⚫ Oreo${oreoCount>0?' ×'+oreoCount:''} · ${state.oreoOrientation==='standing'?'Standing':'Flat'}</span>`);
@@ -10124,11 +13552,22 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*20;
     if(state.addons.has('Sphere Sprinkles'))chips.push(`<span class="cfg-chip chip-accent">✨ Pearl Mix</span>`);
     if(state.addons.has('Number Candles'))chips.push(`<span class="cfg-chip chip-gold">🕯️ Candles${candleCount>0?' ×'+candleCount:''}</span>`);
     if(state.addons.has('Character Topper'))chips.push(`<span class="cfg-chip chip-accent">🎭 ${characterCount>0?characterCount+'× characters · ₱'+characterTotalPrice.toLocaleString():state.characterTopper}</span>`);
-    document.getElementById('addonsSummary').innerHTML=chips.length?chips.join(''):'<span class="cfg-val muted" style="font-size:.73rem;">None selected</span>';
+    document.getElementById('addonsSummary').innerHTML=chips.length?emojiToSvg(chips.join('')):'<span class="cfg-val muted" style="font-size:.73rem;">None selected</span>';
    const shellBorderColorActive = state.frostings.has('Smooth Buttercream') && !isSugarIcing && !isFondant && state.hasCustomIcingColor;
  if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),baseShape:state.shape,flavor:getEffectiveFlavorKey(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:(isSugarIcing||shellBorderColorActive)?state.icingColor:null});}
-    if(typeof window._requestShadowUpdate==='function') setTimeout(window._requestShadowUpdate, 200);
+      if(typeof window._requestShadowUpdate==='function') setTimeout(window._requestShadowUpdate, 200);
       if(typeof window._requestRender==='function') window._requestRender();  
+       if(window.CakeSlice){
+        if(state.sliceEnabled === false){
+            window.CakeSlice.disable();
+        } else {
+            window.CakeSlice.update({flavor:getEffectiveInnerFlavorKey(), filling:state.tierFillings[0]||state.filling, rotationDeg:getEffectiveSliceRotation(), spanDeg:40, tier:state.tier, tierLayers:state.tierLayers, tierFlavors:state.tierFlavors, tierFillings:state.tierFillings});
+            // Reveal animations (shell/fondant/drip) clear clippingPlanes when they
+            // finish, which can wipe out the slice cut a moment after a cake
+            // reload — reapply once they're done (longest reveal is ~2.4s).
+            setTimeout(()=>{ if(window.CakeSlice && state.sliceEnabled !== false) window.CakeSlice.reapply(); }, 2600);
+        }
+    }
 }
 // Gathers every placed decoration as CAKE-RELATIVE FRACTIONS (not screen
 // pixels), so a draft can be rebuilt later at any camera angle/screen size —
@@ -10176,7 +13615,7 @@ function collectDecorPlacements(){
 
     const characters=(typeof window.getCharacterModels==='function')?window.getCharacterModels():[];
     out.characters=characters.filter(m=>m._normX!==undefined).map(m=>({
-        x:m._normX, z:m._normZ, key:m.key, rotY:deg(m.group.rotation.y),
+        x:m._normX, z:m._normZ, key:m.key, rotY:deg(m.group.rotation.y), size:m.sizeInches||4,
     }));
 
     return out;
@@ -10189,6 +13628,7 @@ async function saveDraft(){
         hasDrip:state.hasDrip,dripFlavor:state.dripFlavor,icingColor:state.icingColor,icingColorName:state.icingColorName,
         hasCustomIcingColor:state.hasCustomIcingColor,
         decorations:collectDecorPlacements(),
+        fruitGrams:{...state.fruitGrams},
         kitkatOrientation:state.kitkatOrientation,
         oreoOrientation:state.oreoOrientation,
         chocoCurlsPlacement: state.addons.has('Chocolate Curls') ? state.chocoCurlsPlacement : null,
@@ -10338,12 +13778,12 @@ async function applyDraftConfig(d){
     }
     if(d.cakeType){state.cakeType=d.cakeType;document.getElementById('opts-cake-type').querySelectorAll('[data-cake-type]').forEach(el=>el.classList.toggle('active',el.dataset.cakeType===d.cakeType));syncCakeTypeUI();}
     if(d.filling){state.filling=d.filling;document.getElementById('opts-filling').querySelectorAll('[data-filling]').forEach(el=>el.classList.toggle('active',el.dataset.filling===d.filling));}
-    document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.flavor));
     state.flavor=d.flavor||'Vanilla';
+    state.tierFlavors[0]=state.flavor;
+    state.tierFrostings[0]=state.flavor;
 
     state.frostings=new Set();
-    (Array.isArray(d.frostings)?d.frostings:(d.frosting?[d.frosting]:['Smooth Buttercream'])).forEach(f=>state.frostings.add(f));
-    if(state.frostings.size===0)state.frostings.add('Smooth Buttercream');
+    (Array.isArray(d.frostings)?d.frostings:(d.frosting?[d.frosting]:[])).forEach(f=>state.frostings.add(f));
 
     state.icingColor=d.icingColor||'#FFFFFF';
     state.icingColorName=d.icingColorName||'White';
@@ -10385,6 +13825,9 @@ async function applyDraftConfig(d){
     document.getElementById('oreoOrientBadge').textContent=state.oreoOrientation==='standing'?'🔘 Standing':'⚫ Lying Flat';
 
     state.tobleroneFlavor = d.tobleroneFlavor || 'Chocolate';
+    state.fruitGrams = d.fruitGrams || {};
+    Object.keys(state.fruitGrams).forEach(k=>{ if(!state.addons.has(k)) state.addons.set(k, 0); });
+    if(typeof syncFruitGramUI==='function') syncFruitGramUI();
     state.characterTopper = d.characterTopper || state.characterTopper;
 
     const decor = d.decorations || {};
@@ -10469,7 +13912,7 @@ async function applyDraftConfig(d){
     }
     for(const p of (decor.candles||[])) await window.placeCandleAtFraction(p.num, p.x, p.z);
     for(const p of (decor.characters||[])){
-        const idx = await window.placeCharacterAtFraction(p.key, p.x, p.z);
+        const idx = await window.placeCharacterAtFraction(p.key, p.x, p.z, p.size||4);
         if(idx>=0 && p.rotY!==undefined && typeof window.setCharacterYRotation==='function') window.setCharacterYRotation(idx, p.rotY);
     }
     if(decor.characters && decor.characters.length){
@@ -10671,11 +14114,78 @@ document.getElementById('configInput').value=JSON.stringify({
 if(document.getElementById('btnProceed')) document.getElementById('btnProceed').addEventListener('click',proceed);
 document.getElementById('btnProceedLg').addEventListener('click',proceed);
 document.getElementById('btnResetView').addEventListener('click',()=>{if(typeof window.resetCamera==='function')window.resetCamera();showToast('View reset');});
-if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.07);
+let _sliceAnimFrame = null;
+function animateSliceWedge(fromSpan, toSpan, duration, onDone){
+    if(_sliceAnimFrame) cancelAnimationFrame(_sliceAnimFrame);
+    if(!window.CakeSlice){ if(onDone) onDone(); return; }
+    const rotationDeg = getEffectiveSliceRotation();
+    const startTime = performance.now();
+    const ctxBase = {
+        flavor: getEffectiveInnerFlavorKey(),
+        filling: state.tierFillings[0]||state.filling,
+        rotationDeg, tier: state.tier,
+        tierLayers: state.tierLayers, tierFlavors: state.tierFlavors, tierFillings: state.tierFillings,
+    };
+    let lastFaceRebuild = 0;
+    // Rebuilding the cut-face mesh (raycasts + geometry) on every single
+    // frame was the source of the lag. The wedge cutout itself (cheap plane
+    // math) still updates every frame for a smooth sweep; the detailed cut
+    // face just catches up periodically, then gets one final crisp rebuild.
+    const FACE_REBUILD_INTERVAL = 90; // ms
+    function frame(now){
+        const t = Math.min(1, (now-startTime)/duration);
+        const eased = t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; // easeInOutQuad
+        const currentSpan = fromSpan + (toSpan-fromSpan)*eased;
+        const clampedSpan = Math.max(0.01, currentSpan);
+        window.CakeSlice.updateClipOnly(rotationDeg, clampedSpan);
+        if(now - lastFaceRebuild >= FACE_REBUILD_INTERVAL || t>=1){
+            window.CakeSlice.update({...ctxBase, spanDeg: clampedSpan});
+            lastFaceRebuild = now;
+        }
+        if(typeof window._requestRender==='function') window._requestRender(200);
+        if(t<1){
+            _sliceAnimFrame = requestAnimationFrame(frame);
+        } else {
+            _sliceAnimFrame = null;
+            if(onDone) onDone();
+        }
+    }
+    _sliceAnimFrame = requestAnimationFrame(frame);
+}
+document.getElementById('btnSliceOff').addEventListener('click',()=>{
+    if(state.sliceEnabled === false) return;
+    document.getElementById('btnSliceOff').classList.add('active');
+    document.getElementById('btnSliceOn').classList.remove('active');
+    showToast('Closing slice…',1200);
+    // Sweep the wedge shut (40°→0°) so the cut visually "closes back up",
+    // then fully disable clipping/cut-faces once it's flush again.
+    animateSliceWedge(40, 0, 650, ()=>{
+        state.sliceEnabled = false;
+        if(window.CakeSlice) window.CakeSlice.disable();
+        if(renderer) renderer.shadowMap.needsUpdate = true; // this direction never triggered a shadow refresh before
+        showToast('Showing whole cake',1400);
+    });
+});
+document.getElementById('btnSliceOn').addEventListener('click',()=>{
+    if(state.sliceEnabled === true) return;
+    state.sliceEnabled = true;
+    document.getElementById('btnSliceOn').classList.add('active');
+    document.getElementById('btnSliceOff').classList.remove('active');
+    showToast('Slicing the cake…',1400);
+    // Sweep the wedge open (0°→40°) so it reads as the slice being cut away.
+    animateSliceWedge(0.01, 40, 750, ()=>{
+        updateAll();
+    });
+});
+if(typeof window._setSpotBrightness === 'function') window._setSpotBrightness(0.028);
 window._updateAll=updateAll;
 syncFrostingUI();
 updateOmbrePreview();
 refreshTierPriceLabels();
+syncPlaqueAvailability();
+renderTierLayerRows();
+renderTierFruitBorderRows();
+
 
 // ── PRESET LOADER (from dashboard featured cards) ──
 (function applyPreset() {
@@ -10730,9 +14240,8 @@ refreshTierPriceLabels();
 
     // Flavor
     state.flavor = flavor;
-    document.getElementById('opts-flavor').querySelectorAll('[data-val]').forEach(el => {
-        el.classList.toggle('active', el.dataset.val === flavor);
-    });
+    state.tierFlavors[0] = flavor;
+    state.tierFrostings[0] = flavor;
     // Frosting
     state.frostings = new Set();
      const CAKE_STYLE_MAP = {
@@ -11080,8 +14589,7 @@ initMobileSummary();
 <div id="chocoRotInlinePanel" style="display:none;">
     <div style="background:linear-gradient(135deg,#2A1006 0%,#4A2010 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:8px;">
-            <span id="chocoRotInlineEmoji" style="font-size:1.4rem;line-height:1;">🟤</span>
-            <div>
+            <span id="chocoRotInlineEmoji" style="font-size:1.4rem;line-height:1;"><i class="ic" data-ic="ferrero"></i></span>            <div>
                 <div style="font-size:.68rem;font-weight:700;color:var(--caramel-light);font-family:var(--font-display);">Rotate <span id="chocoRotInlineName">Ferrero</span></div>
                 <div style="font-size:.60rem;color:rgba(232,176,122,0.55);font-family:var(--font-display);">Tap to rotate · Click again to place</div>
             </div>
@@ -11090,16 +14598,14 @@ initMobileSummary();
     </div>
     <div style="background:var(--warm-white);padding:12px 14px;">
    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <span id="chocoRotInlinePreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;">🟤</span>
-            <div style="flex:1;">
+            <span id="chocoRotInlinePreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;"><i class="ic" data-ic="ferrero"></i></span>            <div style="flex:1;">
                 <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↕ Tilt (up/down)</div>
                 <input type="range" id="chocoRotInlineRange" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
                 <div id="chocoRotInlineDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--gold);font-family:var(--font-display);margin-top:2px;">0°</div>
             </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:2.2rem;line-height:1;flex-shrink:0;opacity:0;">🟤</span>
-            <div style="flex:1;">
+            <span style="font-size:2.2rem;line-height:1;flex-shrink:0;opacity:0;"><i class="ic" data-ic="ferrero"></i></span>            <div style="flex:1;">
                 <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↔ Spin (sideways)</div>
                 <input type="range" id="chocoRotInlineRangeY" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
                 <div id="chocoRotInlineDegY" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--gold);font-family:var(--font-display);margin-top:2px;">0°</div>
@@ -11113,16 +14619,14 @@ initMobileSummary();
         </div>
      <div style="display:flex;gap:6px;">
             <button id="chocoRotInlineApply" style="flex:1;padding:9px;background:var(--gold);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">✓ Apply Rotation</button>
-            <button id="chocoRotInlineDelete" title="Remove this item" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'">🗑</button>
-            <button id="chocoRotInlineReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
+            <button id="chocoRotInlineDelete" title="Remove this item" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'"><i class="ic" data-ic="trash"></i></button>            <button id="chocoRotInlineReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
         </div>
     </div>
 </div>
 <div id="characterMovePanel" style="display:none;">
     <div style="background:linear-gradient(135deg,#3A4A9A 0%,#2A3878 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:1.4rem;line-height:1;">🎭</span>
-            <div>
+            <span style="font-size:1.4rem;line-height:1;"><i class="ic" data-ic="character"></i></span>            <div>
                 <div style="font-size:.68rem;font-weight:700;color:#D8E0FF;font-family:var(--font-display);">Move &amp; rotate <span id="characterMovePanelName">character</span></div>
                 <div style="font-size:.60rem;color:rgba(216,224,255,0.65);font-family:var(--font-display);">Drag on the cake to move · spin below to rotate</div>
             </div>
@@ -11139,17 +14643,22 @@ initMobileSummary();
             <button class="character-move-preset" data-deg="180" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">180°</button>
             <button class="character-move-preset" data-deg="270" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">270°</button>
         </div>
+        <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">📏 Height — resizes live on the cake</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">
+            <button class="character-move-size" data-size="3" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">3"</button>
+            <button class="character-move-size" data-size="4" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">4"</button>
+            <button class="character-move-size" data-size="5" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">5"</button>
+            <button class="character-move-size" data-size="6" style="padding:7px 2px;border:1.5px solid var(--border);border-radius:9px;background:var(--cream);color:var(--brown-mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">6"</button>
+        </div>
         <div style="display:flex;gap:6px;">
-            <button id="characterMovePanelDelete" title="Remove this topper" style="flex:1;padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);">🗑 Remove</button>
-            <button id="characterMovePanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺ Reset</button>
+            <button id="characterMovePanelDelete" title="Remove this topper" style="flex:1;padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);"><i class="ic" data-ic="trash"></i> Remove</button>            <button id="characterMovePanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺ Reset</button>
         </div>
     </div>
 </div>
 <div id="fruitRotPanel" style="display:none;">
     <div style="background:linear-gradient(135deg,var(--brown-deep) 0%,var(--brown-mid) 100%);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:8px;">
-            <span id="fruitRotPanelEmoji" style="font-size:1.4rem;line-height:1;">🍓</span>
-            <div>
+            <span id="fruitRotPanelEmoji" style="font-size:1.4rem;line-height:1;"><i class="ic" data-ic="strawberry"></i></span>            <div>
                 <div style="font-size:.68rem;font-weight:700;color:var(--caramel-light);font-family:var(--font-display);">Rotate <span id="fruitRotPanelName">Strawberry</span></div>
                 <div style="font-size:.60rem;color:rgba(232,176,122,0.55);font-family:var(--font-display);">Drag to move · Tap to rotate</div>
             </div>
@@ -11158,16 +14667,14 @@ initMobileSummary();
     </div>
     <div style="background:var(--warm-white);padding:12px 14px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-            <span id="fruitRotPanelPreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;">🍓</span>
-            <div style="flex:1;">
+            <span id="fruitRotPanelPreview" style="font-size:2.2rem;line-height:1;display:block;transition:transform .18s;flex-shrink:0;"><i class="ic" data-ic="strawberry"></i></span>            <div style="flex:1;">
                 <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↕ Tilt (up/down)</div>
                 <input type="range" id="fruitRotPanelRange" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
                 <div id="fruitRotPanelDeg" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);margin-top:2px;">0°</div>
             </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:2.2rem;line-height:1;flex-shrink:0;opacity:0;">🍓</span>
-            <div style="flex:1;">
+            <span style="font-size:2.2rem;line-height:1;flex-shrink:0;opacity:0;"><i class="ic" data-ic="strawberry"></i></span>            <div style="flex:1;">
                 <div style="font-size:.60rem;color:var(--text-muted);margin-bottom:3px;font-family:var(--font-display);font-weight:600;">↔ Spin (sideways)</div>
                 <input type="range" id="fruitRotPanelRangeY" min="0" max="360" step="5" value="0" class="rot-range" style="width:100%;">
                 <div id="fruitRotPanelDegY" style="text-align:center;font-size:.80rem;font-weight:700;color:var(--caramel);font-family:var(--font-display);margin-top:2px;">0°</div>
@@ -11181,8 +14688,7 @@ initMobileSummary();
         </div>
         <div style="display:flex;gap:6px;">
             <button id="fruitRotPanelApply" style="flex:1;padding:9px;background:var(--caramel);border:none;border-radius:10px;color:#fff;font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .18s;">✓ Apply Rotation</button>
-            <button id="fruitRotPanelDelete" title="Remove this fruit" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'">🗑</button>
-            <button id="fruitRotPanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
+            <button id="fruitRotPanelDelete" title="Remove this fruit" style="padding:9px 13px;background:transparent;border:1.5px solid rgba(200,50,30,.40);border-radius:10px;color:#C03020;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;" onmouseover="this.style.background='rgba(200,50,30,.10)'" onmouseout="this.style.background='transparent'"><i class="ic" data-ic="trash"></i></button>            <button id="fruitRotPanelReset" style="padding:9px 12px;background:transparent;border:1.5px solid var(--border-dk);border-radius:10px;color:var(--text-muted);font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-display);">↺</button>
         </div>
     </div>
 </div>
@@ -11224,7 +14730,7 @@ initMobileSummary();
         overlay.classList.remove('visible');
         document.body.style.overflow = '';
         if(remember){ try{ localStorage.setItem(TUT_STORAGE_KEY, '1'); }catch(e){} }
-        playDefaultShellRevealOnce();
+        
     }
 
     // The default cake loads Smooth Buttercream (Shell Border) behind the
@@ -11246,6 +14752,38 @@ initMobileSummary();
     overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeTutorial(true); });
     if(helpBtn) helpBtn.addEventListener('click', openTutorial);
     if(!document.body.classList.contains('preview-mode')) openTutorial();
+})();
+</script>
+<script>
+(function initAddonCollapsibles(){
+    // Group each "Icing & Rosettes / Drip / Fruits / Chocolate Decorations /
+    // Sprinkles / Candles & Toppers" header with everything after it up to
+    // the next header, and collapse it. Clicking the header (icon + arrow)
+    // toggles that one section open/closed — nothing else in the app needs
+    // to change since we only move existing DOM nodes into a wrapper.
+    const labels = Array.from(document.querySelectorAll('.addon-section-lbl'));
+    labels.forEach(label=>{
+        const arrow = document.createElement('span');
+        arrow.className = 'addon-collapse-arrow';
+        arrow.textContent = '▸';
+        label.appendChild(arrow);
+        label.classList.add('addon-collapse-toggle');
+
+        const body = document.createElement('div');
+        body.className = 'addon-collapse-body';
+        let next = label.nextElementSibling;
+        while(next && !next.classList.contains('addon-section-lbl')){
+            const toMove = next;
+            next = next.nextElementSibling;
+            body.appendChild(toMove);
+        }
+        label.insertAdjacentElement('afterend', body);
+
+        label.addEventListener('click', ()=>{
+            const isOpen = body.classList.toggle('open');
+            label.classList.toggle('open', isOpen);
+        });
+    });
 })();
 </script>
 </body>

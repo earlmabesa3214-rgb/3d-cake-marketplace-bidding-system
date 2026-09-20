@@ -2,12 +2,16 @@
 @section('title', 'Dashboard')
 
 @push('styles')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 .sidebar .nav-link { gap: 0.55rem; padding: 0.7rem 0.9rem; }
 .sidebar .nav-link .icon { width: 16px; text-align: left; flex-shrink: 0; }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-* { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+.studio, .studio * { font-family: 'Plus Jakarta Sans', sans-serif; }
 
 .studio, .studio * {
     --brown-deep:   #1C0F07;
@@ -16,339 +20,481 @@
     --caramel:      #C8894A;
     --caramel-light:#E8B07A;
     --caramel-pale: #FDDFC0;
+     --strawberry:   #6B4530;
+    --strawberry-pale: #EFE3D3;
+    --butter:       #8B6F47;
+    --butter-pale:  #F5EDE0;
+    --skyicing:     #E4D9C7;
     --cream:        #FDF6ED;
-    --cream-dark:   #F5EDE0;
+    --cream-dark:   #F6EADA;
     --warm-white:   #FEFAF5;
-    --border:       rgba(200,137,74,0.15);
+    --border:       rgba(92,61,46,0.18);
     --text-dark:    #2A160A;
-    --text-muted:   #9A7A65;
-    --hair: rgba(28,15,7,0.08);
-    --hair-strong: rgba(28,15,7,0.14);
-    --r-sm: 10px;
-    --r-md: 16px;
-    --r-lg: 24px;
-    --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
-    --on-dark-line: rgba(255,255,255,0.14);
-    --on-dark-muted: rgba(255,255,255,0.5);
+    --text-muted:   #8C6C57;
+    --r-sm: 12px;
+    --r-md: 20px;
+    --r-lg: 32px;
 }
 
-@keyframes fadeUp    { from { opacity:0; transform:translateY(18px);} to { opacity:1; transform:none;} }
-@keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
-@keyframes softPulse { 0%,100%{opacity:.45;} 50%{opacity:1;} }
+@keyframes fadeUp  { from { opacity:0; transform:translateY(16px);} to { opacity:1; transform:none;} }
+@keyframes bob     { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-8px) rotate(var(--r,0deg)); } }
+@keyframes sparkle { 0%,100% { opacity:.35; transform: scale(.9); } 50% { opacity:1; transform: scale(1.08); } }
 
 .reveal { opacity: 0; animation: fadeUp .7s cubic-bezier(.22,.68,0,1.12) both; }
-.reveal.d1 { animation-delay: .04s; }
-.reveal.d2 { animation-delay: .12s; }
-.reveal.d5 { animation-delay: .28s; }
+.reveal.d1 { animation-delay: .05s; }
+.reveal.d2 { animation-delay: .14s; }
+.reveal.d3 { animation-delay: .22s; }
 
 @media (prefers-reduced-motion: reduce) {
-    .reveal, .kicker, .eyebrow { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition: none !important; }
+    .reveal, .float-deco { animation: none !important; opacity: 1 !important; }
 }
-.studio { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 0; 
-    padding: 0; 
-    margin: -1.8rem; 
-}
-.kicker {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.kicker b { color: var(--caramel); font-weight: 700; }
-.kicker.on-dark { color: var(--on-dark-muted); }
-.kicker.on-dark b { color: var(--caramel-light); }
 
-.icon { width: 15px; height: 15px; flex-shrink: 0; }
-.icon-sm { width: 13px; height: 13px; }
+.studio { display: flex; flex-direction: column; gap: 0; padding: 0; margin: -1.8rem; background: var(--cream); }
+@media (max-width: 768px) { .studio { margin: -1rem; } }
 
+.studio a { text-decoration: none; }
+.studio img { display: block; max-width: 100%; }
+.studio button { font-family: inherit; }
+
+/* ---------- shared bits ---------- */
+.eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .78rem; font-weight: 700; color: var(--strawberry);
+    letter-spacing: .01em;
+}
+.eyebrow::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--strawberry); flex-shrink: 0;
+}
 .btn-primary {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.78rem 1.5rem;
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.95rem 1.7rem;
     background: linear-gradient(135deg, var(--caramel) 0%, #D4944F 100%);
-    color: white; border-radius: var(--r-sm);
-    font-size: 0.82rem; font-weight: 800; text-decoration: none;
-    box-shadow: 0 10px 26px rgba(200,137,74,0.38);
-    transition: transform 0.2s, box-shadow 0.2s;
+    color: white; border-radius: 999px;
+    font-size: 0.92rem; font-weight: 800;
+    box-shadow: 0 12px 26px rgba(200,137,74,0.38);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     white-space: nowrap; border: none; cursor: pointer;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(200,137,74,0.48); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(200,137,74,0.46); color: white; }
+.btn-secondary {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 1.6rem;
+    background: transparent; color: var(--text-dark); border-radius: 999px;
+    font-size: 0.92rem; font-weight: 700;
+    border: 2px solid var(--brown-deep);
+    transition: transform 0.2s ease, background 0.2s ease;
+    white-space: nowrap; cursor: pointer;
+}
+.btn-secondary:hover { background: var(--brown-deep); color: var(--cream); transform: translateY(-2px); }
+.icon { width: 16px; height: 16px; flex-shrink: 0; }
 
-.journey-cta-btn {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-top: 1.4rem;
-    padding: 1rem 1.75rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 0.92rem;
-    font-weight: 800;
-    color: #fff;
-    text-decoration: none;
-    white-space: nowrap;
-    background: linear-gradient(180deg, var(--caramel-light) 0%, var(--caramel) 55%, #B87538 100%);
-    border-radius: 14px;
-    border: none;
-    cursor: pointer;
-    pointer-events: auto;
-    transform: translateY(0);
-    box-shadow:
-        0 1px 0 rgba(255,255,255,0.35) inset,
-        0 -3px 0 rgba(0,0,0,0.18) inset,
-        0 8px 0 #7A4A22,
-        0 8px 18px rgba(0,0,0,0.45);
-    transition: transform .12s ease, box-shadow .12s ease;
-}
-.journey-cta-btn:hover {
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow:
-        0 1px 0 rgba(255,255,255,0.35) inset,
-        0 -3px 0 rgba(0,0,0,0.18) inset,
-        0 10px 0 #7A4A22,
-        0 14px 24px rgba(0,0,0,0.5);
-}
-.journey-cta-btn:active {
-    transform: translateY(6px);
-    box-shadow:
-        0 1px 0 rgba(255,255,255,0.35) inset,
-        0 -3px 0 rgba(0,0,0,0.18) inset,
-        0 2px 0 #7A4A22,
-        0 4px 10px rgba(0,0,0,0.35);
-}
-@media (max-width: 900px) {
-    .journey-cta-btn { padding: 0.85rem 1.4rem; font-size: 0.85rem; margin-top: 1rem; }
-}
-
-.journey-scroll-track {
-    position: relative;
-}
-.journey-pin {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    width: 100%;
-    height: 100vh;
-    min-height: 640px;
-    overflow: hidden;
-    background: #1C0F07;
-    isolation: isolate;
-    touch-action: none;
-}
-#journeyCanvas {
-    position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0;
-}
-
-.journey-scrim {
-    position: absolute; inset: 0; z-index: 2; pointer-events: none;
-    background: linear-gradient(100deg, rgba(15,8,3,0.5) 0%, rgba(15,8,3,0.18) 38%, rgba(15,8,3,0) 62%);
-}
-.journey-vignette {
-    position: absolute; inset: 0; z-index: 2; pointer-events: none;
-    background:
-        linear-gradient(180deg, rgba(15,8,3,0.5) 0%, rgba(15,8,3,0) 24%, rgba(15,8,3,0) 68%, rgba(15,8,3,0.55) 100%),
-        radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(10,5,2,0.3) 100%);
-}
-.journey-loader {
-    position: absolute; inset: 0; z-index: 6;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6rem;
-    background: #1C0F07; transition: opacity 0.5s ease;
-}
-.journey-loader.is-hidden { opacity: 0; pointer-events: none; }
-.journey-loader span { font-family: var(--mono); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
-
-.journey-skel {
-    display: flex; align-items: flex-end; gap: 0.9rem;
-    width: min(360px, 70vw);
-}
-.journey-skel-block {
+/* ================= HERO ================= */
+.hero {
     position: relative;
     overflow: hidden;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
+    padding: 4rem 4rem 6.5rem;
+    background: radial-gradient(ellipse 90% 70% at 15% 0%, var(--butter-pale) 0%, transparent 55%),
+                radial-gradient(ellipse 80% 60% at 100% 20%, var(--strawberry-pale) 0%, transparent 50%),
+                var(--cream);
 }
-.journey-skel-block::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(100deg, transparent 30%, rgba(232,176,122,0.22) 50%, transparent 70%);
-    background-size: 200% 100%;
-    animation: skelShimmer 1.6s ease-in-out infinite;
+.hero-grid {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 3rem; align-items: center;
+    max-width: 1280px; margin: 0 auto;
 }
-.journey-skel-cabinet { flex: 1; height: 46px; border-radius: 8px 8px 4px 4px; }
-.journey-skel-counter { flex: 1.4; height: 14px; align-self: center; border-radius: 999px; }
-.journey-skel-stand {
-    width: 40px; height: 40px; border-radius: 50%;
-    flex: 0 0 auto;
+.hero h1 {
+    font-size: clamp(2.5rem, 4.2vw, 4rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: var(--text-dark);
+    margin: 0.9rem 0 1.2rem;
 }
-.journey-skel-row { display: flex; align-items: flex-end; gap: 0.9rem; width: 100%; }
+.hero h1 em { font-style: italic; color: var(--strawberry); }
+.hero p.lede {
+    font-size: 1.08rem; line-height: 1.6; color: var(--text-muted);
+    max-width: 46ch; margin-bottom: 2rem;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-@keyframes skelShimmer {
-    0%   { background-position: -140% 0; }
-    100% { background-position: 140% 0; }
+.hero-visual { position: relative; height: 460px; }
+.hero-photo-main {
+    position: absolute; right: 4%; top: 6%;
+    width: 78%; aspect-ratio: 4/5;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(28,15,7,0.22);
+    border: 6px solid var(--warm-white);
+    transform: rotate(3deg);
 }
-@media (prefers-reduced-motion: reduce) {
-    .journey-skel-block::after { animation: none; }
+.hero-photo-main img { width: 100%; height: 100%; object-fit: cover; }
+.hero-photo-side {
+    position: absolute; left: 0; bottom: 2%;
+    width: 46%; aspect-ratio: 1/1;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(28,15,7,0.2);
+    border: 5px solid var(--warm-white);
+    transform: rotate(-6deg);
+}
+.hero-photo-side img { width: 100%; height: 100%; object-fit: cover; }
+.hero-badge {
+    position: absolute; left: 2%; top: 4%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 108px; height: 108px; border-radius: 50%;
+    background: var(--strawberry); color: white; text-align: center;
+    font-weight: 800; font-size: .8rem; line-height: 1.25;
+    box-shadow: 0 14px 26px rgba(107,69,48,0.4);
+    transform: rotate(-10deg);
+    animation: bob 5s ease-in-out infinite;
+    z-index: 3;
+}
+.hero-badge span { display: block; font-size: 1.5rem; font-weight: 700; }
+.float-deco { position: absolute; opacity: .8; animation: bob 6s ease-in-out infinite; --r: 0deg; }
+
+@media (max-width: 980px) {
+    .hero { padding: 3rem 1.5rem 4rem; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { height: 340px; order: -1; }
 }
 
-.journey-hud {
-    position: absolute; z-index: 10; left: 0; top: 0; right: 0; bottom: 0;
-    padding: 2.75rem; max-width: 560px;
-    display: flex; flex-direction: column; justify-content: flex-start;
-    pointer-events: none;
+/* ================= QUICK ACTIONS ================= */
+.quick-actions {
+    padding: 0 4rem; margin-top: -3.5rem; position: relative; z-index: 4;
 }
-.journey-intro {
-    position: absolute; left: 2.75rem; top: 2.75rem; right: 2.75rem; max-width: 460px;
-    opacity: 0; transition: opacity .5s ease;
+.quick-actions-row {
+    max-width: 1280px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.1rem;
 }
-.journey-intro.is-visible { opacity: 1; }
-.journey-intro h2 {
-    font-size: clamp(1.9rem, 3.6vw, 2.6rem); font-weight: 900; letter-spacing: -0.04em;
-    color: #fff; line-height: 1.08; margin: 0.85rem 0 0.9rem;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.35);
+.quick-card {
+    background: var(--warm-white);
+    border-radius: var(--r-md);
+    padding: 1.5rem 1.2rem;
+    box-shadow: 0 16px 32px rgba(28,15,7,0.1);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: .7rem;
+    transition: transform .22s ease, box-shadow .22s ease;
+    color: var(--text-dark);
+}
+.quick-card:hover { transform: translateY(-6px); box-shadow: 0 22px 40px rgba(28,15,7,0.16); }
+.quick-card .qc-icon {
+    width: 46px; height: 46px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+}
+.quick-card .qc-title { font-weight: 800; font-size: .95rem; }
+.quick-card .qc-sub { font-size: .78rem; color: var(--text-muted); line-height: 1.4; }
+.qc-1 .qc-icon { background: var(--caramel-pale); }
+.qc-2 .qc-icon { background: var(--strawberry-pale); }
+.qc-3 .qc-icon { background: var(--butter-pale); }
+.qc-4 .qc-icon { background: #EFE6D8; }
+.qc-5 .qc-icon { background: var(--caramel-pale); }
+
+@media (max-width: 980px) {
+    .quick-actions { padding: 0 1.2rem; margin-top: -2.5rem; }
+    .quick-actions-row { grid-template-columns: repeat(2, 1fr); }
 }
 
-.journey-scrollcue {
-    position: absolute; left: 50%; bottom: 2.25rem; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    opacity: 1; transition: opacity .4s ease; z-index: 10; pointer-events: none;
+/* ================= SECTION SHELL ================= */
+.section { padding: 6rem 4rem 2rem; max-width: 1280px; margin: 0 auto; }
+.section-head { max-width: 640px; margin-bottom: 2.6rem; }
+.section-head h2 {
+    font-weight: 700;
+    font-size: clamp(1.9rem, 3vw, 2.6rem); color: var(--text-dark);
+    line-height: 1.08; margin-top: .7rem;
 }
-.journey-scrollcue.is-hidden { opacity: 0; }
-.journey-scrollcue span { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
-.journey-scrollcue-line { width: 1px; height: 26px; background: linear-gradient(180deg, rgba(255,255,255,0.7), transparent); animation: softPulse 1.8s ease-in-out infinite; }
+.section-head p { color: var(--text-muted); margin-top: .8rem; line-height: 1.6; }
+@media (max-width: 980px) { .section { padding: 4rem 1.2rem 1rem; } }
 
-.journey-rail {
-    position: absolute; z-index: 10; right: 2.5rem; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 0.9rem; align-items: flex-end;
+/* ================= SCREEN TO TABLE ================= */
+.compare-wrap {
+    position: relative;
+    background: linear-gradient(160deg, var(--brown-deep) 0%, var(--brown-mid) 100%);
+    border-radius: var(--r-lg);
+    padding: 3.5rem;
+    overflow: hidden;
 }
-.journey-rail-step { display: flex; align-items: center; gap: 0.6rem; }
-.journey-rail-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.28); transition: background .35s ease, transform .35s ease; }
-.journey-rail-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); transition: color .35s ease; }
-.journey-rail-step.is-active .journey-rail-dot { background: var(--caramel-light); transform: scale(1.7); }
-.journey-rail-step.is-active .journey-rail-label { color: #fff; }
+.compare-wrap::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 85% 15%, rgba(232,176,122,0.14), transparent 45%);
+}
+.compare-head { position: relative; z-index: 2; margin-bottom: 2.5rem; max-width: 620px; }
+.compare-head .eyebrow { color: var(--caramel-light); }
+.compare-head .eyebrow::before { background: var(--caramel-light); }
+.compare-head h2 {
+    color: var(--warm-white); font-weight: 700;
+    font-size: clamp(1.8rem, 2.8vw, 2.4rem); margin-top: .7rem; line-height: 1.1;
+}
+.compare-head p { color: rgba(253,246,237,0.7); margin-top: .8rem; line-height: 1.6; }
 
-@media (max-width: 900px) {
-    .journey-hud, .journey-intro { padding: 0; left: 1.5rem; right: 1.5rem; max-width: 100%; }
-    .journey-intro { top: 1.75rem; }
-    .journey-rail { display: none; }
-    .journey-pin { height: 90vh; min-height: 540px; }
+.compare-stage {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem;
 }
-@media (max-width: 768px) {
-    .studio { margin: -1rem; }
+.compare-panel {
+    background: var(--warm-white); border-radius: var(--r-md); padding: 1.4rem;
+    box-shadow: 0 24px 50px rgba(0,0,0,0.35);
 }
-.page-end-pad {
-    display: none;
+.compare-panel .panel-tag {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .74rem; font-weight: 800; padding: .35rem .8rem; border-radius: 999px;
+    margin-bottom: .9rem;
 }
+.compare-panel.design .panel-tag { background: var(--skyicing); color: #4a3826; }
+.compare-panel.real .panel-tag { background: var(--strawberry); color: white; }
+.compare-panel .frame {
+    border-radius: var(--r-sm); overflow: hidden; aspect-ratio: 1/1;
+    background: var(--cream-dark);
+}
+.compare-panel .frame img { width: 100%; height: 100%; object-fit: cover; }
+.compare-panel .panel-caption { margin-top: .9rem; font-weight: 700; color: var(--text-dark); font-size: .92rem; }
+.compare-panel .panel-sub { font-size: .8rem; color: var(--text-muted); margin-top: .2rem; }
+
+.compare-divider {
+    display: flex; flex-direction: column; align-items: center; gap: .6rem;
+}
+.compare-divider .vs-badge {
+    width: 62px; height: 62px; border-radius: 50%;
+    background: var(--caramel);
+    color: white; font-weight: 700; font-size: 1.15rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 22px rgba(200,137,74,0.5);
+}
+.compare-divider .arrow-track { width: 2px; height: 90px; background: linear-gradient(180deg, rgba(232,176,122,0.5), transparent); }
+
+@media (max-width: 860px) {
+    .compare-wrap { padding: 2rem 1.4rem; }
+    .compare-stage { grid-template-columns: 1fr; }
+    .compare-divider { flex-direction: row; }
+    .compare-divider .arrow-track { width: 60px; height: 2px; }
+}
+
+
+.steps-wrap {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative;
+}
+.step-card { position: relative; padding: 0 1.4rem 0 0; }
+.step-card:not(:last-child)::after {
+    content: ''; position: absolute; top: 26px; right: -8px; width: calc(100% - 40px); height: 2px;
+    background: repeating-linear-gradient(90deg, var(--caramel-light) 0 8px, transparent 8px 16px);
+}
+.step-num {
+    width: 52px; height: 52px; border-radius: 50%; background: var(--brown-deep); color: var(--cream);
+    display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700;
+    font-size: 1.2rem; margin-bottom: 1.2rem; position: relative; z-index: 2;
+}
+.step-title { font-weight: 800; color: var(--text-dark); font-size: 1.05rem; margin-bottom: .5rem; }
+.step-desc { color: var(--text-muted); font-size: .88rem; line-height: 1.55; }
+
+@media (max-width: 980px) {
+    .steps-wrap { grid-template-columns: 1fr 1fr; row-gap: 2rem; }
+    .step-card:not(:last-child)::after { display: none; }
+}
+
+
+.saved-scroll {
+    display: flex; gap: 1.2rem; overflow-x: auto; padding-bottom: 1rem;
+    scroll-snap-type: x mandatory;
+}
+.saved-scroll::-webkit-scrollbar { height: 6px; }
+.saved-scroll::-webkit-scrollbar-thumb { background: var(--caramel-pale); border-radius: 999px; }
+.saved-card {
+    flex: 0 0 220px; scroll-snap-align: start;
+    background: var(--warm-white); border-radius: var(--r-md); overflow: hidden;
+    border: 1px solid var(--border); box-shadow: 0 10px 22px rgba(28,15,7,0.06);
+}
+.saved-card .saved-photo { aspect-ratio: 1/1; }
+.saved-card .saved-photo img { width: 100%; height: 100%; object-fit: cover; }
+.saved-card .saved-body { padding: .9rem 1rem 1.1rem; }
+.saved-card .saved-name { font-weight: 800; font-size: .88rem; color: var(--text-dark); }
+.saved-card .saved-price { color: var(--caramel); font-weight: 800; font-size: .82rem; margin-top: .25rem; }
+
+(nothing — delete this whole block, including the trailing blank line before `</style>`)
 </style>
 @endpush
 
 @section('content')
 <div class="studio">
 
+    {{-- ============================================================
+         HERO
+    ============================================================= --}}
+    <section class="hero">
+        <svg class="float-deco" viewBox="0 0 24 24" width="34" style="top:12%; right:8%; --r:12deg;" fill="none" stroke="var(--caramel)" stroke-width="2"><path d="M12 2l1.8 5.6H19l-4.6 3.5 1.8 5.6L12 13.2 7.8 16.7l1.8-5.6L5 7.6h5.2z"/></svg>
+        <svg class="float-deco" viewBox="0 0 24 24" width="26" style="bottom:16%; left:44%; --r:-8deg; animation-delay:1.2s;" fill="var(--strawberry)"><circle cx="12" cy="12" r="6"/></svg>
 
-    <div class="journey-scroll-track" id="journeyScrollTrack">
-        <div class="journey-pin" id="journeyPin">
-            <canvas id="journeyCanvas" aria-label="3D walkthrough of the baking kitchen"></canvas>
-            <div class="journey-scrim"></div>
-            <div class="journey-vignette"></div>
-
-             <div class="journey-loader" id="journeyLoader">
-                <div class="journey-skel">
-                    <div class="journey-skel-row">
-                        <div class="journey-skel-block journey-skel-cabinet"></div>
-                        <div class="journey-skel-block journey-skel-cabinet"></div>
-                        <div class="journey-skel-block journey-skel-stand"></div>
-                        <div class="journey-skel-block journey-skel-cabinet"></div>
-                    </div>
-                </div>
-                <div class="journey-skel" style="margin-top:-0.4rem;">
-                    <div class="journey-skel-block journey-skel-counter"></div>
-                </div>
-                <span>Loading your kitchen&hellip;</span>
-            </div>
-
-            <div class="journey-hud">
-                          <div class="journey-intro" id="journeyIntro">
-               <span class="kicker on-dark" id="journeyKicker"><b>Welcome</b> &middot; Your cake journey starts here</span>
-                    <h2 id="journeyHeading">Welcome to the kitchen.</h2>
-                    <a href="{{ route('customer.cake-builder.index') }}" class="journey-cta-btn">
-                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2z"/><path d="M12 11V7"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-                        Customize your own cake
+        <div class="hero-grid">
+            <div class="reveal">
+                <span class="eyebrow">Welcome back{{ isset($customer) ? ', ' . $customer->first_name : '' }}</span>
+                <h1>Design the cake.<br>Make it <em>yours</em>.</h1>
+                <p class="lede">Build a cake exactly the way you picture it, then let real bakers bid to bring it to life. See it, customize it, get it &mdash; all in one place.</p>
+                <div class="hero-actions">
+                    <a href="{{ route('customer.cake-builder.index') }}" class="btn-primary">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11H4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2z"/><path d="M12 11V7"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+                        Customize your cake
                     </a>
-                </div>
-                <div class="journey-scrollcue" id="journeyScrollCue">
-                    <span>Scroll to explore</span>
-                    <div class="journey-scrollcue-line"></div>
+                    <a href="{{ url('/customer/cakes') }}" class="btn-secondary">Explore cakes</a>
                 </div>
             </div>
 
-     <div class="journey-rail" aria-hidden="true">
-                <div class="journey-rail-step is-active" data-stage="0">
-                    <span class="journey-rail-label">Welcome</span><span class="journey-rail-dot"></span>
+            <div class="hero-visual reveal d2">
+                <div class="hero-badge">See it.<span>Customize.<br>Get it.</span></div>
+                <div class="hero-photo-main">
+                    {{-- Replace with a real hero cake photograph --}}
+                    <img src="{{ asset('images/cakes/hero-real-cake.jpg') }}" alt="A finished celebration cake made through BakeSphere" loading="lazy">
                 </div>
-                <div class="journey-rail-step" data-stage="1">
-                    <span class="journey-rail-label">Prep</span><span class="journey-rail-dot"></span>
-                </div>
-                <div class="journey-rail-step" data-stage="2">
-                    <span class="journey-rail-label">Oven</span><span class="journey-rail-dot"></span>
-                </div>
-                <div class="journey-rail-step" data-stage="3">
-                    <span class="journey-rail-label">Finished</span><span class="journey-rail-dot"></span>
+                <div class="hero-photo-side">
+                    {{-- Replace with a real detail/lifestyle photo --}}
+                    <img src="{{ asset('images/cakes/hero-detail.jpg') }}" alt="Close-up detail of a BakeSphere cake" loading="lazy">
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
+    {{-- ============================================================
+         QUICK ACTIONS
+    ============================================================= --}}
+    <section class="quick-actions">
+        <div class="quick-actions-row">
+            <a href="{{ route('customer.cake-builder.index') }}" class="quick-card qc-1">
+                <div class="qc-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--brown-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7"/><path d="M2 21h20"/><path d="M4 14c1-1.2 2-1.8 3-1.8s2 .6 3 1.8 2 1.8 3 1.8 2-.6 3-1.8 2-1.8 3-1.8"/><path d="M12 3v4"/><circle cx="12" cy="3.5" r="1.5"/></svg>
+                </div>
+                <div class="qc-title">Customize a cake</div>
+                <div class="qc-sub">Start designing from scratch</div>
+            </a>
+            <a href="{{ url('/customer/cakes') }}" class="quick-card qc-2">
+                <div class="qc-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--brown-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                </div>
+                <div class="qc-title">Browse gallery</div>
+                <div class="qc-sub">Get inspired by real cakes</div>
+            </a>
+            {{-- TODO: point to the customer order-tracking route --}}
+            <a href="{{ url('/customer/orders') }}" class="quick-card qc-3">
+                <div class="qc-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--brown-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+                </div>
+                <div class="qc-title">Track my orders</div>
+                <div class="qc-sub">See status &amp; delivery</div>
+            </a>
+            {{-- TODO: point to the customer wallet route --}}
+            <a href="{{ url('/customer/wallet') }}" class="quick-card qc-4">
+                <div class="qc-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--brown-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"/><path d="M18 12h.01"/></svg>
+                </div>
+                <div class="qc-title">My wallet</div>
+                <div class="qc-sub">Balance &amp; transactions</div>
+            </a>
+            {{-- TODO: point to the customer saved-designs route --}}
+            <a href="{{ url('/customer/saved') }}" class="quick-card qc-5">
+                <div class="qc-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--brown-deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.1 21.35l-1.1-1.02C5.14 15.36 2 12.5 2 8.99 2 6.42 4.02 4.4 6.6 4.4c1.5 0 2.94.7 3.9 1.8a5.3 5.3 0 0 1 3.9-1.8c2.58 0 4.6 2.02 4.6 4.6 0 3.5-3.14 6.37-8.9 11.35l-1 0.99z"/></svg>
+                </div>
+                <div class="qc-title">Saved designs</div>
+                <div class="qc-sub">Your favorite cakes</div>
+            </a>
+        </div>
+    </section>
+
+    {{-- ============================================================
+         FROM YOUR SCREEN TO YOUR TABLE
+    ============================================================= --}}
+    <section class="section">
+        <div class="compare-wrap reveal">
+            <div class="compare-head">
+                <span class="eyebrow">The BakeSphere difference</span>
+                <h2>From your screen to your table.</h2>
+                <p>Design your cake in the BakeSphere builder and see exactly how your digital creation becomes a real celebration cake.</p>
+            </div>
+            <div class="compare-stage">
+                <div class="compare-panel design">
+                    <span class="panel-tag">3D preview</span>
+                    <div class="frame">
+                        {{-- Replace with an export/screenshot from the cake builder --}}
+                        <img src="{{ asset('images/cakes/compare-3d-preview.jpg') }}" alt="A cake design created in the BakeSphere 3D cake builder" loading="lazy">
+                    </div>
+                    <div class="panel-caption">Your design</div>
+                    <div class="panel-sub">Built in the cake customizer</div>
+                </div>
+
+                <div class="compare-divider">
+                    <div class="arrow-track"></div>
+                    <div class="vs-badge">VS</div>
+                    <div class="arrow-track"></div>
+                </div>
+
+                <div class="compare-panel real">
+                    <span class="panel-tag">Real cake</span>
+                    <div class="frame">
+                        {{-- Replace with the real photographed result --}}
+                        <img src="{{ asset('images/cakes/compare-real-cake.jpg') }}" alt="The finished physical cake baked from the design" loading="lazy">
+                    </div>
+                    <div class="panel-caption">Your finished cake</div>
+                    <div class="panel-sub">Baked by a BakeSphere baker</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section">
+        <div class="section-head reveal">
+            <span class="eyebrow">How it works</span>
+            <h2>Your idea becomes a cake in four steps.</h2>
+        </div>
+        <div class="steps-wrap">
+            <div class="step-card reveal">
+                <div class="step-num">1</div>
+                <div class="step-title">Design</div>
+                <div class="step-desc">Customize your cake&rsquo;s shape, flavor, and decorations in the builder.</div>
+            </div>
+            <div class="step-card reveal d1">
+                <div class="step-num">2</div>
+                <div class="step-title">Set your budget</div>
+                <div class="step-desc">Tell bakers what you&rsquo;re looking for and what you&rsquo;re willing to spend.</div>
+            </div>
+            <div class="step-card reveal d2">
+                <div class="step-num">3</div>
+                <div class="step-title">Receive offers</div>
+                <div class="step-desc">Bakers review your request and bid to make it for you.</div>
+            </div>
+            <div class="step-card reveal d3">
+                <div class="step-num">4</div>
+                <div class="step-title">Order &amp; enjoy</div>
+                <div class="step-desc">Pick your baker, track the order, and enjoy your cake.</div>
+            </div>
+        </div>
+    </section>
+
+
+    @if(!empty($savedCakes))
+    <section class="section">
+        <div class="section-head reveal">
+            <span class="eyebrow">Saved for later</span>
+            <h2>Your favorite cakes</h2>
+        </div>
+        <div class="saved-scroll">
+            @foreach($savedCakes as $cake)
+                <div class="saved-card">
+                    <div class="saved-photo">
+                        <img src="{{ $cake->image_url ?? asset('images/cakes/placeholder-cake.jpg') }}" alt="{{ $cake->name }}" loading="lazy">
+                    </div>
+                    <div class="saved-body">
+                        <div class="saved-name">{{ $cake->name }}</div>
+                        <div class="saved-price">From &#8369;{{ number_format($cake->starting_price ?? 0) }}</div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
+    @endif
 </div>
 @endsection
 
 @push('scripts')
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-
-(function syncJourneyPinOffset() {
-    const pin = document.getElementById('journeyPin');
-    const topbarEl = document.querySelector('.topbar');
-    const sidebarEl = document.querySelector('.sidebar');
-    if (!pin) return;
-
-    function sync() {
-        const topbarH = topbarEl ? topbarEl.offsetHeight : 0;
-        // Sidebar is also position:fixed and can slide off-screen on mobile
-        // (translateX(-100%)), so read its actual on-screen edge each time
-        // rather than assuming a fixed 260px — this keeps the pin's HUD text
-        // from being clipped under the sidebar on desktop while staying
-        // full-width on mobile.
-        const sidebarW = sidebarEl ? Math.max(0, sidebarEl.getBoundingClientRect().right) : 0;
-
-        pin.style.top = topbarH + 'px';
-        pin.style.height = `calc(100vh - ${topbarH}px)`;
-        pin.style.left = sidebarW + 'px';
-        pin.style.width = `calc(100% - ${sidebarW}px)`;
-    }
-
-    sync();
-    window.addEventListener('resize', sync);
-    requestAnimationFrame(sync);
-})();
-
-
+<script>
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const io = new IntersectionObserver((entries) => {
         entries.forEach(e => { if (e.isIntersecting) e.target.style.animationPlayState = 'running'; });
@@ -356,459 +502,6 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 }
 
-/* ══════════════════════════════════════════════════════════════
-   THE KITCHEN JOURNEY
 
-   ONE Blender kitchen, loaded once from /models/bakesphere-kitchen.glb.
-   ONE Three.js scene. ONE camera. Scrolling scrubs it along a real
-   path built from the model's own coordinates.
-
-   These three cluster centers were measured directly from the GLB's
-   glTF node graph + accessor bounds (world-space mesh bounding-box
-   centers), not guessed:
-
-     PREP   — mixer / bowl / whisk / flour / egg / butter cluster
-              measured world center ≈ (1.95, 1.04, -2.60)
-     OVEN   — the plain baked cake at the bake counter
-              (node "Cylinder.006" / "cake_base_round.007")
-              measured world center = (3.74, 1.13, -0.89)
-     FINISH — cake stand + finished cake + plate + spatula + box
-              (node "cake_base_round.001" cluster)
-              measured world center ≈ (4.78, 1.02, -2.61)
-
-   The camera path stands the viewer back from each cluster at human
-   eye height (~1.55m, floor at y≈0) and threads a smooth curve
-   through all three, plus two shaping waypoints at the 33%/66% marks
-   so it arcs through the open floor between the two counter runs
-   instead of cutting a straight line through cabinetry.
-══════════════════════════════════════════════════════════════ */
-async function initKitchenJourney() {
-    const track = document.getElementById('journeyScrollTrack');
-    const pin = document.getElementById('journeyPin');
-    const canvas = document.getElementById('journeyCanvas');
-    if (!track || !pin || !canvas || !window.WebGLRenderingContext) return;
-
-    const journeyFallbackTimer = setTimeout(() => {
-        const loader = document.getElementById('journeyLoader');
-        if (loader && !loader.classList.contains('is-hidden')) {
-            loader.querySelector('span').textContent = 'Preview unavailable — your orders are still below';
-            loader.querySelector('.journey-loader-ring').style.display = 'none';
-        }
-    }, 12000);
-
-    let THREE, GLTFLoader;
-    try {
-        THREE = await import('three');
-        ({ GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js'));
-    } catch (err) {
-        console.warn('Kitchen journey: three.js failed to load.', err);
-        return;
-    }
-    clearTimeout(journeyFallbackTimer);
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isMobile = window.matchMedia('(max-width: 760px)').matches;
-    const lowPower = isMobile || (navigator.hardwareConcurrency ? navigator.hardwareConcurrency <= 4 : false);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, alpha: false, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPower ? 1.4 : 1.85));
-    renderer.shadowMap.enabled = !lowPower;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.25;
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1c0f07);
-    scene.fog = new THREE.Fog(0x1c0f07, 6, 16);
-
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.05, 60);
-// ── KITCHEN LIGHTING ────────────────────────────────────────
-const ambient = new THREE.AmbientLight(0xffead6, 1.15);
-scene.add(ambient);
-
-// Main overhead light
-const key = new THREE.DirectionalLight(0xfff4e5, 2.2);
-key.position.set(1, 7, 2);
-key.castShadow = !lowPower;
-
-if (!lowPower) {
-    key.shadow.mapSize.set(1024, 1024);
-    key.shadow.camera.left = -7;
-    key.shadow.camera.right = 7;
-    key.shadow.camera.top = 7;
-    key.shadow.camera.bottom = -7;
-    key.shadow.camera.near = 0.5;
-    key.shadow.camera.far = 18;
-    key.shadow.bias = -0.001;
-}
-
-scene.add(key);
-
-// Front fill — brightens the cabinets/counters facing the camera
-const frontFill = new THREE.PointLight(0xffead2, 1.8, 12, 1.5);
-frontFill.position.set(1.5, 3.5, 2.5);
-scene.add(frontFill);
-
-// Left-side fill
-const leftFill = new THREE.PointLight(0xffdfc0, 1.4, 10, 1.5);
-leftFill.position.set(-2, 3, -1);
-scene.add(leftFill);
-
-// Prep area
-const prepFill = new THREE.PointLight(0xffd9ad, 1.5, 9, 1.5);
-prepFill.position.set(1.5, 2.8, -2.5);
-scene.add(prepFill);
-
-// Oven / right side
-const ovenFill = new THREE.PointLight(0xffd9ad, 1.5, 9, 1.5);
-ovenFill.position.set(5, 3, -1);
-scene.add(ovenFill);
-
-// Soft ceiling light
-const ceilingFill = new THREE.HemisphereLight(
-    0xffead2,
-    0x5a3825,
-    0.9
-);
-scene.add(ceilingFill);
-
-    const loaderEl = document.getElementById('journeyLoader');
-    const loader = new GLTFLoader();
-    let kitchenReady = false;
-
-    loader.load(
-        '/models/bakesphere-kitchen.glb',
-        (gltf) => {
-            const model = gltf.scene;
-            model.traverse(o => {
-                if (o.isMesh) {
-                    o.castShadow = true;
-                    o.receiveShadow = true;
-                    if (o.material) {
-                        const mats = Array.isArray(o.material) ? o.material : [o.material];
-                        mats.forEach(m => { if (m.map) m.map.colorSpace = THREE.SRGBColorSpace; });
-                    }
-                }
-            });
-            scene.add(model);
-            kitchenReady = true;
-            loaderEl && loaderEl.classList.add('is-hidden');
-            updateOverlay(0, true);
-        },
-        undefined,
-        (err) => {
-            console.warn('Kitchen journey: failed to load /models/bakesphere-kitchen.glb', err);
-            if (loaderEl) {
-                loaderEl.querySelector('span').textContent = 'Preview unavailable — your orders are still below';
-                loaderEl.querySelector('.journey-loader-ring').style.display = 'none';
-            }
-        }
-    );
-    const EYE_Y = 1.55;
-
-    /* SCENE 1 — WELCOME (estimated, not measured)
-       Unlike Prep/Oven/Finish below, this is NOT pulled from measured
-       GLB node bounds — there's no dedicated "welcome" object cluster
-       to measure. It's derived by pulling the camera back from the
-       Prep eye position along roughly the same sightline, raised
-       slightly, and re-aimed at the hood / counter run (the visual
-       center of the wide establishing shot).
-
-       TUNING GUIDE if the angle looks off:
-         eyeWelcome.z  → more positive = pulled back further (wider view)
-         eyeWelcome.y  → higher = looking down more into the counters
-         eyeWelcome.x  → shifts camera left(-) / right(+)
-         lookWelcome.x → pans the aim point left(-) / right(+)
-         lookWelcome.z → moves the aim point deeper(-) / closer(+) into the room
-    */
-    const eyeWelcome  = new THREE.Vector3(2.40, 1.75, 0.80);
-    const lookWelcome = new THREE.Vector3(3.30, 1.25, -2.40);
-
-    const eyePrep   = new THREE.Vector3(1.55, EYE_Y, -1.85);
-    const lookPrep  = new THREE.Vector3(2.0, 1.05, -2.50);
-    
-    const eyeMid1   = new THREE.Vector3(2.75, EYE_Y + 0.02, -0.55);
-    const lookMid1  = new THREE.Vector3(2.90, 1.10, -1.60);
-
-const eyeOven   = new THREE.Vector3(4.35, EYE_Y, -1.35);
-const lookOven  = new THREE.Vector3(5.15, 1.02, -2.65);
-
-const eyeMid2   = new THREE.Vector3(1.15, EYE_Y + 0.02, -0.60);
-const lookMid2  = new THREE.Vector3(4.35, 1.08, -1.70);
-
-const eyeFinish = new THREE.Vector3(4.05, EYE_Y - 0.25, -0.15);
-const lookFinish = new THREE.Vector3(3.4, 1.24, -0.89);
-    function withPhantoms(pts) {
-        const first = pts[0].clone().add(pts[0].clone().sub(pts[1]));
-        const last = pts[pts.length - 1].clone().add(pts[pts.length - 1].clone().sub(pts[pts.length - 2]));
-        return [first, ...pts, last];
-    }
-
-    /* ── TWO segments instead of one 5-point spline ──
-       A single Catmull-Rom curve through all 5 waypoints let the curve's
-       arc length "borrow" travel time between them whenever the legs
-       weren't evenly spaced — and they aren't (prep→oven bulges out in z,
-       oven→finish bulges back in). That meant progress=0.5 didn't land
-       exactly on OVEN and progress=1 didn't land exactly on FINISH; the
-       two later stages visually bled into each other.
-
-       Splitting into prep→oven and oven→finish, each explicitly mapped
-       to its own start/mid/end, pins exact stops:
-         progress 0    = PREP
-         progress 0.5  = OVEN     (this image)
-         progress 1    = FINISHED
-       every time, regardless of the model's geometry. */
-    const eyeCurveA  = new THREE.CatmullRomCurve3(withPhantoms([eyePrep, eyeMid1, eyeOven]), false, 'catmullrom', 0.5);
-    const lookCurveA = new THREE.CatmullRomCurve3(withPhantoms([lookPrep, lookMid1, lookOven]), false, 'catmullrom', 0.5);
-    const eyeCurveB  = new THREE.CatmullRomCurve3(withPhantoms([eyeOven, eyeMid2, eyeFinish]), false, 'catmullrom', 0.5);
-    const lookCurveB = new THREE.CatmullRomCurve3(withPhantoms([lookOven, lookMid2, lookFinish]), false, 'catmullrom', 0.5);
-
-    // 3 real points + 1 phantom each side = 5 points = 4 segments.
-    // Real points land at u = 1/4 (start), 2/4 (mid waypoint), 3/4 (end).
-    // Map local segment progress t (0..1) onto u = 1/4 + t/2 so t=0 is
-    // the exact start point and t=1 is the exact end point — no drift.
-    function segmentU(t) { return 0.25 + t * 0.5; }
-    const currentEye = eyeWelcome.clone();
-    const currentLook = lookWelcome.clone();
-    const targetEye = eyeWelcome.clone();
-    const targetLook = lookWelcome.clone();
-    const travelFromEye = eyeWelcome.clone();
-    const travelFromLook = lookWelcome.clone();
-    const TRAVEL_DURATION_MS = 1300; // how long one scene-to-scene camera move takes
-    let travelStartTime = 0;
-    let progress = 0;
-    let renderedProgress = -1;
-    let stageIndex = 0;
-    let isAnimating = false;
-    const STAGE_PROGRESS = [0, 1 / 3, 2 / 3, 1];
-    const STAGE_COOLDOWN_MS = TRAVEL_DURATION_MS + 200; // block new input until the camera move actually finishes
-    function goToStage(nextIndex) {
-        nextIndex = Math.max(0, Math.min(STAGE_PROGRESS.length - 1, nextIndex));
-        if (nextIndex === stageIndex || isAnimating) return;
-        stageIndex = nextIndex;
-        progress = STAGE_PROGRESS[stageIndex];
-        isAnimating = true;
-        setTimeout(() => { isAnimating = false; }, STAGE_COOLDOWN_MS);
-        if (JOURNEY_DEBUG) console.log('[journey] stage=', stageIndex);
-    }
-function updateTargetFromProgress() {
-    /*
-     * Explicit 4-stage camera path:
-     *
-     * 0.000        = WELCOME
-     * 0.333 (1/3)  = PREP
-     * 0.667 (2/3)  = OVEN
-     * 1.000        = FINISHED
-     *
-     * This keeps the camera and the stage labels synchronized.
-     * smoothstep gives the movement a natural cinematic acceleration
-     * and deceleration instead of a robotic linear slide.
-     */
-    const THIRD = 1 / 3;
-
-    if (progress <= THIRD) {
-        const t = progress / THIRD;
-        const smoothT = t * t * (3 - 2 * t);
-
-        targetEye.lerpVectors(eyeWelcome, eyePrep, smoothT);
-        targetLook.lerpVectors(lookWelcome, lookPrep, smoothT);
-    } else if (progress <= THIRD * 2) {
-        const t = (progress - THIRD) / THIRD;
-        const smoothT = t * t * (3 - 2 * t);
-
-        targetEye.lerpVectors(eyePrep, eyeOven, smoothT);
-        targetLook.lerpVectors(lookPrep, lookOven, smoothT);
-    } else {
-        const t = (progress - THIRD * 2) / THIRD;
-        const smoothT = t * t * (3 - 2 * t);
-
-        targetEye.lerpVectors(eyeOven, eyeFinish, smoothT);
-        targetLook.lerpVectors(lookOven, lookFinish, smoothT);
-    }
-}
-
-    const introEl = document.getElementById('journeyIntro');
-    const kickerEl = document.getElementById('journeyKicker');
-    const headingEl = document.getElementById('journeyHeading');
-    const scrollCueEl = document.getElementById('journeyScrollCue');
-    const railSteps = document.querySelectorAll('.journey-rail-step');
-
-    const STAGES = [
-        { kicker: `<b>Welcome</b> &middot; Your cake journey starts here`, heading: `Welcome to the kitchen.` },
-        { kicker: `<b>Preparation</b> &middot; Fresh ingredients, ready to go`, heading: `Freshly prepared, just for you.` },
-        { kicker: `<b>Baking</b> &middot; Into the oven it goes`, heading: `Into the oven.` },
-        { kicker: `<b>Finished</b> &middot; Made, baked, and ready to enjoy`, heading: `Baked to perfection.` },
-    ];
-    let activeStage = -1;
-    let introVisible = false;
-
-   function stageForProgress(p) {
-    // With discrete stage-jump navigation, progress only ever lands
-    // exactly on one of the four STAGE_PROGRESS values, so this just
-    // finds the closest match instead of relying on drift-prone thresholds.
-    let closest = 0;
-    let closestDist = Infinity;
-    STAGE_PROGRESS.forEach((sp, i) => {
-        const d = Math.abs(sp - p);
-        if (d < closestDist) { closestDist = d; closest = i; }
-    });
-    return closest;
-}
-    function updateOverlay(p, force) {
-        const stageIdx = stageForProgress(p);
-
-        if (stageIdx !== activeStage || force) {
-            activeStage = stageIdx;
-            const s = STAGES[stageIdx];
-            kickerEl.innerHTML = s.kicker;
-            headingEl.textContent = s.heading;
-            railSteps.forEach(el => el.classList.toggle('is-active', Number(el.dataset.stage) === stageIdx));
-        }
-
-        if (!introVisible) { introEl.classList.add('is-visible'); introVisible = true; }
-        scrollCueEl.classList.toggle('is-hidden', p > 0.03);
-    }
-
-    let running = false, rafId = null;
-    let lastT = performance.now();
-
-    function frame(now) {
-        if (!running) return;
-        const dt = Math.min(0.05, (now - lastT) / 1000);
-        lastT = now;
-        if (kitchenReady) {
-            if (progress !== renderedProgress) {
-                travelFromEye.copy(currentEye);
-                travelFromLook.copy(currentLook);
-                updateTargetFromProgress();
-                updateOverlay(progress, false);
-                renderedProgress = progress;
-                travelStartTime = now;
-            }
-
-            if (reducedMotion) {
-                currentEye.copy(targetEye);
-                currentLook.copy(targetLook);
-            } else {
-                const t = Math.min(1, (now - travelStartTime) / TRAVEL_DURATION_MS);
-                const smoothT = t * t * (3 - 2 * t);
-                currentEye.lerpVectors(travelFromEye, targetEye, smoothT);
-                currentLook.lerpVectors(travelFromLook, targetLook, smoothT);
-            }
-
-            camera.position.copy(currentEye);
-            camera.lookAt(currentLook);
-        }
-        renderer.render(scene, camera);
-        rafId = requestAnimationFrame(frame);
-    }
-    function start() { if (!running) { running = true; lastT = performance.now(); rafId = requestAnimationFrame(frame); } }
-    function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); }
-const JOURNEY_DEBUG = new URLSearchParams(location.search).has('debugJourney');
-
-const WHEEL_THRESHOLD = 12; // ignore tiny trackpad jitter
-
-function onWheel(e) {
-    e.preventDefault();
-    if (Math.abs(e.deltaY) < WHEEL_THRESHOLD) return;
-    goToStage(stageIndex + (e.deltaY > 0 ? 1 : -1));
-}
-
-let touchStartY = null;
-let touchHandledThisGesture = false;
-
-function onTouchStart(e) {
-    touchStartY = e.touches[0].clientY;
-    touchHandledThisGesture = false;
-}
-function onTouchMove(e) {
-    e.preventDefault();
-    if (touchHandledThisGesture || touchStartY === null) return;
-    const dy = touchStartY - e.touches[0].clientY;
-    const TOUCH_THRESHOLD = 40;
-    if (Math.abs(dy) > TOUCH_THRESHOLD) {
-        goToStage(stageIndex + (dy > 0 ? 1 : -1));
-        touchHandledThisGesture = true;
-    }
-}
-function onTouchEnd() {
-    touchStartY = null;
-    touchHandledThisGesture = false;
-}
-
-window.addEventListener('wheel', onWheel, { passive: false });
-window.addEventListener('touchstart', onTouchStart, { passive: true });
-window.addEventListener('touchmove', onTouchMove, { passive: false });
-window.addEventListener('touchend', onTouchEnd, { passive: true });
-
-    function resize() {
-        const w = pin.clientWidth, h = pin.clientHeight;
-        if (!w || !h) return;
-        camera.aspect = w / h;
-        camera.fov = w / h < 0.9 ? 58 : (w / h < 1.4 ? 53 : 50);
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h, false);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-    start();
-    document.addEventListener('visibilitychange', () => { document.hidden ? stop() : start(); });
-
-    function disposeKitchenJourney() {
-        stop();
-        window.removeEventListener('resize', resize);
-        window.removeEventListener('wheel', onWheel);
-        window.removeEventListener('touchstart', onTouchStart);
-        window.removeEventListener('touchmove', onTouchMove);
-        window.removeEventListener('touchend', onTouchEnd);
-        scene.traverse(obj => {
-            if (obj.geometry) obj.geometry.dispose();
-            if (obj.material) (Array.isArray(obj.material) ? obj.material : [obj.material]).forEach(m => {
-                if (m.map) m.map.dispose();
-                m.dispose();
-            });
-        });
-        renderer.dispose();
-    }
-    window.addEventListener('pagehide', disposeKitchenJourney, { once: true });
-}
-
-initKitchenJourney();
-(function initLibraryFilters() {
-    const filterBar = document.getElementById('libFilters');
-    const grid = document.getElementById('libGrid');
-    const empty = document.getElementById('libEmpty');
-    if (!filterBar || !grid) return;
-    const buttons = filterBar.querySelectorAll('.lib-filter');
-    const cards = grid.querySelectorAll('.lib-card');
-    filterBar.addEventListener('click', (e) => {
-        const btn = e.target.closest('.lib-filter');
-        if (!btn) return;
-        buttons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter = btn.dataset.filter;
-        let visibleCount = 0;
-        cards.forEach(card => {
-            const match = filter === 'all' || card.dataset.cat === filter;
-            card.classList.toggle('is-hidden', !match);
-            if (match) visibleCount++;
-        });
-        empty?.classList.toggle('is-visible', visibleCount === 0);
-    });
-})();
-
-(function initInspirationTabs() {
-    const tabs = document.querySelectorAll('.insp-tab');
-    if (!tabs.length) return;
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.insp-panel').forEach(p => p.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.target)?.classList.add('active');
-        });
-    });
-})();
 </script>
 @endpush

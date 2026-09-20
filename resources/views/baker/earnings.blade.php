@@ -19,7 +19,28 @@
 }
 
 .page-title    { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.75rem; font-weight:800; color:var(--brown-deep); margin-bottom:0.25rem; }
-.page-subtitle { font-size:0.85rem; color:var(--text-muted); margin-bottom:2rem; }
+.page-subtitle { font-size:0.85rem; color:var(--text-muted); margin-bottom:0; }
+
+.page-header-row { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:2rem; }
+
+.btn-report {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.1rem;
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--brown-mid);
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+.btn-report:hover { border-color: var(--caramel); color: var(--brown-deep); background: var(--cream); }
+.btn-report svg { flex-shrink: 0; }
 
 /* ── STAT CARDS ── */
 .stats-grid {
@@ -49,7 +70,8 @@
 .stat-card.c2::after { background: linear-gradient(90deg, #9A6028, #C8803A); }
 .stat-card.c3::after { background: linear-gradient(90deg, var(--brown-deep), var(--brown-mid)); }
 
-.stat-icon  { font-size: 1.6rem; margin-bottom: 0.75rem; }
+.stat-icon  { margin-bottom: 0.75rem; color: var(--caramel); }
+.stat-icon svg { width: 26px; height: 26px; }
 .stat-value { font-family:'Plus Jakarta Sans',sans-serif; font-size: 2rem; font-weight: 800; color: var(--brown-deep); line-height: 1; }
 .stat-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-top: 0.3rem; }
 .stat-sub   { font-size: 0.72rem; color: var(--caramel); font-weight: 600; margin-top: 0.5rem; }
@@ -176,13 +198,13 @@
     align-items: center;
     gap: 0.75rem;
 }
-.best-month-icon { font-size: 1.5rem; flex-shrink: 0; }
+.best-month-icon { color: #fff; flex-shrink: 0; display: flex; align-items: center; }
 .best-month-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.55); margin-bottom: 0.15rem; }
 .best-month-value { font-family:'Plus Jakarta Sans',sans-serif; font-size: 1rem; color: #fff; font-weight: 700; }
 
 /* ── EMPTY ── */
 .empty-state { padding: 3rem 2rem; text-align: center; color: var(--text-muted); }
-.empty-state .emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.empty-state .emoji { color: var(--border); margin-bottom: 0.75rem; display: flex; justify-content: center; }
 .empty-state h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size: 1.1rem; font-weight:700; color: var(--brown-mid); margin-bottom: 0.4rem; }
 
 @media (max-width: 900px) {
@@ -197,25 +219,33 @@
 
 @section('content')
 
-<h1 class="page-title">Earnings</h1>
-<p class="page-subtitle">Your financial overview and monthly breakdown</p>
+<div class="page-header-row">
+    <div>
+        <h1 class="page-title">Earnings</h1>
+        <p class="page-subtitle">Your financial overview and monthly breakdown</p>
+    </div>
+    <button type="button" class="btn-report" onclick="generateReport()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+        Generate Report
+    </button>
+</div>
 
 {{-- ── STAT CARDS ── --}}
 <div class="stats-grid">
     <div class="stat-card c1">
-        <div class="stat-icon">💰</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="14.5" r="2.5"/></svg></div>
         <div class="stat-value">₱{{ number_format($thisMonth, 0) }}</div>
         <div class="stat-label">This Month</div>
         <div class="stat-sub">{{ now()->format('F Y') }}</div>
     </div>
     <div class="stat-card c2">
-        <div class="stat-icon">📈</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
         <div class="stat-value">₱{{ number_format($allTime, 0) }}</div>
         <div class="stat-label">All Time Earnings</div>
         <div class="stat-sub">Since you joined</div>
     </div>
     <div class="stat-card c3">
-        <div class="stat-icon">🎂</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M4 15c1-1.5 2.5-1.5 3.5 0s2.5 1.5 3.5 0 2.5-1.5 3.5 0 2.5 1.5 3.5 0"/><path d="M12 9V5"/><path d="M12 5c-1.1 0-1.8-.8-1.8-1.6C10.2 2.5 12 1 12 1s1.8 1.5 1.8 2.4c0 .8-.7 1.6-1.8 1.6z"/></svg></div>
         <div class="stat-value">{{ $completedCount }}</div>
         <div class="stat-label">Completed Orders</div>
         <div class="stat-sub">Total fulfilled</div>
@@ -232,7 +262,7 @@
         </div>
         @if($monthly->isEmpty())
             <div class="empty-state">
-                <div class="emoji">🫙</div>
+                         <div class="emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M21 8l-2 13H5L3 8"/><path d="M1 3h22"/><path d="M10 12h4"/></svg></div>
                 <h3>No earnings yet</h3>
                 <p>Complete your first order to start seeing earnings here.</p>
             </div>
@@ -304,7 +334,7 @@
 
             @if($bestMonth)
             <div class="best-month-card">
-                <div class="best-month-icon">🏆</div>
+                          <div class="best-month-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 5H4a2 2 0 0 0 0 4h1"/><path d="M17 5h3a2 2 0 0 1 0 4h-1"/></svg></div>
                 <div>
                     <div class="best-month-label">Best Month</div>
                     <div class="best-month-value">
@@ -320,3 +350,107 @@
 </div>
 
 @endsection
+@push('scripts')
+@php
+    $monthlyForReport = $monthly->map(function ($r) {
+        return [
+            'year'  => $r->year,
+            'month' => $r->month,
+            'total' => $r->total,
+            'count' => $r->count,
+        ];
+    })->values();
+@endphp
+<script>
+window._earningsReport = {
+    bakerName: @json(auth()->user()->first_name . ' ' . auth()->user()->last_name),
+    thisMonth: {{ $thisMonth }},
+    allTime: {{ $allTime }},
+    completedCount: {{ $completedCount }},
+    monthly: @json($monthlyForReport)
+};
+
+function generateReport() {
+    const data = window._earningsReport;
+    const rows = data.monthly.map(r => {
+        const monthName = new Date(r.year, r.month - 1, 1).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+        const avg = r.count > 0 ? r.total / r.count : 0;
+        return `<tr>
+            <td>${monthName}</td>
+            <td class="num">₱${Number(r.total).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+            <td class="num">${r.count}</td>
+            <td class="num">₱${Number(avg).toLocaleString('en-US', {maximumFractionDigits:0})}</td>
+        </tr>`;
+    }).join('');
+
+    const win = window.open('', '_blank', 'width=900,height=1000');
+    win.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Earnings Report — ${data.bakerName}</title>
+        <style>
+            * { box-sizing: border-box; }
+            body { font-family: Georgia, 'Times New Roman', serif; color: #2C1A0E; margin: 0; padding: 48px 56px; }
+            .report-header { display:flex; justify-content:space-between; align-items:flex-start; border-bottom: 2px solid #3B1F0F; padding-bottom: 16px; margin-bottom: 28px; }
+            .report-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+            .report-sub { font-size: 12px; color: #6B4A2A; margin: 0; }
+            .report-meta { text-align: right; font-size: 11px; color: #9A7A5A; }
+            .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+            .summary-box { border: 1px solid #EAE0D0; border-radius: 6px; padding: 14px 16px; }
+            .summary-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #9A7A5A; margin-bottom: 6px; }
+            .summary-value { font-size: 20px; font-weight: 700; color: #3B1F0F; }
+            table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 24px; }
+            th { text-align: left; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #6B4A2A; border-bottom: 1.5px solid #3B1F0F; padding: 8px 10px; }
+            td { padding: 8px 10px; border-bottom: 1px solid #EAE0D0; }
+            td.num, th.num { text-align: right; }
+            .footer-note { font-size: 10px; color: #9A7A5A; margin-top: 40px; border-top: 1px solid #EAE0D0; padding-top: 12px; }
+            @media print { body { padding: 24px 32px; } }
+        </style>
+    </head>
+    <body>
+        <div class="report-header">
+            <div>
+                <p class="report-title">${data.bakerName}</p>
+                <p class="report-sub">Earnings Report</p>
+            </div>
+            <div class="report-meta">
+                Generated ${new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}
+            </div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-box">
+                <div class="summary-label">This Month</div>
+                <div class="summary-value">₱${Number(data.thisMonth).toLocaleString('en-US', {maximumFractionDigits:0})}</div>
+            </div>
+            <div class="summary-box">
+                <div class="summary-label">All-Time Earnings</div>
+                <div class="summary-value">₱${Number(data.allTime).toLocaleString('en-US', {maximumFractionDigits:0})}</div>
+            </div>
+            <div class="summary-box">
+                <div class="summary-label">Completed Orders</div>
+                <div class="summary-value">${data.completedCount}</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr><th>Month</th><th class="num">Earnings</th><th class="num">Orders</th><th class="num">Avg. per Order</th></tr>
+            </thead>
+            <tbody>
+                ${rows || '<tr><td colspan="4" style="text-align:center;color:#9A7A5A;">No earnings recorded yet.</td></tr>'}
+            </tbody>
+        </table>
+
+        <p class="footer-note">This report was generated automatically from your BakeSphere account activity and reflects completed orders at the time of generation.</p>
+
+        <script>window.onload = function(){ setTimeout(function(){ window.print(); }, 300); };<\/script>
+    </body>
+    </html>
+    `);
+    win.document.close();
+}
+</script>
+@endpush
