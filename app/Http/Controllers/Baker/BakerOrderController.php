@@ -42,59 +42,68 @@ class BakerOrderController extends Controller
         return view('baker.orders.show', compact('order', 'payment', 'isPickup', 'escrow'));
     }
 
-    /**
-     * PREPARING -> READY only. Everything after READY is handled by
-     * confirmHandover() (pickup) or the customer's confirmReceived() (delivery).
-     */
-    public function advance(Request $request, BakerOrder $order)
-    {
-        abort_if($order->baker_id !== Auth::id(), 403);
-        abort_if($order->status === 'CANCELLED', 422, 'This order has been cancelled.');
-        abort_if($order->status !== 'PREPARING', 422, 'Cannot advance order from current status.');
+   
+public function advance(Request $request, BakerOrder $order)
+{
+    abort_if($order->baker_id !== Auth::id(), 403);
+    abort_if($order->status === 'CANCELLED', 422, 'This order has been cancelled.');
 
-        $request->validate(['cake_final_photo' => 'required|image|max:5120']);
-
-        DB::transaction(function () use ($order, $request) {
-            $order->update([
-                'status'           => 'READY',
-                'cake_final_photo' => $request->file('cake_final_photo')->store('cake-final-photos', 'public'),
-            ]);
-            $order->cakeRequest->update(['status' => 'IN_PROGRESS']);
-        });
-
-        $order->cakeRequest->user->notify(
-            new \App\Notifications\OrderStatusChangedNotification($order, 'READY')
-        );
-
-        return back()->with('success', ' Cake marked as ready! Customer has been notified.');
+    // Pickup orders: the "Confirm Pickup" button posts here while status is READY
+    if ($order->status === 'READY' && $order->cakeRequest->isPickup()) {
+        return $this->confirmHandover($request, $order);
     }
 
-    /**
-     * Pickup only: baker confirms the customer collected the cake in person.
-     * No cash — full payment was already made upfront. Releases escrow.
-     */
-    public function confirmHandover(Request $request, BakerOrder $order)
-    {
-        abort_if($order->baker_id !== Auth::id(), 403);
-        abort_if($order->status !== 'READY', 422, 'Order is not ready for pickup yet.');
-        abort_if(!$order->cakeRequest->isPickup(), 422, 'Use the delivery confirmation flow instead.');
-
-        try {
-            $this->escrow->releaseToBaker($order);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error completing order: ' . $e->getMessage());
-        }
-
-        $order->update(['status' => 'COMPLETED', 'completed_at' => now()]);
-        $order->cakeRequest->update(['status' => 'COMPLETED']);
-
-        $order->cakeRequest->user->notify(
-            new \App\Notifications\OrderStatusChangedNotification($order, 'COMPLETED')
-        );
-        return redirect()
-            ->route('baker.orders.show', $order->id)
-            ->with('success', '🎉 Pickup confirmed! Funds released to your wallet.');
+    // Double-click or stale page: go back instead of throwing a 422
+    if ($order->status !== 'PREPARING') {
+        return redirect()->route('baker.orders.show', $order->id)
+            ->with('error', 'This order has already moved to the next step.');
     }
+
+    $request->validate(['cake_final_photo' => 'required|image|max:5120']);
+
+    DB::transaction(function () use ($order, $request) {
+        $order->update([
+            'status'           => 'READY',
+            'cake_final_photo' => $request->file('cake_final_photo')->store('cake-final-photos', 'public'),
+        ]);
+        $order->cakeRequest->update(['status' => 'IN_PROGRESS']);
+    });
+
+    $order->cakeRequest->user->notify(
+        new \App\Notifications\OrderStatusChangedNotification($order, 'READY')
+    );
+
+    return back()->with('success', 'Cake marked as ready! Customer has been notified.');
+}
+
+public function confirmHandover(Request $request, BakerOrder $order)
+{
+    abort_if($order->baker_id !== Auth::id(), 403);
+    abort_if($order->status === 'CANCELLED', 422, 'This order has been cancelled.');
+    abort_if(! $order->cakeRequest->isPickup(), 422, 'Only pickup orders are confirmed via handover.');
+
+    if ($order->status !== 'READY') {
+        return redirect()->route('baker.orders.show', $order->id)
+            ->with('error', 'This order is not ready for handover.');
+    }
+
+    try {
+        $this->escrow->releaseToBaker($order);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error completing order: ' . $e->getMessage());
+    }
+
+    $order->update(['status' => 'COMPLETED', 'completed_at' => now()]);
+    $order->cakeRequest->update(['status' => 'COMPLETED']);
+
+    $order->cakeRequest->user->notify(
+        new \App\Notifications\OrderStatusChangedNotification($order, 'COMPLETED')
+    );
+
+    return redirect()
+        ->route('baker.orders.show', $order->id)
+        ->with('success', 'Pickup confirmed! Funds released to your wallet.');
+}
 
     /**
      * Delivery only: baker marks the cake as delivered, once the customer

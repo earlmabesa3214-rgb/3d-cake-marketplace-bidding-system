@@ -81,11 +81,45 @@
     .lb-close{position:fixed;top:1.25rem;right:1.5rem;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
     .alert-success{display:flex;align-items:center;gap:.75rem;padding:.8rem 1rem;border-radius:var(--r);font-size:.8rem;font-weight:500;margin-bottom:1rem;background:var(--teal-soft);border:1.5px solid rgba(31,122,108,.25);color:var(--teal);font-family:'Plus Jakarta Sans',sans-serif;}
     @media(max-width:900px){.layout{grid-template-columns:1fr;}.doc-grid{grid-template-columns:1fr;}.hero{flex-direction:column;align-items:flex-start;}.hero-right{flex-wrap:wrap;}}
-    </style>
+    /* ── admin console override ── */
+:root{--gold:#b89452;--gold-dark:#8a6b30;--gold-dk:#8a6b30;--gold-light:#d3b77e;--gold-lt:#d3b77e;--gold-soft:#f4ecda;--copper:#a96f42;--teal:#2f5d46;--teal-soft:#e6eee8;--rose:#7a2a32;--rose-soft:#f4e6e7;--espresso:#24150f;--mocha:#4a2a1a;--t1:#24150f;--t2:#3a241a;--tm:#7d6b5b;--s:#fff;--s2:#fbf8f1;--s3:#efe6d7;--bdr:#e2d6c3;--bdr-md:#d8c8b7;--r:5px;--rl:6px;--rxl:8px;}
+.pg{padding:0 0 3rem;}
+.ic{width:14px;height:14px;fill:none;stroke:currentcolor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:-2px;}
+.back-btn{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.hero{border-radius:var(--rxl);background:var(--espresso);border-bottom:2px solid var(--gold);padding:1.25rem 1.75rem;}
+.hero::before{display:none;}
+.hero-avatar{border-radius:6px;background:var(--mocha);border:1px solid rgba(184,148,82,.5);color:var(--gold-light);}
+.hero-name{letter-spacing:-.025em;}
+.badge{border-radius:3px;text-transform:uppercase;letter-spacing:.06em;font-size:.62rem;}
+.badge-registered,.badge-homebased{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#ebd9ae;}
+.badge-pending{background:rgba(200,150,50,.18);border:1px solid rgba(232,194,122,.4);color:#e8c27a;}
+.badge-approved{background:rgba(94,148,120,.2);border:1px solid rgba(156,199,174,.4);color:#9cc7ae;}
+.badge-rejected{background:rgba(180,80,90,.2);border:1px solid rgba(220,140,150,.4);color:#e8a0a8;}
+.btn-approve,.btn-reject{border-radius:var(--r);font-size:.78rem;}
+.btn-approve{background:var(--teal);}.btn-approve:hover{background:#244b38;transform:none;box-shadow:none;}
+.btn-reject{background:var(--rose);}.btn-reject:hover{background:#5e1f26;transform:none;box-shadow:none;}
+.card,.side-card{border-width:1px;border-radius:var(--rxl);}
+.card-head,.side-head{background:var(--s2);}
+.card-head h3,.side-head{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;}
+.card-head-icon{width:26px;height:26px;border-radius:5px;background:transparent;border:1px solid var(--bdr-md);color:var(--gold-dark);}
+.info-key,.meta-key,.doc-label{letter-spacing:.12em;}
+.info-val,.meta-val{font-variant-numeric:tabular-nums;}
+.tag{border-radius:3px;}
+.type-icon{border-radius:6px;border:1px solid var(--bdr-md);background:var(--s2)!important;color:var(--gold-dark);}
+.doc-item{border-width:1px;border-radius:6px;}
+.portfolio-item{border-radius:5px;}
+.lightbox img{border-radius:6px;}
+.meta-icon{width:16px;display:flex;align-items:center;justify-content:center;margin-top:.2rem;}
+.chk{width:12px;height:12px;border-radius:2px;border:1px solid var(--bdr-md);display:inline-block;position:relative;}
+.chk.on{background:var(--teal);border-color:var(--teal);}
+.chk.on::after{content:'';position:absolute;left:3px;top:0;width:3px;height:7px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg);}
+.chk.off{background:var(--rose-soft);border-color:#ddb9bd;}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
 
     <div class="pg">
 
-    <a href="{{ route('bakers.index') }}" class="back-btn">← Back to Baker Registry</a>
+    <a href="{{ route('bakers.index') }}" class="back-btn"><svg class="ic" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Back to Baker Registry</a>
 
     {{-- HERO --}}
     <div class="hero">
@@ -98,12 +132,12 @@
         </div>
         <div class="hero-right">
             @if($baker->seller_type === 'homebased')
-                <span class="badge badge-homebased">🏠 Home-Based Baker</span>
+                <span class="badge badge-homebased">Home-Based Baker</span>
             @else
-                <span class="badge badge-registered">🏢 Registered Business</span>
+                <span class="badge badge-registered">Registered Business</span>
             @endif
             <span class="badge badge-{{ $baker->status }}">
-                @if($baker->status==='pending')⏳@elseif($baker->status==='approved')✅@else✕@endif
+                
                 {{ ucfirst($baker->status) }}
             </span>
         </div>
@@ -114,11 +148,11 @@
     <div class="action-bar">
         <form method="POST" action="{{ route('bakers.approve', $baker->id) }}" style="display:inline">
             @csrf @method('PATCH')
-            <button type="submit" class="btn-approve">✓ Approve Application</button>
+            <button type="submit" class="btn-approve">Approve Application</button>
         </form>
         <form method="POST" action="{{ route('bakers.reject', $baker->id) }}" style="display:inline">
             @csrf @method('PATCH')
-            <button type="submit" class="btn-reject">✕ Reject Application</button>
+            <button type="submit" class="btn-reject">Reject Application</button>
         </form>
     </div>
     @endif
@@ -131,11 +165,11 @@
         {{-- BAKER TYPE --}}
         <div class="card">
             <div class="card-head">
-                <div class="card-head-icon">{{ $baker->seller_type==='homebased'?'🏠':'🏢' }}</div>
+                <div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2h5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                 <h3>Baker Type</h3>
             </div>
             <div class="type-banner type-{{ $baker->seller_type }}">
-                <div class="type-icon">{{ $baker->seller_type==='homebased'?'🧁':'🏛️' }}</div>
+               <div class="type-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2h5a2 2 0 0 1-2-2z"/></svg></div>
                 <div>
                     <div class="type-title">{{ $baker->seller_type==='homebased'?'Home-Based Baker':'Registered Business' }}</div>
                     <div class="type-sub">{{ $baker->seller_type==='homebased'?'Verified via government ID and selfie — no business permit required.':'Verified via DTI/SEC registration, business permit, and sanitary permit.' }}</div>
@@ -145,7 +179,7 @@
 
         {{-- PERSONAL INFO --}}
         <div class="card">
-            <div class="card-head"><div class="card-head-icon">👤</div><h3>Personal Information</h3></div>
+            <div class="card-head"><div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m20 21v-2a4 4 0 0 0-4-4h8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h3>Personal Information</h3></div>
             <div class="info-row"><span class="info-key">Full Name</span><span class="info-val">{{ $baker->name }}</span></div>
             <div class="info-row"><span class="info-key">Email</span><span class="info-val"><a href="mailto:{{ $baker->email }}">{{ $baker->email }}</a></span></div>
             <div class="info-row"><span class="info-key">Phone</span><span class="info-val">{{ $baker->phone ?? '—' }}</span></div>
@@ -153,7 +187,7 @@
             @if($baker->latitude && $baker->longitude)
             <div class="info-row">
                 <span class="info-key">Map</span>
-                <span class="info-val"><a href="https://maps.google.com/?q={{ $baker->latitude }},{{ $baker->longitude }}" target="_blank">📍 View on Google Maps</a></span>
+                <span class="info-val"><a href="https://maps.google.com/?q={{ $baker->latitude }},{{ $baker->longitude }}" target="_blank">View on Google Maps</a></span>
             </div>
             @endif
             <div class="info-row"><span class="info-key">Submitted</span><span class="info-val">{{ $baker->created_at->format('M d, Y · g:i A') }}</span></div>
@@ -161,7 +195,7 @@
 
         {{-- BAKERY INFO --}}
         <div class="card">
-            <div class="card-head"><div class="card-head-icon">🎂</div><h3>Bakery Information</h3></div>
+            <div class="card-head"><div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m3 9l9-7 9 7v11a2 2 0 0 1-2 2h5a2 2 0 0 1-2-2z"/></svg></div><h3>Bakery Information</h3></div>
             <div class="info-row"><span class="info-key">Shop Name</span><span class="info-val">{{ $baker->shop_name ?? '—' }}</span></div>
             <div class="info-row"><span class="info-key">Experience</span><span class="info-val">{{ $baker->experience_years ?? '—' }}</span></div>
             <div class="info-row"><span class="info-key">Min. Order</span><span class="info-val">{{ $baker->min_order_price ? '₱'.number_format($baker->min_order_price,0) : '—' }}</span></div>
@@ -180,7 +214,7 @@
         {{-- BIO --}}
         @if($baker->bio)
         <div class="card">
-            <div class="card-head"><div class="card-head-icon">📝</div><h3>About the Baker</h3></div>
+            <div class="card-head"><div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m12 20h9"/><path d="m16.5 3.5a2.1 2.1 0 0 1 3 3l7 19l-4 1 1-4z"/></svg></div><h3>About the Baker</h3></div>
             <div class="bio-text">{{ $baker->bio }}</div>
         </div>
         @endif
@@ -188,10 +222,10 @@
         {{-- REGISTERED BUSINESS DOCS --}}
         @if($baker->seller_type === 'registered')
         <div class="card">
-            <div class="card-head"><div class="card-head-icon">📋</div><h3>Business Documents</h3></div>
+            <div class="card-head"><div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m14 2h6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Business Documents</h3></div>
             <div class="info-row">
                 <span class="info-key">DTI / SEC Number</span>
-                <span class="info-val" style="font-family:'DM Mono',monospace;font-weight:700;color:var(--gold);">{{ $baker->dti_sec_number ?? '—' }}</span>
+                <span class="info-val" style="font-variant-numeric:tabular-nums;font-weight:700;color:var(--gold);">{{ $baker->dti_sec_number ?? '—' }}</span>
             </div>
             <div class="doc-grid">
                 @foreach([
@@ -212,7 +246,7 @@
                                 <img src="{{ asset('storage/'.$cleanPath) }}" alt="{{ $label }}" onclick="openLightbox(this.src)">
                             @else
                                 <div class="doc-pdf">
-                                    <span style="font-size:1.8rem">📄</span>
+                                    <svg class="ic" style="width:28px;height:28px" viewbox="0 0 24 24"><path d="m14 2h6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v8z"/><polyline points="14 2 14 8 20 8"/></svg>
                                     <a href="{{ asset('storage/'.$cleanPath) }}" target="_blank" style="color:var(--gold);font-size:.72rem;font-weight:600;">View PDF</a>
                                 </div>
                             @endif
@@ -229,7 +263,7 @@
         {{-- HOME-BASED IDENTITY DOCS --}}
         @if($baker->seller_type === 'homebased')
         <div class="card">
-            <div class="card-head"><div class="card-head-icon">🪪</div><h3>Identity Verification</h3></div>
+            <div class="card-head"><div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="13" y1="10" x2="18" y2="10"/><line x1="13" y1="14" x2="18" y2="14"/></svg></div><h3>Identity Verification</h3></div>
             <div class="info-row">
                 <span class="info-key">ID Type</span>
                 <span class="info-val">{{ $baker->gov_id_type ? ucwords(str_replace('_',' ',$baker->gov_id_type)) : '—' }}</span>
@@ -253,7 +287,7 @@
                                 <img src="{{ asset('storage/'.$cleanPath) }}" alt="{{ $label }}" onclick="openLightbox(this.src)">
                             @else
                                 <div class="doc-pdf">
-                                    <span style="font-size:1.8rem">📄</span>
+                                    <svg class="ic" style="width:28px;height:28px" viewbox="0 0 24 24"><path d="m14 2h6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v8z"/><polyline points="14 2 14 8 20 8"/></svg>
                                     <a href="{{ asset('storage/'.$cleanPath) }}" target="_blank" style="color:var(--gold);font-size:.72rem;font-weight:600;">View PDF</a>
                                 </div>
                             @endif
@@ -271,7 +305,7 @@
         @php $portfolio = is_array($baker->portfolio) ? $baker->portfolio : json_decode($baker->portfolio ?? '[]', true); @endphp
         @if(!empty($portfolio))
         <div class="card">
-            <div class="card-head"><div class="card-head-icon">📸</div><h3>Portfolio Photos</h3></div>
+            <div class="card-head"><div class="card-head-icon"><svg class="ic" viewbox="0 0 24 24"><path d="m23 19a2 2 0 0 1-2 2h3a2 2 0 0 1-2-2v8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><h3>Portfolio Photos</h3></div>
             <div class="portfolio-grid">
                 @foreach($portfolio as $photo)
                 @php $cleanPhoto = str_replace('public/', '', $photo); @endphp
@@ -290,26 +324,26 @@
 
         {{-- SUMMARY --}}
         <div class="side-card">
-            <div class="side-head">📊 Application Summary</div>
+            <div class="side-head">Application Summary</div>
             <div class="side-body">
                 <div class="meta-item">
-                    <div class="meta-icon">🆔</div>
-                    <div><div class="meta-key">App ID</div><div class="meta-val" style="font-family:'DM Mono',monospace;">#{{ str_pad($baker->id,4,'0',STR_PAD_LEFT) }}</div></div>
+                    
+                    <div><div class="meta-key">App ID</div><div class="meta-val" style="font-variant-numeric:tabular-nums;">#{{ str_pad($baker->id,4,'0',STR_PAD_LEFT) }}</div></div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-icon">📅</div>
+                    
                     <div><div class="meta-key">Submitted</div><div class="meta-val">{{ $baker->created_at->format('M d, Y') }}</div></div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-icon">{{ $baker->seller_type==='homebased'?'🏠':'🏢' }}</div>
+                    
                     <div><div class="meta-key">Type</div><div class="meta-val">{{ $baker->seller_type==='homebased'?'Home-Based':'Registered Business' }}</div></div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-icon">⭐</div>
+                    
                     <div><div class="meta-key">Experience</div><div class="meta-val">{{ $baker->experience_years ?? '—' }}</div></div>
                 </div>
                 <div class="meta-item">
-                    <div class="meta-icon">💰</div>
+                    
                     <div><div class="meta-key">Min. Order</div><div class="meta-val">{{ $baker->min_order_price ? '₱'.number_format($baker->min_order_price,0) : '—' }}</div></div>
                 </div>
             </div>
@@ -317,7 +351,7 @@
 
         {{-- DOCUMENT CHECKLIST --}}
         <div class="side-card">
-            <div class="side-head">✅ Document Checklist</div>
+            <div class="side-head">Document Checklist</div>
             <div class="side-body">
                 @if($baker->seller_type === 'registered')
                     @foreach([
@@ -328,7 +362,7 @@
                         'bir_certificate' => 'BIR Certificate',
                     ] as $f => $l)
                     <div class="meta-item">
-                        <div class="meta-icon">{{ $baker->$f ? '✅' : '❌' }}</div>
+                        <div class="meta-icon"><span class="chk {{ $baker->$f ? 'on' : 'off' }}"></span></div>
                         <div class="meta-val" style="{{ $baker->$f ? '' : 'color:var(--tm)' }}">{{ $l }}</div>
                     </div>
                     @endforeach
@@ -341,7 +375,7 @@
                         'food_safety_cert' => 'Food Safety Cert',
                     ] as $f => $l)
                     <div class="meta-item">
-                        <div class="meta-icon">{{ $baker->$f ? '✅' : '⬜' }}</div>
+                        <div class="meta-icon"><span class="chk {{ $baker->$f ? 'on' : 'off' }}"></span></div>
                         <div class="meta-val" style="{{ $baker->$f ? '' : 'color:var(--tm)' }}">{{ $l }}</div>
                     </div>
                     @endforeach
@@ -352,15 +386,15 @@
         {{-- DECISION (only if pending) --}}
         @if($baker->status === 'pending')
         <div class="side-card">
-            <div class="side-head">⚙️ Decision</div>
+            <div class="side-head">Decision</div>
             <div class="side-body" style="display:flex;flex-direction:column;gap:.625rem;">
                 <form method="POST" action="{{ route('bakers.approve', $baker->id) }}">
                     @csrf @method('PATCH')
-                    <button type="submit" class="btn-approve" style="width:100%;justify-content:center;">✓ Approve Application</button>
+                    <button type="submit" class="btn-approve" style="width:100%;justify-content:center;">Approve Application</button>
                 </form>
                 <form method="POST" action="{{ route('bakers.reject', $baker->id) }}">
                     @csrf @method('PATCH')
-                    <button type="submit" class="btn-reject" style="width:100%;justify-content:center;">✕ Reject Application</button>
+                    <button type="submit" class="btn-reject" style="width:100%;justify-content:center;">Reject Application</button>
                 </form>
             </div>
         </div>

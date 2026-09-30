@@ -1,0 +1,157 @@
+/* BakeSphere email theme: espresso, ivory, champagne gold.
+   Email clients ignore web fonts, so Plus Jakarta Sans falls back to a clean system sans. */
+
+/* Base */
+body,
+body *:not(html):not(style):not(br):not(tr):not(code) {
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+    position: relative;
+}
+
+body {
+    -webkit-text-size-adjust: none;
+    background-color: #F7F2E9;
+    color: #3A241A;
+    height: 100%;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    width: 100% !important;
+}
+
+p, ul, ol, blockquote {
+    line-height: 1.7;
+    text-align: left;
+}
+
+a { color: #A96F42; }
+a img { border: none; }
+
+/* Typography */
+h1 {
+    color: #24150F;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-top: 0;
+    text-align: left;
+}
+h2 { color: #24150F; font-size: 16px; font-weight: 700; margin-top: 0; text-align: left; }
+h3 { color: #24150F; font-size: 14px; font-weight: 700; margin-top: 0; text-align: left; }
+
+p { color: #3A241A; font-size: 15px; line-height: 1.7; margin-top: 0; text-align: left; }
+p.sub { font-size: 12px; }
+img { max-width: 100%; }
+
+/* Layout */
+.wrapper {
+    background-color: #F7F2E9;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.content { margin: 0; padding: 0; width: 100%; }
+
+/* Header: espresso band with gold hairline */
+.header {
+    background-color: #24150F;
+    border-bottom: 2px solid #B89452;
+    padding: 30px 0;
+    text-align: center;
+}
+.header a {
+    color: #F7F2E9;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+}
+
+/* Body */
+.body {
+    background-color: #F7F2E9;
+    border-bottom: 1px solid #F7F2E9;
+    border-top: 1px solid #F7F2E9;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.inner-body {
+    background-color: #FBF8F2;
+    border-color: #D8C8B7;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-top: 3px solid #B89452;
+    margin: 32px auto;
+    padding: 0;
+    width: 570px;
+}
+.inner-body a { word-break: break-all; }
+
+/* Subcopy */
+.subcopy {
+    border-top: 1px solid #D8C8B7;
+    margin-top: 25px;
+    padding-top: 25px;
+}
+.subcopy p { font-size: 13px; color: #7A5E4C; }
+
+/* Footer */
+.footer {
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    width: 570px;
+}
+.footer p { color: #9A897A; font-size: 12px; text-align: center; }
+.footer a { color: #9A897A; text-decoration: underline; }
+
+/* Tables */
+.table table { margin: 30px auto; width: 100%; }
+.table th { border-bottom: 1px solid #D8C8B7; margin: 0; padding-bottom: 8px; }
+.table td { color: #3A241A; font-size: 15px; line-height: 18px; margin: 0; padding: 10px 0; }
+.content-cell { max-width: 100vw; padding: 40px 36px; }
+
+/* Buttons */
+.action { margin: 30px auto; padding: 0; text-align: center; width: 100%; }
+.button {
+    -webkit-text-size-adjust: none;
+    border-radius: 2px;
+    color: #24150F;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    overflow: hidden;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+.button-blue,
+.button-primary {
+    background-color: #B89452;
+    border-bottom: 14px solid #B89452;
+    border-left: 32px solid #B89452;
+    border-right: 32px solid #B89452;
+    border-top: 14px solid #B89452;
+    color: #24150F;
+}
+.button-green, .button-success {
+    background-color: #24150F; border-bottom: 14px solid #24150F; border-left: 32px solid #24150F;
+    border-right: 32px solid #24150F; border-top: 14px solid #24150F; color: #D4B06A;
+}
+.button-red, .button-error {
+    background-color: #54252C; border-bottom: 14px solid #54252C; border-left: 32px solid #54252C;
+    border-right: 32px solid #54252C; border-top: 14px solid #54252C; color: #F7F2E9;
+}
+
+/* Panels */
+.panel { border-left: #B89452 solid 3px; margin: 21px 0; }
+.panel-content { background-color: #EFE6D7; color: #3A241A; padding: 16px; }
+.panel-content p { color: #3A241A; }
+.panel-item { padding: 0; }
+.panel-item p:last-of-type { margin-bottom: 0; padding-bottom: 0; }
+
+/* Utilities */
+.break-all { word-break: break-all; }

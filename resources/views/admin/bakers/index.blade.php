@@ -2,7 +2,7 @@
 @section('title', 'Bakers')
 @section('content')
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root{--gold:#C07828;--gold-dark:#9A5E14;--gold-light:#DC9E48;--gold-soft:#FEF3E2;--gold-glow:rgba(192,120,40,.16);--copper:#A45224;--teal:#1F7A6C;--teal-soft:#E4F2EF;--rose:#B43840;--rose-soft:#FDEAEB;--espresso:#2C1608;--mocha:#6A4824;--t1:#1E0E04;--t2:#4A2C14;--tm:#8C6840;--bg:#F5F0E8;--s:#FFF;--s2:#FAF7F2;--s3:#F2ECE2;--bdr:#E8E0D0;--bdr-md:#D8CCBA;--r:10px;--rl:14px;--rxl:18px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -62,7 +62,7 @@
 .table-topbar{display:flex;align-items:center;justify-content:space-between;padding:.9375rem 1.5rem;border-bottom:1.5px solid var(--bdr);background:var(--s2);gap:1rem;flex-wrap:wrap;}
 .table-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:.8125rem;font-weight:700;color:var(--t2);display:flex;align-items:center;gap:.4rem;}
 .title-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 5px rgba(192,120,40,.3);animation:pulse 2.5s infinite;}
-.table-count{font-size:.7rem;background:var(--gold-soft);border:1.5px solid rgba(192,120,40,.2);border-radius:20px;padding:.15rem .6rem;color:var(--gold-dark);font-weight:600;font-family:'DM Mono',monospace;}
+.table-count{font-size:.7rem;background:var(--gold-soft);border:1.5px solid rgba(192,120,40,.2);border-radius:20px;padding:.15rem .6rem;color:var(--gold-dark);font-weight:600;font-variant-numeric:tabular-nums;}
 
 /* Section headers */
 .section-block{border-top:1.5px solid var(--bdr);}
@@ -76,7 +76,7 @@
 .pending-title{color:#9C7010;}
 .approved-title{color:var(--teal);}
 .rejected-title{color:var(--rose);}
-.section-count{font-size:.68rem;border-radius:10px;padding:.1rem .45rem;font-weight:700;font-family:'DM Mono',monospace;}
+.section-count{font-size:.68rem;border-radius:10px;padding:.1rem .45rem;font-weight:700;font-variant-numeric:tabular-nums;}
 .count-pending{background:#FEF9E7;border:1px solid #EDD880;color:#9C7010;}
 .count-approved{background:var(--teal-soft);border:1px solid rgba(31,122,108,.28);color:var(--teal);}
 .count-rejected{background:var(--rose-soft);border:1px solid rgba(180,56,64,.22);color:var(--rose);}
@@ -164,30 +164,85 @@
 .alert-close{margin-left:auto;background:none;border:none;color:var(--teal);cursor:pointer;font-size:1.1rem;opacity:.55;transition:opacity .15s;padding:0;}
 .alert-close:hover{opacity:1;}
 @media(max-width:768px){.bakers-grid{grid-template-columns:1fr;}.fgrid{grid-template-columns:1fr;}.table-card{margin:1rem;}.toolbar{padding:1rem;}.bakers-hero{flex-direction:column;padding:1.5rem;}.hero-stats{width:100%;justify-content:flex-start;}}
+/* ── admin console override ── */
+:root{--gold:#b89452;--gold-dark:#8a6b30;--gold-dk:#8a6b30;--gold-light:#d3b77e;--gold-lt:#d3b77e;--gold-soft:#f4ecda;--gold-glow:rgba(184,148,82,.18);--copper:#a96f42;--teal:#2f5d46;--teal-soft:#e6eee8;--rose:#7a2a32;--rose-soft:#f4e6e7;--espresso:#24150f;--mocha:#4a2a1a;--t1:#24150f;--t2:#3a241a;--tm:#7d6b5b;--bg:#f7f2e9;--s:#fff;--s2:#fbf8f1;--s3:#efe6d7;--bdr:#e2d6c3;--bdr-md:#d8c8b7;--r:5px;--rl:6px;--rxl:8px;}
+.bakers-hero{border-radius:var(--rxl);background:var(--espresso);border-bottom:2px solid var(--gold);padding:1.4rem 1.75rem;}
+.bakers-hero::before,.bakers-hero::after{display:none;}
+.hero-eyebrow{background:none;border:none;border-radius:0;padding:0;color:var(--gold-light);font-weight:700;letter-spacing:.16em;}
+.hero-title{font-size:1.6rem;letter-spacing:-.025em;}
+.hero-stats{gap:0;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);overflow:hidden;}
+.hero-stat{background:transparent;border:none;border-right:1px solid rgba(255,255,255,.1);border-radius:0;min-width:84px;padding:.7rem 1.1rem;}
+.hero-stat:last-child{border-right:none;}
+.hero-stat-val{font-size:1.5rem;font-variant-numeric:tabular-nums;}
+.table-card{margin:1.25rem 0 0;border-width:1px;box-shadow:none;}
+.table-topbar{padding:.75rem 1.25rem;}
+.table-title{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;}
+.title-dot{border-radius:1px;box-shadow:none;}
+.table-count,.section-count{border-radius:3px;}
+.tsearch{border-width:1px;height:34px;}
+.section-label{background:var(--s3);padding:.5rem 1.25rem;border-bottom:1px solid var(--bdr);}
+.section-dot{border-radius:1px;width:7px;height:7px;}
+.dot-pending{background:#a8741a;}.pending-title{color:#7a5410;}
+.count-pending{background:#f8efd8;border-color:#e4cd97;color:#7a5410;}
+.bakers-grid{display:block;padding:0;}
+.baker-card{display:grid;grid-template-columns:minmax(240px,1.6fr) minmax(150px,1fr) auto;align-items:center;gap:1rem;background:var(--s);border:none;border-bottom:1px solid var(--bdr);border-radius:0;padding:.7rem 1.25rem;transform:none;box-shadow:none;transition:background .12s;}
+.baker-card:last-child{border-bottom:none;}
+.baker-card:hover{background:var(--s2);transform:none;box-shadow:none;border-color:var(--bdr);}
+.baker-top{margin-bottom:0;align-items:center;}
+.baker-meta{margin-bottom:0;}
+.baker-ava{width:34px;height:34px;border-radius:5px;background:var(--mocha)!important;border:1px solid rgba(184,148,82,.5);color:var(--gold-light);font-size:.7rem;}
+.baker-name{font-size:.86rem;}
+.type-tag{border-radius:3px;text-transform:uppercase;letter-spacing:.06em;font-size:.56rem;}
+.type-homebased{background:var(--cream,#efe6d7);border-color:#d8c8b7;color:#6f6052;}
+.status-pill{border-radius:3px;border-width:1px;text-transform:uppercase;letter-spacing:.06em;font-size:.6rem;font-weight:700;}
+.status-pill::before{border-radius:50%;}
+.status-pending{background:#f8efd8;border-color:#e4cd97;color:#7a5410;}.status-pending::before{background:#a8741a;}
+.btn-sm{border-width:1px;border-radius:4px;height:26px;}
+.btn-view{color:var(--gold-dark);}
+.btn-view:hover{background:var(--espresso);border-color:var(--espresso);color:#fff;}
+.modal-box,.del-box{border-width:1px;border-radius:var(--rxl);}
+.modal-box.show,.del-box.show{animation:slideup .2s ease both;}
+.modal-box::before{height:2px;background:var(--gold);}
+.del-box::before{height:2px;background:var(--rose);}
+.m-icon{border-radius:6px;background:var(--espresso);color:var(--gold-light);}
+.m-close,.fi,.fs{border-width:1px;}
+.btn-submit{background:var(--espresso);border-radius:var(--r);box-shadow:none;}
+.btn-submit:hover{background:var(--mocha);transform:none;}
+.btn-confirm-del{background:var(--rose);border-radius:var(--r);}
+.btn-confirm-del:hover{transform:none;box-shadow:none;background:#5e1f26;}
+@media(max-width:900px){.baker-card{grid-template-columns:1fr;gap:.6rem;}}
+@media(max-width:768px){.table-card{margin:1rem 0 0;}.bakers-hero{padding:1.25rem;}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
+<div class="pg ah-page">
 
-<div class="pg">
-
-    {{-- HERO BANNER --}}
-    <div class="bakers-hero">
-        <div class="hero-left">
-            <div class="hero-eyebrow"><span class="hero-dot"></span> Personnel Management</div>
-            <div class="hero-title"><em>Baker</em> Registry</div>
-            <div class="hero-sub">Review applications, manage baker profiles, and control access</div>
-        </div>
-        <div class="hero-stats">
-            @php
-                $pendingCount  = $bakers->where('status','pending')->count();
-                $approvedCount = $bakers->where('status','approved')->count();
-                $rejectedCount = $bakers->where('status','rejected')->count();
-            @endphp
-            <div class="hero-stat"><div class="hero-stat-val">{{ $bakers->count() }}</div><div class="hero-stat-lbl">Total</div></div>
-            <div class="hero-stat"><div class="hero-stat-val">{{ $pendingCount }}</div><div class="hero-stat-lbl">Pending</div></div>
-            <div class="hero-stat"><div class="hero-stat-val">{{ $approvedCount }}</div><div class="hero-stat-lbl">Approved</div></div>
+@php
+    $pendingCount  = $bakers->where('status','pending')->count();
+    $approvedCount = $bakers->where('status','approved')->count();
+    $rejectedCount = $bakers->where('status','rejected')->count();
+@endphp
+<div class="ah-top">
+<header class="ah-hero">
+    <div class="ah-hero-main">
+        <span class="ah-hero-mark"><svg class="ah-ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <div>
+            <div class="ah-eyebrow">BakeSphere &middot; Personnel</div>
+            <h1 class="ah-title">Baker Registry</h1>
+            <p class="ah-subtitle">Review applications, manage baker profiles, and control access.</p>
         </div>
     </div>
-
-
+    <div class="ah-side">
+        <span class="ah-side-label"><span class="ah-dot"></span>Live registry</span>
+        <span class="ah-side-value">Updated {{ now()->format('M d, H:i') }}</span>
+    </div>
+</header>
+<section class="ah-ledger" aria-label="Baker summary">
+    <div class="ah-fig"><div class="ah-fig-lbl">Total</div><div class="ah-fig-val">{{ $bakers->count() }}</div></div>
+    <div class="ah-fig ah-fig--caramel"><div class="ah-fig-lbl">Pending</div><div class="ah-fig-val">{{ $pendingCount }}</div></div>
+    <div class="ah-fig ah-fig--sage"><div class="ah-fig-lbl">Approved</div><div class="ah-fig-val">{{ $approvedCount }}</div></div>
+    <div class="ah-fig ah-fig--burgundy"><div class="ah-fig-lbl">Rejected</div><div class="ah-fig-val">{{ $rejectedCount }}</div></div>
+</section>
+</div>
 
     {{-- TABLE CARD --}}
     <div class="table-card">
@@ -241,9 +296,9 @@
                                 <div class="baker-name">{{ $baker->name }}</div>
                                 <div class="baker-email">{{ $baker->email }}</div>
                                 @if($baker->seller_type === 'homebased')
-                                    <span class="type-tag type-homebased">🏠 Home-Based</span>
+                                    <span class="type-tag type-homebased">Home-Based</span>
                                 @elseif($baker->seller_type === 'registered')
-                                    <span class="type-tag type-registered">🏢 Registered</span>
+                                    <span class="type-tag type-registered">Registered</span>
                                 @endif
                             </div>
                             <span class="status-pill status-pending">Pending</span>
@@ -286,9 +341,9 @@
                                 <div class="baker-name">{{ $baker->name }}</div>
                                 <div class="baker-email">{{ $baker->email }}</div>
                                 @if($baker->seller_type === 'homebased')
-                                    <span class="type-tag type-homebased">🏠 Home-Based</span>
+                                    <span class="type-tag type-homebased">Home-Based</span>
                                 @elseif($baker->seller_type === 'registered')
-                                    <span class="type-tag type-registered">🏢 Registered</span>
+                                    <span class="type-tag type-registered">Registered</span>
                                 @endif
                             </div>
                             <span class="status-pill status-approved">Approved</span>
@@ -325,9 +380,9 @@
                                 <div class="baker-name">{{ $baker->name }}</div>
                                 <div class="baker-email">{{ $baker->email }}</div>
                                 @if($baker->seller_type === 'homebased')
-                                    <span class="type-tag type-homebased">🏠 Home-Based</span>
+                                    <span class="type-tag type-homebased">Home-Based</span>
                                 @elseif($baker->seller_type === 'registered')
-                                    <span class="type-tag type-registered">🏢 Registered</span>
+                                    <span class="type-tag type-registered">Registered</span>
                                 @endif
                             </div>
                             <span class="status-pill status-rejected">Rejected</span>

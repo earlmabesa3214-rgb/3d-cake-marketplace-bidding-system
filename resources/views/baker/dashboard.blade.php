@@ -3,407 +3,523 @@
 
 @push('styles')
 <style>
+/* Baker Dashboard: luxury cake-atelier workspace. Plus Jakarta Sans only. */
+.bd{
+--esp:#24150F;--cof:#3A241A;--ivory:#F7F2E9;--cream:#EFE6D7;--caramel:#A96F42;--gold:#B89452;--gold-l:#D4B06A;
+--burg:#54252C;--taupe:#9A897A;--beige:#D8C8B7;--w:#FBF8F2;--mocha:#7A5E4C;--credit:#7A6120;--sage:#5E7F5A;
+--line:rgba(36,21,15,.14);--gold-line:rgba(184,148,82,.35);--e:cubic-bezier(.2,.7,.2,1);
+max-width:1500px;width:100%;margin:0 auto;color:var(--esp);font-family:'Plus Jakarta Sans',sans-serif}
+.bd *{box-sizing:border-box;font-family:inherit}
+.bd svg{display:block}
+.bd a{text-decoration:none}
+.bd a:focus-visible,.bd button:focus-visible,.bd input:focus-visible+.bd-fulfil-card-inner{outline:2px solid var(--gold);outline-offset:3px}
+@keyframes bd-fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes bd-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes bd-pulse{0%,100%{box-shadow:0 0 0 0 rgba(184,148,82,.55)}50%{box-shadow:0 0 0 6px rgba(184,148,82,0)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.bd-reveal{animation:bd-fadeUp .6s var(--e) backwards}
+.bd-reveal.r1{animation-delay:.02s}.bd-reveal.r2{animation-delay:.12s}.bd-reveal.r3{animation-delay:.22s}.bd-reveal.r4{animation-delay:.32s}
 
+/* header */
+.bd-head{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap;margin:0 0 2.25rem;padding-bottom:1.75rem}
+.bd-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold-line)}
+.bd-head::before{content:"";position:absolute;left:0;bottom:0;width:72px;height:3px;background:var(--gold);z-index:1;transform-origin:left;animation:bd-line .9s var(--e) .3s backwards}
+.bd-head-left{min-width:260px;flex:1}
+.bd-eyebrow{display:block;font-size:.66rem;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--caramel);margin-bottom:.9rem}
+.bd-greeting{font-size:clamp(2.2rem,5.4vw,4.2rem);font-weight:900;line-height:.98;letter-spacing:-.05em;margin:0}
+.bd-greeting-sub{margin:1rem 0 0;max-width:54ch;font-size:.98rem;line-height:1.7;color:var(--mocha)}
 
-* { font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box; }
+.bd-status-card{position:relative;display:block;flex-shrink:0;min-width:260px;padding:1.25rem 1.4rem 1.2rem;color:var(--ivory);transition:transform .3s var(--e);
+background:repeating-linear-gradient(45deg,rgba(247,242,233,.012) 0 1px,transparent 1px 8px),radial-gradient(ellipse 90% 70% at 100% 0,rgba(184,148,82,.22),transparent 62%),linear-gradient(160deg,#2B1A12,#24150F 60%,#1B0F09)}
+.bd-status-card::after{content:"";position:absolute;left:1.4rem;right:1.4rem;bottom:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent)}
+.bd-status-card:hover{transform:translateY(-2px)}
+.bd-status-label{font-size:.6rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+.bd-availability-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem}
+.bd-avail-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.bd-avail-dot.is-off{background:var(--taupe)}
+.bd-avail-dot.is-on{animation:bd-pulse 2.4s ease-in-out infinite}
+.bd-availability-text{font-size:1.15rem;font-weight:900;letter-spacing:-.03em}
+.bd-status-sub{font-size:.76rem;color:var(--beige);line-height:1.5}
 
-/* ══ HERO ══ */
-.dash-hero {
-    background: linear-gradient(135deg, #1C0F07 0%, #3D2416 45%, #5C3D2E 100%);
-    border-radius: 24px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    min-height: 200px;
-    box-shadow: 0 20px 60px rgba(44,26,14,0.35);
-}
-.dash-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: radial-gradient(circle, rgba(200,137,74,0.15) 1px, transparent 1px);
-    background-size: 24px 24px;
-    pointer-events: none;
-}
-.dash-hero::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; left: -40px;
-    width: 280px; height: 280px;
-    background: radial-gradient(circle, rgba(200,137,74,0.2) 0%, transparent 70%);
-    pointer-events: none;
-}
-.hero-content {
-    padding: 2.25rem 2.75rem;
-    position: relative; z-index: 2;
-    display: flex; flex-direction: column; justify-content: center;
-}
-.hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--caramel-light); font-weight: 700; margin-bottom: 0.65rem; opacity: 0.85;
-}
-.hero-eyebrow::before {
-    content: ''; display: inline-block; width: 18px; height: 1.5px;
-    background: var(--caramel-light); opacity: 0.6;
-}
-.hero-title {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 800; line-height: 1.15; margin-bottom: 0.5rem; letter-spacing: -0.02em;
-}
-.hero-sub {
-    font-size: 0.875rem; color: rgba(255,255,255,0.55);
-    line-height: 1.6; max-width: 420px; margin-bottom: 1.75rem;
-}
+/* priority */
+.bd-priority{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:2.25rem;padding:1.4rem 1.6rem;background:var(--cream);border:1px solid var(--gold-line);border-left:3px solid var(--gold)}
+.bd-priority.state-none{border-left-color:var(--sage)}
+.bd-priority.state-requests{background:var(--w);border-color:var(--esp);border-left:3px solid var(--gold)}
+.bd-priority-icon{width:52px;height:52px;flex-shrink:0;display:grid;place-items:center;color:var(--gold);border:1px solid var(--gold-line);box-shadow:inset 0 0 0 4px var(--cream),inset 0 0 0 5px var(--gold-line)}
+.bd-priority.state-requests .bd-priority-icon{box-shadow:inset 0 0 0 4px var(--w),inset 0 0 0 5px var(--gold-line)}
+.bd-priority.state-none .bd-priority-icon{color:var(--sage)}
+.bd-priority-body{flex:1;min-width:220px}
+.bd-priority-title{font-size:.7rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;margin-bottom:.5rem}
+.bd-priority-sub{font-size:.88rem;line-height:1.6;color:var(--mocha)}
+.bd-priority-progress{display:flex;align-items:center;gap:.8rem;margin-top:.8rem}
+.bd-priority-progress-track{flex:1;max-width:200px;height:4px;background:var(--beige);overflow:hidden}
+.bd-priority-progress-fill{height:100%;width:0%;background:var(--gold);transition:width 1s var(--e)}
+.bd-priority-progress-label{font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--credit);white-space:nowrap}
+.bd-priority-cta{display:inline-flex;align-items:center;gap:.6rem;flex-shrink:0;padding:1rem 1.5rem;background:var(--esp);color:var(--ivory);border:1px solid var(--esp);font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 12px 28px rgba(36,21,15,.25);transition:background .3s,color .3s,transform .3s var(--e)}
+.bd-priority-cta:hover{background:var(--gold);border-color:var(--gold);color:var(--esp);transform:translateY(-2px)}
+.bd-priority-cta svg{transition:transform .3s}
+.bd-priority-cta:hover svg{transform:translateX(3px)}
 
-/* Rush toggle */
-.hero-rush-wrap { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-.hero-rush {
-    display: inline-flex; align-items: center; gap: 0.85rem;
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(200,137,74,0.35);
-    border-radius: 100px; padding: 0.6rem 1rem 0.6rem 0.75rem; backdrop-filter: blur(8px);
-}
-.rush-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--caramel-light); flex-shrink: 0;
-    animation: rushPulse 2s ease-in-out infinite;
-}
-.rush-dot.off { background: rgba(255,255,255,0.2); animation: none; }
-@keyframes rushPulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(232,169,74,0.5); }
-    50%      { box-shadow: 0 0 0 5px rgba(232,169,74,0); }
-}
-.rush-label { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); }
-.rush-switch { position: relative; width: 44px; height: 24px; cursor: pointer; flex-shrink: 0; }
-.rush-switch input { opacity:0; width:0; height:0; position:absolute; }
-.rush-slider {
-    position: absolute; inset: 0;
-    background: rgba(255,255,255,0.15); border-radius: 24px;
-    border: 1.5px solid rgba(255,255,255,0.2); transition: 0.3s;
-}
-.rush-slider::before {
-    content: ''; position: absolute;
-    width: 16px; height: 16px; border-radius: 50%;
-    left: 3px; top: 50%; transform: translateY(-50%);
-    background: white; transition: 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-}
-.rush-switch input:checked + .rush-slider { background: var(--caramel); border-color: var(--caramel-light); }
-.rush-switch input:checked + .rush-slider::before { transform: translateY(-50%) translateX(20px); }
-.rush-fee-field {
-    display: flex; align-items: center; gap: 0.35rem;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 8px; padding: 0.3rem 0.6rem;
-}
-.rush-fee-field span { font-size: 0.72rem; color: rgba(255,255,255,0.5); }
-.rush-fee-field input {
-    width: 52px; background: transparent; border: none;
-    color: white; font-size: 0.85rem; font-weight: 700;
-    text-align: center; outline: none; font-family: 'Plus Jakarta Sans', sans-serif;
-}
+/* stats */
+.bd-stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--esp);margin-bottom:3rem}
+.bd-stat{position:relative;display:block;padding:1.6rem 1.5rem 1.5rem;background:var(--w);color:var(--esp);transition:background .35s}
+.bd-stat+.bd-stat{border-left:1px solid var(--line)}
+.bd-stat:hover{background:var(--cream)}
+.bd-stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
+.bd-stat-icon{color:var(--gold)}
+.bd-stat-arrow{color:var(--taupe);transition:transform .3s,color .3s}
+.bd-stat:hover .bd-stat-arrow{transform:translateX(3px);color:var(--esp)}
+.bd-stat-value{font-size:clamp(1.9rem,3vw,2.6rem);font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.bd-stat.c4 .bd-stat-value{color:var(--credit)}
+.bd-stat-label{margin-top:.8rem;font-size:.6rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe)}
+.bd-stat-foot{margin-top:.3rem;font-size:.74rem;color:var(--mocha)}
+.bd-stat-accent{position:absolute;left:1.5rem;bottom:0;width:32px;height:2px;background:var(--gold);transition:width .4s var(--e)}
+.bd-stat:hover .bd-stat-accent{width:calc(100% - 3rem)}
 
-/* Hero illustration */
-.hero-illustration {
-    position: relative; width: 220px;
-    display: flex; align-items: center; justify-content: center; align-self: center;
-    padding: 2rem 2rem 1rem 0; z-index: 2;
-}
-@keyframes pulse-ring {
-    0%   { box-shadow: 0 0 0 0 rgba(200,137,74,0.4); }
-    70%  { box-shadow: 0 0 0 10px rgba(200,137,74,0); }
-    100% { box-shadow: 0 0 0 0 rgba(200,137,74,0); }
-}
-.hero-sparkle { position: absolute; border-radius: 50%; background: var(--caramel-light); opacity: 0.5; }
-.hs1 { width:10px;height:10px;top:15%;left:8%;animation:pulse-ring 2.5s ease-in-out infinite; }
-.hs2 { width:6px;height:6px;top:70%;left:5%;animation:pulse-ring 3.2s ease-in-out infinite 0.5s; }
-.hs3 { width:8px;height:8px;top:25%;right:10%;animation:pulse-ring 2.8s ease-in-out infinite 1s; }
+/* main grid */
+.bd-main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:3rem;align-items:start}
+.bd-col{min-width:0;display:flex;flex-direction:column;gap:3rem}
+.bd-panel{border-top:1px solid var(--esp)}
+.bd-panel-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 0 1rem;border-bottom:1px solid var(--line)}
+.bd-panel-title{display:flex;align-items:center;gap:.6rem;font-size:.7rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase}
+.bd-panel-title svg{color:var(--gold);flex-shrink:0}
+.bd-panel-link{font-size:.6rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--caramel);white-space:nowrap;transition:color .25s}
+.bd-panel-link:hover{color:var(--esp)}
 
-@media (max-width: 640px) {
-    .dash-hero { grid-template-columns: 1fr; }
-    .hero-illustration { display: none; }
-    .hero-content { padding: 1.75rem 1.5rem; }
+/* requests */
+.bd-req{display:flex;align-items:center;gap:1.25rem;padding:1.3rem 0;border-bottom:1px solid var(--line);color:var(--esp);transition:background .3s,padding-left .3s var(--e)}
+.bd-req:hover{background:rgba(239,230,215,.5);padding-left:.75rem}
+.bd-req-visual{width:64px;height:64px;flex-shrink:0;display:grid;place-items:center;color:var(--gold);background:var(--cream);border:1px solid var(--gold-line);box-shadow:inset 0 0 0 4px var(--cream),inset 0 0 0 5px var(--gold-line)}
+.bd-req-info{flex:1;min-width:0}
+.bd-req-name{font-size:1.1rem;font-weight:900;letter-spacing:-.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-req-badges{display:flex;flex-wrap:wrap;margin-top:.45rem}
+.bd-req-badge{font-size:.58rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mocha);padding:0 .7rem;border-left:1px solid var(--beige)}
+.bd-req-badge:first-child{padding-left:0;border-left:0}
+.bd-req-meta-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:.6rem}
+.bd-req-meta-item{display:inline-flex;align-items:center;gap:.4rem;font-size:.74rem;font-weight:600;color:var(--taupe)}
+.bd-req-meta-item svg{color:var(--gold)}
+.bd-req-bids{display:inline-flex;align-items:center;gap:.4rem;padding:.2rem .55rem;background:#F3EAD3;border:1px solid var(--gold-line);border-left:2px solid var(--gold);color:#7A5A15;font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.bd-req-right{display:flex;align-items:center;gap:1rem;flex-shrink:0;text-align:right}
+.bd-req-budget-val{font-size:1.05rem;font-weight:900;letter-spacing:-.03em;color:var(--credit);font-variant-numeric:tabular-nums}
+.bd-req-budget-date{margin-top:.2rem;font-size:.68rem;color:var(--taupe)}
+.bd-req-arrow{color:var(--taupe);transition:transform .3s,color .3s}
+.bd-req:hover .bd-req-arrow{transform:translateX(4px);color:var(--esp)}
+
+/* empty */
+.bd-empty{padding:3rem 1rem;text-align:center;border-bottom:1px solid var(--line)}
+.bd-empty-icon{display:flex;justify-content:center;margin-bottom:.9rem;color:var(--gold);opacity:.7}
+.bd-empty-title{font-size:1.05rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.3rem}
+.bd-empty-sub{font-size:.8rem;color:var(--mocha)}
+
+/* earnings */
+.bd-earn-summary{padding:1.5rem 0 .25rem}
+.bd-earn-value{font-size:clamp(2rem,4vw,3rem);font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--credit);font-variant-numeric:tabular-nums}
+.bd-earn-label{margin-top:.6rem;font-size:.6rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--taupe)}
+.bd-chart-wrap{position:relative;padding:1.25rem 0 0}
+.bd-chart{display:flex;align-items:flex-end;gap:10px;height:132px;border-bottom:1px solid var(--esp);background-image:linear-gradient(0deg,var(--line) 1px,transparent 1px);background-size:100% 33px;background-position:bottom}
+.bd-bar-col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.bd-bar{width:100%;max-width:34px;height:0;min-height:3px;cursor:pointer;background:linear-gradient(to top,var(--esp),var(--cof) 60%,var(--gold));transition:height 1s var(--e),filter .2s}
+.bd-bar:hover{filter:brightness(1.25)}
+.bd-bar-label{margin-top:.6rem;font-size:.56rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;text-align:center;color:var(--taupe)}
+.bd-tooltip{position:absolute;z-index:3;padding:.4rem .65rem;background:var(--esp);color:var(--ivory);border:1px solid var(--gold-line);font-size:.68rem;font-weight:700;white-space:nowrap;pointer-events:none;opacity:0;transform:translate(-50%,-6px);transition:opacity .15s,transform .15s}
+.bd-tooltip.show{opacity:1;transform:translate(-50%,-12px)}
+
+/* fulfillment */
+.bd-fulfil-desc{padding:1.25rem 0 1rem;font-size:.82rem;line-height:1.6;color:var(--mocha)}
+.bd-fulfil-cards{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.bd-fulfil-card{position:relative;display:block;cursor:pointer}
+.bd-fulfil-card input{position:absolute;opacity:0;width:0;height:0}
+.bd-fulfil-card-inner{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;height:100%;padding:1.1rem 1rem;background:var(--w);border:1px solid var(--beige);transition:border-color .3s,background .3s,transform .3s var(--e)}
+.bd-fulfil-card:hover .bd-fulfil-card-inner{border-color:var(--taupe);transform:translateY(-2px)}
+.bd-fulfil-card-icon{display:grid;place-items:center;width:34px;height:34px;color:var(--mocha);border:1px solid var(--beige);transition:.3s}
+.bd-fulfil-card-title{font-size:.95rem;font-weight:900;letter-spacing:-.02em}
+.bd-fulfil-card-sub{margin-top:-.3rem;font-size:.7rem;color:var(--taupe)}
+.bd-fulfil-card-tag{padding:.25rem .55rem;font-size:.54rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--taupe);border:1px solid var(--beige);border-left-width:2px}
+.bd-fulfil-card input:checked+.bd-fulfil-card-inner{background:var(--cream);border-color:var(--gold-line);box-shadow:inset 0 0 0 4px var(--ivory),inset 0 0 0 5px var(--gold-line)}
+.bd-fulfil-card input:checked+.bd-fulfil-card-inner .bd-fulfil-card-icon{background:var(--esp);border-color:var(--esp);color:var(--gold-l)}
+.bd-fulfil-card input:checked+.bd-fulfil-card-inner .bd-fulfil-card-tag{background:#F3EAD3;color:#7A5A15;border-color:var(--gold-line);border-left-color:var(--gold)}
+.bd-fulfil-status{display:flex;align-items:center;gap:.6rem;padding:.8rem 1rem;background:#EFF2E8;border-left:2px solid var(--sage);color:#33502F;font-size:.76rem;font-weight:700;line-height:1.45}
+.bd-fulfil-status.is-warn{background:#F6ECEA;border-left-color:var(--burg);color:var(--burg)}
+.bd-fulfil-status svg{flex-shrink:0}
+
+/* profile completion */
+.bd-profile-body{padding:1.4rem 0 .25rem}
+.bd-profile-pct{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:.9rem}
+.bd-profile-pct-val{font-size:2rem;font-weight:900;letter-spacing:-.05em;line-height:1}
+.bd-profile-pct-label{font-size:.6rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--taupe)}
+.bd-progress-track{display:flex;gap:4px;height:6px;margin-bottom:1.1rem}
+.bd-progress-track .layer{flex:1;position:relative;overflow:hidden;background:var(--beige)}
+.bd-progress-fill{position:absolute;inset:0;background:var(--gold)}
+.bd-profile-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.1rem}
+.bd-chip{padding:.3rem .65rem;background:#F3EAD3;color:#7A5A15;border:1px solid var(--gold-line);border-left:2px solid var(--gold);font-size:.62rem;font-weight:800;letter-spacing:.08em}
+.bd-profile-cta{display:inline-flex;align-items:center;gap:.5rem;font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--caramel);transition:color .25s}
+.bd-profile-cta:hover{color:var(--esp)}
+.bd-profile-ready{display:flex;align-items:center;gap:1rem;padding:1.4rem 0;border-bottom:1px solid var(--line)}
+.bd-ready-icon{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;color:var(--sage);border:1px solid rgba(94,127,90,.4)}
+.bd-ready-title{font-size:.95rem;font-weight:900;letter-spacing:-.02em}
+.bd-ready-sub{margin-top:.2rem;font-size:.76rem;color:var(--mocha)}
+
+/* recent bids */
+.bd-bid{display:flex;align-items:flex-start;gap:1rem;padding:1.05rem 0;border-bottom:1px solid var(--line)}
+.bd-bid-rail{position:relative;flex-shrink:0;width:9px;display:flex;justify-content:center;align-self:stretch}
+.bd-bid-rail::before{content:'';position:absolute;top:16px;bottom:-17px;width:1px;background:var(--beige)}
+.bd-bid:last-child .bd-bid-rail::before{display:none}
+.bd-bid-dot{position:relative;z-index:1;width:9px;height:9px;margin-top:.4rem;background:var(--gold);transform:rotate(45deg)}
+.bd-bid-dot.accepted{background:var(--sage)}
+.bd-bid-dot.rejected{background:var(--burg)}
+.bd-bid-info{flex:1;min-width:0}
+.bd-bid-name{font-size:.86rem;font-weight:800;letter-spacing:-.01em}
+.bd-bid-meta{margin-top:.2rem;font-size:.72rem;color:var(--taupe)}
+.bd-bid-status{flex-shrink:0;padding:.28rem .55rem;border:1px solid transparent;border-left-width:2px;font-size:.54rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.bd-bid-status.pending{background:#F3EAD3;color:#7A5A15;border-color:var(--gold-line);border-left-color:var(--gold)}
+.bd-bid-status.accepted{background:#EFF2E8;color:#33502F;border-color:rgba(94,127,90,.35);border-left-color:var(--sage)}
+.bd-bid-status.rejected{background:#F6ECEA;color:var(--burg);border-color:rgba(84,37,44,.28);border-left-color:var(--burg)}
+
+/* responsive */
+@media(max-width:1100px){.bd-main{grid-template-columns:1fr;gap:2.5rem}}
+@media(max-width:780px){
+.bd-stats{grid-template-columns:1fr 1fr}
+.bd-stat:nth-child(3){border-left:0}
+.bd-stat:nth-child(n+3){border-top:1px solid var(--line)}
+.bd-status-card{width:100%}
 }
-
-/* ══ PROFILE BANNER ══ */
-.pib {
-    display:flex; align-items:center; justify-content:space-between; gap:1rem;
-    background:linear-gradient(135deg,#FEF3C7,#FDE68A); border:1.5px solid #F59E0B;
-    border-radius:16px; padding:1.1rem 1.5rem; margin-bottom:1.5rem; flex-wrap:wrap;
+@media(max-width:560px){
+.bd-fulfil-cards{grid-template-columns:1fr}
+.bd-req{flex-wrap:wrap}
+.bd-req-right{width:100%;justify-content:space-between;padding-left:84px}
+.bd-priority-cta{width:100%;justify-content:center}
 }
-.pib-left { display:flex; align-items:flex-start; gap:0.9rem; }
-.pib-title { font-size:0.92rem; font-weight:700; color:#78350F; margin-bottom:0.35rem; }
-.pib-missing { display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center; font-size:0.72rem; color:#92400E; }
-.pib-chip { background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#78350F; padding:0.15rem 0.6rem; border-radius:20px; font-weight:600; font-size:0.68rem; }
-.pib-btn { display:inline-flex; align-items:center; gap:0.4rem; padding:0.65rem 1.25rem; background:#F59E0B; color:#fff; border-radius:10px; font-size:0.85rem; font-weight:700; text-decoration:none; white-space:nowrap; transition:background 0.2s; flex-shrink:0; }
-.pib-btn:hover { background:#D97706; color:#fff; }
-
-/* ══ STATS ══ */
-.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; margin-bottom:2rem; }
-.stat-card {
-    background:var(--warm-white); border:1px solid var(--border); border-radius:16px;
-    padding:1.5rem; position:relative; overflow:hidden; transition:transform 0.2s,box-shadow 0.2s;
-}
-.stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-warm); }
-.stat-card::after {
-    content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:16px 16px 0 0;
-}
-.stat-card.c1::after { background:linear-gradient(90deg,var(--caramel),var(--caramel-light)); }
-.stat-card.c2::after { background:linear-gradient(90deg,#9A6028,#C8803A); }
-.stat-card.c3::after { background:linear-gradient(90deg,#7A4A28,#B87040); }
-.stat-card.c4::after { background:linear-gradient(90deg,var(--brown-deep),var(--brown-mid)); }
-.stat-icon { font-size:1.6rem; margin-bottom:0.75rem; }
-.stat-value { font-size:2rem; font-weight:700; color:var(--brown-deep); line-height:1; }
-.stat-label { font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); font-weight:600; margin-top:0.3rem; }
-.stat-change { font-size:0.72rem; color:var(--caramel); font-weight:600; margin-top:0.5rem; }
-
-/* ══ MAIN GRID ══ */
-.main-grid { display:grid; grid-template-columns:1fr 360px; gap:1.5rem; }
-.card { background:var(--warm-white); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
-.card-header {
-    padding:1.25rem 1.5rem; border-bottom:1px solid var(--border);
-    display:flex; align-items:center; justify-content:space-between;
-}
-.card-title { font-size:1.05rem; font-weight:700; color:var(--brown-deep); }
-.card-link { font-size:0.78rem; color:var(--caramel); text-decoration:none; font-weight:600; }
-.card-link:hover { text-decoration:underline; }
-
-.request-item {
-    padding:1.1rem 1.5rem; border-bottom:1px solid var(--border);
-    display:flex; align-items:center; gap:1rem; transition:background 0.15s; cursor:pointer; text-decoration:none;
-}
-.request-item:last-child { border-bottom:none; }
-.request-item:hover { background:#FBF5EE; }
-.req-icon { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg,#F5EFE6,#EDD0A8); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-.req-info { flex:1; min-width:0; }
-.req-name { font-weight:600; font-size:0.875rem; color:var(--text-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.req-meta { font-size:0.72rem; color:var(--text-muted); margin-top:0.15rem; }
-.req-budget { text-align:right; }
-.req-budget-val { font-size:0.9rem; font-weight:700; color:var(--brown-mid); }
-.req-budget-date { font-size:0.68rem; color:var(--text-muted); }
-.req-bid-count { display:inline-flex; align-items:center; gap:0.25rem; font-size:0.68rem; font-weight:700; padding:0.2rem 0.5rem; border-radius:8px; background:#FBF3E8; color:var(--brown-mid); margin-top:0.25rem; }
-
-.bid-item { padding:1.1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:1rem; }
-.bid-item:last-child { border-bottom:none; }
-.bid-status { display:inline-flex; align-items:center; padding:0.25rem 0.65rem; border-radius:20px; font-size:0.68rem; font-weight:700; text-transform:uppercase; white-space:nowrap; }
-.bid-status.pending  { background:#FEF6E4; color:#9B6A10; border:1px solid #EDD090; }
-.bid-status.accepted { background:#FBF0E6; color:#7A3A10; border:1px solid #E5C0A0; }
-.bid-status.rejected { background:#F8EDEA; color:#8B2A1E; border:1px solid #DDB5A8; }
-
-.earnings-bars { display:flex; align-items:flex-end; gap:6px; height:80px; padding:0 1.5rem 1.5rem; }
-.e-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
-.e-bar { width:100%; border-radius:6px 6px 0 0; background:linear-gradient(to top,var(--caramel),var(--caramel-light)); min-height:4px; transition:height 0.8s cubic-bezier(.22,.68,0,1.2); }
-.e-bar-label { font-size:0.55rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; }
-
-.empty-mini { padding:2rem; text-align:center; color:var(--text-muted); font-size:0.82rem; }
-.empty-mini .emo { font-size:1.8rem; margin-bottom:0.5rem; }
 </style>
 @endpush
 
+@section('content')
 @php
     $bakerRecordDash = \App\Models\Baker::where('user_id', auth()->id())->first();
+
+    $hour = now()->hour;
+    $greeting = $hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening');
+
+    $fulfillmentSet = (bool) ($bakerRecordDash?->accepts_delivery || $bakerRecordDash?->accepts_pickup);
+
+    if ($profileIncomplete) {
+        $priorityType = 'profile';
+    } elseif (!$fulfillmentSet) {
+        $priorityType = 'fulfillment';
+    } elseif ($openRequestsCount > 0) {
+        $priorityType = 'requests';
+    } else {
+        $priorityType = 'none';
+    }
+
+    $headerSub = match ($priorityType) {
+        'profile'     => 'Finish setting up your profile so customers can find and trust you.',
+        'fulfillment' => 'Set your delivery options below so you can start bidding.',
+        'requests'    => $openRequestsCount . ' new cake ' . Str::plural('request', $openRequestsCount) . ' waiting for your offer.',
+        default       => "Here's what's happening with your bakery today.",
+    };
+
+    // Rough profile-completion estimate for the progress bar.
+    $bdTotalProfileFields = 5;
+    $bdMissingCount = $profileIncomplete ? count($missingFields) : 0;
+    $bdCompletedFields = max(0, $bdTotalProfileFields - $bdMissingCount);
+    $bdProfilePct = $profileIncomplete ? (int) round(($bdCompletedFields / $bdTotalProfileFields) * 100) : 100;
+
+    $bdDeliveryOn = (bool) $bakerRecordDash?->accepts_delivery;
+    $bdPickupOn   = (bool) $bakerRecordDash?->accepts_pickup;
+    $bdStatusSub = $fulfillmentSet
+        ? implode(' + ', array_filter([$bdDeliveryOn ? 'Delivery' : null, $bdPickupOn ? 'Pickup' : null]))
+        : 'Choose delivery or pickup to start bidding';
 @endphp
 
-@section('content')
+<div class="bd">
 
-<div class="dash-hero">
-    <div class="hero-content">
-        <div class="hero-eyebrow">Welcome</div>
-        <div class="hero-title">Hello, {{ auth()->user()->first_name }}!</div>
-             <div class="hero-sub">
-            @if($openRequestsCount > 0)
-                You have <strong style="color:var(--caramel-light);">{{ $openRequestsCount }} open {{ Str::plural('request', $openRequestsCount) }}</strong> waiting for a bid. Get baking!
+    {{-- HEADER --}}
+    <div class="bd-head bd-reveal r1">
+        <div class="bd-head-left">
+            <span class="bd-eyebrow">Baker workspace</span>
+            <h1 class="bd-greeting">{{ $greeting }}, {{ auth()->user()->first_name }}</h1>
+            <p class="bd-greeting-sub">{{ $headerSub }}</p>
+        </div>
+
+        <a href="#fulfillment-settings" class="bd-status-card">
+            <div class="bd-status-label">Baker Status</div>
+            <div class="bd-availability-row">
+                <span class="bd-avail-dot {{ $fulfillmentSet ? 'is-on' : 'is-off' }}"></span>
+                <span class="bd-availability-text">{{ $fulfillmentSet ? 'Accepting Orders' : 'Bidding Paused' }}</span>
+            </div>
+            <div class="bd-status-sub">{{ $bdStatusSub }}</div>
+        </a>
+    </div>
+
+    {{-- PRIORITY / ACTION CENTER --}}
+    <div class="bd-priority bd-reveal r2 state-{{ $priorityType }}">
+        <div class="bd-priority-icon">
+            @if($priorityType === 'profile')
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            @elseif($priorityType === 'fulfillment')
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5a2 2 0 0 1-2 2h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            @elseif($priorityType === 'requests')
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>
             @else
-                Welcome back — here's what's happening today.
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             @endif
         </div>
-
-        <div class="hero-rush-wrap" id="fulfillment-wrap">
-            <div class="hero-rush" style="flex-direction:column; align-items:flex-start; gap:0.5rem; padding:0.75rem 1rem;">
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <span class="rush-label" style="opacity:0.85;">How do you fulfill orders? <span style="color:var(--caramel-light);">*required to bid</span></span>
+        <div class="bd-priority-body">
+            @if($priorityType === 'profile')
+                <div class="bd-priority-title">Profile Setup</div>
+                <div class="bd-priority-sub">Complete the details customers look for before choosing a baker.</div>
+                <div class="bd-priority-progress">
+                    <div class="bd-priority-progress-track"><div class="bd-priority-progress-fill" data-pct="{{ $bdProfilePct }}"></div></div>
+                    <span class="bd-priority-progress-label">{{ $bdProfilePct }}% complete</span>
                 </div>
-                <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                    <label style="display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); padding:0.4rem 0.75rem; border-radius:8px;">
-                        <input type="checkbox" id="pref-delivery" {{ $bakerRecordDash?->accepts_delivery ? 'checked' : '' }} onchange="saveFulfillment()" style="accent-color: var(--caramel);">
-                        🚚 Delivery
+            @elseif($priorityType === 'fulfillment')
+                <div class="bd-priority-title">Order Fulfillment Required</div>
+                <div class="bd-priority-sub">Choose delivery, pickup, or both. You can't place bids until at least one is on.</div>
+            @elseif($priorityType === 'requests')
+                <div class="bd-priority-title">New Cake Requests</div>
+                <div class="bd-priority-sub">{{ $openRequestsCount }} {{ Str::plural('customer', $openRequestsCount) }} nearby {{ $openRequestsCount === 1 ? 'is' : 'are' }} looking for a baker. Review the details and send an offer.</div>
+            @else
+                <div class="bd-priority-title">Bakery Status: Ready</div>
+                <div class="bd-priority-sub">You're all caught up. New cake requests will appear here.</div>
+            @endif
+        </div>
+        @if($priorityType === 'profile')
+        <a href="{{ route('baker.profile.index') }}" class="bd-priority-cta">Complete Profile <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        @elseif($priorityType === 'fulfillment')
+        <a href="#fulfillment-settings" class="bd-priority-cta">Configure Fulfillment <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        @elseif($priorityType === 'requests')
+        <a href="{{ route('baker.requests.index') }}" class="bd-priority-cta">View Requests <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        @endif
+    </div>
+
+    {{-- STATS (each links to its section) --}}
+    <div class="bd-stats bd-reveal r3">
+        <a href="{{ route('baker.requests.index') }}" class="bd-stat c1">
+            <div class="bd-stat-top">
+                <span class="bd-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg></span>
+                <svg class="bd-stat-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="bd-stat-value" data-count="{{ $openRequestsCount }}">0</div>
+            <div class="bd-stat-label">Open Requests</div>
+            <div class="bd-stat-foot">New cakes waiting</div>
+            <div class="bd-stat-accent"></div>
+        </a>
+        <a href="{{ route('baker.bids.index') }}" class="bd-stat c2">
+            <div class="bd-stat-top">
+                <span class="bd-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>
+                <svg class="bd-stat-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="bd-stat-value" data-count="{{ $myActiveBidsCount }}">0</div>
+            <div class="bd-stat-label">Active Bids</div>
+            <div class="bd-stat-foot">Offers in review</div>
+            <div class="bd-stat-accent"></div>
+        </a>
+        <a href="{{ route('baker.orders.index') }}" class="bd-stat c3">
+            <div class="bd-stat-top">
+                <span class="bd-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+                <svg class="bd-stat-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="bd-stat-value" data-count="{{ $activeOrdersCount }}">0</div>
+            <div class="bd-stat-label">Orders in Progress</div>
+            <div class="bd-stat-foot">Currently baking</div>
+            <div class="bd-stat-accent"></div>
+        </a>
+        <a href="{{ route('baker.earnings.index') }}" class="bd-stat c4">
+            <div class="bd-stat-top">
+                <span class="bd-stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg></span>
+                <svg class="bd-stat-arrow" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+            <div class="bd-stat-value" data-count="{{ $monthEarnings }}" data-format="currency">₱0</div>
+            <div class="bd-stat-label">Monthly Earnings</div>
+            <div class="bd-stat-foot">{{ $completedThisMonth }} {{ Str::plural('order', $completedThisMonth) }} completed</div>
+            <div class="bd-stat-accent"></div>
+        </a>
+    </div>
+
+    {{-- MAIN GRID --}}
+    <div class="bd-main bd-reveal r4">
+
+        {{-- LEFT: open requests + earnings --}}
+        <div class="bd-col">
+            <section class="bd-panel">
+                <div class="bd-panel-head">
+                    <div class="bd-panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Open Cake Requests</div>
+                    <a href="{{ route('baker.requests.index') }}" class="bd-panel-link">View all</a>
+                </div>
+                @forelse($openRequests as $req)
+                @php
+                    $config = is_array($req->cake_configuration) ? $req->cake_configuration : (json_decode($req->cake_configuration, true) ?? []);
+                    $bidCount = $req->bids()->count();
+                    $reqBadgeParts = array_filter([$config['shape'] ?? null, $config['size'] ?? null, $config['frosting'] ?? null]);
+                @endphp
+                <a class="bd-req" href="{{ route('baker.requests.show', $req->id) }}">
+                    <div class="bd-req-visual"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg></div>
+                    <div class="bd-req-info">
+                        <div class="bd-req-name">{{ $config['flavor'] ?? 'Custom' }} Cake</div>
+                        <div class="bd-req-badges">
+                            @foreach($reqBadgeParts as $part)
+                            <span class="bd-req-badge">{{ $part }}</span>
+                            @endforeach
+                        </div>
+                        <div class="bd-req-meta-row">
+                            <span class="bd-req-meta-item"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Due {{ $req->delivery_date->format('M d') }}</span>
+                            @if($bidCount > 0)
+                            <span class="bd-req-bids"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>{{ $bidCount }} {{ Str::plural('offer', $bidCount) }}</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="bd-req-right">
+                        <div>
+                            <div class="bd-req-budget-val">₱{{ number_format($req->budget_min,0) }}–{{ number_format($req->budget_max,0) }}</div>
+                            <div class="bd-req-budget-date">{{ $req->delivery_date->diffForHumans() }}</div>
+                        </div>
+                        <svg class="bd-req-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </div>
+                </a>
+                @empty
+                <div class="bd-empty">
+                    <div class="bd-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/></svg></div>
+                    <div class="bd-empty-title">No open requests right now</div>
+                    <div class="bd-empty-sub">New requests near you will show up here as soon as customers post them.</div>
+                </div>
+                @endforelse
+            </section>
+
+            <section class="bd-panel">
+                <div class="bd-panel-head">
+                    <div class="bd-panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg>Earnings</div>
+                    <a href="{{ route('baker.earnings.index') }}" class="bd-panel-link">Details</a>
+                </div>
+                <div class="bd-earn-summary">
+                    <div class="bd-earn-value">₱{{ number_format($monthEarnings, 0) }}</div>
+                    <div class="bd-earn-label">This month · {{ $completedThisMonth }} {{ Str::plural('order', $completedThisMonth) }} completed</div>
+                </div>
+                @php $maxEarning = max(array_column($earningsChart, 'total') ?: [1]) ?: 1; @endphp
+                <div class="bd-chart-wrap">
+                    <div class="bd-chart">
+                        @foreach($earningsChart as $month)
+                        <div class="bd-bar-col">
+                            <div class="bd-bar"
+                                 data-h="{{ max(3, ($month['total'] / $maxEarning) * 128) }}"
+                                 data-value="₱{{ number_format($month['total'], 0) }}"
+                                 data-label="{{ $month['label'] }}"></div>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        @foreach($earningsChart as $month)
+                        <div class="bd-bar-label" style="flex:1;">{{ $month['label'] }}</div>
+                        @endforeach
+                    </div>
+                    <div class="bd-tooltip" id="bdChartTooltip"></div>
+                </div>
+            </section>
+        </div>
+
+        {{-- RIGHT: sidebar --}}
+        <div class="bd-col">
+            <section class="bd-panel" id="fulfillment-settings">
+                <div class="bd-panel-head">
+                    <div class="bd-panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5a2 2 0 0 1-2 2h-1"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Order Fulfillment</div>
+                </div>
+                <div class="bd-fulfil-desc">How will customers receive their cakes? Select at least one.</div>
+                <div class="bd-fulfil-cards">
+                    <label class="bd-fulfil-card" for="pref-delivery">
+                        <input type="checkbox" id="pref-delivery" {{ $bdDeliveryOn ? 'checked' : '' }} onchange="saveFulfillment()">
+                        <span class="bd-fulfil-card-inner">
+                            <span class="bd-fulfil-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></span>
+                            <span class="bd-fulfil-card-title">Delivery</span>
+                            <span class="bd-fulfil-card-sub">Customer delivery</span>
+                            <span class="bd-fulfil-card-tag">{{ $bdDeliveryOn ? 'Enabled' : 'Off' }}</span>
+                        </span>
                     </label>
-                    <label style="display:inline-flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.78rem; font-weight:600; color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); padding:0.4rem 0.75rem; border-radius:8px;">
-                        <input type="checkbox" id="pref-pickup" {{ $bakerRecordDash?->accepts_pickup ? 'checked' : '' }} onchange="saveFulfillment()" style="accent-color: var(--caramel);">
-                        🏪 Pickup
+                    <label class="bd-fulfil-card" for="pref-pickup">
+                        <input type="checkbox" id="pref-pickup" {{ $bdPickupOn ? 'checked' : '' }} onchange="saveFulfillment()">
+                        <span class="bd-fulfil-card-inner">
+                            <span class="bd-fulfil-card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/><path d="M9 14h6"/></svg></span>
+                            <span class="bd-fulfil-card-title">Pickup</span>
+                            <span class="bd-fulfil-card-sub">Store pickup</span>
+                            <span class="bd-fulfil-card-tag">{{ $bdPickupOn ? 'Enabled' : 'Off' }}</span>
+                        </span>
                     </label>
                 </div>
-                <div id="fulfillment-status" style="font-size:0.68rem; color:{{ (!$bakerRecordDash?->accepts_delivery && !$bakerRecordDash?->accepts_pickup) ? '#FCA5A5' : 'rgba(255,255,255,0.4)' }};">
-                    {{ (!$bakerRecordDash?->accepts_delivery && !$bakerRecordDash?->accepts_pickup) ? 'Select at least one — you can\'t bid until this is set.' : 'Saved automatically' }}
+                <div id="fulfillment-status" class="bd-fulfil-status {{ !$fulfillmentSet ? 'is-warn' : '' }}">
+                    <svg id="fulfillment-status-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        @if(!$fulfillmentSet)
+                        <path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+                        @else
+                        <polyline points="20 6 9 17 4 12"/>
+                        @endif
+                    </svg>
+                    <span id="fulfillment-status-text">{{ !$fulfillmentSet ? "Select at least one. You can't bid until this is set." : 'Ready to bid · Saved automatically' }}</span>
                 </div>
-            </div>
-        </div>
+            </section>
 
-</div>
-
-    <div class="hero-illustration">
-        <div class="hero-sparkle hs1"></div>
-        <div class="hero-sparkle hs2"></div>
-        <div class="hero-sparkle hs3"></div>
-        <svg width="140" height="170" viewBox="0 0 140 170" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="44" y="6" width="8" height="26" rx="4" fill="#D4944F" opacity="0.9"/>
-            <rect x="88" y="2" width="8" height="30" rx="4" fill="#D4944F" opacity="0.9"/>
-            <ellipse cx="48" cy="5" rx="5" ry="7" fill="#F7CC50"/>
-            <ellipse cx="48" cy="5" rx="3" ry="5" fill="#FFF3A3"/>
-            <ellipse cx="92" cy="1" rx="5" ry="7" fill="#F7CC50"/>
-            <ellipse cx="92" cy="1" rx="3" ry="5" fill="#FFF3A3"/>
-            <rect x="30" y="32" width="80" height="38" rx="11" fill="#C8894A" opacity="0.95"/>
-            <path d="M30 43 Q38 50 46 43 Q54 36 62 43 Q70 50 78 43 Q86 36 94 43 Q102 50 110 43" stroke="#E8B07A" stroke-width="3" fill="none" opacity="0.6"/>
-            <rect x="30" y="64" width="80" height="6" rx="3" fill="#9A6028" opacity="0.7"/>
-            <rect x="14" y="70" width="112" height="52" rx="13" fill="#E8B07A" opacity="0.95"/>
-            <path d="M14 84 Q25 95 36 84 Q47 73 58 84 Q69 95 80 84 Q91 73 102 84 Q113 95 126 84" stroke="#FDDFC0" stroke-width="3.5" fill="none" opacity="0.7"/>
-            <rect x="14" y="115" width="112" height="7" rx="3.5" fill="#C8703A" opacity="0.7"/>
-            <ellipse cx="70" cy="126" rx="64" ry="10" fill="#9A6028" opacity="0.6"/>
-            <circle cx="38" cy="96" r="5" fill="white" opacity="0.25"/>
-            <circle cx="70" cy="91" r="5" fill="white" opacity="0.25"/>
-            <circle cx="102" cy="96" r="5" fill="white" opacity="0.25"/>
-            <circle cx="52" cy="104" r="4" fill="white" opacity="0.18"/>
-            <circle cx="86" cy="104" r="4" fill="white" opacity="0.18"/>
-            <circle cx="52" cy="48" r="4" fill="white" opacity="0.22"/>
-            <circle cx="88" cy="45" r="4" fill="white" opacity="0.22"/>
-            <circle cx="70" cy="52" r="3" fill="white" opacity="0.18"/>
-            <rect x="14" y="108" width="112" height="7" rx="3.5" fill="#C8703A" opacity="0.4"/>
-        </svg>
-    </div>
-</div>
-
-@if($profileIncomplete)
-<div class="pib">
-    <div class="pib-left">
-        <div style="flex-shrink:0; margin-top:0.1rem;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-        <div>
-            <div class="pib-title">Complete your profile to start bidding</div>
-            <div class="pib-missing">
-                Missing:
-                @foreach($missingFields as $field)
-                    <span class="pib-chip">{{ $field }}</span>
-                @endforeach
-            </div>
-        </div>
-    </div>
-    <a href="{{ route('baker.profile.index') }}" class="pib-btn">Complete Profile →</a>
-</div>
-@endif
-
-<div class="stats-grid">
-    <div class="stat-card c1">
-        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--caramel)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></div>
-        <div class="stat-value">{{ $openRequestsCount }}</div>
-        <div class="stat-label">Open Requests</div>
-        <div class="stat-change">↑ Available to bid</div>
-    </div>
-    <div class="stat-card c2">
-        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9A6028" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
-        <div class="stat-value">{{ $myActiveBidsCount }}</div>
-        <div class="stat-label">My Active Bids</div>
-        <div class="stat-change">Awaiting response</div>
-    </div>
-    <div class="stat-card c3">
-        <div class="stat-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7A4A28" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
-        <div class="stat-value">{{ $activeOrdersCount }}</div>
-        <div class="stat-label">Orders in Progress</div>
-        <div class="stat-change">Currently baking</div>
-    </div>
-    <div class="stat-card c4">
-        <div class="stat-icon" style="font-size:1.6rem; font-weight:700; color:var(--brown-deep); line-height:1;">₱</div>
-        <div class="stat-value">₱{{ number_format($monthEarnings, 0) }}</div>
-        <div class="stat-label">This Month</div>
-        <div class="stat-change">{{ $completedThisMonth }} completed</div>
-    </div>
-</div>
-
-<div class="main-grid">
-    <div>
-        <div class="card" style="margin-bottom:1.5rem;">
-            <div class="card-header">
-                <h2 class="card-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Open Requests Near You</h2>
-                <a href="{{ route('baker.requests.index') }}" class="card-link">View all →</a>
-            </div>
-            @forelse($openRequests as $req)
-            @php
-                $config = is_array($req->cake_configuration) ? $req->cake_configuration : (json_decode($req->cake_configuration,true) ?? []);
-                $bidCount = $req->bids()->count();
-            @endphp
-            <a class="request-item" href="{{ route('baker.requests.show', $req->id) }}">
-                <div class="req-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--caramel)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg></div>
-                <div class="req-info">
-                    <div class="req-name">{{ $config['flavor'] ?? 'Custom' }} {{ $config['shape'] ?? 'Cake' }}</div>
-                    <div class="req-meta">
-                        {{ $config['size'] ?? '' }}
-                        @if(!empty($config['frosting'])) · {{ $config['frosting'] }} @endif
-                        · Due {{ $req->delivery_date->format('M d') }}
+            <section class="bd-panel">
+                @if($profileIncomplete)
+                <div class="bd-panel-head">
+                    <div class="bd-panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Baker Profile</div>
+                </div>
+                <div class="bd-profile-body">
+                    <div class="bd-profile-pct">
+                        <span class="bd-profile-pct-val">{{ $bdProfilePct }}%</span>
+                        <span class="bd-profile-pct-label">ready</span>
                     </div>
-                    @if($bidCount > 0)
-                    <div class="req-bid-count"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> {{ $bidCount }} bid{{ $bidCount > 1 ? 's' : '' }}</div>
-                    @endif
-                </div>
-                <div class="req-budget">
-                    <div class="req-budget-val">₱{{ number_format($req->budget_min,0) }}–{{ number_format($req->budget_max,0) }}</div>
-                    <div class="req-budget-date">{{ $req->delivery_date->diffForHumans() }}</div>
-                </div>
-            </a>
-            @empty
-            <div class="empty-mini">
-                <div class="emo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/></svg></div>
-                No open requests right now. Check back soon!
-            </div>
-            @endforelse
-        </div>
-    </div>
-
-    <div>
-        <div class="card" style="margin-bottom:1.5rem;">
-            <div class="card-header">
-                <h2 class="card-title">My Recent Bids</h2>
-                <a href="{{ route('baker.bids.index') }}" class="card-link">All bids →</a>
-            </div>
-            @forelse($recentBids as $bid)
-            <div class="bid-item">
-                <div style="flex:1; min-width:0;">
-                    <div style="font-size:0.82rem; font-weight:600; color:var(--text-dark);">
-                        #{{ str_pad($bid->cake_request_id, 4,'0',STR_PAD_LEFT) }}
-                        {{ $bid->cakeRequest->cake_configuration['flavor'] ?? 'Cake' }}
+                    <div class="bd-progress-track">
+                        @for($i = 0; $i < $bdTotalProfileFields; $i++)
+                        <div class="layer">
+                            @if(($i + 1) * (100 / $bdTotalProfileFields) <= $bdProfilePct)
+                            <div class="bd-progress-fill"></div>
+                            @endif
+                        </div>
+                        @endfor
                     </div>
-                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.1rem;">
-                        Offered ₱{{ number_format($bid->amount, 0) }} · {{ $bid->created_at->diffForHumans() }}
+                    <div class="bd-profile-chips">
+                        @foreach($missingFields as $field)
+                        <span class="bd-chip">{{ $field }}</span>
+                        @endforeach
+                    </div>
+                    <a href="{{ route('baker.profile.index') }}" class="bd-profile-cta">Complete profile <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+                </div>
+                @else
+                <div class="bd-panel-head">
+                    <div class="bd-panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Baker Profile</div>
+                </div>
+                <div class="bd-profile-ready">
+                    <div class="bd-ready-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <div>
+                        <div class="bd-ready-title">Your profile is ready</div>
+                        <div class="bd-ready-sub">Customers can now view your baker profile.</div>
                     </div>
                 </div>
-                <span class="bid-status {{ strtolower($bid->status) }}">{{ $bid->status }}</span>
-            </div>
-            @empty
-            <div class="empty-mini">
-                <div class="emo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
-                No bids placed yet.
-            </div>
-            @endforelse
-        </div>
+                @endif
+            </section>
 
-        <div class="card">
-       <div class="card-header">
-                <h2 class="card-title">Earnings (6 months)</h2>
-                <a href="{{ route('baker.earnings.index') }}" class="card-link">Details →</a>
-            </div>
-            @php $maxEarning = max(array_column($earningsChart, 'total') ?: [1]) ?: 1; @endphp
-            <div class="earnings-bars">
-                @foreach($earningsChart as $month)
-                <div class="e-bar-wrap">
-                    <div class="e-bar"
-                         data-h="{{ max(4, ($month['total']/$maxEarning)*72) }}"
-                         style="height:0px;"
-                         title="₱{{ number_format($month['total'],0) }}"></div>
-                    <div class="e-bar-label">{{ $month['label'] }}</div>
+            <section class="bd-panel">
+                <div class="bd-panel-head">
+                    <div class="bd-panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Recent Bids</div>
+                    <a href="{{ route('baker.bids.index') }}" class="bd-panel-link">All bids</a>
                 </div>
-                @endforeach
-            </div>
+                @forelse($recentBids as $bid)
+                <div class="bd-bid">
+                    <div class="bd-bid-rail"><div class="bd-bid-dot {{ strtolower($bid->status) }}"></div></div>
+                    <div class="bd-bid-info">
+                        <div class="bd-bid-name">#{{ str_pad($bid->cake_request_id, 4, '0', STR_PAD_LEFT) }} · {{ $bid->cakeRequest->cake_configuration['flavor'] ?? 'Cake' }}</div>
+                        <div class="bd-bid-meta">Your offer · ₱{{ number_format($bid->amount, 0) }} · {{ $bid->created_at->diffForHumans() }}</div>
+                    </div>
+                    <span class="bd-bid-status {{ strtolower($bid->status) }}">{{ $bid->status }}</span>
+                </div>
+                @empty
+                <div class="bd-empty">
+                    <div class="bd-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+                    <div class="bd-empty-title">No bids placed yet</div>
+                    <div class="bd-empty-sub">Offers you send will appear here.</div>
+                </div>
+                @endforelse
+            </section>
         </div>
     </div>
 </div>
-
 @endsection
 
 @push('scripts')
@@ -412,6 +528,8 @@ function saveFulfillment() {
     const delivery = document.getElementById('pref-delivery').checked;
     const pickup   = document.getElementById('pref-pickup').checked;
     const statusEl = document.getElementById('fulfillment-status');
+    const statusText = document.getElementById('fulfillment-status-text');
+    const statusIcon = document.getElementById('fulfillment-status-icon');
 
     fetch('{{ route("baker.toggle-rush") }}', {
         method: 'POST',
@@ -419,36 +537,78 @@ function saveFulfillment() {
         body: JSON.stringify({ accepts_delivery: delivery, accepts_pickup: pickup })
     });
 
+    const availDot = document.querySelector('.bd-avail-dot');
+    const availText = document.querySelector('.bd-availability-text');
+    const statusSub = document.querySelector('.bd-status-sub');
+
+    // Reflect selection on the feature cards themselves
+    document.querySelectorAll('.bd-fulfil-card').forEach(card => {
+        const tag = card.querySelector('.bd-fulfil-card-tag');
+        const input = card.querySelector('input');
+        if (tag && input) tag.textContent = input.checked ? 'Enabled' : 'Off';
+    });
+
     if (!delivery && !pickup) {
-        statusEl.textContent = "Select at least one — you can't bid until this is set.";
-        statusEl.style.color = '#FCA5A5';
+        statusEl.classList.add('is-warn');
+        statusText.textContent = "Select at least one. You can't bid until this is set.";
+        statusIcon.innerHTML = '<path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"></path>';
+        if (availDot) { availDot.classList.remove('is-on'); availDot.classList.add('is-off'); }
+        if (availText) availText.textContent = 'Bidding Paused';
+        if (statusSub) statusSub.textContent = 'Choose delivery or pickup to start bidding';
     } else {
-        statusEl.textContent = 'Saved automatically';
-        statusEl.style.color = 'rgba(255,255,255,0.4)';
+        statusEl.classList.remove('is-warn');
+        const label = (delivery && pickup) ? 'Delivery + Pickup' : (delivery ? 'Delivery' : 'Pickup');
+        statusText.textContent = 'Ready to bid · Saved automatically';
+        statusIcon.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+        if (availDot) { availDot.classList.remove('is-off'); availDot.classList.add('is-on'); }
+        if (availText) availText.textContent = 'Accepting Orders';
+        if (statusSub) statusSub.textContent = label;
     }
 }
 
-function toggleRush(checkbox) {    const feeWrap = document.getElementById('rush-fee-wrap');
-    const dot = document.getElementById('rushDot');
-    feeWrap.style.display = checkbox.checked ? '' : 'none';
-    dot.classList.toggle('off', !checkbox.checked);
-    fetch('{{ route("baker.toggle-rush") }}', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-        body: JSON.stringify({ accepts_rush: checkbox.checked })
-    });
-}
-function saveRushFee(value) {
-    fetch('{{ route("baker.toggle-rush") }}', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-        body: JSON.stringify({ rush_fee: parseInt(value) })
-    });
-}
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.e-bar').forEach((bar, i) => {
+    // Count-up stats
+    document.querySelectorAll('.bd-stat-value[data-count]').forEach(el => {
+        const target = parseFloat(el.dataset.count) || 0;
+        const isCurrency = el.dataset.format === 'currency';
+        const duration = 900;
+        const start = performance.now();
+        function tick(now) {
+            const progress = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const value = Math.round(target * eased);
+            el.textContent = isCurrency ? ('₱' + value.toLocaleString('en-PH')) : value.toLocaleString('en-PH');
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    });
+
+    // Profile progress bar (priority banner)
+    const priorityFill = document.querySelector('.bd-priority-progress-fill');
+    if (priorityFill) {
+        const pct = priorityFill.dataset.pct || 0;
+        requestAnimationFrame(() => { priorityFill.style.width = pct + '%'; });
+    }
+
+    // Earnings chart bars + tooltip
+    const tooltip = document.getElementById('bdChartTooltip');
+    const chartWrap = document.querySelector('.bd-chart-wrap');
+    document.querySelectorAll('.bd-bar').forEach((bar, i) => {
         const h = bar.dataset.h;
-        setTimeout(() => { bar.style.height = h + 'px'; }, 100 + i * 80);
+        setTimeout(() => { bar.style.height = h + 'px'; }, 150 + i * 70);
+
+        bar.addEventListener('mouseenter', () => {
+            if (!tooltip || !chartWrap) return;
+            tooltip.textContent = bar.dataset.value + ' · ' + bar.dataset.label;
+            const barRect = bar.getBoundingClientRect();
+            const wrapRect = chartWrap.getBoundingClientRect();
+            tooltip.style.left = (barRect.left - wrapRect.left + barRect.width / 2) + 'px';
+            tooltip.style.top = (barRect.top - wrapRect.top) + 'px';
+            tooltip.classList.add('show');
+        });
+        bar.addEventListener('mouseleave', () => {
+            if (tooltip) tooltip.classList.remove('show');
+        });
     });
 });
 </script>

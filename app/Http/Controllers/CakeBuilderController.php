@@ -25,8 +25,22 @@ class CakeBuilderController extends Controller
     ];
     public function index(Request $request)
 {
-    $components = \App\Models\Ingredient::selectable()->orderBy('id')->get()->groupBy('category');
-       $castPriceMap = fn($categoryKey) => $components->get($categoryKey, collect())
+    // Hidden completely: Inactive / Draft
+    $disabledNames = \App\Models\Ingredient::whereIn('status', ['inactive', 'draft'])
+        ->pluck('name')
+        ->values();
+
+    // Visible but locked with a "Coming Soon" badge
+    $comingSoonNames = \App\Models\Ingredient::where('status', 'coming_soon')
+        ->pluck('name')
+        ->values();
+
+    // Active + Coming Soon are loaded so both can be displayed
+    $components = \App\Models\Ingredient::whereIn('status', ['active', 'coming_soon'])
+        ->get()
+        ->groupBy('category');
+
+    $castPriceMap = fn($categoryKey) => $components->get($categoryKey, collect())
         ->pluck('price', 'name')
         ->map(fn($p) => (float) $p);
 
@@ -92,6 +106,8 @@ class CakeBuilderController extends Controller
         'roundSizePrices'  => $roundSizePrices,
         'tierShapePrices'  => $tierShapePrices,
         'characterPrices'  => $characterPrices,
+        'disabledNames'    => $disabledNames,
+        'comingSoonNames'  => $comingSoonNames,
     ]);
 }
     public function calculatePrice(Request $request)

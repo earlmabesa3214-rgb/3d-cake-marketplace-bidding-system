@@ -1,25 +1,20 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+    <h1 class="g-title">Forgot your password?</h1>
+    <p class="g-sub">Enter the email on your account and we will send you a link to choose a new one. If you signed up with Google, use Continue with Google on the sign-in page instead.</p>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @if (session('status'))
+        <div class="g-alert g-ok" role="status">{{ session('status') }}</div>
+    @endif
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="g-field">
+            <label for="email">Email address</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="juan@email.com" class="{{ $errors->has('email') ? 'is-invalid' : '' }}" required autofocus>
+            @error('email')<div class="g-err">{{ $message }}</div>@enderror
         </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
+        <button type="submit" class="g-btn">Email reset link</button>
     </form>
+
+    <a class="g-back" href="{{ route('login') }}">Back to sign in</a>
 </x-guest-layout>

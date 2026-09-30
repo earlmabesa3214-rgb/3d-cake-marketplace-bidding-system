@@ -34,7 +34,9 @@ class IngredientController extends Controller
             ->groupBy('category')
             ->pluck('cnt', 'category');
 
-        return view('admin.ingredients.index', compact('ingredients', 'stats', 'categoryCounts'));
+        $trashed = Ingredient::onlyTrashed()->orderByDesc('deleted_at')->get();
+
+        return view('admin.ingredients.index', compact('ingredients', 'stats', 'categoryCounts', 'trashed'));
     }
 
     public function store(Request $request)
@@ -74,16 +76,39 @@ class IngredientController extends Controller
 
     public function destroy(Ingredient $ingredient)
     {
-        // Only drafts are safe to hard-delete — anything that ever reached
-        // Coming Soon/Active/Inactive may already be captured inside a
-        // customer's saved cake_configuration JSON.
-        if ($ingredient->status !== 'draft') {
-            return back()->with('error', 'Only draft components can be deleted. Set this to Inactive instead to retire it.');
-        }
+        $name = $ingredient->name;
 
+        // Soft delete: goes to Trash and can be restored. Uploaded files are kept.
         $ingredient->delete();
 
-        return redirect()->route('ingredients.index')->with('success', 'Draft component deleted.');
+        return redirect()->route('ingredients.index')
+            ->with('success', 'Component "' . $name . '" moved to Trash.');
+    }
+
+    public function restore($id)
+    {
+        $ingredient = Ingredient::onlyTrashed()->findOrFail($id);
+        $ingredient->restore();
+
+        return redirect()->route('ingredients.index')
+            ->with('success', 'Component "' . $ingredient->name . '" restored.');
+    }
+
+    public function forceDelete($id)
+    {
+        $ingredient = Ingredient::onlyTrashed()->findOrFail($id);
+        $name = $ingredient->name;
+
+        foreach (['model_path', 'thumbnail_path'] as $col) {
+            if ($ingredient->$col) {
+                Storage::disk('public')->delete($ingredient->$col);
+            }
+        }
+
+        $ingredient->forceDelete();
+
+        return redirect()->route('ingredients.index')
+            ->with('success', 'Component "' . $name . '" permanently deleted.');
     }
     private function validated(Request $request): array
     {

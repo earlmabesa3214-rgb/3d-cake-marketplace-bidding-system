@@ -3,6 +3,7 @@
     Shared Report Form — works for baker (reporting customer) AND customer (reporting baker)
     Route: /report/order/{bakerOrder}
     Controller passes: $bakerOrder, $isBaker (bool), $reportedUser
+    Styled in the same cake-atelier ledger language as Notifications, Bids, Orders and Wallet.
 --}}
 @php
     $isBaker      = $isBaker ?? (auth()->user()->role === 'baker');
@@ -28,627 +29,383 @@
     ];
 
     $categories = $isBaker ? $bakerCategories : $customerCategories;
-    $backRoute   = $isBaker
+    $backRoute  = $isBaker
         ? route('baker.orders.show', $bakerOrder->id)
         : route('customer.cake-requests.show', $bakerOrder->cake_request_id);
+
+    // ── SVG helper + icon set (same stroke style as the notifications page) ──
+    $ico = fn ($paths, $s = 20, $w = '1.75') => '<svg xmlns="http://www.w3.org/2000/svg" width="'.$s.'" height="'.$s.'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'.$w.'" stroke-linecap="round" stroke-linejoin="round">'.$paths.'</svg>';
+    $catIcons = [
+        'no_show'         => '<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>',
+        'payment_fraud'   => '<rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+        'fake_proof'      => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/>',
+        'harassment'      => '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+        'order_abandoned' => '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+        'poor_quality'    => '<path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/>',
+        'other'           => '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+    ];
+    $icoBack   = $ico('<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>', 12, '2.5');
+    $icoAlert  = $ico('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 16, '2');
+    $icoWarn   = $ico('<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>', 14, '2.25');
+    $icoUpload = $ico('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>', 20);
+    $icoCheck  = $ico('<polyline points="20 6 9 17 4 12"/>', 20, '2');
+    $icoLock   = $ico('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>', 14, '2');
+    $icoCoin   = $ico('<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/>', 20);
 @endphp
 
 @section('title', 'Report ' . ($isBaker ? 'Customer' : 'Baker') . ' — #' . $orderId)
 
 @push('styles')
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Report form: same cake-atelier ledger language as Notifications, Bids, Orders and Wallet. Plus Jakarta Sans only. */
+.report-page{
+--esp:#24150F;--ivory:#F7F2E9;--cream:#EFE6D7;--caramel:#A96F42;--gold:#B89452;--gold-l:#D4B06A;
+--burg:#54252C;--taupe:#9A897A;--beige:#D8C8B7;--w:#FBF8F2;--mocha:#7A5E4C;--credit:#7A6120;--sage:#5E7F5A;--sage-d:#33502F;
+--line:rgba(36,21,15,.14);--gold-line:rgba(184,148,82,.35);--e:cubic-bezier(.2,.7,.2,1);
+max-width:1500px;width:100%;margin:0 auto;padding-bottom:5rem;color:var(--esp);font-family:'Plus Jakarta Sans',sans-serif}
+.report-page *{box-sizing:border-box;font-family:inherit}
+.report-page svg{flex-shrink:0}
+.report-page a:focus-visible,.report-page button:focus-visible,.report-page textarea:focus-visible,
+.report-page .rp-radio:focus-visible + .rp-cat,.report-page .rp-dz input:focus-visible + .rp-dz-icon{outline:2px solid var(--gold);outline-offset:3px}
+@keyframes rp-fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes rp-line{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes rp-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.report-page *,.report-page *::before,.report-page *::after{animation:none!important;transition:none!important}}
+
+/* back link */
+.rp-back{display:inline-flex;align-items:center;gap:.4rem;margin-bottom:1.5rem;font-size:.6rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--caramel);text-decoration:none;border-bottom:1px solid var(--gold-line);padding-bottom:1px;transition:color .3s,border-color .3s}
+.rp-back:hover{color:var(--esp);border-color:var(--esp);text-decoration:none}
+
+/* header */
+.rp-header{position:relative;margin:0 0 2rem;padding-bottom:1.75rem;animation:rp-fadeUp .6s var(--e) backwards}
+.rp-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold-line)}
+.rp-header::before{content:"";position:absolute;left:0;bottom:0;width:72px;height:3px;background:var(--gold);z-index:1;transform-origin:left;animation:rp-line .9s var(--e) .3s backwards}
+.rp-title{font-size:clamp(2.4rem,6vw,4.6rem);font-weight:900;line-height:.95;letter-spacing:-.05em;margin:0}
+.rp-sub{margin:1rem 0 0;max-width:56ch;font-size:.98rem;line-height:1.7;color:var(--mocha)}
+
+/* two columns: the form fills the left, guidance sits on the right */
+.rp-layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:3.5rem;align-items:start}
+.rp-body{min-width:0;animation:rp-fadeUp .6s var(--e) .15s backwards}
+.rp-aside{position:sticky;top:1.5rem;animation:rp-fadeUp .6s var(--e) .3s backwards}
+.rp-aside-block{padding:1.25rem 0 1.75rem;border-top:1px solid var(--esp)}
+.rp-aside-block + .rp-aside-block{margin-top:1rem}
+.rp-aside-title{margin:0 0 .5rem;font-size:1rem;font-weight:800;letter-spacing:-.02em}
+.rp-steps,.rp-tips{list-style:none;margin:0;padding:0}
+.rp-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1rem;padding:1rem 0;border-bottom:1px solid var(--line)}
+.rp-step-n{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--esp);color:var(--gold-l);font-size:.78rem;font-weight:900}
+.rp-step-t{font-size:.9rem;font-weight:800;letter-spacing:-.01em;line-height:1.3}
+.rp-step-d{margin-top:.2rem;font-size:.82rem;line-height:1.55;color:var(--mocha)}
+.rp-tips li{position:relative;padding:.9rem 0 .9rem 1.5rem;border-bottom:1px solid var(--line);font-size:.86rem;line-height:1.6;color:var(--mocha)}
+.rp-tips li::before{content:"";position:absolute;left:.15rem;top:1.3rem;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
+.rp-tips strong{color:var(--esp);font-weight:800}
+@media(max-width:1100px){
+    .rp-layout{grid-template-columns:minmax(0,1fr);gap:2rem}
+    .rp-aside{position:static}
 }
 
-:root {
-    --brown-deep:    #3B1F0F;
-    --brown-mid:     #7A4A28;
-    --caramel:       #C8893A;
-    --caramel-lt:    #E8A94A;
-    --cream:         #F5EFE6;
-    --warm-white:    #FFFDF9;
-    --border:        #EAE0D0;
-    --text-dark:     #2C1A0E;
-    --text-mid:      #6B4A2A;
-    --text-muted:    #9A7A5A;
-    --red-deep:      #4A1515;
-    --red-mid:       #7A2020;
-    --red-accent:    #B03030;
-    --red-pale:      #FDF2F2;
-    --red-border:    #EABFBF;
-    --shadow-sm:     0 1px 4px rgba(59,31,15,0.07);
-    --shadow-md:     0 4px 16px rgba(59,31,15,0.10);
-}
-.rp-page {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 0 5rem;
-}
+/* reported party: a ledger row */
+.rp-subject{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:1.25rem;padding:1.25rem 1.25rem 1.25rem 0;border-top:1px solid var(--esp);border-bottom:1px solid var(--line)}
+.rp-avatar{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--esp);color:var(--gold-l);font-size:1.1rem;font-weight:900;overflow:hidden}
+.rp-avatar img{width:100%;height:100%;object-fit:cover}
+.rp-subject-name{font-size:.98rem;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+.rp-subject-meta{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem;margin-top:.35rem;font-size:.8rem;color:var(--mocha);word-break:break-all}
+.rp-tag{display:inline-flex;align-items:center;padding:.22rem .5rem;background:var(--esp);color:var(--gold-l);font-size:.52rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.rp-order{text-align:right}
+.rp-order-num{font-size:1.15rem;font-weight:900;letter-spacing:-.03em;color:var(--caramel)}
+.rp-order-label{margin-top:.15rem;font-size:.52rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe)}
 
-/* ── BACK ── */
-.rp-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    text-decoration: none;
-    margin-bottom: 1.75rem;
-    transition: color 0.18s;
-}
-.rp-back:hover { color: var(--caramel); }
-.rp-back svg { transition: transform 0.18s; }
-.rp-back:hover svg { transform: translateX(-2px); }
+/* notice / errors: bordered bar with a colored edge */
+.rp-alert{position:relative;display:flex;align-items:flex-start;gap:.75rem;margin:1.5rem 0 0;padding:1rem 1.25rem 1rem 1.5rem;background:#F8F1E2;border-bottom:1px solid var(--line);font-size:.86rem;line-height:1.6;color:var(--mocha)}
+.rp-alert::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.rp-alert svg{margin-top:2px;color:var(--credit)}
+.rp-alert strong{color:var(--esp);font-weight:800}
+.rp-alert.error{background:#F6ECEA;color:var(--burg)}
+.rp-alert.error::before{background:var(--burg)}
+.rp-alert.error svg{color:var(--burg)}
+.rp-alert ul{margin:.35rem 0 0 1rem;padding:0}
 
-/* ── PAGE HEADER ── */
-.rp-page-header {
-    margin-bottom: 2rem;
-}
-.rp-page-header-top {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
-}
-.rp-header-icon {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--red-deep), var(--red-mid));
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-}
-.rp-page-title {
-    font-size: 1.45rem;
-    font-weight: 800;
-    color: var(--brown-deep);
-    line-height: 1.2;
-}
-.rp-page-sub {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-left: calc(44px + 1rem);
-}
+/* sections */
+.rp-section{padding:1.75rem 0;border-bottom:1px solid var(--line)}
+.rp-label{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;margin:0 0 1rem;font-size:1rem;font-weight:800;letter-spacing:-.02em}
+.rp-label-main{display:inline-flex;align-items:center;gap:.6rem}
+.rp-req{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+.rp-opt{font-size:.74rem;font-weight:600;letter-spacing:0;color:var(--taupe)}
 
-/* ── SUBJECT STRIP ── */
-.rp-subject {
-    background: var(--warm-white);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--shadow-sm);
-}
-.rp-subject-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--caramel), var(--caramel-lt));
-    color: white; display: flex; align-items: center;
-    justify-content: center; font-size: 0.95rem; font-weight: 800;
-    flex-shrink: 0; overflow: hidden; border: 2px solid var(--border);
-}
-.rp-subject-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.rp-subject-name { font-size: 0.88rem; font-weight: 700; color: var(--text-dark); }
-.rp-subject-meta {
-    font-size: 0.68rem; color: var(--text-muted);
-    margin-top: 0.15rem; display: flex; align-items: center; gap: 0.4rem;
-}
-.rp-subject-role-tag {
-    padding: 0.1rem 0.4rem;
-    background: var(--cream); border: 1px solid var(--border);
-    border-radius: 4px; font-weight: 700; font-size: 0.6rem;
-    text-transform: uppercase; letter-spacing: 0.06em; color: var(--brown-mid);
-}
-.rp-order-ref {
-    margin-left: auto; flex-shrink: 0;
-    text-align: right;
-}
-.rp-order-ref-num {
-    font-size: 0.82rem; font-weight: 800; color: var(--caramel);
-}
-.rp-order-ref-label {
-    font-size: 0.6rem; color: var(--text-muted); margin-top: 0.1rem;
-    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
-}
+/* category list */
+.rp-cats{border-top:1px solid var(--esp)}
+.rp-cat-wrap{position:relative}
+.rp-radio{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.rp-cat{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:1.25rem;padding:1rem 1.25rem 1rem 1.5rem;border-bottom:1px solid var(--line);cursor:pointer;transition:background .3s}
+.rp-cat:hover{background:rgba(239,230,215,.5)}
+.rp-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--beige);background:var(--cream);color:var(--mocha);transition:background .3s,color .3s,border-color .3s}
+.rp-cat-text{font-size:.94rem;font-weight:700;letter-spacing:-.01em;color:var(--esp)}
+.rp-mark{width:9px;height:9px;border:1px solid var(--taupe);transform:rotate(45deg);transition:background .25s,border-color .25s}
+.rp-radio:checked + .rp-cat{background:#F8F1E2}
+.rp-radio:checked + .rp-cat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.rp-radio:checked + .rp-cat .rp-icon{background:var(--esp);border-color:var(--esp);color:var(--gold-l)}
+.rp-radio:checked + .rp-cat .rp-mark{background:var(--gold);border-color:var(--gold)}
 
-/* ── NOTICE BAR ── */
-.rp-notice {
-    background: #FFFBEB;
-    border: 1.5px solid #EDD070;
-    border-radius: 10px;
-    padding: 0.8rem 1rem;
-    display: flex; align-items: flex-start; gap: 0.6rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.76rem; color: #6B4800; line-height: 1.6;
-}
-.rp-notice-icon { flex-shrink: 0; margin-top: 1px; }
+/* textarea */
+.rp-textarea{display:block;width:100%;min-height:150px;padding:1rem 1.1rem;background:var(--w);border:1px solid var(--beige);border-radius:0;font-size:.92rem;line-height:1.7;color:var(--esp);resize:vertical;transition:border-color .25s,background .25s}
+.rp-textarea::placeholder{color:var(--taupe)}
+.rp-textarea:hover{border-color:var(--taupe)}
+.rp-textarea:focus{outline:none;border-color:var(--esp);background:#fff}
+.rp-hint{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:.6rem;font-size:.74rem;font-weight:600;color:var(--taupe)}
+.rp-count.warn{color:var(--burg);font-weight:800}
 
-/* ── SECTION ── */
-.rp-section {
-    margin-bottom: 1rem;
-}
-.rp-section-label {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    margin-bottom: 0.6rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-.rp-required-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--red-accent); flex-shrink: 0;
-}
+/* upload */
+.rp-dz{position:relative;display:flex;align-items:center;gap:1.1rem;padding:1rem 1.25rem;background:var(--w);border:1px dashed var(--taupe);cursor:pointer;transition:background .3s,border-color .3s}
+.rp-dz:hover{background:rgba(239,230,215,.5);border-color:var(--esp)}
+.rp-dz.has-file{border-style:solid;border-color:var(--gold-line);background:#F8F1E2}
+.rp-dz input[type="file"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.rp-dz-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--beige);background:var(--cream);color:var(--mocha)}
+.rp-dz.has-file .rp-dz-icon{background:#EFF2E8;border-color:rgba(94,127,90,.35);color:var(--sage-d)}
+.rp-dz-title{font-size:.9rem;font-weight:800;letter-spacing:-.01em;word-break:break-all}
+.rp-dz-sub{margin-top:.15rem;font-size:.76rem;color:var(--mocha)}
+.rp-preview{display:none;width:42px;height:42px;object-fit:cover;border:1px solid var(--beige);margin-left:auto}
+.rp-attached{display:none;align-items:center;margin-left:auto;padding:.22rem .5rem;background:var(--esp);color:var(--gold-l);font-size:.52rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
 
-/* ── CATEGORY LIST ── */
-.rp-cat-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-.rp-cat-radio { display: none; }
-.rp-cat-item {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 0.8rem 1rem;
-    background: var(--warm-white);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-}
-.rp-cat-item:hover {
-    border-color: #C8A0A0;
-    background: #FDFAFA;
-}
-.rp-cat-radio:checked + .rp-cat-item {
-    border-color: var(--red-accent);
-    background: var(--red-pale);
-}
-.rp-cat-radio:checked + .rp-cat-item .rp-cat-indicator {
-    border-color: var(--red-accent);
-    background: var(--red-accent);
-}
-.rp-cat-radio:checked + .rp-cat-item .rp-cat-indicator::after {
-    opacity: 1;
-}
-.rp-cat-indicator {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-}
-.rp-cat-indicator::after {
-    content: '';
-    width: 6px; height: 6px; border-radius: 50%;
-    background: white;
-    opacity: 0;
-    transition: opacity 0.15s;
-}
-.rp-cat-label-text {
-    font-size: 0.84rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    flex: 1;
-}
-.rp-cat-svg {
-    flex-shrink: 0;
-    color: var(--text-muted);
-}
-.rp-cat-radio:checked + .rp-cat-item .rp-cat-svg {
-    color: var(--red-accent);
-}
+/* refund request */
+.rp-refund{display:none;position:relative;margin-top:1.75rem;padding:1.25rem 1.25rem 1.25rem 1.5rem;background:#F8F1E2;border-bottom:1px solid var(--line)}
+.rp-refund::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.rp-refund-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.75rem;color:var(--credit)}
+.rp-refund-title{font-size:1rem;font-weight:800;letter-spacing:-.02em;color:var(--esp)}
+.rp-refund-note{margin:0 0 1rem;max-width:70ch;font-size:.86rem;line-height:1.6;color:var(--mocha)}
+.rp-check{display:flex;align-items:flex-start;gap:.8rem;cursor:pointer}
+.rp-check input{width:18px;height:18px;margin-top:2px;accent-color:var(--burg);flex-shrink:0}
+.rp-check-title{font-size:.9rem;font-weight:800;letter-spacing:-.01em}
+.rp-check-sub{margin-top:.2rem;font-size:.8rem;line-height:1.5;color:var(--mocha)}
 
-/* ── TEXTAREA ── */
-.rp-textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 0.9rem 1rem;
-    background: var(--warm-white);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: 0.84rem;
-    color: var(--text-dark);
-    line-height: 1.6;
-    resize: vertical;
-    transition: all 0.15s;
-    outline: none;
-}
-.rp-textarea::placeholder { color: var(--text-muted); }
-.rp-textarea:focus {
-    border-color: var(--red-accent);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(176,48,48,0.08);
-}
-.rp-char-hint {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 0.4rem;
-}
-.rp-char-count {
-    font-size: 0.68rem; color: var(--text-muted); font-weight: 500;
-}
-.rp-char-count.warn { color: var(--red-accent); font-weight: 700; }
-.rp-char-min {
-    font-size: 0.68rem; color: var(--text-muted);
-}
+/* inline validation */
+.rp-error{display:none;align-items:center;gap:.4rem;margin-top:.7rem;font-size:.8rem;font-weight:700;color:var(--burg)}
+.rp-error.show{display:flex}
 
-/* ── FILE UPLOAD ── */
-.rp-dropzone {
-    border: 1.5px dashed var(--border);
-    border-radius: 10px;
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    background: var(--warm-white);
-    transition: all 0.18s;
-    display: flex; align-items: center; gap: 0.85rem;
-    position: relative;
-}
-.rp-dropzone:hover {
-    border-color: var(--red-accent);
-    background: var(--red-pale);
-}
-.rp-dropzone.has-file {
-    border-style: solid;
-    border-color: var(--red-accent);
-    background: var(--red-pale);
-}
-.rp-dropzone input[type="file"] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
-}
-.rp-dz-icon-wrap {
-    width: 40px; height: 40px; border-radius: 10px;
-    background: var(--cream); border: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; color: var(--text-muted); transition: all 0.18s;
-}
-.rp-dropzone.has-file .rp-dz-icon-wrap {
-    background: var(--red-pale); border-color: var(--red-border);
-    color: var(--red-accent);
-}
-.rp-dz-text-title { font-size: 0.82rem; font-weight: 700; color: var(--text-dark); }
-.rp-dz-text-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
-.rp-file-preview {
-    width: 40px; height: 40px; border-radius: 7px; object-fit: cover;
-    border: 1.5px solid var(--border); display: none; flex-shrink: 0; margin-left: auto;
-}
-.rp-file-ok {
-    margin-left: auto; flex-shrink: 0;
-    display: none; align-items: center; gap: 0.35rem;
-    font-size: 0.68rem; font-weight: 700; color: #166534;
-    background: #EFF5EF; border: 1px solid #BFDFBE;
-    padding: 0.2rem 0.55rem; border-radius: 20px;
-}
-.rp-optional-tag {
-    margin-left: auto;
-    font-size: 0.62rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    font-style: italic;
-}
+/* footer + buttons */
+.rp-footer{display:flex;align-items:center;flex-wrap:wrap;gap:1rem;margin-top:2rem}
+.rp-note{flex:1;min-width:200px;display:flex;align-items:center;gap:.5rem;font-size:.78rem;line-height:1.5;color:var(--taupe)}
+.rp-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;height:36px;padding:0 .95rem;background:var(--w);border:1px solid var(--esp);border-radius:0;font-size:.6rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--esp);text-decoration:none;white-space:nowrap;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.rp-btn:hover{background:var(--esp);color:var(--gold-l);text-decoration:none}
+.rp-btn.submit{height:42px;padding:0 1.3rem;background:var(--burg);border-color:var(--burg);color:var(--ivory)}
+.rp-btn.submit:hover:not(:disabled){background:var(--esp);border-color:var(--esp);color:var(--gold-l)}
+.rp-btn:disabled{opacity:.5;cursor:not-allowed}
+.rp-spin{animation:rp-spin .7s linear infinite}
 
-/* ── REFUND CARD ── */
-.rp-refund-card {
-    background: #FFFBEB;
-    border: 1.5px solid #EDD070;
-    border-radius: 12px;
-    padding: 1.1rem 1.25rem;
-    margin-bottom: 1rem;
-}
-.rp-refund-header {
-    display: flex; align-items: center; gap: 0.6rem;
-    margin-bottom: 0.75rem;
-}
-.rp-refund-title { font-size: 0.88rem; font-weight: 700; color: var(--brown-deep); }
-.rp-refund-notice {
-    font-size: 0.75rem; color: #6B4800; line-height: 1.6;
-    margin-bottom: 0.85rem;
-    padding: 0.65rem 0.85rem;
-    background: rgba(255,255,255,0.6);
-    border-radius: 8px;
-    border: 1px solid #EDD070;
-}
-.rp-refund-check-label {
-    display: flex; align-items: flex-start; gap: 0.7rem; cursor: pointer;
-}
-.rp-refund-check-label input[type="checkbox"] {
-    width: 17px; height: 17px; margin-top: 2px;
-    accent-color: var(--red-accent); flex-shrink: 0;
-}
-.rp-refund-check-title { font-size: 0.84rem; font-weight: 700; color: var(--brown-deep); }
-.rp-refund-check-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; line-height: 1.5; }
-
-/* ── DIVIDER ── */
-.rp-divider {
-    height: 1px; background: var(--border); margin: 1.25rem 0;
-}
-
-/* ── VALIDATION ERROR ── */
-.rp-error {
-    font-size: 0.72rem; color: var(--red-accent); font-weight: 600;
-    display: flex; align-items: center; gap: 0.35rem;
-    margin-top: 0.45rem; display: none;
-}
-.rp-error.show { display: flex; }
-
-/* ── SUBMIT ROW ── */
-.rp-footer {
-    display: flex; align-items: center; gap: 0.75rem;
-    flex-wrap: wrap; margin-top: 1.5rem;
-}
-.rp-cancel-btn {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    padding: 0.7rem 1.1rem;
-    background: white; color: var(--text-mid);
-    border: 1.5px solid var(--border); border-radius: 10px;
-    font-size: 0.84rem; font-weight: 600; cursor: pointer;
-    text-decoration: none; transition: all 0.18s; white-space: nowrap;
-}
-.rp-cancel-btn:hover { border-color: var(--caramel); color: var(--caramel); }
-.rp-submit-btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.7rem 1.5rem;
-    background: linear-gradient(135deg, var(--red-deep), var(--red-mid));
-    color: white; border: none; border-radius: 10px;
-    font-size: 0.84rem; font-weight: 700; cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    box-shadow: 0 3px 12px rgba(122,32,32,0.28);
-    transition: all 0.18s; white-space: nowrap;
-}
-.rp-submit-btn:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 5px 18px rgba(122,32,32,0.38);
-}
-.rp-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.rp-footer-note {
-    flex: 1; min-width: 160px;
-    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
-    display: flex; align-items: center; gap: 0.4rem;
-}
-
-/* ── VALIDATION ERRORS BLOCK ── */
-.rp-errors-block {
-    background: var(--red-pale);
-    border: 1.5px solid var(--red-border);
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
-    display: flex; align-items: flex-start; gap: 0.6rem;
-    margin-bottom: 1.25rem;
-    font-size: 0.78rem; color: var(--red-mid); line-height: 1.6;
-}
-
-@media (max-width: 560px) {
-    .rp-footer { flex-direction: column-reverse; align-items: stretch; }
-    .rp-submit-btn, .rp-cancel-btn { justify-content: center; }
-    .rp-page-sub { margin-left: 0; margin-top: 0.35rem; }
+@media(max-width:720px){
+    .rp-subject{grid-template-columns:auto minmax(0,1fr);row-gap:.9rem;padding-right:0}
+    .rp-order{grid-column:1 / -1;display:flex;align-items:baseline;justify-content:space-between;text-align:left}
+    .rp-cat{gap:1rem;padding:.95rem 1rem .95rem 1.25rem}
+    .rp-icon{width:38px;height:38px}
+    .rp-footer{flex-direction:column-reverse;align-items:stretch}
+    .rp-btn{justify-content:center}
+    .rp-note{min-width:0}
 }
 </style>
 @endpush
 
 @section('content')
-<div class="rp-page">
+<div class="report-page">
 
     {{-- Back --}}
-    <a href="{{ $backRoute }}" class="rp-back">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Back to Order
-    </a>
+    <a href="{{ $backRoute }}" class="rp-back">{!! $icoBack !!} Back to order</a>
 
-    {{-- Page Header --}}
-    <div class="rp-page-header">
-        <div class="rp-page-header-top">
-            <div class="rp-header-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            </div>
-            <div class="rp-page-title">Report {{ $isBaker ? 'Customer' : 'Baker' }}</div>
-        </div>
-        <div class="rp-page-sub">Help us keep BakeSphere safe — reports are reviewed by our admin team within 24–48 hours.</div>
+    {{-- Page header --}}
+    <div class="rp-header">
+        <h1 class="rp-title">Report {{ $isBaker ? 'Customer' : 'Baker' }}</h1>
+        <p class="rp-sub">Help us keep BakeSphere safe. Our admin team reviews every report within 24–48 hours.</p>
     </div>
 
-    {{-- Reported Party --}}
-    <div class="rp-subject">
-        <div class="rp-subject-avatar">
-            @if($reportedUser->profile_photo)
-                <img src="{{ str_starts_with($reportedUser->profile_photo, 'http') ? $reportedUser->profile_photo : asset('storage/'.$reportedUser->profile_photo) }}" alt="">
-            @else
-                {{ strtoupper(substr($reportedUser->first_name, 0, 1)) }}
-            @endif
-        </div>
-        <div>
-            <div class="rp-subject-name">{{ $reportedUser->first_name }} {{ $reportedUser->last_name }}</div>
-            <div class="rp-subject-meta">
-                <span class="rp-subject-role-tag">{{ $isBaker ? 'Customer' : 'Baker' }}</span>
-                {{ $reportedUser->email }}
-            </div>
-        </div>
-        <div class="rp-order-ref">
-            <div class="rp-order-ref-num">#{{ $orderId }}</div>
-            <div class="rp-order-ref-label">Order Ref.</div>
-        </div>
-    </div>
+    <div class="rp-layout">
+    <div class="rp-body">
 
-    {{-- Warning notice --}}
-    <div class="rp-notice">
-        <div class="rp-notice-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8B6000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div><strong>Important:</strong> False reports are taken seriously and may result in account suspension. Only submit if you have a genuine concern. All reports are anonymous to the reported party.</div>
-    </div>
-
-    {{-- Server validation errors --}}
-    @if($errors->any())
-    <div class="rp-errors-block">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div>
-            <strong>Please fix the following:</strong>
-            <ul style="margin:0.35rem 0 0 1rem;">
-                @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-            </ul>
-        </div>
-    </div>
-    @endif
-
-    <form id="report-form" method="POST" action="{{ route('report.store', $bakerOrder->id) }}" enctype="multipart/form-data">
-        @csrf
-
-        {{-- Category --}}
-        <div class="rp-section">
-            <div class="rp-section-label">
-                <span class="rp-required-dot"></span>
-                What is your complaint about?
+        {{-- Reported party --}}
+        <div class="rp-subject">
+            <div class="rp-avatar">
+                @if($reportedUser->profile_photo)
+                    <img src="{{ str_starts_with($reportedUser->profile_photo, 'http') ? $reportedUser->profile_photo : asset('storage/'.$reportedUser->profile_photo) }}" alt="">
+                @else
+                    {{ strtoupper(substr($reportedUser->first_name, 0, 1)) }}
+                @endif
             </div>
-            <div class="rp-cat-list">
-                @foreach($categories as $value => $cat)
-                @php
-                    $catIcons = [
-                        'no_show'          => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',
-                        'payment_fraud'    => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
-                        'fake_proof'       => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>',
-                        'harassment'       => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-                        'order_abandoned'  => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
-                        'poor_quality'     => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/></svg>',
-                        'other'            => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>',
-                    ];
-                    $icon = $catIcons[$value] ?? $catIcons['other'];
-                @endphp
-                <div>
-                    <input class="rp-cat-radio" type="radio" name="category" id="cat_{{ $value }}" value="{{ $value }}"
-                           {{ old('category') === $value ? 'checked' : '' }}>
-                    <label class="rp-cat-item" for="cat_{{ $value }}">
-                        <div class="rp-cat-indicator"></div>
-                        <span class="rp-cat-label-text">{{ $cat['label'] }}</span>
-                        <span class="rp-cat-svg">{!! $icon !!}</span>
-                    </label>
-                </div>
-                @endforeach
-            </div>
-            <div id="cat-error" class="rp-error">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Please select a complaint category.
-            </div>
-        </div>
-
-        <div class="rp-divider"></div>
-
-        {{-- Description --}}
-        <div class="rp-section">
-            <div class="rp-section-label">
-                <span class="rp-required-dot"></span>
-                Describe what happened
-            </div>
-            <textarea class="rp-textarea" name="description" id="rp-desc" maxlength="2000"
-                placeholder="Describe the issue in detail — include relevant dates, amounts, or specific incidents…"
-                rows="5">{{ old('description') }}</textarea>
-            <div class="rp-char-hint">
-                <div class="rp-char-min">Minimum 10 characters</div>
-                <div class="rp-char-count" id="char-count">0 / 2000</div>
-            </div>
-            <div id="desc-error" class="rp-error">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Please describe what happened (at least 10 characters).
-            </div>
-        </div>
-
-        <div class="rp-divider"></div>
-
-        {{-- Screenshot --}}
-        <div class="rp-section">
-            <div class="rp-section-label" style="justify-content:space-between;">
-                <div style="display:flex;align-items:center;gap:0.4rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    Attach Screenshot
-                </div>
-                <span class="rp-optional-tag">Optional — helps with investigation</span>
-            </div>
-            <div class="rp-dropzone" id="rp-dropzone">
-                <input type="file" name="screenshot" accept=".jpg,.jpeg,.png,.webp,.pdf"
-                       onchange="handleReportFile(this)">
-                <div class="rp-dz-icon-wrap" id="rp-dz-icon-wrap">
-                    <svg id="rp-dz-svg-default" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                    <svg id="rp-dz-svg-done" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polyline points="20 6 9 17 4 12"/></svg>
-                </div>
-                <div>
-                    <div class="rp-dz-text-title" id="rp-dz-title">Click to upload screenshot</div>
-                    <div class="rp-dz-text-sub" id="rp-dz-sub">JPG, PNG, PDF · max 5 MB</div>
-                </div>
-                <img class="rp-file-preview" id="rp-file-preview" src="" alt="">
-                <div class="rp-file-ok" id="rp-file-ok">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Attached
+            <div>
+                <div class="rp-subject-name">{{ $reportedUser->first_name }} {{ $reportedUser->last_name }}</div>
+                <div class="rp-subject-meta">
+                    <span class="rp-tag">{{ $isBaker ? 'Customer' : 'Baker' }}</span>
+                    {{ $reportedUser->email }}
                 </div>
             </div>
+            <div class="rp-order">
+                <div class="rp-order-num">#{{ $orderId }}</div>
+                <div class="rp-order-label">Order ref.</div>
+            </div>
         </div>
 
-        {{-- Refund request (customer only) --}}
-        @if(!$isBaker)
-        <div class="rp-refund-card" id="refund-request-card" style="display:none;">
-            <div class="rp-refund-header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B6000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M8 9h5a3 3 0 0 1 0 6H8"/></svg>
-                <div class="rp-refund-title">Request a Refund?</div>
-            </div>
-            <div class="rp-refund-notice">
-                Downpayments are strictly non-refundable under normal circumstances. However, if your baker failed to comply by the agreed deadline, you may request a refund review. Our admin team will investigate and decide based on evidence.
-            </div>
-            <label class="rp-refund-check-label">
-                <input type="checkbox" name="request_refund" id="request_refund" value="1">
-                <div>
-                    <div class="rp-refund-check-title">Yes, I want to request a refund</div>
-                    <div class="rp-refund-check-sub">Admin will review your evidence and decide. Refunds are credited to your BakeSphere wallet if approved.</div>
-                </div>
-            </label>
+        {{-- Warning notice --}}
+        <div class="rp-alert">
+            {!! $icoAlert !!}
+            <div><strong>Important:</strong> False reports are taken seriously and may result in account suspension. Only submit if you have a genuine concern. All reports are anonymous to the reported party.</div>
         </div>
-        <script>
-        const refundEligibleCats = ['no_show', 'order_abandoned'];
-        document.querySelectorAll('input[name="category"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const card = document.getElementById('refund-request-card');
-                if (card) {
-                    card.style.display = refundEligibleCats.includes(this.value) ? 'block' : 'none';
-                    if (!refundEligibleCats.includes(this.value)) {
-                        document.getElementById('request_refund').checked = false;
-                    }
-                }
-            });
-        });
-        </script>
+
+        {{-- Server validation errors --}}
+        @if($errors->any())
+        <div class="rp-alert error">
+            {!! $icoAlert !!}
+            <div>
+                <strong>Please fix the following:</strong>
+                <ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+        </div>
         @endif
 
-        {{-- Footer --}}
-        <div class="rp-footer">
-            <a href="{{ $backRoute }}" class="rp-cancel-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                Go Back
-            </a>
-            <div class="rp-footer-note">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Your identity will not be revealed to the reported party.
+        <form id="report-form" method="POST" action="{{ route('report.store', $bakerOrder->id) }}" enctype="multipart/form-data">
+            @csrf
+
+            {{-- Category --}}
+            <div class="rp-section">
+                <div class="rp-label"><span class="rp-label-main"><span class="rp-req"></span>What is your complaint about?</span></div>
+                <div class="rp-cats" role="radiogroup">
+                    @foreach($categories as $value => $cat)
+                    <div class="rp-cat-wrap">
+                        <input class="rp-radio" type="radio" name="category" id="cat_{{ $value }}" value="{{ $value }}" {{ old('category') === $value ? 'checked' : '' }}>
+                        <label class="rp-cat" for="cat_{{ $value }}">
+                            <span class="rp-icon">{!! $ico($catIcons[$value] ?? $catIcons['other'], 18) !!}</span>
+                            <span class="rp-cat-text">{{ $cat['label'] }}</span>
+                            <span class="rp-mark"></span>
+                        </label>
+                    </div>
+                    @endforeach
+                </div>
+                <div id="cat-error" class="rp-error">{!! $ico('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 14, '2.25') !!} Choose a complaint category.</div>
             </div>
-            <button type="submit" class="rp-submit-btn" id="rp-submit" onclick="return validateReport()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                Submit Report
-            </button>
+
+            {{-- Description --}}
+            <div class="rp-section">
+                <div class="rp-label"><span class="rp-label-main"><span class="rp-req"></span>Describe what happened</span></div>
+                <textarea class="rp-textarea" name="description" id="rp-desc" maxlength="2000" rows="5"
+                    placeholder="Include relevant dates, amounts or specific incidents…">{{ old('description') }}</textarea>
+                <div class="rp-hint">
+                    <span>Minimum 10 characters</span>
+                    <span class="rp-count" id="char-count">0 / 2000</span>
+                </div>
+                <div id="desc-error" class="rp-error">{!! $ico('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>', 14, '2.25') !!} Describe what happened in at least 10 characters.</div>
+            </div>
+
+            {{-- Screenshot --}}
+            <div class="rp-section">
+                <div class="rp-label">
+                    <span class="rp-label-main">Attach a screenshot</span>
+                    <span class="rp-opt">Optional, helps with the investigation</span>
+                </div>
+                <div class="rp-dz" id="rp-dropzone">
+                    <input type="file" name="screenshot" accept=".jpg,.jpeg,.png,.webp,.pdf" onchange="handleReportFile(this)">
+                    <div class="rp-dz-icon">
+                        <span id="rp-dz-svg-default">{!! $icoUpload !!}</span>
+                        <span id="rp-dz-svg-done" style="display:none;">{!! $icoCheck !!}</span>
+                    </div>
+                    <div>
+                        <div class="rp-dz-title" id="rp-dz-title">Click to upload a screenshot</div>
+                        <div class="rp-dz-sub" id="rp-dz-sub">JPG, PNG, PDF · max 5 MB</div>
+                    </div>
+                    <img class="rp-preview" id="rp-file-preview" src="" alt="">
+                    <div class="rp-attached" id="rp-file-ok">Attached</div>
+                </div>
+            </div>
+
+            {{-- Refund request (customer only) --}}
+            @if(!$isBaker)
+            <div class="rp-refund" id="refund-request-card">
+                <div class="rp-refund-head">
+                    {!! $icoCoin !!}
+                    <div class="rp-refund-title">Request a refund?</div>
+                </div>
+                <p class="rp-refund-note">Downpayments are non-refundable under normal circumstances. If your baker missed the agreed deadline, you can request a refund review. Our admin team will investigate and decide based on the evidence.</p>
+                <label class="rp-check">
+                    <input type="checkbox" name="request_refund" id="request_refund" value="1">
+                    <div>
+                        <div class="rp-check-title">Yes, I want to request a refund</div>
+                        <div class="rp-check-sub">Admin reviews your evidence and decides. Approved refunds are credited to your BakeSphere wallet.</div>
+                    </div>
+                </label>
+            </div>
+            <script>
+            const refundEligibleCats = ['no_show', 'order_abandoned'];
+            function syncRefundCard() {
+                const picked = document.querySelector('input[name="category"]:checked');
+                const card = document.getElementById('refund-request-card');
+                const show = picked && refundEligibleCats.includes(picked.value);
+                card.style.display = show ? 'block' : 'none';
+                if (!show) document.getElementById('request_refund').checked = false;
+            }
+            document.querySelectorAll('input[name="category"]').forEach(r => r.addEventListener('change', syncRefundCard));
+            syncRefundCard();
+            </script>
+            @endif
+
+            {{-- Footer --}}
+            <div class="rp-footer">
+                <a href="{{ $backRoute }}" class="rp-btn">{!! $icoBack !!} Go back</a>
+                <div class="rp-note">{!! $icoLock !!} Your identity will not be revealed to the reported party.</div>
+                <button type="submit" class="rp-btn submit" id="rp-submit" onclick="return validateReport()">{!! $icoWarn !!} Submit report</button>
+            </div>
+        </form>
+    </div>
+
+    {{-- Guidance column --}}
+    <aside class="rp-aside">
+        <div class="rp-aside-block">
+            <h2 class="rp-aside-title">What happens next</h2>
+            <ol class="rp-steps">
+                <li>
+                    <span class="rp-step-n">1</span>
+                    <div>
+                        <div class="rp-step-t">Your report is sent to admin</div>
+                        <div class="rp-step-d">It is anonymous to the {{ $isBaker ? 'customer' : 'baker' }} you are reporting.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="rp-step-n">2</span>
+                    <div>
+                        <div class="rp-step-t">Admin reviews the evidence</div>
+                        <div class="rp-step-d">Every report is reviewed within 24–48 hours.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="rp-step-n">3</span>
+                    <div>
+                        <div class="rp-step-t">Admin decides the outcome</div>
+                        <div class="rp-step-d">
+                            @if($isBaker)
+                                Action is taken on the account if the report is upheld.
+                            @else
+                                Action is taken on the account if the report is upheld. Approved refunds are credited to your BakeSphere wallet.
+                            @endif
+                        </div>
+                    </div>
+                </li>
+            </ol>
         </div>
 
-    </form>
+        <div class="rp-aside-block">
+            <h2 class="rp-aside-title">Make your report count</h2>
+            <ul class="rp-tips">
+                <li><strong>Be specific.</strong> Include dates, amounts and what was agreed.</li>
+                <li><strong>Attach proof.</strong> A screenshot of the chat or receipt speeds up the review.</li>
+                <li><strong>Stick to the facts.</strong> Describe what happened on order #{{ $orderId }} only.</li>
+            </ul>
+        </div>
+    </aside>
+    </div>
 </div>
 
 <script>
+const SUBMIT_LABEL = @json('Submit report');
+const SUBMIT_ICON  = @json($icoWarn);
+
 document.addEventListener('DOMContentLoaded', function () {
     @if($errors->any())
     const btn = document.getElementById('rp-submit');
-    if (btn) { btn.disabled = false; btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Submit Report'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = SUBMIT_ICON + ' ' + SUBMIT_LABEL; }
     @endif
 });
 
@@ -665,25 +422,22 @@ updateCount();
 function handleReportFile(input) {
     if (!input.files || !input.files[0]) return;
     const file = input.files[0];
-    const isImage = file.type.startsWith('image/');
-    const dropzone = document.getElementById('rp-dropzone');
-    dropzone.classList.add('has-file');
-
+    document.getElementById('rp-dropzone').classList.add('has-file');
     document.getElementById('rp-dz-title').textContent = file.name;
     document.getElementById('rp-dz-sub').textContent   = (file.size / 1024).toFixed(0) + ' KB';
     document.getElementById('rp-dz-svg-default').style.display = 'none';
-    document.getElementById('rp-dz-svg-done').style.display    = 'block';
+    document.getElementById('rp-dz-svg-done').style.display    = 'inline-flex';
 
     const okEl = document.getElementById('rp-file-ok');
-    okEl.style.display = 'flex';
+    okEl.style.display = 'inline-flex';
 
-    if (isImage) {
+    if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = e => {
             const prev = document.getElementById('rp-file-preview');
             prev.src = e.target.result;
             prev.style.display = 'block';
-            okEl.style.display = 'none'; // hide badge if preview visible
+            okEl.style.display = 'none'; // hide badge when the preview is visible
         };
         reader.readAsDataURL(file);
     }
@@ -692,28 +446,20 @@ function handleReportFile(input) {
 function validateReport() {
     let ok = true;
     const catSelected = document.querySelector('input[name="category"]:checked');
-    const catErr  = document.getElementById('cat-error');
-    const descErr = document.getElementById('desc-error');
-
-    catErr.classList.toggle('show', !catSelected);
+    document.getElementById('cat-error').classList.toggle('show', !catSelected);
     if (!catSelected) ok = false;
 
-    const desc = descEl.value.trim();
-    descErr.classList.toggle('show', desc.length < 10);
-    if (desc.length < 10) ok = false;
+    const tooShort = descEl.value.trim().length < 10;
+    document.getElementById('desc-error').classList.toggle('show', tooShort);
+    if (tooShort) ok = false;
 
     if (ok) {
         const btn = document.getElementById('rp-submit');
         btn.disabled = true;
-        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 0.7s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Submitting…';
+        btn.innerHTML = '<svg class="rp-spin" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Submitting…';
         document.getElementById('report-form').submit();
     }
     return false;
 }
-
-// Spinner keyframe
-const s = document.createElement('style');
-s.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-document.head.appendChild(s);
 </script>
 @endsection

@@ -10,11 +10,19 @@ return new class extends Migration
     {
         Schema::create('order_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('baker_order_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+
+            $table->foreignId('baker_order_id')
+                ->constrained('baker_orders')
+                ->cascadeOnDelete();
+
+            $table->foreignId('sender_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
             $table->text('body')->nullable();
             $table->string('image_path')->nullable();
             $table->timestamp('read_at')->nullable();
+
             $table->timestamps();
         });
     }

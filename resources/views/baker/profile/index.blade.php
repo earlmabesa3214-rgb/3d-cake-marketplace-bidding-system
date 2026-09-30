@@ -4,307 +4,221 @@
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-:root {
-    --brown-deep:   #3B1F0F;
-    --brown-mid:    #7A4A28;
-    --caramel:      #C8893A;
-    --caramel-light:#E8A94A;
-    --warm-white:   #FFFDF9;
-    --cream:        #F5EFE6;
-    --border:       #EAE0D0;
-    --text-dark:    #2C1A0E;
-    --text-mid:     #6B4A2A;
-    --text-muted:   #9A7A5A;
-    --err:          #C0392B;
-    --success:      #5B8F6A;
-}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── HERO ── */
-.profile-hero {
-    background: linear-gradient(135deg, var(--brown-deep) 0%, var(--brown-mid) 60%, #5A3018 100%);
-    padding: 2.5rem 2rem 0;
-    border-radius: 0 0 24px 24px;
-    margin-bottom: 2rem;
-    position: relative;
-    overflow: hidden;
-}
-.profile-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%),
-                radial-gradient(circle at 10% 80%, rgba(232,169,74,0.07) 0%, transparent 40%);
-    pointer-events: none;
-}
-.hero-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.5rem;
-    position: relative;
-    z-index: 1;
-    flex-wrap: wrap;
-}
-.avatar-wrap { position: relative; flex-shrink: 0; }
-.avatar-circle {
-    width: 90px; height: 90px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--caramel), var(--caramel-light));
-    border: 3px solid rgba(255,255,255,0.2);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-    font-size: 2rem; font-weight: 700; color: #fff;
-}
-.avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
-.hero-info { flex: 1; min-width: 200px; }
-.hero-name  { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
-.hero-email { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 0.75rem; }
-.hero-tags  { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.tag { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
-.tag-role    { background: rgba(232,169,74,0.2); color: var(--caramel-light); border: 1px solid rgba(232,169,74,0.3); }
-.tag-shop    { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.15); }
-.tag-pending { background: rgba(245,158,11,0.2); color: #FDE68A; border: 1px solid rgba(245,158,11,0.3); }
-.tag-approved{ background: rgba(91,143,106,0.25); color: #A7F3D0; border: 1px solid rgba(91,143,106,0.3); }
-.tag-incomplete { background: rgba(192,57,43,0.2); color: #FCA5A5; border: 1px solid rgba(192,57,43,0.3); }
+/* Baker Profile: same cake-atelier ledger language as the rest of the portal. Plus Jakarta Sans only.
+   Legacy variable names are aliased inside .profile-page so the included payment-methods partial keeps working. */
+.profile-page{
+--esp:#24150F;--ivory:#F7F2E9;--cream:#EFE6D7;--caramel:#A96F42;--gold:#B89452;--gold-l:#D4B06A;
+--burg:#54252C;--taupe:#9A897A;--beige:#D8C8B7;--w:#FBF8F2;--mocha:#7A5E4C;--credit:#7A6120;--sage:#5E7F5A;--sage-d:#33502F;
+--line:rgba(36,21,15,.14);--gold-line:rgba(184,148,82,.35);--e:cubic-bezier(.2,.7,.2,1);
+--brown-deep:#24150F;--brown-mid:#7A5E4C;--caramel-light:#D4B06A;--warm-white:#FBF8F2;--border:#D8C8B7;
+--text-dark:#24150F;--text-mid:#7A5E4C;--text-muted:#9A897A;--err:#54252C;--success:#5E7F5A;
+max-width:1500px;width:100%;margin:0 auto;padding-bottom:3rem;color:var(--esp);font-family:'Plus Jakarta Sans',sans-serif}
+.profile-page *{box-sizing:border-box;font-family:inherit}
+.profile-page svg{flex-shrink:0}
+.profile-page a:focus-visible,.profile-page button:focus-visible,.profile-page input:focus-visible,.profile-page select:focus-visible,.profile-page textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@keyframes pf-fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.profile-page *,.profile-page *::before,.profile-page *::after{animation:none!important;transition:none!important}}
 
-/* TAB NAV */
-.tab-nav {
-    display: flex;
-    gap: 0;
-    margin-top: 1.5rem;
-    position: relative;
-    z-index: 1;
-}
-.tab-btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.5);
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-    white-space: nowrap;
-}
-.tab-btn:hover  { color: rgba(255,255,255,0.8); }
-.tab-btn.active { color: #fff; border-bottom-color: var(--caramel); }
-.tab-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 16px; height: 16px;
-    background: #EF4444;
-    border-radius: 50%;
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: #fff;
-    margin-left: 5px;
-    vertical-align: middle;
-}
+.pf-label{font-size:.58rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe)}
 
-/* ── PAGE BODY ── */
-.profile-body { padding: 0 1.5rem 3rem; }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
+/* ── HEADER ── */
+.pf-header{display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap;padding-bottom:1.75rem;animation:pf-fadeUp .6s var(--e) backwards}
+.pf-avatar{width:104px;height:104px;flex-shrink:0;background:var(--esp);color:var(--gold-l);outline:1px solid var(--gold-line);outline-offset:4px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:2rem;font-weight:900;letter-spacing:-.03em}
+.pf-avatar img{width:100%;height:100%;object-fit:cover}
+.pf-id{flex:1;min-width:220px}
+.pf-name{margin:0;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:.98;letter-spacing:-.05em}
+.pf-email{margin:.7rem 0 1rem;font-size:.95rem;color:var(--mocha)}
+.pf-tags{display:flex;gap:.45rem;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .6rem;border:1px solid transparent;border-left-width:2px;font-size:.56rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.tag-role{background:#F3EAD3;color:#7A5A15;border-color:var(--gold-line);border-left-color:var(--gold)}
+.tag-shop{background:var(--cream);color:var(--mocha);border-color:var(--beige);border-left-color:var(--taupe)}
+.tag-approved{background:#EFF2E8;color:var(--sage-d);border-color:rgba(94,127,90,.35);border-left-color:var(--sage)}
+.tag-pending{background:#F3EAD3;color:#7A5A15;border-color:var(--gold-line);border-left-color:var(--gold)}
+.tag-incomplete{background:#F6ECEA;color:var(--burg);border-color:rgba(84,37,44,.28);border-left-color:var(--burg)}
 
-/* ── SECTION CARD ── */
-.section-card {
-    background: var(--warm-white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 12px rgba(59,31,15,0.05);
-}
-.section-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--cream);
-}
-.section-card-title {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    color: var(--brown-deep);
-}
-.section-card-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--caramel), var(--caramel-light));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-}
-.section-card-body { padding: 1.5rem; }
+/* ── TABS ── */
+.tab-nav{display:flex;gap:0;margin:0 0 2rem;border-bottom:1px solid var(--esp);overflow-x:auto;scrollbar-width:none;animation:pf-fadeUp .6s var(--e) .1s backwards}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 1.35rem;margin-bottom:-1px;background:none;border:none;border-bottom:3px solid transparent;font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--taupe);white-space:nowrap;cursor:pointer;transition:color .25s,border-color .25s,background .25s}
+.tab-btn:hover{color:var(--esp);background:rgba(239,230,215,.5)}
+.tab-btn.active{color:var(--esp);border-bottom-color:var(--gold)}
+.tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 .3rem;background:var(--burg);color:var(--ivory);font-size:.58rem;font-weight:800;letter-spacing:0}
+.tab-badge.gold{background:var(--gold);color:var(--esp)}
 
-/* ── INFO ROWS ── */
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.info-item {}
-.info-label {
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 0.25rem;
-}
-.info-value {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-dark);
-    line-height: 1.5;
-}
-.info-empty { color: var(--border); font-style: italic; font-weight: 400; font-size: 0.85rem; }
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:pf-fadeUp .5s var(--e) backwards}
 
-/* ── COMPLETION STATUS ── */
-.completion-bar-wrap {
-    background: var(--warm-white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1.5rem;
-}
-.completion-bar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.75rem;
-}
-.completion-bar-title { font-size: 0.85rem; font-weight: 700; color: var(--brown-deep); }
-.completion-pct { font-size: 0.85rem; font-weight: 700; color: var(--caramel); }
-.completion-track {
-    height: 8px;
-    background: var(--border);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 0.75rem;
-}
-.completion-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--caramel), var(--caramel-light));
-    border-radius: 999px;
-    transition: width 0.6s ease;
-}
-.completion-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.completion-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 20px;
-    font-size: 0.68rem;
-    font-weight: 600;
-}
-.chip-ok      { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
-.chip-missing { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+/* ── PANELS ── */
+.section-card{background:var(--w);border:1px solid var(--beige);border-top:2px solid var(--esp);margin-bottom:1.5rem}
+.section-card-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:1.1rem 1.5rem;border-bottom:1px solid var(--line)}
+.section-card-title{display:flex;align-items:center;gap:.75rem;font-size:1.1rem;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--esp)}
+.section-card-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#F3EAD3;border:1px solid var(--gold-line);color:var(--credit)}
+.section-card-body{padding:1.5rem}
+.pf-meta{font-size:.74rem;font-weight:600;color:var(--taupe)}
 
-/* ── FORM ELEMENTS ── */
-.form-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-group { margin-bottom: 1.1rem; }
-.form-label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-mid); margin-bottom: 0.4rem; }
-.form-label .req  { color: var(--caramel); }
-.form-label .hint { font-size: 0.7rem; font-weight: 400; color: var(--text-muted); margin-left: 4px; }
-.form-input {
-    width: 100%; padding: 0.7rem 0.9rem;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-size: 0.88rem;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--warm-white);
-    color: var(--text-dark);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.form-input:focus { border-color: var(--caramel); box-shadow: 0 0 0 3px rgba(200,137,58,0.12); }
-textarea.form-input { resize: vertical; min-height: 85px; }
-select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%239A7A5A' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.9rem center; }
-.field-error { font-size: 0.73rem; color: var(--err); margin-top: 0.3rem; }
+/* ── BUTTONS ── */
+.btn-save{display:inline-flex;align-items:center;gap:.6rem;padding:1.05rem 1.7rem;background:var(--esp);color:var(--ivory);border:1px solid var(--esp);border-radius:0;font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:background .3s,color .3s,border-color .3s}
+.btn-save:hover{background:var(--gold);border-color:var(--gold);color:var(--esp)}
+.pf-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.55rem .9rem;background:transparent;border:1px solid var(--esp);border-radius:0;font-size:.6rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--esp);cursor:pointer;transition:background .25s,color .25s}
+.pf-btn:hover{background:var(--esp);color:var(--gold-l)}
+.pf-actions{display:flex;justify-content:flex-end}
+.pf-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--caramel);text-decoration:none;border-bottom:1px solid var(--gold-line);padding-bottom:1px;transition:color .3s,border-color .3s}
+.pf-link:hover{color:var(--esp);border-color:var(--esp);text-decoration:none}
+.pf-inline-btn{background:none;border:none;padding:0;font-size:inherit;font-weight:700;color:var(--caramel);cursor:pointer;border-bottom:1px solid var(--gold-line)}
 
-/* ── FILE UPLOAD ── */
-.file-upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 1rem 0.75rem; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--warm-white); position: relative; }
-.file-upload-area:hover { border-color: var(--caramel); background: var(--cream); }
-.file-upload-area.has-file { border-color: var(--success); background: #F0FAF3; }
-.file-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.file-upload-icon  { font-size: 1.3rem; margin-bottom: 0.25rem; }
-.file-upload-title { font-size: 0.78rem; font-weight: 600; color: var(--brown-mid); }
-.file-upload-hint  { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem; }
-.file-name-display { margin-top: 0.35rem; font-size: 0.7rem; color: var(--success); font-weight: 600; display: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.current-file-link { font-size: 0.7rem; color: var(--caramel); margin-top: 0.25rem; display: block; }
+/* ── ALERTS ── */
+.alert{display:flex;align-items:flex-start;gap:.7rem;padding:.95rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.55;border:1px solid transparent;border-left-width:2px}
+.alert svg{margin-top:3px}
+.alert-success{background:#EFF2E8;color:var(--sage-d);border-color:rgba(94,127,90,.35);border-left-color:var(--sage)}
+.alert-error{background:#F6ECEA;color:#3E1A1F;border-color:rgba(84,37,44,.28);border-left-color:var(--burg)}
 
-/* ── DOC GRID ── */
-.doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+/* ── COMPLETION ── */
+.completion-bar-wrap{background:var(--w);border:1px solid var(--beige);border-top:2px solid var(--esp);padding:1.4rem 1.5rem;margin-bottom:1.5rem}
+.completion-bar-header{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.completion-bar-title{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
+.completion-pct{font-size:1.8rem;font-weight:900;letter-spacing:-.04em;color:var(--credit);font-variant-numeric:tabular-nums}
+.completion-track{height:6px;background:var(--cream);margin-bottom:1.1rem;overflow:hidden}
+.completion-fill{height:100%;background:var(--gold);transition:width .6s var(--e)}
+.completion-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.completion-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .6rem;border:1px solid transparent;border-left-width:2px;font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.chip-ok{background:#EFF2E8;color:var(--sage-d);border-color:rgba(94,127,90,.35);border-left-color:var(--sage)}
+.chip-missing{background:#F6ECEA;color:var(--burg);border-color:rgba(84,37,44,.28);border-left-color:var(--burg)}
+
+/* ── OVERVIEW BLOCKS ── */
+.pf-banner{display:flex;align-items:center;gap:1.25rem;padding:1.5rem;border-bottom:1px solid var(--line);background:rgba(239,230,215,.45)}
+.pf-avatar-sm{width:56px;height:56px;background:var(--esp);color:var(--gold-l);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:1.2rem;font-weight:900;flex-shrink:0}
+.pf-avatar-sm img{width:100%;height:100%;object-fit:cover}
+.pf-banner-name{font-size:1.15rem;font-weight:900;letter-spacing:-.03em}
+.pf-banner-sub{margin-top:.15rem;font-size:.82rem;color:var(--mocha)}
+.pf-banner .tag{margin-top:.55rem}
+.pf-details{display:grid;grid-template-columns:1fr 1fr}
+.pf-detail{padding:1.1rem 1.5rem;border-bottom:1px solid var(--line)}
+.pf-detail:nth-child(even){border-left:1px solid var(--line)}
+.pf-detail:nth-last-child(-n+2){border-bottom:0}
+.pf-detail .pf-label{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem}
+.pf-detail-val{font-size:.92rem;font-weight:700}
+.pf-empty{font-size:.85rem;font-style:italic;font-weight:400;color:var(--taupe)}
+.pf-shop{display:flex;align-items:center;gap:.9rem;padding:1.25rem 1.5rem;border-bottom:1px solid var(--line);background:rgba(239,230,215,.45)}
+.pf-shop svg{color:var(--gold)}
+.pf-shop-name{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
+.pf-shop-bio{margin-top:.25rem;max-width:64ch;font-size:.84rem;line-height:1.6;color:var(--mocha)}
+.pf-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.pf-stat{padding:1.2rem 1.25rem;text-align:center}
+.pf-stat + .pf-stat{border-left:1px solid var(--line)}
+.pf-stat svg{color:var(--gold);margin:0 auto .5rem;display:block}
+.pf-stat-val{margin-top:.45rem;font-size:1rem;font-weight:900;letter-spacing:-.03em}
+.pf-specs{padding:1.25rem 1.5rem}
+.pf-specs .pf-label{display:flex;align-items:center;gap:.45rem;margin-bottom:.8rem}
+.pf-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.pf-chip{padding:.3rem .7rem;background:var(--cream);border:1px solid var(--beige);font-size:.72rem;font-weight:700;color:var(--mocha)}
+
+/* ── INFO ROWS (documents) ── */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.info-item{padding:1rem 1.1rem;border:1px solid var(--line);background:var(--ivory)}
+.info-label{display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem;font-size:.58rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe)}
+.info-value{font-size:.92rem;font-weight:600;line-height:1.5;color:var(--esp)}
+.info-empty{font-size:.85rem;font-style:italic;font-weight:400;color:var(--taupe)}
+.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+
+/* ── FORMS ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{margin-bottom:1.15rem}
+.form-label{display:block;margin-bottom:.5rem;font-size:.58rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe)}
+.form-label .req{color:var(--caramel)}
+.form-label .hint{margin-left:.4rem;font-size:.6rem;font-weight:600;letter-spacing:.04em;text-transform:none;color:var(--taupe)}
+.form-input{width:100%;padding:.8rem .95rem;background:var(--ivory);border:1px solid var(--beige);border-radius:0;font-size:.9rem;font-weight:500;color:var(--esp);transition:border-color .25s,background .25s}
+.form-input::placeholder{color:var(--taupe)}
+.form-input:hover{border-color:var(--gold)}
+.form-input:focus{outline:none;border-color:var(--gold);background:#fff}
+textarea.form-input{resize:vertical;min-height:96px;line-height:1.6}
+select.form-input{appearance:none;-webkit-appearance:none;padding-right:2.4rem;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A5E4C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .95rem center}
+.field-error{margin-top:.4rem;font-size:.75rem;font-weight:600;color:var(--burg)}
+
+/* ── FILE UPLOAD (kept for compatibility) ── */
+.file-upload-area{position:relative;padding:1rem .75rem;text-align:center;border:1px dashed var(--beige);background:var(--ivory);cursor:pointer;transition:border-color .25s,background .25s}
+.file-upload-area:hover{border-color:var(--gold);background:var(--cream)}
+.file-upload-area.has-file{border-color:var(--sage);background:#EFF2E8}
+.file-upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-name-display{display:none;margin-top:.4rem;font-size:.72rem;font-weight:700;color:var(--sage-d);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ── SPECIALTIES ── */
-.specialties-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.5rem; }
-.specialty-check { display: flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.7rem; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); user-select: none; }
-.specialty-check:hover { border-color: var(--caramel); color: var(--brown-mid); }
-.specialty-check input { display: none; }
-.specialty-check.checked { border-color: var(--caramel); background: var(--cream); color: var(--brown-deep); font-weight: 600; }
-.check-indicator { width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; flex-shrink: 0; }
+.specialties-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.specialty-check{display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;border:1px solid var(--beige);background:var(--ivory);font-size:.82rem;font-weight:600;color:var(--mocha);cursor:pointer;user-select:none;transition:border-color .2s,background .2s,color .2s}
+.specialty-check:hover{border-color:var(--gold);color:var(--esp)}
+.specialty-check input{display:none}
+.specialty-check.checked{border-color:var(--esp);background:var(--cream);color:var(--esp);font-weight:800}
+.check-indicator{width:16px;height:16px;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.specialty-check.checked .check-indicator{background:var(--esp);border-color:var(--esp);color:var(--gold-l)}
 
 /* ── MAP ── */
-#profile-map { height: 260px; width: 100%; border-radius: 10px; overflow: hidden; }
-.btn-locate { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.9rem; background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.78rem; font-weight: 600; color: var(--brown-mid); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; margin-bottom: 0.75rem; }
-.btn-locate:hover { background: var(--border); border-color: var(--caramel); color: var(--brown-deep); }
-.map-coords { font-size: 0.72rem; color: var(--caramel); font-weight: 600; margin-bottom: 0.5rem; display: none; }
-.map-coords.visible { display: block; }
+#profile-map{height:300px;width:100%;border:1px solid var(--beige)}
+.btn-locate{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:.9rem;padding:.65rem 1rem;background:transparent;border:1px solid var(--esp);border-radius:0;font-size:.62rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--esp);cursor:pointer;transition:background .25s,color .25s}
+.btn-locate:hover{background:var(--esp);color:var(--gold-l)}
+.map-coords{display:none;align-items:center;gap:.4rem;margin-bottom:.7rem;font-size:.76rem;font-weight:700;color:var(--credit);font-variant-numeric:tabular-nums}
+.map-coords.visible{display:flex}
+.pf-intro{margin:0 0 1rem;max-width:64ch;font-size:.88rem;line-height:1.7;color:var(--mocha)}
 
-/* ── PORTFOLIO PREVIEW ── */
-.portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
-.portfolio-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-.portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.2s; }
-.portfolio-item:hover img { opacity: 0.85; }
-.portfolio-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--cream); font-size: 1.6rem; cursor: pointer; transition: all 0.15s; border: 2px dashed var(--border); border-radius: 10px; aspect-ratio: 1; }
-.portfolio-empty:hover { background: var(--border); border-color: var(--caramel); }
-.portfolio-empty-label { font-size: 0.62rem; color: var(--text-muted); margin-top: 0.2rem; font-weight: 600; }
-.portfolio-del-btn { position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; background: rgba(192,57,43,0.88); color: #fff; border: none; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: all 0.15s; z-index: 5; line-height: 1; font-weight: 700; }
-.portfolio-del-btn:hover { background: #C0392B; transform: scale(1.1); }
-.portfolio-new-badge { position: absolute; bottom: 5px; left: 5px; background: var(--caramel); color: #fff; font-size: 0.58rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; z-index: 5; }
+/* ── PORTFOLIO ── */
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.85rem;margin-bottom:1.25rem}
+.portfolio-item{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--beige);background:var(--cream)}
+.portfolio-item img{width:100%;height:100%;object-fit:cover;transition:opacity .2s}
+.portfolio-item:hover img{opacity:.88}
+.portfolio-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;background:var(--ivory);border:1px dashed var(--taupe);color:var(--taupe);cursor:pointer;transition:background .25s,border-color .25s,color .25s}
+.portfolio-empty:hover{background:var(--cream);border-color:var(--gold);color:var(--esp)}
+.portfolio-empty-label{font-size:.58rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
+.portfolio-del-btn{position:absolute;top:6px;right:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--burg);color:var(--ivory);border:none;border-radius:0;cursor:pointer;z-index:5;transition:background .2s}
+.portfolio-del-btn:hover{background:#3E1A1F}
+.portfolio-new-badge{position:absolute;bottom:6px;left:6px;padding:.22rem .5rem;background:var(--esp);color:var(--gold-l);font-size:.52rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;z-index:5}
+.pf-tip{display:flex;align-items:center;gap:.6rem;margin-top:.75rem;padding:.9rem 1rem;background:var(--cream);border-left:2px solid var(--gold);font-size:.8rem;line-height:1.6;color:var(--mocha)}
+.pf-tip svg{color:var(--gold)}
 
-/* ── SUBMIT BUTTON ── */
-.btn-save {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.8rem 2rem;
-    background: linear-gradient(135deg, var(--brown-mid), var(--caramel));
-    color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(123,79,58,0.25);
-    transition: all 0.2s;
+/* ── REVIEWS ── */
+.pf-stars{display:inline-flex;gap:2px;color:var(--gold)}
+.pf-rating{display:flex;gap:2.5rem;align-items:center;flex-wrap:wrap;padding-bottom:1.5rem;margin-bottom:1.25rem;border-bottom:1px solid var(--line)}
+.pf-rating-num{font-size:3.4rem;font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.pf-rating-side{text-align:center;min-width:90px}
+.pf-rating-side .pf-stars{margin:.6rem 0 .4rem}
+.pf-bars{flex:1;min-width:200px}
+.pf-bar-row{display:flex;align-items:center;gap:.7rem;margin-bottom:.45rem}
+.pf-bar-row .n{width:12px;text-align:right;font-size:.74rem;font-weight:800;color:var(--mocha)}
+.pf-bar-row svg{color:var(--gold)}
+.pf-bar-track{flex:1;height:6px;background:var(--cream)}
+.pf-bar-fill{height:100%;background:var(--gold)}
+.pf-bar-row .c{width:24px;font-size:.72rem;font-weight:700;color:var(--taupe);font-variant-numeric:tabular-nums}
+.pf-review{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 0;border-bottom:1px solid var(--line)}
+.pf-review:last-child{border-bottom:0;padding-bottom:0}
+.pf-review-avatar{width:40px;height:40px;background:var(--esp);color:var(--gold-l);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;flex-shrink:0}
+.pf-review-main{flex:1;min-width:0}
+.pf-review-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;margin-bottom:.4rem}
+.pf-review-name{font-size:.95rem;font-weight:800;letter-spacing:-.02em}
+.pf-review-date{font-size:.74rem;color:var(--taupe)}
+.pf-review-score{display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem;font-size:.74rem;font-weight:700;color:var(--mocha)}
+.pf-comment{padding:.7rem 1rem;background:var(--cream);border-left:2px solid var(--gold);font-size:.86rem;line-height:1.65;color:var(--mocha)}
+.pf-nocomment{font-size:.8rem;font-style:italic;color:var(--taupe)}
+.pf-emptyblock{text-align:center;padding:3.5rem 1rem}
+.pf-emptyblock svg{color:var(--gold);opacity:.75;margin-bottom:1rem}
+.pf-emptyblock h3{margin:0 0 .6rem;font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:900;letter-spacing:-.04em;line-height:1}
+.pf-emptyblock p{margin:0 auto;max-width:44ch;font-size:.9rem;color:var(--mocha)}
+
+/* ── AVAILABILITY TOGGLE (kept for compatibility) ── */
+.toggle-switch{position:relative;width:44px;height:24px}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--beige);transition:.3s;cursor:pointer}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;background:#fff;left:3px;bottom:3px;transition:.3s}
+input:checked + .toggle-slider{background:var(--sage)}
+input:checked + .toggle-slider:before{transform:translateX(20px)}
+
+@media(max-width:900px){.specialties-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){
+    .info-grid,.form-row,.doc-grid,.pf-details{grid-template-columns:1fr}
+    .pf-detail:nth-child(even){border-left:0}
+    .pf-detail:nth-last-child(2){border-bottom:1px solid var(--line)}
+    .pf-avatar{width:84px;height:84px}
+    .tab-btn{padding:.9rem 1rem}
 }
-.btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(123,79,58,0.35); }
-
-/* ── ALERT ── */
-.alert { padding: 0.9rem 1.25rem; border-radius: 10px; margin-bottom: 1.5rem; font-size: 0.875rem; }
-.alert-success { background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
-.alert-error   { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
-
-/* ── AVAILABILITY TOGGLE ── */
-.availability-row { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; }
-.avail-label { font-size: 0.88rem; font-weight: 600; color: var(--text-dark); }
-.avail-sub   { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; }
-.toggle-switch { position: relative; width: 44px; height: 24px; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 999px; transition: 0.3s; cursor: pointer; }
-.toggle-slider:before { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; left: 3px; bottom: 3px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-input:checked + .toggle-slider { background: var(--success); }
-input:checked + .toggle-slider:before { transform: translateX(20px); }
-
-@media (max-width: 768px) {
-    .info-grid, .form-row, .doc-grid, .specialties-grid { grid-template-columns: 1fr; }
-    .profile-hero { padding: 1.5rem 1rem 0; }
-    .profile-body { padding: 0 1rem 3rem; }
-    .tab-btn { padding: 0.65rem 0.9rem; font-size: 0.75rem; }
-}
+@media(max-width:520px){.specialties-grid{grid-template-columns:1fr}.pf-stats{grid-template-columns:1fr}.pf-stat + .pf-stat{border-left:0;border-top:1px solid var(--line)}}
 </style>
 @endpush
 
@@ -336,68 +250,103 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
     $oldSpecs = old('specialties', is_array($bakerRecord?->specialties) ? $bakerRecord->specialties : []);
     $specialtyOptions = ['Wedding Cakes','Birthday Cakes','Fondant Art','Cupcakes','Macarons','Cheesecakes','Custom Designs','Vegan Cakes','Gluten-Free','Chocolate Cakes','Pastries','Tarts'];
+
+    // ── SVG icon helper (all icons on this page are SVG) ──
+    $P = [
+        'user'    => '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+        'store'   => '<path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 20v-6h6v6"/>',
+        'baker'   => '<path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/>',
+        'file'    => '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+        'filelines'=> '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>',
+        'clip'    => '<path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/>',
+        'pin'     => '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+        'star'    => '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+        'card'    => '<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+        'wallet'  => '<rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="14.5" r="2.2"/>',
+        'checkc'  => '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+        'xc'      => '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+        'check'   => '<polyline points="20 6 9 17 4 12"/>',
+        'x'       => '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+        'clock'   => '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+        'alert'   => '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+        'lock'    => '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+        'phone'   => '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
+        'cal'     => '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+        'home'    => '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+        'building'=> '<rect x="4" y="2" width="16" height="20" rx="1"/><line x1="9" y1="7" x2="9.01" y2="7"/><line x1="15" y1="7" x2="15.01" y2="7"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="15" y1="12" x2="15.01" y2="12"/><path d="M10 22v-4h4v4"/>',
+        'link'    => '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+        'edit'    => '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/>',
+        'save'    => '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>',
+        'target'  => '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+        'idcard'  => '<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/>',
+        'idback'  => '<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="14" y2="14"/>',
+        'shield'  => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+        'camera'  => '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+        'hash'    => '<line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>',
+        'arrow'   => '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+        'info'    => '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+        'cake'    => '<path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/>',
+    ];
+    $ic = fn ($k, $s = 16, $sw = 1.8, $fill = 'none') => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="'.$s.'" height="'.$s.'" fill="'.$fill.'" stroke="currentColor" stroke-width="'.$sw.'" stroke-linecap="round" stroke-linejoin="round">'.$P[$k].'</svg>';
+    $stars = function ($n) use ($ic) { $o = ''; for ($i = 1; $i <= 5; $i++) { $o .= $ic('star', 15, 1.8, $i <= $n ? 'currentColor' : 'none'); } return '<span class="pf-stars">'.$o.'</span>'; };
 @endphp
 
+<div class="profile-page">
+
 @if(session('success'))
-<div class="alert alert-success" style="display:flex;align-items:center;gap:0.5rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> {{ session('success') }}</div>
+<div class="alert alert-success">{!! $ic('checkc') !!} <span>{{ session('success') }}</span></div>
 @endif
 @if($errors->any())
-<div class="alert alert-error" style="display:flex;align-items:center;gap:0.5rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> {{ $errors->first() }}</div>
+<div class="alert alert-error">{!! $ic('xc') !!} <span>{{ $errors->first() }}</span></div>
 @endif
 
-{{-- ── HERO ── --}}
-<div class="profile-hero">
-    <div class="hero-top">
-        <div class="avatar-wrap">
-            <div class="avatar-circle">
-                @if($baker->profile_photo)
-                    <img src="{{ Str::startsWith($baker->profile_photo, 'http') ? $baker->profile_photo : Storage::url($baker->profile_photo) }}" alt="Photo">
-                @else
-                    {{ strtoupper(substr($baker->first_name,0,1).substr($baker->last_name,0,1)) }}
-                @endif
-            </div>
-        </div>
-        <div class="hero-info">
-            <div class="hero-name">{{ $baker->first_name }} {{ $baker->last_name }}</div>
-            <div class="hero-email">{{ $baker->email }}</div>
-            <div class="hero-tags">
-         <span class="tag tag-role" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg> Baker</span>
-                @if(!empty($bakerRecord?->shop_name))
-                <span class="tag tag-shop" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 20v-6h6v6"/></svg> {{ $bakerRecord->shop_name }}</span>
-                @endif
-                @if($bakerRecord?->is_approved)
-                       <span class="tag tag-approved" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Approved</span>
-                @else
-                    <span class="tag tag-pending" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Pending Approval</span>
-                @endif
-                @if($missingCount > 0)
-                    <span class="tag tag-incomplete" style="display:inline-flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> {{ $missingCount }} incomplete</span>
-                @endif
-            </div>
+{{-- ── HEADER ── --}}
+<div class="pf-header">
+    <div class="pf-avatar">
+        @if($baker->profile_photo)
+            <img src="{{ Str::startsWith($baker->profile_photo, 'http') ? $baker->profile_photo : Storage::url($baker->profile_photo) }}" alt="Photo">
+        @else
+            {{ strtoupper(substr($baker->first_name,0,1).substr($baker->last_name,0,1)) }}
+        @endif
+    </div>
+    <div class="pf-id">
+        <h1 class="pf-name">{{ $baker->first_name }} {{ $baker->last_name }}</h1>
+        <div class="pf-email">{{ $baker->email }}</div>
+        <div class="pf-tags">
+            <span class="tag tag-role">{!! $ic('baker', 12) !!} Baker</span>
+            @if(!empty($bakerRecord?->shop_name))
+            <span class="tag tag-shop">{!! $ic('store', 12) !!} {{ $bakerRecord->shop_name }}</span>
+            @endif
+            @if($bakerRecord?->is_approved)
+                <span class="tag tag-approved">{!! $ic('checkc', 12, 2) !!} Approved</span>
+            @else
+                <span class="tag tag-pending">{!! $ic('clock', 12) !!} Pending Approval</span>
+            @endif
+            @if($missingCount > 0)
+                <span class="tag tag-incomplete">{!! $ic('alert', 12) !!} {{ $missingCount }} incomplete</span>
+            @endif
         </div>
     </div>
+</div>
 
-    <div class="tab-nav">
-              <button class="tab-btn active" onclick="switchTab('overview', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Overview</button>
-        <button class="tab-btn" onclick="switchTab('bakery', this)" style="display:inline-flex;align-items:center;gap:0.4rem;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M9 20v-6h6v6"/></svg> Bakery Info
-            @if(empty($bakerRecord?->shop_name)) <span class="tab-badge">!</span> @endif
-        </button>
-<button class="tab-btn" onclick="switchTab('documents', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Documents</button>
-        <button class="tab-btn" onclick="switchTab('location', this)" style="display:inline-flex;align-items:center;gap:0.4rem;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Location
-            @if(empty($bakerRecord?->latitude)) <span class="tab-badge">!</span> @endif
-        </button>
-<button class="tab-btn" onclick="switchTab('portfolio', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg> Cake Designs</button>
-<button class="tab-btn" onclick="switchTab('reviews', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Reviews
-    @if($reviews->count() > 0)
-        <span class="tab-badge" style="background:var(--caramel);">{{ $reviews->count() }}</span>
-    @endif
-</button>
-
-<button class="tab-btn" onclick="switchTab('payments', this)" style="display:inline-flex;align-items:center;gap:0.4rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Payments</button>
-
-    </div>
+<div class="tab-nav" role="tablist">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">{!! $ic('user', 14, 2) !!} Overview</button>
+    <button class="tab-btn" onclick="switchTab('bakery', this)">
+        {!! $ic('store', 14, 2) !!} Bakery Info
+        @if(empty($bakerRecord?->shop_name)) <span class="tab-badge">!</span> @endif
+    </button>
+    <button class="tab-btn" onclick="switchTab('documents', this)">{!! $ic('file', 14, 2) !!} Documents</button>
+    <button class="tab-btn" onclick="switchTab('location', this)">
+        {!! $ic('pin', 14, 2) !!} Location
+        @if(empty($bakerRecord?->latitude)) <span class="tab-badge">!</span> @endif
+    </button>
+    <button class="tab-btn" onclick="switchTab('portfolio', this)">{!! $ic('baker', 14, 2) !!} Cake Designs</button>
+    <button class="tab-btn" onclick="switchTab('reviews', this)">{!! $ic('star', 14, 2) !!} Reviews
+        @if($reviews->count() > 0)
+            <span class="tab-badge gold">{{ $reviews->count() }}</span>
+        @endif
+    </button>
+    <button class="tab-btn" onclick="switchTab('payments', this)">{!! $ic('card', 14, 2) !!} Payments</button>
 </div>
 
 <div class="profile-body">
@@ -417,57 +366,57 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             <div class="completion-chips">
                 @foreach($allChecks as $label => $done)
                     <span class="completion-chip {{ $done ? 'chip-ok' : 'chip-missing' }}">
-{!! $done ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" style="vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' !!} {{ $label }}
+                        {!! $done ? $ic('check', 11, 2.75) : $ic('x', 11, 2.75) !!} {{ $label }}
                     </span>
                 @endforeach
             </div>
         </div>
 
-      {{-- Personal Info --}}
+        {{-- Personal Info --}}
         <div class="section-card">
             <div class="section-card-header">
                 <div class="section-card-title">
-                   <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                    <div class="section-card-icon">{!! $ic('user') !!}</div>
                     Personal Information
                 </div>
-                <span style="font-size:0.72rem;color:var(--text-muted);font-weight:500;">Member since {{ $baker->created_at->format('M Y') }}</span>
+                <span class="pf-meta">Member since {{ $baker->created_at->format('M Y') }}</span>
             </div>
             <div class="section-card-body" style="padding:0;">
 
-                {{-- Profile banner row --}}
-                <div style="display:flex;align-items:center;gap:1.25rem;padding:1.5rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--cream) 0%,var(--warm-white) 100%);">
-                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--caramel),var(--caramel-light));display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(200,137,58,0.3);">
+                <div class="pf-banner">
+                    <div class="pf-avatar-sm">
                         @if($baker->profile_photo)
-                            <img src="{{ Str::startsWith($baker->profile_photo,'http') ? $baker->profile_photo : Storage::url($baker->profile_photo) }}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">
+                            <img src="{{ Str::startsWith($baker->profile_photo,'http') ? $baker->profile_photo : Storage::url($baker->profile_photo) }}" alt="">
                         @else
                             {{ strtoupper(substr($baker->first_name,0,1).substr($baker->last_name,0,1)) }}
                         @endif
                     </div>
                     <div>
-                        <div style="font-size:1.1rem;font-weight:700;color:var(--brown-deep);">{{ $baker->first_name }} {{ $baker->last_name }}</div>
-                        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.1rem;">{{ $baker->email }}</div>
-                        <div style="margin-top:0.4rem;">
-                            <span style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.7rem;font-weight:600;background:var(--cream);border:1px solid var(--border);color:var(--text-mid);padding:0.15rem 0.6rem;border-radius:20px;">
-                              {!! $bakerRecord?->seller_type === 'homebased' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;margin-right:3px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home-Based Baker' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;margin-right:3px;"><rect x="4" y="2" width="16" height="20" rx="1"/></svg> Registered Business' !!}
-                            </span>
-                        </div>
+                        <div class="pf-banner-name">{{ $baker->first_name }} {{ $baker->last_name }}</div>
+                        <div class="pf-banner-sub">{{ $baker->email }}</div>
+                        <span class="tag tag-shop">
+                            @if($bakerRecord?->seller_type === 'homebased')
+                                {!! $ic('home', 12) !!} Home-Based Baker
+                            @else
+                                {!! $ic('building', 12) !!} Registered Business
+                            @endif
+                        </span>
                     </div>
                 </div>
 
-                {{-- Detail rows --}}
-                <div style="display:grid;grid-template-columns:1fr 1fr;">
-                    @php
-                        $phone = $baker->phone ?? $bakerRecord?->phone;
-                                      $details = [
-                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>', 'Phone', $phone ?: null],
-                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>', 'Member Since', $baker->created_at->format('F d, Y')],
-                        ];
-                    @endphp
-                    @foreach($details as [$icon, $lbl, $val])
-                    <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);{{ $loop->even ? 'border-left:1px solid var(--border);' : '' }}">
-                      <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.3rem;">{!! $icon !!} {{ $lbl }}</div>
-                        <div style="font-size:0.88rem;font-weight:600;color:var(--text-dark);">
-                            @if($val) {{ $val }} @else <span style="color:var(--border);font-style:italic;font-weight:400;font-size:0.82rem;">Not provided</span> @endif
+                @php
+                    $phone = $baker->phone ?? $bakerRecord?->phone;
+                    $details = [
+                        ['phone', 'Phone', $phone ?: null],
+                        ['cal', 'Member Since', $baker->created_at->format('F d, Y')],
+                    ];
+                @endphp
+                <div class="pf-details">
+                    @foreach($details as [$iconKey, $lbl, $val])
+                    <div class="pf-detail">
+                        <div class="pf-label">{!! $ic($iconKey, 12, 2) !!} {{ $lbl }}</div>
+                        <div class="pf-detail-val">
+                            @if($val) {{ $val }} @else <span class="pf-empty">Not provided</span> @endif
                         </div>
                     </div>
                     @endforeach
@@ -476,70 +425,66 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             </div>
         </div>
 
- {{-- Bakery Summary --}}
+        {{-- Bakery Summary --}}
         <div class="section-card">
             <div class="section-card-header">
                 <div class="section-card-title">
-                               <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg></div>
+                    <div class="section-card-icon">{!! $ic('baker') !!}</div>
                     Bakery Details
                 </div>
-                <button onclick="switchTab('bakery', document.querySelector('[onclick*=bakery]'))"
-                    style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.75rem;font-weight:600;color:var(--caramel);background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:0.3rem 0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit
+                <button class="pf-btn" onclick="switchTab('bakery', document.querySelector('[onclick*=bakery]'))">
+                    {!! $ic('edit', 12, 2) !!} Edit
                 </button>
             </div>
             <div class="section-card-body" style="padding:0;">
 
-                {{-- Shop name hero strip --}}
                 @if(!empty($bakerRecord?->shop_name))
-                <div style="padding:1.25rem 1.5rem;background:linear-gradient(135deg,var(--cream),var(--warm-white));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.75rem;">
-                    <span style="font-size:1.5rem;">🏪</span>
+                <div class="pf-shop">
+                    {!! $ic('store', 28, 1.5) !!}
                     <div>
-                        <div style="font-size:1rem;font-weight:700;color:var(--brown-deep);">{{ $bakerRecord->shop_name }}</div>
+                        <div class="pf-shop-name">{{ $bakerRecord->shop_name }}</div>
                         @if($bakerRecord?->bio)
-                        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:0.2rem;line-height:1.5;max-width:600px;">{{ Str::limit($bakerRecord->bio, 120) }}</div>
+                        <div class="pf-shop-bio">{{ Str::limit($bakerRecord->bio, 120) }}</div>
                         @endif
                     </div>
                 </div>
                 @endif
 
-                {{-- Stats row --}}
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);">
-                    @php
-                                         $stats = [
-                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>', 'Experience', $bakerRecord?->experience_years ?? null],
-                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="14.5" r="2.2"/></svg>', 'Min. Order',  $bakerRecord?->min_order_price ? '₱'.number_format($bakerRecord->min_order_price,0) : null],
-                            ['<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>', 'Online Shop',  $bakerRecord?->social_media ? 'Linked' : null],
-                        ];
-                    @endphp
-                    @foreach($stats as [$icon, $lbl, $val])
-                    <div style="padding:1rem 1.25rem;text-align:center;{{ !$loop->last ? 'border-right:1px solid var(--border);' : '' }}">
-                      <div style="margin-bottom:0.2rem;color:var(--caramel);display:flex;justify-content:center;">{!! $icon !!}</div>
-                        <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.25rem;">{{ $lbl }}</div>
+                @php
+                    $stats = [
+                        ['clock', 'Experience', $bakerRecord?->experience_years ?? null],
+                        ['wallet', 'Min. Order',  $bakerRecord?->min_order_price ? '₱'.number_format($bakerRecord->min_order_price,0) : null],
+                        ['link', 'Online Shop',  $bakerRecord?->social_media ? 'Linked' : null],
+                    ];
+                @endphp
+                <div class="pf-stats">
+                    @foreach($stats as [$iconKey, $lbl, $val])
+                    <div class="pf-stat">
+                        {!! $ic($iconKey, 20, 1.7) !!}
+                        <div class="pf-label">{{ $lbl }}</div>
                         @if($val)
                             @if($lbl === 'Online Shop' && $bakerRecord?->social_media)
-                                <a href="{{ $bakerRecord->social_media }}" target="_blank" style="font-size:0.8rem;font-weight:700;color:var(--caramel);text-decoration:none;">View →</a>
+                                <div class="pf-stat-val"><a href="{{ $bakerRecord->social_media }}" target="_blank" class="pf-link">View {!! $ic('arrow', 12, 2.5) !!}</a></div>
                             @else
-                                <div style="font-size:0.88rem;font-weight:700;color:var(--brown-deep);">{{ $val }}</div>
+                                <div class="pf-stat-val">{{ $val }}</div>
                             @endif
                         @else
-                            <div style="font-size:0.78rem;color:var(--border);font-style:italic;">Not set</div>
+                            <div class="pf-empty" style="margin-top:.45rem;">Not set</div>
                         @endif
                     </div>
                     @endforeach
                 </div>
 
-                {{-- Specialties --}}
-                <div style="padding:1.1rem 1.5rem;">
-                  <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:0.65rem;display:flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg> Specialties</div>
+                <div class="pf-specs">
+                    <div class="pf-label">{!! $ic('baker', 12, 1.8) !!} Specialties</div>
                     @if(!empty($bakerRecord?->specialties))
-                        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+                        <div class="pf-chips">
                             @foreach((array)$bakerRecord->specialties as $s)
-                                <span style="background:var(--cream);border:1px solid var(--border);padding:0.25rem 0.7rem;border-radius:20px;font-size:0.72rem;font-weight:600;color:var(--text-mid);">{{ $s }}</span>
+                                <span class="pf-chip">{{ $s }}</span>
                             @endforeach
                         </div>
                     @else
-                        <span style="font-size:0.82rem;color:var(--border);font-style:italic;">No specialties added yet — <button onclick="switchTab('bakery',document.querySelector('[onclick*=bakery]'))" style="background:none;border:none;color:var(--caramel);font-weight:600;cursor:pointer;font-size:0.82rem;padding:0;">add some →</button></span>
+                        <span class="pf-empty">No specialties added yet — <button class="pf-inline-btn" onclick="switchTab('bakery',document.querySelector('[onclick*=bakery]'))">add some</button></span>
                     @endif
                 </div>
 
@@ -556,7 +501,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
             <div class="section-card">
                 <div class="section-card-header">
-             <div class="section-card-title"><div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg></div> Bakery Information</div>
+                    <div class="section-card-title"><div class="section-card-icon">{!! $ic('baker') !!}</div> Bakery Information</div>
                 </div>
                 <div class="section-card-body">
                     <div class="form-row">
@@ -610,7 +555,7 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                             @foreach($specialtyOptions as $spec)
                             <label class="specialty-check {{ in_array($spec, $oldSpecs) ? 'checked' : '' }}">
                                 <input type="checkbox" name="specialties[]" value="{{ $spec }}" {{ in_array($spec, $oldSpecs) ? 'checked' : '' }}>
-                                <span class="check-indicator">{{ in_array($spec, $oldSpecs) ? '✓' : '' }}</span>
+                                <span class="check-indicator">@if(in_array($spec, $oldSpecs)){!! $ic('check', 11, 3.5) !!}@endif</span>
                                 {{ $spec }}
                             </label>
                             @endforeach
@@ -619,78 +564,77 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                 </div>
             </div>
 
-            <div style="display:flex;justify-content:flex-end;">
-<button type="submit" class="btn-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Bakery Info</button>
+            <div class="pf-actions">
+                <button type="submit" class="btn-save">{!! $ic('save', 15, 2) !!} Save Bakery Info</button>
             </div>
         </form>
     </div>
 
-{{-- ══ DOCUMENTS TAB ══ --}}
-<div class="tab-panel" id="tab-documents">
-    <div class="section-card">
-        <div class="section-card-header">
-            <div class="section-card-title">
-                         <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/></svg></div>
-                Submitted Documents
+    {{-- ══ DOCUMENTS TAB ══ --}}
+    <div class="tab-panel" id="tab-documents">
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-card-title">
+                    <div class="section-card-icon">{!! $ic('clip') !!}</div>
+                    Submitted Documents
+                </div>
+                <span class="tag tag-pending">{!! $ic('lock', 11, 2) !!} Read-only — contact admin to update</span>
             </div>
-            <span style="font-size:0.72rem;background:#FEF9E8;color:#7A5800;padding:0.2rem 0.75rem;border-radius:20px;font-weight:700;border:1px solid #F0D4B0;display:inline-flex;align-items:center;gap:0.3rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Read-only — contact admin to update</span>
-        </div>
-        <div class="section-card-body">
-            @if(($bakerRecord?->seller_type ?? 'registered') === 'registered')
-                <div class="doc-grid">
-                    @foreach([
-                        ['DTI/SEC Number',    $bakerRecord?->dti_sec_number,  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>', false],
-                        ['Business Permit',   $bakerRecord?->business_permit, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>', true],
-                        ['DTI Certificate',   $bakerRecord?->dti_certificate, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/></svg>', true],
-                        ['Sanitary Permit',   $bakerRecord?->sanitary_permit, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', true],
-                        ['BIR Certificate',   $bakerRecord?->bir_certificate, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>', true],
-                    ] as [$label, $value, $icon, $isFile])
-                    <div class="info-item">
-                        <div class="info-label">{!! $icon !!} {{ $label }}</div>
-                        <div class="info-value">
-                            @if($value)
-                                @if($isFile)
-                                    <a href="{{ Storage::url($value) }}" target="_blank" style="color:var(--caramel);font-weight:600;font-size:0.82rem;">✓ View File →</a>
+            <div class="section-card-body">
+                @if(($bakerRecord?->seller_type ?? 'registered') === 'registered')
+                    <div class="doc-grid">
+                        @foreach([
+                            ['DTI/SEC Number',    $bakerRecord?->dti_sec_number,  'hash',      false],
+                            ['Business Permit',   $bakerRecord?->business_permit, 'file',      true],
+                            ['DTI Certificate',   $bakerRecord?->dti_certificate, 'clip',      true],
+                            ['Sanitary Permit',   $bakerRecord?->sanitary_permit, 'shield',    true],
+                            ['BIR Certificate',   $bakerRecord?->bir_certificate, 'filelines', true],
+                        ] as [$label, $value, $iconKey, $isFile])
+                        <div class="info-item">
+                            <div class="info-label">{!! $ic($iconKey, 12, 2) !!} {{ $label }}</div>
+                            <div class="info-value">
+                                @if($value)
+                                    @if($isFile)
+                                        <a href="{{ Storage::url($value) }}" target="_blank" class="pf-link">{!! $ic('check', 12, 2.5) !!} View File</a>
+                                    @else
+                                        {{ $value }}
+                                    @endif
                                 @else
-                                    {{ $value }}
+                                    <span class="info-empty">Not submitted</span>
                                 @endif
-                            @else
-                                <span class="info-empty">Not submitted</span>
-                            @endif
+                            </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="doc-grid">
-                    @foreach([
-                        ['ID Type',         $bakerRecord?->gov_id_type,  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg>', false],
-                        ['Gov\'t ID Front',  $bakerRecord?->gov_id_front, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="14" y1="10" x2="18" y2="10"/><line x1="14" y1="14" x2="18" y2="14"/></svg>', true],
-                        ['Gov\'t ID Back',   $bakerRecord?->gov_id_back,  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="14" y2="14"/></svg>', true],
-                        ['Selfie with ID',   $bakerRecord?->id_selfie,    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>', true],
-                        ['Food Safety Cert', $bakerRecord?->food_safety_cert, '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="vertical-align:-2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>', true],
-                    ] as [$label, $value, $icon, $isFile])
-                    <div class="info-item">
-                        <div class="info-label">{!! $icon !!} {{ $label }}</div>
-                        <div class="info-value">
-                            @if($value)
-                                @if($isFile)
-                                    <a href="{{ Storage::url($value) }}" target="_blank" style="color:var(--caramel);font-weight:600;font-size:0.82rem;">✓ View File →</a>
+                @else
+                    <div class="doc-grid">
+                        @foreach([
+                            ['ID Type',         $bakerRecord?->gov_id_type,  'idcard', false],
+                            ['Gov\'t ID Front',  $bakerRecord?->gov_id_front, 'idcard', true],
+                            ['Gov\'t ID Back',   $bakerRecord?->gov_id_back,  'idback', true],
+                            ['Selfie with ID',   $bakerRecord?->id_selfie,    'camera', true],
+                            ['Food Safety Cert', $bakerRecord?->food_safety_cert, 'shield', true],
+                        ] as [$label, $value, $iconKey, $isFile])
+                        <div class="info-item">
+                            <div class="info-label">{!! $ic($iconKey, 12, 2) !!} {{ $label }}</div>
+                            <div class="info-value">
+                                @if($value)
+                                    @if($isFile)
+                                        <a href="{{ Storage::url($value) }}" target="_blank" class="pf-link">{!! $ic('check', 12, 2.5) !!} View File</a>
+                                    @else
+                                        {{ $value }}
+                                    @endif
                                 @else
-                                    {{ $value }}
+                                    <span class="info-empty">Not submitted</span>
                                 @endif
-                            @else
-                                <span class="info-empty">Not submitted</span>
-                            @endif
+                            </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
-                </div>
-            @endif
+                @endif
+            </div>
         </div>
     </div>
-</div>
-          
 
     {{-- ══ LOCATION TAB ══ --}}
     <div class="tab-panel" id="tab-location">
@@ -700,15 +644,15 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
             <div class="section-card">
                 <div class="section-card-header">
-       <div class="section-card-title"><div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div> Bakery Location</div>
+                    <div class="section-card-title"><div class="section-card-icon">{!! $ic('pin') !!}</div> Bakery Location</div>
                 </div>
                 <div class="section-card-body">
-                    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.6;">Pin your exact bakery location on the map so customers can see how far you are when reviewing your bids.</p>
+                    <p class="pf-intro">Pin your exact bakery location on the map so customers can see how far you are when reviewing your bids.</p>
 
-              <button type="button" class="btn-locate" onclick="locateMe()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Use My Current Location</button>
-              <div class="map-coords" id="map-coords" style="display:flex;align-items:center;gap:0.3rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Pinned: <span id="coords-display"></span></div>
+                    <button type="button" class="btn-locate" onclick="locateMe()">{!! $ic('target', 14, 2) !!} Use My Current Location</button>
+                    <div class="map-coords" id="map-coords">{!! $ic('pin', 13, 2) !!} Pinned: <span id="coords-display"></span></div>
 
-                    <div id="profile-map" style="margin-bottom:1rem;"></div>
+                    <div id="profile-map" style="margin-bottom:1.25rem;"></div>
 
                     <div class="form-group">
                         <label class="form-label">Full Address <span class="req">*</span></label>
@@ -722,13 +666,13 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                 </div>
             </div>
 
-            <div style="display:flex;justify-content:flex-end;">
-             <button type="submit" class="btn-save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Location</button>
+            <div class="pf-actions">
+                <button type="submit" class="btn-save">{!! $ic('save', 15, 2) !!} Save Location</button>
             </div>
         </form>
     </div>
 
-   {{-- ══ PORTFOLIO TAB ══ --}}
+    {{-- ══ PORTFOLIO TAB ══ --}}
     <div class="tab-panel" id="tab-portfolio">
         <form method="POST" action="{{ route('baker.profile.update') }}" enctype="multipart/form-data" id="portfolio-form">
             @csrf @method('PUT')
@@ -736,8 +680,8 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 
             <div class="section-card">
                 <div class="section-card-header">
-                   <div class="section-card-title"><div class="section-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M4 21v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6"/><path d="M2 21h20"/><path d="M12 9V5"/></svg></div> Cake Designs</div>
-                    <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;" id="portfolio-count-label"></span>
+                    <div class="section-card-title"><div class="section-card-icon">{!! $ic('baker') !!}</div> Cake Designs</div>
+                    <span class="pf-meta" id="portfolio-count-label"></span>
                 </div>
                 <div class="section-card-body">
                     @php
@@ -750,8 +694,8 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                         $maxPhotos = 5;
                     @endphp
 
-                    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.6;">
-                        Click an empty slot to add a photo. Click <strong style="color:#C0392B;">✕</strong> on any photo to remove it. You can have up to <strong>5</strong> designs.
+                    <p class="pf-intro">
+                        Click an empty slot to add a photo. Use the <strong>remove</strong> button on any photo to delete it. You can have up to <strong>5</strong> designs.
                     </p>
 
                     {{-- Dynamic grid managed by JS --}}
@@ -763,14 +707,14 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
                     {{-- Hidden: new file inputs appended by JS --}}
                     <div id="new-file-inputs-container" style="display:none;"></div>
 
-                    <div style="background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;font-size:0.78rem;color:var(--text-muted);margin-top:0.75rem;">
-                        💡 JPG or PNG · Max 5MB each · Slots auto-shift when a photo is removed.
+                    <div class="pf-tip">
+                        {!! $ic('info', 16, 2) !!} <span>JPG or PNG · Max 5MB each · Slots auto-shift when a photo is removed.</span>
                     </div>
                 </div>
             </div>
 
-          <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
-             <button type="button" class="btn-save" onclick="submitPortfolioForm()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Cake Designs</button>
+            <div class="pf-actions">
+                <button type="button" class="btn-save" onclick="submitPortfolioForm()">{!! $ic('save', 15, 2) !!} Save Cake Designs</button>
             </div>
         </form>
 
@@ -781,101 +725,99 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
             window._storageBase = "{{ Storage::url('') }}";
         </script>
     </div>
-{{-- ══ REVIEWS TAB ══ --}}
-<div class="tab-panel" id="tab-reviews">
 
-    @php
-        $avgRating = $reviews->count() > 0 ? round($reviews->avg('rating'), 1) : 0;
-        $ratingCounts = [5=>0, 4=>0, 3=>0, 2=>0, 1=>0];
-        foreach($reviews as $r) { $ratingCounts[(int)$r->rating] = ($ratingCounts[(int)$r->rating] ?? 0) + 1; }
-    @endphp
+    {{-- ══ REVIEWS TAB ══ --}}
+    <div class="tab-panel" id="tab-reviews">
 
-    <div class="section-card" style="margin-bottom:1.5rem;">
-        <div class="section-card-header">
-            <div class="section-card-title">
-                      <div class="section-card-icon"><svg viewBox="0 0 24 24" fill="#fff" stroke="#fff" width="16" height="16"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-                Customer Reviews
+        @php
+            $avgRating = $reviews->count() > 0 ? round($reviews->avg('rating'), 1) : 0;
+            $ratingCounts = [5=>0, 4=>0, 3=>0, 2=>0, 1=>0];
+            foreach($reviews as $r) { $ratingCounts[(int)$r->rating] = ($ratingCounts[(int)$r->rating] ?? 0) + 1; }
+        @endphp
+
+        <div class="section-card">
+            <div class="section-card-header">
+                <div class="section-card-title">
+                    <div class="section-card-icon">{!! $ic('star', 16, 1.8, 'currentColor') !!}</div>
+                    Customer Reviews
+                </div>
+                <span class="pf-meta">{{ $reviews->count() }} total review{{ $reviews->count() !== 1 ? 's' : '' }}</span>
             </div>
-            <span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">{{ $reviews->count() }} total review{{ $reviews->count() !== 1 ? 's' : '' }}</span>
-        </div>
-        <div class="section-card-body">
+            <div class="section-card-body">
 
-            @if($reviews->count() === 0)
-                <div style="text-align:center;padding:2.5rem 1rem;">
-                    <div style="font-size:2.5rem;margin-bottom:0.75rem;">🎂</div>
-                    <div style="font-size:0.95rem;font-weight:600;color:var(--text-mid);margin-bottom:0.35rem;">No reviews yet</div>
-                    <div style="font-size:0.8rem;color:var(--text-muted);">Reviews will appear here once customers complete their orders.</div>
-                </div>
-            @else
-
-                <div style="display:flex;gap:2rem;align-items:center;padding-bottom:1.25rem;border-bottom:1px solid var(--border);margin-bottom:1.25rem;flex-wrap:wrap;">
-                    <div style="text-align:center;min-width:80px;">
-                        <div style="font-size:3rem;font-weight:800;color:var(--brown-deep);line-height:1;">{{ $avgRating }}</div>
-                        <div style="color:#F59E0B;font-size:1.1rem;margin:0.25rem 0;">
-                            @for($i=1;$i<=5;$i++){{ $i <= round($avgRating) ? '★' : '☆' }}@endfor
-                        </div>
-                        <div style="font-size:0.72rem;color:var(--text-muted);font-weight:600;">out of 5</div>
+                @if($reviews->count() === 0)
+                    <div class="pf-emptyblock">
+                        {!! $ic('cake', 44, 1.3) !!}
+                        <h3>No reviews yet</h3>
+                        <p>Reviews will appear here once customers complete their orders.</p>
                     </div>
-                    <div style="flex:1;min-width:180px;">
-                        @foreach([5,4,3,2,1] as $star)
-                        @php $count = $ratingCounts[$star]; $pct = $reviews->count() > 0 ? round(($count/$reviews->count())*100) : 0; @endphp
-                        <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
-                            <span style="font-size:0.72rem;font-weight:700;color:var(--text-muted);width:10px;text-align:right;">{{ $star }}</span>
-                            <span style="color:#F59E0B;font-size:0.72rem;">★</span>
-                            <div style="flex:1;height:7px;background:var(--border);border-radius:999px;overflow:hidden;">
-                                <div style="height:100%;width:{{ $pct }}%;background:linear-gradient(90deg,#F59E0B,#FCD34D);border-radius:999px;"></div>
+                @else
+
+                    <div class="pf-rating">
+                        <div class="pf-rating-side">
+                            <div class="pf-rating-num">{{ $avgRating }}</div>
+                            {!! $stars(round($avgRating)) !!}
+                            <div class="pf-label">out of 5</div>
+                        </div>
+                        <div class="pf-bars">
+                            @foreach([5,4,3,2,1] as $star)
+                            @php $count = $ratingCounts[$star]; $barPct = $reviews->count() > 0 ? round(($count/$reviews->count())*100) : 0; @endphp
+                            <div class="pf-bar-row">
+                                <span class="n">{{ $star }}</span>
+                                {!! $ic('star', 12, 1.8, 'currentColor') !!}
+                                <div class="pf-bar-track"><div class="pf-bar-fill" style="width:{{ $barPct }}%;"></div></div>
+                                <span class="c">{{ $count }}</span>
                             </div>
-                            <span style="font-size:0.7rem;color:var(--text-muted);width:22px;">{{ $count }}</span>
+                            @endforeach
                         </div>
-                        @endforeach
                     </div>
-                </div>
 
-                @foreach($reviews as $review)
-                <div style="padding:1.1rem 0;{{ !$loop->last ? 'border-bottom:1px solid var(--border);' : '' }}">
-                    <div style="display:flex;align-items:flex-start;gap:0.85rem;">
-                        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--caramel),var(--caramel-light));display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#fff;flex-shrink:0;">
-                            {{ strtoupper(substr($review->customer?->first_name ?? 'C', 0, 1)) }}
-                        </div>
-                        <div style="flex:1;min-width:0;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.3rem;">
-                                <span style="font-size:0.88rem;font-weight:700;color:var(--brown-deep);">
+                    @foreach($reviews as $review)
+                    <div class="pf-review">
+                        <div class="pf-review-avatar">{{ strtoupper(substr($review->customer?->first_name ?? 'C', 0, 1)) }}</div>
+                        <div class="pf-review-main">
+                            <div class="pf-review-top">
+                                <span class="pf-review-name">
                                     {{ $review->customer ? $review->customer->first_name . ' ' . substr($review->customer->last_name,0,1) . '.' : 'Customer' }}
                                 </span>
-                                <span style="font-size:0.7rem;color:var(--text-muted);">{{ $review->created_at->format('M d, Y') }}</span>
+                                <span class="pf-review-date">{{ $review->created_at->format('M d, Y') }}</span>
                             </div>
-                            <div style="color:#F59E0B;font-size:0.85rem;margin-bottom:0.45rem;">
-                                @for($i=1;$i<=5;$i++){{ $i <= $review->rating ? '★' : '☆' }}@endfor
-                                <span style="font-size:0.72rem;color:var(--text-muted);margin-left:4px;font-weight:600;">{{ $review->rating }}/5</span>
+                            <div class="pf-review-score">
+                                {!! $stars((int) $review->rating) !!}
+                                <span>{{ $review->rating }}/5</span>
                             </div>
                             @if($review->comment)
-                            <div style="font-size:0.83rem;color:var(--text-mid);line-height:1.6;background:var(--cream);border-left:3px solid var(--caramel);padding:0.6rem 0.85rem;border-radius:0 8px 8px 0;">
-                                "{{ $review->comment }}"
-                            </div>
+                            <div class="pf-comment">"{{ $review->comment }}"</div>
                             @else
-                            <div style="font-size:0.78rem;color:var(--text-muted);font-style:italic;">No written comment.</div>
+                            <div class="pf-nocomment">No written comment.</div>
                             @endif
                         </div>
                     </div>
-                </div>
-                @endforeach
+                    @endforeach
 
-            @endif
+                @endif
+            </div>
         </div>
     </div>
-</div>
 
-{{-- ══ PAYMENTS TAB ══ --}}
-<div class="tab-panel" id="tab-payments">
+    {{-- ══ PAYMENTS TAB ══ --}}
+    <div class="tab-panel" id="tab-payments">
         @include('baker.payment-methods.index')
-
     </div>
+
+</div>{{-- /.profile-body --}}
+</div>{{-- /.profile-page --}}
 
 @endsection
 
 @push('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// ── SVG glyphs used by script-rendered UI ──
+const SVG_CHECK  = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const SVG_X      = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+const SVG_CAMERA = '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
+
 // ── TAB SWITCHING ──
 function switchTab(name, btn) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -896,13 +838,13 @@ document.addEventListener('DOMContentLoaded', function () {
 document.querySelectorAll('.specialty-check').forEach(label => {
     label.addEventListener('click', function () {
         const input = this.querySelector('input'), ind = this.querySelector('.check-indicator');
-        setTimeout(() => { this.classList.toggle('checked', input.checked); ind.textContent = input.checked ? '✓' : ''; }, 0);
+        setTimeout(() => { this.classList.toggle('checked', input.checked); ind.innerHTML = input.checked ? SVG_CHECK : ''; }, 0);
     });
 });
 // ── FILE UPLOAD ──
 function handleFile(input, areaId, nameId) {
     const area = document.getElementById(areaId), nameEl = document.getElementById(nameId);
-    if (input.files && input.files[0]) { area.classList.add('has-file'); nameEl.style.display = 'block'; nameEl.textContent = '✓ ' + input.files[0].name; }
+    if (input.files && input.files[0]) { area.classList.add('has-file'); nameEl.style.display = 'block'; nameEl.textContent = input.files[0].name; }
 }
 // ── PORTFOLIO MANAGER ──
 window._portfolioRender = (function () {
@@ -946,7 +888,7 @@ window._portfolioRender = (function () {
             const div = document.createElement('div');
             div.className = 'portfolio-item';
             div.innerHTML = '<img src="' + window._storageBase + path + '" alt="Design">'
-                          + '<button type="button" class="portfolio-del-btn" title="Remove">✕</button>';
+                          + '<button type="button" class="portfolio-del-btn" title="Remove" aria-label="Remove photo">' + SVG_X + '</button>';
             div.querySelector('.portfolio-del-btn').addEventListener('click', function () {
                 removedPaths.push(path);   // ← add to persistent tracker
                 existing.splice(i, 1);
@@ -961,8 +903,8 @@ window._portfolioRender = (function () {
             const div  = document.createElement('div');
             div.className = 'portfolio-item';
             div.innerHTML = '<img src="' + slot.previewURL + '" alt="New">'
-                          + '<span class="portfolio-new-badge">NEW</span>'
-                          + '<button type="button" class="portfolio-del-btn" title="Remove">✕</button>';
+                          + '<span class="portfolio-new-badge">New</span>'
+                          + '<button type="button" class="portfolio-del-btn" title="Remove" aria-label="Remove photo">' + SVG_X + '</button>';
             div.querySelector('.portfolio-del-btn').addEventListener('click', function () {
                 URL.revokeObjectURL(slot.previewURL);
                 delete newSlots[key];
@@ -990,7 +932,7 @@ window._portfolioRender = (function () {
             div.style.position = 'relative';
             div.innerHTML = '<input type="file" accept=".jpg,.jpeg,.png"'
                           + ' style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:3;">'
-                          + '<span>📷</span>'
+                          + SVG_CAMERA
                           + '<span class="portfolio-empty-label">Add Photo</span>';
             div.querySelector('input[type=file]').addEventListener('change', function () {
                 const file = this.files[0];
@@ -1049,6 +991,7 @@ if (phoneInput) {
 window._mapInitialized = false;
 let _map, _marker;
 const _brownIcon = null;
+const _pinHtml = '<div style="width:26px;height:26px;background:#24150F;border:3px solid #D4B06A;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,.3);"></div>';
 
 function initMap() {
     window._mapInitialized = true;
@@ -1059,7 +1002,7 @@ function initMap() {
     _map = L.map('profile-map').setView([lat, lng], zoom);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(_map);
 
-    const icon = L.divIcon({ html: `<div style="width:26px;height:26px;background:linear-gradient(135deg,#7A4A28,#C8893A);border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,.3);"></div>`, iconSize:[26,26], iconAnchor:[13,26], className:'' });
+    const icon = L.divIcon({ html: _pinHtml, iconSize:[26,26], iconAnchor:[13,26], className:'' });
 
     if (document.getElementById('input-lat').value) {
         _marker = L.marker([lat, lng], { icon, draggable: true }).addTo(_map);
@@ -1097,7 +1040,7 @@ function locateMe() {
         if (!window._mapInitialized) initMap();
         _map.setView([p.coords.latitude, p.coords.longitude], 16);
         if (_marker) _marker.setLatLng([p.coords.latitude, p.coords.longitude]);
-        else { const icon = L.divIcon({ html:`<div style="width:26px;height:26px;background:linear-gradient(135deg,#7A4A28,#C8893A);border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,.3);"></div>`, iconSize:[26,26], iconAnchor:[13,26], className:'' }); _marker = L.marker([p.coords.latitude, p.coords.longitude], { icon, draggable:true }).addTo(_map); }
+        else { const icon = L.divIcon({ html: _pinHtml, iconSize:[26,26], iconAnchor:[13,26], className:'' }); _marker = L.marker([p.coords.latitude, p.coords.longitude], { icon, draggable:true }).addTo(_map); }
         updateCoords(p.coords.latitude, p.coords.longitude);
         reverseGeocode(p.coords.latitude, p.coords.longitude);
     }, () => alert('Could not get your location.'));

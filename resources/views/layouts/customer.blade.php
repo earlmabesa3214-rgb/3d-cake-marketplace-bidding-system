@@ -82,6 +82,103 @@ body { min-height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; backgroun
     .mobile-menu-btn { display: none !important; }
     .sidebar-overlay { display: none !important; }
 }
+  /* ═════ CUSTOMER SHELL: luxury patisserie frame ═════ */
+body{background:linear-gradient(180deg,#F7F2E9 0%,#F4EEE3 100%) fixed;color:#1A0F08}
+.main{min-width:0}
+
+/* SIDEBAR */
+.sidebar{
+  background:
+    repeating-linear-gradient(45deg,rgba(247,242,233,.012) 0 1px,transparent 1px 8px),
+    radial-gradient(ellipse 130% 38% at 0% 0%,rgba(184,148,82,.11),transparent 62%),
+    linear-gradient(180deg,#2B1A12 0%,#24150F 50%,#1B0F09 100%);
+  border-right:1px solid rgba(184,148,82,.2);
+}
+.sidebar::before{display:none}
+
+/* branding */
+.sidebar-brand{padding:1.9rem 1.5rem 1.6rem;border-bottom:0;position:relative}
+.sidebar-brand::after{content:'';position:absolute;left:1.5rem;right:1.5rem;bottom:0;height:1px;background:linear-gradient(90deg,#B89452,rgba(184,148,82,.08))}
+.brand-logo{gap:1rem}
+.brand-icon{width:46px;height:46px;border-radius:2px;color:#D8BA78;
+  background:linear-gradient(145deg,rgba(184,148,82,.2),rgba(184,148,82,.03));
+  border:1px solid rgba(184,148,82,.6);
+  box-shadow:inset 0 0 0 3px #24150F,inset 0 0 0 4px rgba(184,148,82,.28),0 6px 18px rgba(0,0,0,.28)}
+.brand-name{font-size:1.18rem;font-weight:600;letter-spacing:.015em;color:#F7F2E9;line-height:1.1}
+.brand-sub{font-size:.56rem;font-weight:700;letter-spacing:.36em;color:#B89452;margin-top:6px}
+
+/* navigation */
+.sidebar-nav{padding:1.1rem 1rem 1.25rem;scrollbar-width:thin;scrollbar-color:rgba(184,148,82,.3) transparent}
+.nav-section-label{font-size:.58rem;font-weight:700;letter-spacing:.34em;color:rgba(184,148,82,.78);padding:0 .9rem;margin:1.6rem 0 .6rem}
+.nav-section-label:first-child{margin-top:.5rem}
+.nav-link{position:relative;gap:.85rem;padding:.72rem .9rem;margin-bottom:.1rem;border-radius:2px;border-left:2px solid transparent;
+  font-size:.84rem;font-weight:500;letter-spacing:.01em;color:rgba(247,242,233,.62);
+  transition:background .3s,color .3s,border-color .3s}
+.nav-link svg{width:17px;height:17px;flex-shrink:0;stroke-width:1.5;opacity:.85;transition:stroke .3s,opacity .3s}
+.nav-link:hover{background:rgba(247,242,233,.045);color:#F7F2E9;border-left-color:rgba(184,148,82,.45)}
+.nav-link:hover svg{stroke:#D8BA78;opacity:1}
+.nav-link.active{
+  background:linear-gradient(90deg,rgba(184,148,82,.2),rgba(184,148,82,.03) 85%);
+  border-left-color:#B89452;color:#F7F2E9;font-weight:600;
+  box-shadow:inset 14px 0 26px -16px rgba(216,186,120,.4);
+}
+.nav-link.active svg{stroke:#D8BA78;opacity:1}
+
+/* wallet amount: integrated gold figure, not a badge */
+.nav-link > span[style*="rgba(200,137,74,0.25)"]{
+  background:none!important;border-radius:0!important;padding:0 0 0 .7rem!important;
+  border-left:1px solid rgba(184,148,82,.4);color:#D8BA78!important;
+  font-size:.76rem!important;font-weight:600!important;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+/* notification count in sidebar */
+.nav-link > span[style*="margin-left:auto"]{
+  background:#B89452!important;color:#24150F!important;border-radius:2px!important;
+  font-size:.62rem!important;font-weight:800!important;padding:.15rem .45rem!important;letter-spacing:.04em}
+
+/* user area */
+.sidebar-user{padding:1.3rem 1.1rem;gap:.65rem;border-top:1px solid rgba(184,148,82,.28);background:rgba(0,0,0,.16)}
+.user-avatar{width:40px;height:40px;background:#3A241A;border:1px solid #B89452;box-shadow:0 0 0 3px rgba(184,148,82,.12);color:#D8BA78;font-weight:600}
+.sidebar-user form{flex-shrink:0}
+.user-name{font-size:.82rem;font-weight:600;color:#F7F2E9;letter-spacing:.01em}
+.user-role{font-size:.54rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#9A897A;margin-top:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logout-btn{background:transparent;border:1px solid rgba(247,242,233,.16);color:rgba(247,242,233,.6);border-radius:2px;
+  padding:.4rem .55rem;font-size:.54rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:all .3s}
+.logout-btn:hover{background:transparent;border-color:#B89452;color:#D8BA78}
+
+/* TOPBAR */
+.topbar{background:rgba(247,242,233,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(36,21,15,.1);padding:1.2rem clamp(1.25rem,3.5vw,3rem)}
+.topbar::after{content:'';position:absolute;left:clamp(1.25rem,3.5vw,3rem);bottom:-1px;width:56px;height:1px;background:#B89452}
+.topbar-breadcrumb{font-size:.64rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#9A897A}
+.topbar-breadcrumb span{color:#24150F;font-weight:800}
+.topbar-right{gap:1.5rem}
+.topbar-greeting{font-size:.8rem;color:#9A897A;letter-spacing:.01em}
+.topbar-greeting strong{color:#24150F;font-weight:700}
+.notif-bell{width:40px;height:40px;border-radius:2px;background:transparent;border:1px solid rgba(36,21,15,.16);color:#24150F;transition:all .3s}
+.notif-bell:hover{background:transparent;border-color:#B89452;color:#8F6F35}
+.notif-badge{top:-7px;right:-7px;background:#54252C;color:#F7F2E9;border-radius:2px;border:2px solid #F7F2E9;font-size:.58rem;font-weight:800}
+.mobile-menu-btn{width:40px;height:40px;border-radius:2px;background:transparent;border:1px solid rgba(36,21,15,.16);color:#24150F}
+
+/* PAGE CONTENT */
+.page-content{padding:clamp(1.5rem,3vw,2.5rem) clamp(1.25rem,3.5vw,3rem) 4rem}
+
+/* ALERTS */
+.alert{border-radius:2px;padding:.95rem 1.25rem;font-size:.82rem;font-weight:500;gap:.7rem;border:0;border-left:2px solid}
+.alert svg{flex-shrink:0}
+.alert-success{background:#EFF2E8;color:#33502F;border-left-color:#5E7F5A}
+.alert-error{background:#F6ECEA;color:#54252C;border-left-color:#54252C}
+
+/* MOBILE */
+.sidebar-overlay{background:rgba(24,12,7,.66);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+@media (max-width:768px){
+  .sidebar{width:min(84vw,300px);box-shadow:26px 0 70px rgba(0,0,0,.4)}
+  .topbar{padding:.85rem 1rem}
+  .topbar::after{left:1rem}
+  .topbar-breadcrumb{font-size:.58rem;letter-spacing:.18em}
+  .page-content{padding:1.25rem 1rem 3rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .nav-link,.nav-link svg,.logout-btn,.notif-bell{transition:none}
+}
     </style>
     @stack('styles')
 </head>

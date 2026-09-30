@@ -2,7 +2,9 @@
     @section('title', 'Order Tracker — #' . str_pad($cakeRequest->id, 4, '0', STR_PAD_LEFT))
 
     @push('styles')
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-grid.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap-utilities.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
     <style>
@@ -12,6 +14,18 @@
     .back-link { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.82rem; color:var(--text-muted); text-decoration:none; margin-bottom:1rem; transition:color 0.2s; }
     .back-link:hover { color:var(--caramel); }
 
+    @keyframes ot-popIn { 0%{opacity:0; transform:scale(.92) translateY(10px)} 70%{opacity:1; transform:scale(1.015) translateY(0)} 100%{transform:scale(1)} }
+    @keyframes ot-dotBounce { 0%{opacity:0; transform:scale(.3)} 60%{opacity:1; transform:scale(1.25)} 100%{transform:scale(1)} }
+    @keyframes ot-dealLeft  { from{opacity:0; transform:translateX(-38px) rotate(-3deg)} to{opacity:1; transform:none} }
+    @keyframes ot-dealRight { from{opacity:0; transform:translateX(38px) rotate(3deg)}  to{opacity:1; transform:none} }
+    @keyframes ot-flipIn    { from{opacity:0; transform:perspective(700px) rotateY(-18deg) translateY(6px)} to{opacity:1; transform:perspective(700px) rotateY(0) translateY(0)} }
+    @keyframes ot-cardIn    { from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:translateY(0)} }
+    @media(prefers-reduced-motion:reduce){
+        .tracker-hero,.tracker-step-dot,.bid-card,.id-card,
+        .card,.bids-summary-card,.bids-list-wrap,.payment-section-card,
+        .confirmed-baker-card,.next-box{animation:none!important;opacity:1!important;transform:none!important}
+    }
+
     /* ── HERO TRACKER BANNER ── */
     .tracker-hero {
         border-radius: 24px;
@@ -20,6 +34,7 @@
         position: relative;
         overflow: hidden;
         color: white;
+        animation: ot-popIn .5s cubic-bezier(.22,.9,.32,1.15) backwards;
     }
 
 .tracker-hero.status-OPEN                { background: linear-gradient(135deg, #3B1F0F 0%, #7A4A28 100%); }
@@ -95,7 +110,14 @@
         background:rgba(255,255,255,0.1);
         color:rgba(255,255,255,0.5);
         transition:all 0.3s;
+        animation: ot-dotBounce .45s cubic-bezier(.34,1.6,.64,1) backwards;
     }
+    .tracker-step:nth-child(1) .tracker-step-dot{animation-delay:.45s}
+    .tracker-step:nth-child(2) .tracker-step-dot{animation-delay:.55s}
+    .tracker-step:nth-child(3) .tracker-step-dot{animation-delay:.65s}
+    .tracker-step:nth-child(4) .tracker-step-dot{animation-delay:.75s}
+    .tracker-step:nth-child(5) .tracker-step-dot{animation-delay:.85s}
+    .tracker-step:nth-child(6) .tracker-step-dot{animation-delay:.95s}
     .tracker-step-dot.done   { background:rgba(255,255,255,0.9); color:#7B4A1E; border-color:white; }
     .tracker-step-dot.active { background:white; color:#7B4A1E; border-color:white; box-shadow:0 0 0 6px rgba(255,255,255,0.2); animation:stepPulse 2s ease-in-out infinite; }
     @keyframes stepPulse {
@@ -129,6 +151,7 @@
         background:var(--warm-white); border:1px solid var(--border); border-radius:16px;
         padding:1.5rem 2rem; margin-bottom:2rem;
         display:flex; align-items:flex-start; gap:1rem;
+        animation: ot-cardIn .5s cubic-bezier(.22,.9,.32,1.15) .1s backwards;
     }
     .next-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
     .next-icon.yellow { background:#FEF9E8; }
@@ -148,6 +171,7 @@
         border: 1px solid var(--border);
         border-radius: 20px;
         overflow: hidden;
+        animation: ot-cardIn .5s cubic-bezier(.22,.9,.32,1.15) .05s backwards;
     }
     .bids-list-header {
         padding: 1rem 1.25rem;
@@ -169,7 +193,14 @@
         border-bottom: 1px solid var(--border);
         transition: background 0.15s;
         position: relative;
+        animation: ot-dealLeft .45s cubic-bezier(.2,.7,.2,1) backwards;
     }
+    .bid-card:nth-child(even){ animation-name: ot-dealRight; }
+    .bid-card:nth-child(1){animation-delay:.05s}
+    .bid-card:nth-child(2){animation-delay:.15s}
+    .bid-card:nth-child(3){animation-delay:.25s}
+    .bid-card:nth-child(4){animation-delay:.35s}
+    .bid-card:nth-child(n+5){animation-delay:.45s}
     .bid-card:last-child { border-bottom: none; }
     .bid-card:hover { background: #FFFAF5; }
     .bid-card::before {
@@ -214,7 +245,7 @@
         background: var(--caramel, #C07840); color: white;
         border: none; border-radius: 8px;
         font-size: 0.75rem; font-weight: 700; cursor: pointer;
-        font-family:'Plus Jakarta Sans', sans-serif
+        font-family:'Plus Jakarta Sans', sans-serif;
         box-shadow: 0 2px 8px rgba(192,120,64,0.3);
         transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
     }
@@ -227,6 +258,7 @@
         border: 1px solid var(--border);
         border-radius: 20px;
         overflow: hidden;
+        animation: ot-flipIn .55s cubic-bezier(.2,.7,.2,1) .1s backwards;
     }
     .bids-summary-top {
         background: linear-gradient(135deg, #5C3D2E, #9B6030);
@@ -246,8 +278,13 @@
     .bss-val { font-size: 0.8rem; font-weight: 600; color: var(--text-dark); text-align: right; max-width: 55%; }
 
     /* ── CARDS ── */
-    .card { background:var(--warm-white); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:1.5rem; }
+    .card { background:var(--warm-white); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:1.5rem; animation: ot-cardIn .5s cubic-bezier(.22,.9,.32,1.15) backwards; }
     .card:last-child { margin-bottom:0; }
+    .card:nth-of-type(1){animation-delay:.05s}
+    .card:nth-of-type(2){animation-delay:.12s}
+    .card:nth-of-type(3){animation-delay:.19s}
+    .card:nth-of-type(4){animation-delay:.26s}
+    .card:nth-of-type(n+5){animation-delay:.33s}
     .card-header { padding:1.1rem 1.75rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
     .card-header h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; font-weight:700; color:var(--brown-deep); }
 
@@ -265,10 +302,28 @@
     .i-val { font-size:0.86rem; color:var(--text-dark); font-weight:500; text-align:right; }
     .notes-box { padding:1.1rem 1.5rem; font-size:0.86rem; color:var(--text-dark); line-height:1.65; }
 
+    /* ── DETAILED CAKE SPECS (same layout as baker view) ── */
+    .specs-group { padding:0.9rem 1.5rem 0.5rem; border-bottom:1px solid var(--border); }
+    .specs-group:last-child { border-bottom:none; }
+    .specs-group-title { font-size:0.65rem; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--caramel); margin-bottom:0.3rem; }
+    .specs-row { display:flex; justify-content:space-between; align-items:baseline; gap:1.5rem; padding:0.6rem 0; border-top:1px dashed var(--border); font-size:0.85rem; }
+    .specs-key { color:var(--text-muted); font-weight:500; flex-shrink:0; }
+    .specs-val { color:var(--brown-deep); font-weight:700; text-align:right; line-height:1.5; }
+
+    /* ── DETAILED CAKE SPECS ── */
+    .specs-group { padding:0.9rem 1.5rem 0.5rem; border-bottom:1px solid var(--border); }
+    .specs-group:last-child { border-bottom:none; }
+    .specs-group-title { font-size:0.65rem; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--caramel); margin-bottom:0.3rem; }
+    .specs-row { display:flex; justify-content:space-between; align-items:baseline; gap:1.5rem; padding:0.6rem 0; border-top:1px dashed var(--border); font-size:0.85rem; }
+    .specs-key { color:var(--text-muted); font-weight:500; flex-shrink:0; }
+    .specs-val { color:var(--brown-deep); font-weight:700; text-align:right; line-height:1.5; }
+
     /* ── SIDEBAR ── */
     .id-card {
         background: linear-gradient(135deg, var(--brown-deep, #5C3D2E), var(--brown-mid, #7B4F3A));
         border-radius: 20px; padding: 1.75rem 1.5rem; text-align: center; margin-bottom: 1.5rem; color: white;
+        animation: ot-flipIn .55s cubic-bezier(.2,.7,.2,1) .2s backwards;
+        transform-style: preserve-3d;
     }
     .id-label { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.45; margin-bottom:0.3rem; }
     .id-num { font-family:'Plus Jakarta Sans',sans-serif; font-size:2.75rem; font-weight:800; color:var(--caramel-light, #E8C9A8); line-height:1; }
@@ -288,6 +343,11 @@
     .btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--text-mid, #6B5244); margin-top:0.5rem; }
     .btn-outline:hover { border-color:var(--caramel); color:var(--caramel); }
 
+    /* Sidebar "Confirm Delivery" / "Leave a Review" cards — single-line headers */
+    .dr-slot .card-header { flex-wrap:nowrap; gap:0.5rem; padding:0.9rem 1rem; }
+    .dr-slot .card-header h3 { white-space:nowrap; font-size:0.88rem; margin:0; }
+    .dr-slot .card-header > *:last-child { white-space:nowrap; flex-shrink:0; font-size:0.62rem; padding:0.2rem 0.55rem; }
+
     /* ── SUCCESS TOAST ── */
     .success-toast {
         display:flex; align-items:center; gap:0.85rem;
@@ -306,7 +366,7 @@
     .bids-waiting-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:700; color:var(--brown-deep); margin-bottom:0.4rem; }
     .bids-waiting-sub { font-size:0.78rem; color:var(--text-muted); line-height:1.6; }
 
-    .confirmed-baker-card { margin:1.25rem 1.5rem; border:1.5px solid #D4B896; border-radius:14px; overflow:hidden; background:#FBF4EC; }
+    .confirmed-baker-card { margin:1.25rem 1.5rem; border:1.5px solid #D4B896; border-radius:14px; overflow:hidden; background:#FBF4EC; animation: ot-cardIn .45s cubic-bezier(.22,.9,.32,1.15) .1s backwards; }
     .confirmed-baker-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:#F5E8D4; border-bottom:1px solid #D4B896; }
     .confirmed-baker-body { padding:1.1rem 1.25rem; }
     .confirmed-price { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; color:var(--brown-deep, #5C3D2E); font-weight:800; }
@@ -347,6 +407,7 @@
         margin-bottom: 1.5rem;
         box-shadow: 0 4px 16px rgba(200,134,42,0.1);
         position: relative;
+        animation: ot-cardIn .5s cubic-bezier(.22,.9,.32,1.15) .15s backwards;
     }
     .payment-section-card::before {
         content: '';
@@ -455,7 +516,7 @@
         background: linear-gradient(135deg, #8B2A1E, #C44030);
         color: white; border: none; border-radius: 8px;
         font-size: 0.78rem; font-weight: 700; cursor: pointer;
-        font-family: 'Plus Jakarta Sans', sans-serif
+        font-family: 'Plus Jakarta Sans', sans-serif;
         transition: all 0.2s; align-self: flex-end;
         display: inline-flex; align-items: center; gap: 0.35rem;
     }
@@ -502,12 +563,12 @@
     .confirm-modal-btn-cancel {
         flex: 1; padding: 0.75rem 1rem; border-radius: 12px;
         border: 1.5px solid var(--border, #EAE0D0); background: white; color: var(--text-mid, #6B4A2A);
-        font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif transition: all 0.2s;
+        font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s;
     }
     .confirm-modal-btn-cancel:hover { border-color: var(--text-muted); color: var(--text-dark); }
     .confirm-modal-btn-ok {
         flex: 2; padding: 0.75rem 1rem; border-radius: 12px; border: none;
-        font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif
+        font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
         transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
     }
     .confirm-modal-btn-ok:hover { transform: translateY(-1px); }
@@ -565,6 +626,275 @@
     .modal-btn-cancel:hover { border-color:var(--caramel,#C07840); color:var(--caramel,#C07840); }
     .modal-btn-confirm { flex:2; padding:0.75rem; border-radius:12px; border:none; background:linear-gradient(135deg,#7B4A1E,#C07840); color:white; font-size:0.875rem; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans', sans-serif; box-shadow:0 4px 14px rgba(192,120,64,0.4); transition:all 0.2s; }
     .modal-btn-confirm:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(192,120,64,0.5); }
+
+    /* ═════════ LUXURY EDITORIAL LAYER ═════════ */
+:root{
+  --lx-espresso:#24150F; --lx-choc:#3A241A; --lx-ivory:#F7F2E9; --lx-cream:#EFE6D7;
+  --lx-caramel:#A96F42; --lx-gold:#B89452; --lx-burg:#54252C; --lx-taupe:#9A897A; --lx-beige:#D8C8B7;
+  --lx-serif:'Plus Jakarta Sans',sans-serif; --lx-rule:1px solid rgba(36,21,15,.16);
+  --warm-white:var(--lx-ivory); --cream:var(--lx-cream); --border:rgba(36,21,15,.16);
+  --caramel:var(--lx-caramel); --brown-deep:var(--lx-espresso);
+}
+html,body{overflow-x:clip}
+*,*::before,*::after{font-family:'Plus Jakarta Sans',sans-serif}
+button,input,select,textarea{font-family:inherit}
+.leaflet-container,.leaflet-popup-content{font-family:'Plus Jakarta Sans',sans-serif}
+body{background:var(--lx-ivory)}
+@keyframes lx-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes lx-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes lx-glow{0%,100%{box-shadow:0 0 0 0 rgba(184,148,82,.5)}50%{box-shadow:0 0 0 7px rgba(184,148,82,0)}}
+
+/* HERO: full-bleed dark opening spread */
+.tracker-hero{
+  width:auto; margin:0 0 4rem; border-radius:0; border:0; box-shadow:none;
+  padding:clamp(3rem,6vw,4.5rem) clamp(1.25rem,4vw,4rem) clamp(2rem,4vw,3.5rem); background:var(--lx-espresso)!important;
+  background-image:linear-gradient(180deg,rgba(184,148,82,.10),transparent 45%)!important;
+  animation:lx-rise .9s cubic-bezier(.2,.7,.2,1) backwards;
+}
+.tracker-hero::before{content:'';position:absolute;left:clamp(1.25rem,4vw,4rem);right:clamp(1.25rem,4vw,4rem);top:2rem;width:auto;height:1px;border-radius:0;background:rgba(184,148,82,.55);animation:none;transform-origin:left;animation:lx-draw 1.4s .2s ease backwards}
+.tracker-hero::after{display:none}
+.tracker-hero.status-CANCELLED{background:var(--lx-burg)!important}
+.hero-decor{display:none}
+.hero-bignum{position:absolute;right:clamp(1.25rem,4vw,4rem);top:2.5rem;bottom:auto;z-index:0;font-family:var(--lx-serif);font-weight:800;font-size:clamp(7rem,22vw,19rem);line-height:.8;letter-spacing:-.08em;color:transparent;-webkit-text-stroke:1px rgba(247,242,233,.14);pointer-events:none;user-select:none}
+.hero-top{margin-bottom:3rem}
+.hero-request-id{background:none;color:var(--lx-gold);padding:0;transform:none;font-size:.7rem;font-weight:700;letter-spacing:.32em;opacity:1;margin-bottom:1.75rem}
+.hero-title{font-family:var(--lx-serif);font-weight:600;font-size:clamp(2.4rem,6.2vw,5.2rem);line-height:1;letter-spacing:-.045em;text-transform:none;max-width:13ch;color:var(--lx-ivory);margin-bottom:1.25rem}
+.hero-subtitle{color:var(--lx-beige);opacity:1;font-size:1rem;max-width:48ch;line-height:1.7;font-weight:300}
+.hero-status-badge{align-self:flex-end;background:none;border:0;border-top:1px solid var(--lx-gold);border-radius:0;box-shadow:none;transform:none;padding:.75rem 0 0;color:var(--lx-gold);text-transform:uppercase;letter-spacing:.28em;font-size:.68rem;font-weight:700;position:relative;z-index:1}
+.pulse-dot{background:var(--lx-gold);width:7px;height:7px;animation:lx-glow 2.2s ease infinite}
+
+/* PROGRESS: hairline journey */
+.tracker-steps{margin-top:0;padding-top:2rem;border-top:1px solid rgba(247,242,233,.18);align-items:flex-start}
+.tracker-step{align-items:flex-start;gap:.9rem;padding-right:1rem}
+.tracker-step::after{top:5px;left:14px;width:calc(100% - 14px);height:1px;background:rgba(247,242,233,.2);border:0}
+.tracker-step-dot{width:11px;height:11px;border-radius:0;border:1px solid rgba(247,242,233,.4);background:var(--lx-espresso);font-size:0;color:transparent;animation:none;box-shadow:none}
+.tracker-step-dot svg{display:none}
+.tracker-step-dot.done{background:var(--lx-gold);border-color:var(--lx-gold)}
+.tracker-step-dot.active{background:var(--lx-ivory);border-color:var(--lx-gold);transform:none;animation:lx-glow 2.2s ease infinite}
+.tracker-step-label{text-align:left;font-size:.62rem;letter-spacing:.24em;font-weight:600;opacity:.5;color:var(--lx-ivory)}
+.tracker-step-label::before{content:counter(otstep,decimal-leading-zero);display:block;font-family:var(--lx-serif);font-size:1.7rem;font-weight:400;letter-spacing:-.02em;margin-bottom:.35rem}
+.tracker-step-label.done{opacity:.85}
+.tracker-step-label.active{opacity:1;color:var(--lx-gold);font-weight:800}
+.tracker-steps{counter-reset:otstep}.tracker-step{counter-increment:otstep}
+
+/* WHAT HAPPENS NEXT: editorial strip */
+.next-box{background:transparent;border:0;border-top:1px solid var(--lx-espresso);border-bottom:var(--lx-rule);border-radius:0;padding:2rem 0;margin-bottom:4rem;gap:2rem;align-items:flex-start;animation:lx-rise .8s .15s backwards}
+.next-box::before,.next-box::after{display:none}
+.next-icon{width:auto;height:auto;background:none!important;border:0;border-radius:0;box-shadow:none;transform:none;color:var(--lx-gold)}
+.next-icon svg{width:34px;height:34px;stroke-width:1.2}
+.next-title{font-family:var(--lx-serif);font-size:2rem;font-weight:600;letter-spacing:-.015em;text-transform:none;color:var(--lx-espresso)}
+.next-desc{color:var(--lx-choc);font-size:.95rem;line-height:1.75;max-width:62ch}
+
+/* LAYOUT: asymmetric with a hairline gutter */
+.tracker-layout{grid-template-columns:minmax(0,1.9fr) minmax(280px,.8fr);gap:0;align-items:start}
+.tracker-layout>div:first-child{padding-right:4rem}
+.tracker-layout>div:last-child{padding-left:2.75rem;border-left:var(--lx-rule)}
+.bids-sidebar{top:1.5rem}
+.back-link{text-transform:uppercase;letter-spacing:.22em;font-size:.66rem;font-weight:700;color:var(--lx-taupe)}
+.back-link:hover{color:var(--lx-gold)}
+
+/* CARDS → OPEN SECTIONS */
+.card,.bids-summary-card,.payment-section-card,.bids-list-wrap{background:transparent;border:0;border-top:1px solid var(--lx-espresso);border-radius:0;box-shadow:none;margin-bottom:3.5rem;overflow:visible;animation:lx-rise .8s backwards}
+.card:hover{transform:none;box-shadow:none}
+.card-header,.bids-list-header{background:none;border:0;padding:1.25rem 0 1.5rem;color:var(--lx-espresso)}
+.card-header h3,.bids-list-header h3{font-family:var(--lx-serif);font-size:1.9rem;font-weight:600;letter-spacing:-.02em;text-transform:none;color:var(--lx-espresso)}
+.card-header h3 svg,.bids-list-header h3 svg{width:14px;height:14px;stroke:var(--lx-gold);stroke-width:1.5;margin-right:10px}
+.card-header span,.bid-count-pill{background:none!important;border:0!important;border-radius:0;color:var(--lx-gold)!important;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;font-weight:700;padding:0;transform:none}
+
+/* SIDE PANEL */
+.id-card,.bids-summary-top{background:var(--lx-espresso);color:var(--lx-ivory);border:0;border-radius:0;transform:none;box-shadow:0 20px 50px rgba(36,21,15,.10);text-align:left;padding:2.25rem 2rem;position:relative;overflow:hidden}
+.id-card{animation:lx-rise .9s .1s backwards;margin-bottom:2.5rem}
+.id-card::before{content:'';position:absolute;left:2rem;right:2rem;top:0;height:2px;background:var(--lx-gold)}
+.id-label,.bss-label{color:var(--lx-gold);opacity:1;font-weight:700;letter-spacing:.3em;font-size:.62rem}
+.id-num,.bss-id{font-family:var(--lx-serif);font-size:4.5rem;font-weight:300;letter-spacing:-.06em;color:var(--lx-ivory);margin:.4rem 0}
+.id-date,.bss-date{color:var(--lx-taupe);opacity:1}
+.id-divider{border-top:1px solid rgba(247,242,233,.15)}
+.bss-row,.info-row{padding:1rem 0;border-bottom:var(--lx-rule);background:none}
+.bss-key,.i-key,.c-label{font-size:.62rem;letter-spacing:.24em;font-weight:700;color:var(--lx-taupe)}
+.bss-val,.i-val{font-family:var(--lx-serif);font-size:1rem;font-weight:500;color:var(--lx-espresso)}
+.bids-summary-card{border-top:0}
+
+/* BIDS: editorial profile columns */
+.bids-list-wrap{counter-reset:lxbaker;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0;border-top:1px solid var(--lx-espresso)}
+.bids-list-header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline}
+.bid-card{counter-increment:lxbaker;display:flex;flex-direction:column;gap:.5rem;background:transparent;border:0;border-left:var(--lx-rule);border-top:var(--lx-rule);border-radius:0;padding:2rem 1.75rem 2rem;box-shadow:none;position:relative;transition:background .4s;animation:lx-rise .8s backwards}
+.bid-card:first-of-type{border-left:0}
+.bid-card:hover{background:var(--lx-cream)}
+.bid-card::before{content:'BAKER ' counter(lxbaker,decimal-leading-zero);position:static;display:block;width:auto;height:auto;opacity:1;background:none;border-radius:0;font-size:.6rem;letter-spacing:.32em;font-weight:700;color:var(--lx-gold);margin-bottom:1.25rem}
+.bid-top{flex-wrap:wrap;gap:1rem}
+.bid-avatar{width:68px;height:68px;border-radius:2px;background:var(--lx-choc);font-family:var(--lx-serif);font-size:1.5rem}
+.bid-name{font-family:var(--lx-serif);font-size:1.3rem;font-weight:600;letter-spacing:-.01em}
+.bid-meta{color:var(--lx-taupe);font-size:.68rem;letter-spacing:.04em}
+.bid-stars{color:var(--lx-gold)}
+.bid-price{order:5;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:baseline;padding:1.25rem 0;margin-top:.5rem;border-top:var(--lx-rule);border-bottom:var(--lx-rule)}
+.bid-price-num{font-family:var(--lx-serif);font-size:3rem;font-weight:300;letter-spacing:-.05em;color:var(--lx-espresso)}
+.bid-price-days{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--lx-taupe)}
+.bid-msg{background:none;border:0;border-left:1px solid var(--lx-gold);border-radius:0;font-family:var(--lx-serif);font-size:.95rem;line-height:1.6;color:var(--lx-choc);padding:.25rem 0 .25rem 1rem;margin:.75rem 0}
+.bid-bottom{flex-direction:column;align-items:stretch;gap:1rem;margin-top:auto}
+.bid-tags{max-height:none}
+.bid-tag{background:none;border:1px solid var(--lx-beige);border-radius:2px;color:var(--lx-choc);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;padding:.25rem .55rem}
+.btn-accept{width:100%;justify-content:space-between;background:var(--lx-espresso);color:var(--lx-ivory);border:0;border-radius:2px;padding:1rem 1.25rem;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;box-shadow:none;transition:background .35s,color .35s}
+.btn-accept::after{content:'→';font-size:1rem;letter-spacing:0;transition:transform .35s}
+.btn-accept:hover{background:var(--lx-gold);color:var(--lx-espresso);transform:none}
+.btn-accept:hover::after{transform:translateX(5px)}
+
+/* CONFIRMED BAKER */
+.confirmed-baker-card{margin:0;border:0;border-top:2px solid var(--lx-gold);border-radius:0;background:var(--lx-cream);box-shadow:none;transform:none}
+.confirmed-baker-header{background:none;border:0}
+.confirmed-price{font-family:var(--lx-serif);font-size:3rem;font-weight:400}
+.confirmed-label{color:var(--lx-gold);letter-spacing:.28em}
+.bid-baker-avatar{border-radius:2px}
+
+/* BAKING PROGRESS */
+.b-dot{width:12px;height:12px;border-radius:0;border:1px solid var(--lx-taupe);font-size:0;background:none}
+.b-dot svg{display:none}
+.b-dot.done{background:var(--lx-gold);border-color:var(--lx-gold)}
+.b-dot.active{background:var(--lx-ivory);border-color:var(--lx-gold);animation:lx-glow 2.2s ease infinite}
+.b-connector{height:1px;background:var(--lx-beige)!important;border:0}
+.b-label{letter-spacing:.2em;font-weight:700}.b-label.active{color:var(--lx-gold)}
+
+/* PAYMENT: dark, amount-dominant */
+.payment-section-card{background:var(--lx-espresso);color:var(--lx-ivory);border:0;border-top:2px solid var(--lx-gold);box-shadow:0 20px 50px rgba(36,21,15,.14)}
+.payment-section-card::before{display:none}
+.psc-header{border-bottom:1px solid rgba(247,242,233,.14);padding:1.75rem 1.75rem 1.25rem}
+.psc-icon{background:none;border:1px solid var(--lx-gold);border-radius:0;color:var(--lx-gold)}
+.psc-title{font-family:var(--lx-serif);font-size:1.6rem;font-weight:500;color:var(--lx-ivory)}
+.psc-sub{color:var(--lx-taupe);letter-spacing:.06em}
+.payment-section-card [style*="var(--cream)"]{background:rgba(247,242,233,.05)!important;border-radius:0!important}
+.payment-section-card [style*="var(--text-muted)"]{color:var(--lx-taupe)!important}
+.payment-section-card [style*="var(--brown-deep)"]{color:var(--lx-ivory)!important}
+.psc-split{padding:1.5rem 1.75rem}
+.psc-half,.half-paid,.half-pending,.half-locked,.half-rejected{background:none;border:0;border-top:1px solid var(--lx-gold);border-radius:0;padding:1.25rem 0}
+.half-rejected{border-top-color:#c98a93}
+.half-label{color:var(--lx-gold);letter-spacing:.3em;font-size:.6rem}
+.half-amount{font-family:var(--lx-serif);font-size:3.4rem;font-weight:300;letter-spacing:-.05em;color:var(--lx-ivory)}
+.half-status{letter-spacing:.14em;text-transform:uppercase;font-size:.62rem}
+.half-status.paid{color:#9CC7A8}.half-status.pending{color:var(--lx-gold)}.half-status.locked{color:var(--lx-taupe)}.half-status.rejected{color:#d9a0a8}
+.psc-half>div[style*="border-radius:50%"]{background:none!important;border:1px solid rgba(247,242,233,.3);border-radius:0!important;color:var(--lx-gold)}
+.psc-cta,.psc-paid-notice{background:transparent!important;border-top:1px solid rgba(247,242,233,.14)!important;color:var(--lx-beige)!important;padding:1.25rem 1.75rem;font-size:.78rem;letter-spacing:.04em}
+.psc-cta-note{color:var(--lx-taupe)}
+.psc-pay-btn{background:var(--lx-gold)!important;color:var(--lx-espresso)!important;border:0!important;border-radius:2px;box-shadow:none;text-transform:uppercase;letter-spacing:.22em;font-size:.7rem;font-weight:800;padding:1.1rem 2rem;transition:background .3s}
+.psc-pay-btn:hover{background:var(--lx-ivory)!important;transform:none;box-shadow:none}
+
+/* CAKE SPECIFICATION SHEET */
+.specs-group{padding:1.75rem 0 .5rem;border-bottom:var(--lx-rule);background:none}
+.specs-group-title{font-family:var(--lx-serif);font-size:.72rem;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--lx-gold);border:0;padding:0;margin-bottom:.75rem}
+.specs-row{display:grid;grid-template-columns:150px 1fr;gap:1.5rem;border-top:1px solid rgba(36,21,15,.08);padding:.85rem 0}
+.specs-key{text-transform:uppercase;letter-spacing:.2em;font-size:.6rem;font-weight:700;color:var(--lx-taupe)}
+.specs-val{text-align:left;font-family:var(--lx-serif);font-size:1.1rem;font-weight:500;color:var(--lx-espresso)}
+.card>img{filter:saturate(.92) contrast(1.02)}
+
+/* ORDER JOURNEY */
+.timeline-log li{position:relative;padding:1.1rem 0 1.1rem 2rem;border:0}
+.timeline-log li:not(:last-child)::after{content:'';position:absolute;left:4px;top:1.9rem;bottom:-.2rem;width:1px;background:var(--lx-beige)}
+.log-dot{position:absolute;left:0;top:1.45rem;width:9px;height:9px;border-radius:0;background:var(--lx-ivory)!important;border:1px solid var(--lx-gold);margin:0}
+.timeline-log li:first-child .log-dot{background:var(--lx-gold)!important}
+.log-event{font-family:var(--lx-serif);font-size:1.02rem;font-weight:600}
+.log-time{letter-spacing:.1em;text-transform:uppercase;font-size:.6rem;color:var(--lx-taupe)}
+
+/* REJECTION */
+.rejection-alert{border:0;border-left:2px solid var(--lx-burg);border-radius:0}
+.rejection-alert-header{background:var(--lx-burg)}
+.rejection-body{background:transparent}
+.reupload-dropzone,#downDropzone,#finalDropzone{border-radius:2px!important;border-color:var(--lx-taupe)!important}
+.reupload-submit-btn,#downSubmitBtn,#finalSubmitBtn{background:var(--lx-burg)!important;border-radius:2px!important;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem!important}
+
+/* BUTTONS */
+.btn{border-radius:2px;text-transform:uppercase;letter-spacing:.2em;font-size:.66rem;font-weight:700;padding:1rem 1.4rem}
+.btn-danger{background:none;border:1px solid var(--lx-burg);color:var(--lx-burg)}
+.btn-danger:hover{background:var(--lx-burg);color:var(--lx-ivory)}
+.btn-outline{border:1px solid var(--lx-espresso);color:var(--lx-espresso)}
+.btn-outline:hover{background:var(--lx-espresso);color:var(--lx-ivory);border-color:var(--lx-espresso)}
+.dr-slot .card-header h3{font-size:1.1rem}
+
+/* MODALS */
+.confirm-modal-backdrop,.modal-backdrop{background:rgba(24,12,7,.78);backdrop-filter:blur(3px)}
+.confirm-modal,.modal-box{background:var(--lx-ivory);border:0;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.35);transform:translateY(14px) scale(1)}
+.confirm-modal-backdrop.is-open .confirm-modal,.modal-backdrop.open .modal-box{transform:none;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.confirm-modal-header,.modal-header,.confirm-modal-header.variant-accept,.confirm-modal-header.variant-advance{background:var(--lx-espresso);text-align:left;padding:2.25rem 2rem 1.75rem;border-bottom:2px solid var(--lx-gold)}
+.confirm-modal-header.variant-danger{background:var(--lx-burg)}
+.confirm-modal-header::after,.modal-header::after{display:none}
+.confirm-modal-icon{margin:0 0 1.25rem;width:auto;height:auto;background:none;border:0;border-radius:0;transform:none}
+.confirm-modal-icon svg,.modal-header-icon svg{stroke:var(--lx-gold);stroke-width:1.2}
+.confirm-modal-title,.modal-header-title{font-family:var(--lx-serif);font-size:1.8rem;font-weight:500;text-transform:none;letter-spacing:-.02em;color:var(--lx-ivory)}
+.confirm-modal-subtitle,.modal-header-sub{color:var(--lx-beige);letter-spacing:.04em}
+.modal-header-icon{text-align:left}
+.confirm-modal-detail{background:none;border:0;border-top:1px solid var(--lx-espresso);border-radius:0;padding:.5rem 0}
+.confirm-modal-detail-key{letter-spacing:.24em;font-size:.6rem}
+.confirm-modal-detail-val{font-family:var(--lx-serif);font-size:1rem}
+.confirm-modal-note{text-align:left;border-radius:0!important}
+.confirm-modal-btn-cancel,.modal-btn-cancel{border-radius:2px;border:1px solid var(--lx-espresso);text-transform:uppercase;letter-spacing:.18em;font-size:.66rem}
+.confirm-modal-btn-ok,.modal-btn-confirm{border-radius:2px;text-transform:uppercase;letter-spacing:.2em;font-size:.68rem;box-shadow:none!important;background:var(--lx-espresso)!important;color:var(--lx-ivory)!important}
+.confirm-modal-btn-ok.style-danger{background:var(--lx-burg)!important}
+.confirm-modal-btn-ok:hover,.modal-btn-confirm:hover{background:var(--lx-gold)!important;color:var(--lx-espresso)!important;transform:none}
+#acceptModal .modal-box{border-radius:2px}
+#modalMap{border-radius:0!important}
+
+/* ── VERTICAL CENTERING BETWEEN LINES ── */
+.specs-group{padding:1.25rem 0 0}
+.specs-group-title{margin-bottom:1.25rem;line-height:1}
+.specs-row{align-items:center;padding:.9rem 0}
+.specs-key,.i-key,.c-label,.bss-key,.log-time{line-height:1}
+.specs-val,.i-val,.bss-val{line-height:1.35}
+.info-row,.bss-row{align-items:center;padding:1rem 0}
+.i-val,.bss-val{display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
+.i-val span[style*="display:flex"],.bss-val span[style*="display:flex"]{justify-content:flex-end}
+.timeline-log li{align-items:center}
+.log-dot{top:50%!important;transform:translateY(-50%)}
+.timeline-log li:not(:last-child)::after{top:50%;bottom:-50%}
+
+/* RESPONSIVE: Bootstrap breakpoints sm 576 · md 768 · lg 992 */
+.tracker-layout{display:flex;flex-wrap:wrap}
+.tracker-layout>div:first-child{width:100%;padding-right:0}
+.tracker-layout>div:last-child{width:100%;padding-left:0;border-left:0;border-top:1px solid var(--lx-espresso);margin-top:3rem;padding-top:2rem}
+.bids-list-header + .bid-card{border-left:0}
+.confirm-modal{max-height:calc(100dvh - 2rem);overflow-y:auto}
+.modal-backdrop{padding:.75rem}
+
+/* lg and up: 68 / 32 editorial split */
+@media(min-width:992px){
+  .tracker-layout>div:first-child{flex:0 0 auto;width:68%;padding-right:clamp(2rem,4vw,4rem)}
+  .tracker-layout>div:last-child{flex:0 0 auto;width:32%;padding-left:clamp(1.5rem,2.5vw,2.75rem);border-left:var(--lx-rule);border-top:0;margin-top:0;padding-top:0}
+}
+
+/* below lg: tablet and phone */
+@media(max-width:767.98px){
+  .hero-top{flex-direction:column;gap:1.5rem;margin-bottom:2rem}
+  .hero-status-badge{align-self:flex-start}
+  .hero-bignum{font-size:min(9rem,38vw);top:4rem}
+  .next-box{flex-direction:column;gap:1rem}
+  .next-title{font-size:1.5rem}
+  .card-header h3,.bids-list-header h3{font-size:1.5rem}
+  .half-amount{font-size:2.6rem}
+  .id-num,.bss-id{font-size:3.5rem}
+  /* 48px touch targets; 16px inputs stop iOS zoom-on-focus */
+  .btn,.btn-accept,.psc-pay-btn,.confirm-modal-btn-ok,.confirm-modal-btn-cancel,.modal-btn-confirm,.modal-btn-cancel{min-height:48px}
+  input,select,textarea{font-size:16px}
+  .confirm-modal-footer,.modal-footer{flex-direction:column-reverse}
+  #acceptModal .modal-box{max-width:100%!important;width:100%!important;max-height:96dvh!important}
+  #acceptModal .modal-box>div[style*="grid-template-columns"]{grid-template-columns:1fr!important;overflow-y:auto!important}
+  #modalMap{min-height:220px}
+}
+
+/* phones */
+@media(max-width:575.98px){
+  .tracker-hero{padding:3rem 1.25rem 1.75rem}
+  .bids-list-wrap{grid-template-columns:1fr}
+  .bid-card{border-left:0;padding:1.5rem 0}
+  .specs-row{grid-template-columns:1fr;gap:.2rem}
+  .confirm-modal-header,.modal-header{padding:1.5rem 1.25rem 1.25rem}
+  .confirm-modal-body{padding:1.25rem}
+  .confirm-modal-footer{padding:0 1.25rem 1.5rem}
+  /* progress becomes a vertical list, so the current step is always visible */
+  .tracker-steps{flex-direction:column;align-items:stretch;overflow:visible;gap:0;padding-top:1rem}
+  .tracker-step{flex-direction:row;align-items:center;gap:1rem;min-width:0;padding:.85rem 0;border-bottom:1px solid rgba(247,242,233,.1)}
+  .tracker-step::after{display:none}
+  .tracker-step-label{display:flex;align-items:baseline;gap:.75rem}
+  .tracker-step-label::before{margin:0;font-size:1.2rem}
+}
+    @media(prefers-reduced-motion:reduce){
+  .tracker-hero,.tracker-hero::before,.next-box,.id-card,.card,.bid-card,.payment-section-card,.pulse-dot,.tracker-step-dot,.b-dot,.log-dot{animation:none!important;transition:none!important}
+}
     </style>
     @endpush
 
@@ -602,7 +932,7 @@ $order[] = 'COMPLETED';
 
     $statusMessages = [
         'OPEN'                => ['title'=>'Waiting for Bakers', 'sub'=>'Your request is live. Bakers are reviewing it now.'],
-        'RUSH_MATCHING'       => ['icon'=>'⚡','color'=>'blue',  'title'=>'Choose your rush baker!', 'desc'=>'Nearby rush bakers have been notified and will submit their prices. Accept the best offer before the 60-second timer expires!'],
+        'RUSH_MATCHING'       => ['icon'=>'⚡','color'=>'blue',  'title'=>'Choose your rush baker!', 'sub'=>'Nearby rush bakers have been notified and will submit their prices. Accept the best offer before the 60-second timer expires!'],
         'BIDDING'             => ['title'=>'Bakers Are Bidding!', 'sub'=>'Review the offers below and accept the best one.'],
         'ACCEPTED'            => ['title'=>'Baker Confirmed!', 'sub'=>'Your baker is getting started. You\'ll be notified when it\'s time to pay.'],
         'WAITING_FOR_PAYMENT' => ['title'=>'Pay to Begin', 'sub'=>'Your baker is ready and waiting. Send the full payment so they can start preparing your cake.'],
@@ -616,6 +946,161 @@ $order[] = 'COMPLETED';
     $config = is_array($cakeRequest->cake_configuration)
         ? $cakeRequest->cake_configuration
         : (json_decode($cakeRequest->cake_configuration, true) ?? []);
+
+    $specsHtml = '';
+    foreach (($config['baker_summary'] ?? []) as $group) {
+        if (empty($group['rows'])) continue;
+        $specsHtml .= '<div class="specs-group"><div class="specs-group-title">' . e($group['title'] ?? '') . '</div>';
+        foreach ($group['rows'] as $row) {
+            $specsHtml .= '<div class="specs-row"><span class="specs-key">' . e((string)($row[0] ?? '')) . '</span><span class="specs-val">' . e((string)($row[1] ?? '')) . '</span></div>';
+        }
+        $specsHtml .= '</div>';
+    }
+    if ($specsHtml === '') {
+        $cake = [];
+        if (!empty($config['cakeType']))   $cake[] = ['Type', $config['cakeType']];
+        if (!empty($config['shapeLabel'])) $cake[] = ['Shape', $config['shapeLabel']];
+        elseif (!empty($config['shape']))  $cake[] = ['Shape', $config['shape']];
+        if (!empty($config['tier']) && $config['tier'] !== 'Single') $cake[] = ['Tiers', $config['tier']];
+        if (!empty($config['size']))       $cake[] = ['Size', $config['size']];
+
+        $flavor        = [];
+        $tierFlavors   = $config['tierFlavors']   ?? [];
+        $tierFrostings = $config['tierFrostings'] ?? [];
+        $tierFillings  = $config['tierFillings']  ?? [];
+        $tierLayers    = $config['tierLayers']    ?? [];
+        $tc = max(count($tierFlavors), count($tierFrostings), 1);
+        for ($i = 0; $i < $tc; $i++) {
+            $parts = [];
+            if (!empty($tierFlavors[$i])) $parts[] = $tierFlavors[$i] . ' cake';
+            $layers = $tierLayers[$i] ?? 1;
+            if ($layers) $parts[] = $layers . ' ' . ($layers > 1 ? 'layers' : 'layer');
+            if ($layers > 1 && !empty($tierFillings[$i]) && $tierFillings[$i] !== 'No Filling') $parts[] = $tierFillings[$i] . ' filling';
+            if (!empty($tierFrostings[$i])) $parts[] = $tierFrostings[$i] . ' frosting';
+            if ($parts) {
+                $label = $tc > 1 ? 'Tier ' . ($i + 1) . ($i === 0 ? ' (bottom)' : ($i === $tc - 1 ? ' (top)' : '')) : 'Cake';
+                $flavor[] = [$label, implode(' · ', $parts)];
+            }
+        }
+
+        $frost = [];
+        if (!empty($config['frosting']))             $frost[] = ['Style', $config['frosting']];
+        if (!empty($config['shellBorderColorName'])) $frost[] = ['Shell border', $config['shellBorderColorName']];
+        if (!empty($config['icingColorName']))       $frost[] = ['Sugar icing', $config['icingColorName']];
+
+        $deco = [];
+        if (!empty($config['hasDrip'])) $deco[] = ['Drip', trim(($config['dripFlavor'] ?? '') . ' drip')];
+        $tierFruitBorders = $config['tierFruitBorders'] ?? [];
+        foreach ($tierFruitBorders as $i => $f) {
+            if (!empty($f) && $f !== 'None') $deco[] = ['Tier ' . ($i + 1) . ' fruit border', $f];
+        }
+        if (!empty($config['addons'])) $deco[] = ['Add-ons', implode(', ', (array) $config['addons'])];
+
+        foreach ([
+            ['title' => 'Cake',              'rows' => $cake],
+            ['title' => 'Flavor & Layers',   'rows' => $flavor],
+            ['title' => 'Frosting',          'rows' => $frost],
+            ['title' => 'Decorations',       'rows' => $deco],
+        ] as $group) {
+            if (empty($group['rows'])) continue;
+            $specsHtml .= '<div class="specs-group"><div class="specs-group-title">' . e($group['title']) . '</div>';
+            foreach ($group['rows'] as $row) {
+                $specsHtml .= '<div class="specs-row"><span class="specs-key">' . e((string)($row[0] ?? '')) . '</span><span class="specs-val">' . e((string)($row[1] ?? '')) . '</span></div>';
+            }
+            $specsHtml .= '</div>';
+        }
+
+        if ($specsHtml === '') {
+            $specsHtml = '<div class="config-grid">';
+            foreach (['shape','size','flavor','frosting'] as $k) {
+                if (!empty($config[$k])) {
+                    $specsHtml .= '<div class="config-item"><div class="c-label">' . e(ucfirst($k)) . '</div><div class="c-value">' . e((string) $config[$k]) . '</div></div>';
+                }
+            }
+            if (!empty($config['addons'])) {
+                $specsHtml .= '<div class="config-item" style="grid-column:1/-1; border-right:none;"><div class="c-label">Add-ons</div><div class="c-value">' . e(implode(', ', (array) $config['addons'])) . '</div></div>';
+            }
+            $specsHtml .= '</div>';
+        }
+    }
+
+    // Detailed specs (same data the baker sees). Falls back to the old grid for older orders.
+    $specsHtml = '';
+    foreach (($config['baker_summary'] ?? []) as $group) {
+        if (empty($group['rows'])) continue;
+        $specsHtml .= '<div class="specs-group"><div class="specs-group-title">' . e($group['title'] ?? '') . '</div>';
+        foreach ($group['rows'] as $row) {
+            $specsHtml .= '<div class="specs-row"><span class="specs-key">' . e($row[0] ?? '') . '</span><span class="specs-val">' . e($row[1] ?? '') . '</span></div>';
+        }
+        $specsHtml .= '</div>';
+    }
+    if ($specsHtml === '') {
+        $cake = [];
+        if (!empty($config['cakeType']))   $cake[] = ['Type', $config['cakeType']];
+        if (!empty($config['shapeLabel'])) $cake[] = ['Shape', $config['shapeLabel']];
+        elseif (!empty($config['shape']))  $cake[] = ['Shape', $config['shape']];
+        if (!empty($config['tier']) && $config['tier'] !== 'Single') $cake[] = ['Tiers', $config['tier']];
+        if (!empty($config['size']))       $cake[] = ['Size', $config['size']];
+
+        $flavor        = [];
+        $tierFlavors   = $config['tierFlavors']   ?? [];
+        $tierFrostings = $config['tierFrostings'] ?? [];
+        $tierFillings  = $config['tierFillings']  ?? [];
+        $tierLayers    = $config['tierLayers']    ?? [];
+        $tc = max(count($tierFlavors), count($tierFrostings), 1);
+        for ($i = 0; $i < $tc; $i++) {
+            $parts = [];
+            if (!empty($tierFlavors[$i])) $parts[] = $tierFlavors[$i] . ' cake';
+            $layers = $tierLayers[$i] ?? 1;
+            if ($layers) $parts[] = $layers . ' ' . ($layers > 1 ? 'layers' : 'layer');
+            if ($layers > 1 && !empty($tierFillings[$i]) && $tierFillings[$i] !== 'No Filling') $parts[] = $tierFillings[$i] . ' filling';
+            if (!empty($tierFrostings[$i])) $parts[] = $tierFrostings[$i] . ' frosting';
+            if ($parts) {
+                $label = $tc > 1 ? 'Tier ' . ($i + 1) . ($i === 0 ? ' (bottom)' : ($i === $tc - 1 ? ' (top)' : '')) : 'Cake';
+                $flavor[] = [$label, implode(' · ', $parts)];
+            }
+        }
+
+        $frost = [];
+        if (!empty($config['frosting']))             $frost[] = ['Style', $config['frosting']];
+        if (!empty($config['shellBorderColorName'])) $frost[] = ['Shell border', $config['shellBorderColorName']];
+        if (!empty($config['icingColorName']))       $frost[] = ['Sugar icing', $config['icingColorName']];
+
+        $deco = [];
+        if (!empty($config['hasDrip'])) $deco[] = ['Drip', trim(($config['dripFlavor'] ?? '') . ' drip')];
+        $tierFruitBorders = $config['tierFruitBorders'] ?? [];
+        foreach ($tierFruitBorders as $i => $f) {
+            if (!empty($f) && $f !== 'None') $deco[] = ['Tier ' . ($i + 1) . ' fruit border', $f];
+        }
+        if (!empty($config['addons'])) $deco[] = ['Add-ons', implode(', ', (array) $config['addons'])];
+
+        foreach ([
+            ['title' => 'Cake',              'rows' => $cake],
+            ['title' => 'Flavor & Layers',   'rows' => $flavor],
+            ['title' => 'Frosting',          'rows' => $frost],
+            ['title' => 'Decorations',       'rows' => $deco],
+        ] as $group) {
+            if (empty($group['rows'])) continue;
+            $specsHtml .= '<div class="specs-group"><div class="specs-group-title">' . e($group['title']) . '</div>';
+            foreach ($group['rows'] as $row) {
+                $specsHtml .= '<div class="specs-row"><span class="specs-key">' . e((string)($row[0] ?? '')) . '</span><span class="specs-val">' . e((string)($row[1] ?? '')) . '</span></div>';
+            }
+            $specsHtml .= '</div>';
+        }
+
+        if ($specsHtml === '') {
+            $specsHtml = '<div class="config-grid">';
+            foreach (['shape','size','flavor','frosting'] as $k) {
+                if (!empty($config[$k])) {
+                    $specsHtml .= '<div class="config-item"><div class="c-label">' . e(ucfirst($k)) . '</div><div class="c-value">' . e((string) $config[$k]) . '</div></div>';
+                }
+            }
+            if (!empty($config['addons'])) {
+                $specsHtml .= '<div class="config-item" style="grid-column:1/-1; border-right:none;"><div class="c-label">Add-ons</div><div class="c-value">' . e(implode(', ', (array) $config['addons'])) . '</div></div>';
+            }
+            $specsHtml .= '</div>';
+        }
+    }
 
     $bakerOrder = $cakeRequest->bakerOrder ?? null;
     $bakerMapLat = null;
@@ -716,6 +1201,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
 
     {{-- ── HERO TRACKER ── --}}
     <div class="tracker-hero status-{{ $cakeRequest->status }}">
+        <div class="hero-bignum" aria-hidden="true">{{ str_pad($cakeRequest->id, 4, '0', STR_PAD_LEFT) }}</div>
         <div class="hero-top">
             <div>
                 <div class="hero-request-id">Request ID · #{{ str_pad($cakeRequest->id, 4, '0', STR_PAD_LEFT) }}</div>
@@ -787,10 +1273,20 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
         ];
     @endphp
 
-    {{-- ── MAIN TWO-COLUMN LAYOUT ── --}}
-    <div class="tracker-layout">
+    @if(!empty($next))
+    <div class="next-box">
+        <div class="next-icon {{ $next['color'] }}">{!! $nextIconSvg[$next['icon']] ?? '' !!}</div>
+        <div>
+            <div class="next-title">{{ $next['title'] }}</div>
+            <div class="next-desc">{{ $next['desc'] }}</div>
+        </div>
+    </div>
+    @endif
 
-    @if($cakeRequest->status === 'BIDDING' && $cakeRequest->bids->count() > 0)
+    {{-- ── MAIN TWO-COLUMN LAYOUT ── --}}
+    <div class="tracker-layout row g-0">
+
+    @if($cakeRequest->status === 'BIDDING')
         {{-- ── LEFT: Bid list ── --}}
         <div>
             <div class="bids-list-wrap" style="margin-bottom:1.5rem;">
@@ -803,7 +1299,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
                     <div class="bid-top">
                         <div class="bid-avatar">
                         @if($bid->baker->profile_photo)
-        <img src="{{ str_starts_with($bid->baker->profile_photo, 'http') ? $bid->baker->profile_photo : asset('storage/'.$bid->baker->profile_photo) }}" alt="">
+        <img referrerpolicy="no-referrer" src="{{ str_starts_with($bid->baker->profile_photo, 'http') ? $bid->baker->profile_photo : asset('storage/'.$bid->baker->profile_photo) }}" alt="">
     @else
         {{ strtoupper(substr($bid->baker->first_name, 0, 1)) }}
     @endif
@@ -885,7 +1381,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
         </div>
         <img src="{{ asset('storage/' . $cakeRequest->cake_preview_image) }}"
             alt="3D Cake Preview"
-            style="width:100%; max-height:320px; object-fit:cover; display:block;">
+            style="width:100%; height:auto; max-height:520px; object-fit:contain; background:#2C1A0E; display:block;">
         <div style="padding:0.75rem 1.5rem; font-size:0.75rem; color:var(--text-muted); text-align:center;">
             3D preview captured at time of request
         </div>
@@ -894,12 +1390,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
     {{-- Cake Design --}}
     <div class="card">
         <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake Design</h3></div>
-        <div class="config-grid">
-            @foreach(['shape','size','flavor','frosting'] as $key)
-                @if(!empty($config[$key])) <div class="config-item"><div class="c-label">{{ ucfirst($key) }}</div><div class="c-value">{{ $config[$key] }}</div></div> @endif
-            @endforeach
-            @if(!empty($config['addons'])) <div class="config-item" style="grid-column:1/-1; border-right:none;"><div class="c-label">Add-ons</div><div class="c-value">{{ implode(', ', (array)$config['addons']) }}</div></div> @endif
-        </div>
+        {!! $specsHtml !!}
     </div>
 
 
@@ -1001,6 +1492,8 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
     </div>
     @endif
 
+        </div>{{-- close BIDDING right sidebar --}}
+
 @elseif($cakeRequest->status === 'RUSH_MATCHING')
         <div>
             <div class="card" style="margin-bottom:1.5rem;">
@@ -1038,7 +1531,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
                     <div class="bid-top">
                         <div class="bid-avatar">
                             @if($bid->baker->profile_photo)
-                                <img src="{{ str_starts_with($bid->baker->profile_photo, 'http') ? $bid->baker->profile_photo : asset('storage/'.$bid->baker->profile_photo) }}" alt="">
+                                <img referrerpolicy="no-referrer" src="{{ str_starts_with($bid->baker->profile_photo, 'http') ? $bid->baker->profile_photo : asset('storage/'.$bid->baker->profile_photo) }}" alt="">
                             @else
                                 {{ strtoupper(substr($bid->baker->first_name, 0, 1)) }}
                             @endif
@@ -1087,16 +1580,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
             {{-- Cake design + location cards same as OPEN --}}
             <div class="card">
                 <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake Design</h3></div>
-                <div class="config-grid">
-                    @foreach(['shape','size','flavor','frosting'] as $key)
-                        @if(!empty($config[$key]))
-                        <div class="config-item"><div class="c-label">{{ ucfirst($key) }}</div><div class="c-value">{{ $config[$key] }}</div></div>
-                        @endif
-                    @endforeach
-                    @if(!empty($config['addons']))
-                    <div class="config-item" style="grid-column:1/-1; border-right:none;"><div class="c-label">Add-ons</div><div class="c-value">{{ implode(', ', (array)$config['addons']) }}</div></div>
-                    @endif
-                </div>
+                {!! $specsHtml !!}
             </div>
         </div>
 
@@ -1133,16 +1617,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
 
     <div class="card">
                 <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>Cake Design</h3></div>
-                <div class="config-grid">
-                    @foreach(['shape','size','flavor','frosting'] as $key)
-                        @if(!empty($config[$key]))
-                        <div class="config-item"><div class="c-label">{{ ucfirst($key) }}</div><div class="c-value">{{ $config[$key] }}</div></div>
-                        @endif
-                    @endforeach
-                    @if(!empty($config['addons']))
-                    <div class="config-item" style="grid-column:1/-1; border-right:none;"><div class="c-label">Add-ons</div><div class="c-value">{{ implode(', ', (array)$config['addons']) }}</div></div>
-                    @endif
-                </div>
+                {!! $specsHtml !!}
             </div>
 
             {{-- ── ADD THIS RIGHT HERE (OPEN state) ── --}}
@@ -1151,7 +1626,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
                 <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>3D Cake Preview</h3></div>
                 <img src="{{ asset('storage/' . $cakeRequest->cake_preview_image) }}"
                     alt="3D Cake Preview"
-                    style="width:100%; max-height:320px; object-fit:cover; display:block;">
+                    style="width:100%; height:auto; max-height:520px; object-fit:contain; background:#2C1A0E; display:block;">
                 <div style="padding:0.75rem 1.5rem; font-size:0.75rem; color:var(--text-muted); text-align:center;">
                     3D preview captured at time of request
                 </div>
@@ -1254,7 +1729,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
         <div style="padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; border-bottom:1px solid var(--border);">
             <div class="bid-baker-avatar" style="width:44px; height:44px; font-size:1.1rem; flex-shrink:0;">
             @if($bakerOrder->baker->profile_photo)
-        <img src="{{ str_starts_with($bakerOrder->baker->profile_photo, 'http') ? $bakerOrder->baker->profile_photo : asset('storage/'.$bakerOrder->baker->profile_photo) }}" alt="">
+        <img referrerpolicy="no-referrer" src="{{ str_starts_with($bakerOrder->baker->profile_photo, 'http') ? $bakerOrder->baker->profile_photo : asset('storage/'.$bakerOrder->baker->profile_photo) }}" alt="">
     @else
         {{ strtoupper(substr($bakerOrder->baker->first_name, 0, 1)) }}
     @endif
@@ -1505,7 +1980,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
         </div>
         <img src="{{ asset('storage/' . $cakeRequest->cake_preview_image) }}"
             alt="3D Cake Preview"
-            style="width:100%; max-height:320px; object-fit:cover; display:block;">
+            style="width:100%; height:auto; max-height:520px; object-fit:contain; background:#2C1A0E; display:block;">
         <div style="padding:0.75rem 1.5rem; font-size:0.75rem; color:var(--text-muted); text-align:center;">
             3D preview captured at time of request
         </div>
@@ -1514,12 +1989,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
         {{-- Cake Design + Order Details (combined) --}}
             <div class="card">
                 <div class="card-header"><h3><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/></svg>Cake &amp; Order Details</h3></div>
-                <div class="config-grid">
-                    @foreach(['shape','size','flavor','frosting'] as $key)
-                        @if(!empty($config[$key])) <div class="config-item"><div class="c-label">{{ ucfirst($key) }}</div><div class="c-value">{{ $config[$key] }}</div></div> @endif
-                    @endforeach
-                    @if(!empty($config['addons'])) <div class="config-item" style="grid-column:1/-1; border-right:none;"><div class="c-label">Add-ons</div><div class="c-value">{{ implode(', ', (array)$config['addons']) }}</div></div> @endif
-                </div>
+                {!! $specsHtml !!}
                 <div style="border-top:1px solid var(--border);">
                    <div class="info-row">
     <span class="i-key">Method</span>
@@ -1577,6 +2047,21 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
                         📍 Baker's pickup address will appear here. You can also ask via the chat below.
                     </div>
                     @endif
+
+                    @if($bakerProfile && $bakerProfile->latitude && $bakerProfile->longitude)
+                    <div id="show-map-pickup" style="width:100%; height:220px;"></div>
+                    <div style="padding:0.75rem 1.5rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
+                        <div style="font-size:0.72rem; color:var(--text-muted);">Baker's pickup location</div>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $bakerProfile->latitude }},{{ $bakerProfile->longitude }}&travelmode=two-wheeler"
+                           target="_blank" rel="noopener"
+                           style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.5rem 1rem; background:transparent; color:var(--text-muted); border:1.5px solid var(--border); border-radius:10px; font-size:0.78rem; font-weight:600; text-decoration:none; white-space:nowrap; transition:all 0.2s;"
+                           onmouseover="this.style.borderColor='var(--caramel)';this.style.color='var(--caramel)';"
+                           onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)';">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                            Get Directions
+                        </a>
+                    </div>
+                    @endif
                 </div>
                 @endif
             @elseif($cakeRequest->delivery_lat && $cakeRequest->delivery_lng)
@@ -1627,6 +2112,12 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
                 @endif
         
             </div>
+    @if($bakerOrder)
+        <div class="dr-slot">
+            @include('partials.delivery-review', ['bakerOrder' => $bakerOrder, 'cakeRequest' => $cakeRequest])
+        </div>
+    @endif
+
     @if($acceptedBid)
 @php
     $pmtCakePrice   = $bakerOrder ? $bakerOrder->agreed_price : $acceptedBid->amount;
@@ -1933,10 +2424,7 @@ $msg = $statusMessages[$cakeRequest->status] ?? ['title'=>$cakeRequest->status,'
             </div>
             @endif
 
-            {{-- Rate Your Baker --}}
-            @if($bakerOrder)
-                @include('partials.delivery-review', ['bakerOrder' => $bakerOrder, 'cakeRequest' => $cakeRequest])
-            @endif
+
 
         </div>
     @endif
@@ -2391,6 +2879,8 @@ However, if the baker fails to meet the agreed deadline, you may request a refun
     </form>
     @endif
     @endsection
+
+    @push('scripts')
     <script>
     function handleReuploadFile(input, dropzoneId, previewId, filenameId, submitBtnId) {
         if (!input.files || !input.files[0]) return;
@@ -2434,6 +2924,8 @@ However, if the baker fails to meet the agreed deadline, you may request a refun
       @if(!$cakeRequest->isPickup() && $cakeRequest->delivery_lat && $cakeRequest->delivery_lng)
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        if (!document.getElementById('show-map')) return;
+        if (!document.getElementById('show-map')) return;
         const lat = {{ $cakeRequest->delivery_lat }};
         const lng = {{ $cakeRequest->delivery_lng }};
         const map = L.map('show-map', { zoomControl: true, dragging: false, scrollWheelZoom: false, doubleClickZoom: false }).setView([lat, lng], 16);
@@ -2502,6 +2994,22 @@ However, if the baker fails to meet the agreed deadline, you may request a refun
     });
     </script>
     @endif
+
+@if($cakeRequest->isPickup() && $bakerMapLat && $bakerMapLng)
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var el = document.getElementById('show-map-pickup');
+    if (!el) return;
+    var lat = {{ $bakerMapLat }};
+    var lng = {{ $bakerMapLng }};
+    var map = L.map('show-map-pickup', { zoomControl: true, dragging: true, scrollWheelZoom: false, doubleClickZoom: false }).setView([lat, lng], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors', maxZoom: 19 }).addTo(map);
+    var icon = L.divIcon({ className: '', html: '<div style="width:20px;height:20px;background:#6B3A1A;border:3px solid white;border-radius:50%;box-shadow:0 2px 12px rgba(107,58,26,0.7);"></div>', iconSize: [20,20], iconAnchor: [10,10] });
+    L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup('<strong>Pick up here</strong>').openPopup();
+    setTimeout(function() { map.invalidateSize(); }, 200);
+});
+</script>
+@endif
 
 {{-- ── Rush countdown (keep the timer, ditch the dumb reload) ── --}}
 @if($cakeRequest->status === 'RUSH_MATCHING' && $cakeRequest->rush_expires_at)
@@ -3216,11 +3724,10 @@ document.getElementById('modalPrice').textContent = '₱' + agreedTotal.toLocale
         document.body.style.overflow = '';
     }
 
-    document.getElementById('reviewsModal').addEventListener('click', function(e) {
-        if (e.target === this) closeReviewsModal();
-    });
-    document.getElementById('acceptModal').addEventListener('click', function(e) {
-        if (e.target === this) closeAcceptModal();
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'reviewsModal') closeReviewsModal();
+        if (e.target.id === 'acceptModal') closeAcceptModal();
+        if (e.target.classList && e.target.classList.contains('confirm-modal-backdrop')) closeConfirmModal(e.target.id);
     });
     document.addEventListener('keydown', function(e) {
         if (e.key !== 'Escape') return;
@@ -3401,3 +3908,4 @@ document.getElementById('modalPrice').textContent = '₱' + agreedTotal.toLocale
         }).join('');
     }
     </script>
+    @endpush

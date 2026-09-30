@@ -3,108 +3,137 @@
 
 @push('styles')
 <style>
-* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
-:root {
-    --gold:#C07828; --gold-light:#DC9E48; --gold-soft:#FEF3E2; --gold-glow:rgba(192,120,40,.14);
-    --teal:#1F7A6C; --teal-soft:#E4F2EF;
-    --rose:#B43840; --rose-soft:#FDEAEB;
-    --espresso:#2C1608; --mocha:#6A4824;
-    --t1:#1E0E04; --t2:#4A2C14; --tm:#8C6840;
-    --border:#E8E0D0; --bdr-md:#D8CCBA;
-    --surface:#FFF; --surface-2:#FAF7F2; --surface-3:#F2ECE2;
-    --r:10px; --rl:14px; --rxl:18px;
+/* BakeSphere Admin · Sales Report (scoped: .sr) */
+.sr, .sr * { font-family:'Plus Jakarta Sans',sans-serif; box-sizing:border-box; }
+.sr {
+    --espresso:#24150F; --chocolate:#3A241A; --ivory:#F7F2E9; --cream:#EFE6D7;
+    --caramel:#A96F42; --gold:#B89452; --burgundy:#54252C; --taupe:#9A897A; --beige:#D8C8B7;
+    --ok:#2F6B4F; --ok-bg:#E6EFE8; --ok-bd:#B9D2C3; --info:#33566F;
+    --line:#E2D6C4; --ink:#24150F; --ink-2:#5C4738;
+    background:var(--ivory); color:var(--ink); font-variant-numeric:tabular-nums;
 }
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.4}}
+.sr svg { width:1em; height:1em; flex-shrink:0; }
 
 /* HERO */
-.rpt-hero{background:linear-gradient(135deg,var(--espresso) 0%,#3E1E08 50%,#5C2C10 100%);padding:2rem 2.25rem;position:relative;overflow:hidden;}
-.rpt-hero::before{content:'';position:absolute;inset:0;opacity:.025;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:26px 26px;}
-.rpt-hero::after{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(192,120,40,.18),transparent 65%);border-radius:50%;}
-.hero-inner{position:relative;z-index:1;}
-.hero-pill{display:inline-flex;align-items:center;gap:.35rem;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:.22rem .7rem;font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.58);margin-bottom:.875rem;}
-.hero-dot{width:5px;height:5px;border-radius:50%;background:var(--gold-light);animation:pulse 2s infinite;}
-.hero-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.875rem;font-weight:800;letter-spacing:-.04em;color:#fff;line-height:1.1;margin-bottom:.4rem;}
-.hero-title em{font-style:normal;background:linear-gradient(90deg,var(--gold-light),#F0C070);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{font-size:.8rem;color:rgba(255,255,255,.42);}
+.sr-hero { background:var(--espresso); color:var(--ivory); padding:2.25rem 2.25rem 2rem; border-bottom:3px solid var(--gold); }
+.sr-hero-in { display:flex; justify-content:space-between; align-items:flex-end; gap:1.5rem; flex-wrap:wrap; max-width:1400px; margin:0 auto; }
+.sr-kicker { font-size:.66rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:.6rem; }
+.sr-title { font-size:2.1rem; font-weight:800; letter-spacing:-.035em; line-height:1.05; margin:0 0 .5rem; color:#fff; }
+.sr-sub { font-size:.86rem; color:rgba(247,242,233,.62); max-width:52ch; line-height:1.6; margin:0; }
+.sr-year { display:inline-flex; align-items:center; gap:.55rem; padding:.5rem .9rem; border:1px solid rgba(184,148,82,.45); font-size:.74rem; font-weight:700; border-radius:4px; }
+.sr-year svg { color:var(--gold); font-size:1rem; }
 
-.rpt-body{padding:1.5rem 2rem 4rem;}
+.sr-body { padding:0 0 4rem; }
+.sr-body > .sr-panel:first-child { margin-top:3.25rem !important; }
 
-/* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;animation:fadeUp .38s ease both;}
-.scard{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rl);padding:1.2rem 1.4rem;position:relative;overflow:hidden;}
-.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.scard.gold::before{background:linear-gradient(90deg,var(--gold),var(--gold-light));}
-.scard.teal::before{background:linear-gradient(90deg,var(--teal),#3BAA98);}
-.scard.rose::before{background:linear-gradient(90deg,var(--rose),#D05060);}
-.scard.mocha::before{background:linear-gradient(90deg,var(--mocha),#A07040);}
-.scard.blue::before{background:linear-gradient(90deg,#2A6AA8,#4A8AC8);}
-.scard.green::before{background:linear-gradient(90deg,#2A7A3A,#4A9A5A);}
-.scard-lbl{font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tm);font-weight:700;margin-bottom:.5rem;}
-.scard-val{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--t1);line-height:1;}
-.scard-sub{font-size:.7rem;color:var(--tm);margin-top:.35rem;}
+/* METRICS */
+.sr-metrics { display:grid; grid-template-columns:repeat(3,1fr); background:#fff; border:1px solid var(--line); border-top:3px solid var(--chocolate); margin-bottom:1.5rem; }
+.sr-m { padding:1.2rem 1.4rem; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+.sr-m:nth-child(3n) { border-right:none; }
+.sr-m:nth-last-child(-n+3) { border-bottom:none; }
+.sr-m-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:.7rem; }
+.sr-m-lbl { font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--taupe); }
+.sr-m-ico { font-size:1.05rem; color:var(--gold); }
+.sr-m-val { font-size:2rem; font-weight:800; letter-spacing:-.04em; line-height:1; color:var(--espresso); }
+.sr-m.is-money .sr-m-val { color:var(--ok); }
+.sr-m-note { font-size:.72rem; color:var(--taupe); margin-top:.5rem; }
+
+/* PANELS */
+.sr-panel { background:#fff; border:1px solid var(--line); margin-bottom:1.5rem; }
+.sr-panel-h { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.5rem; border-bottom:1px solid var(--line); }
+.sr-panel-t { display:flex; align-items:center; gap:.6rem; margin:0; font-size:.98rem; font-weight:800; letter-spacing:-.01em; color:var(--espresso); }
+.sr-panel-t svg { color:var(--caramel); }
+.sr-tag { font-size:.7rem; font-weight:700; color:var(--chocolate); background:var(--cream); border:1px solid var(--beige); padding:.2rem .65rem; border-radius:3px; }
+.sr-panel-b { padding:1.25rem 1.5rem 1.4rem; }
 
 /* CHART */
-.section{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rxl);overflow:hidden;margin-bottom:1.5rem;animation:fadeUp .38s ease .08s both;}
-.section-hd{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1.5px solid var(--border);background:var(--surface-2);}
-.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:700;color:var(--espresso);}
-.section-badge{font-size:.7rem;background:var(--gold-soft);border:1.5px solid rgba(192,120,40,.22);border-radius:20px;padding:.18rem .65rem;color:#9A5E14;font-weight:700;}
-.section-body{padding:1.25rem 1.5rem;}
+.sr-legend { display:flex; gap:1.25rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+.sr-leg { display:flex; align-items:center; gap:.4rem; font-size:.72rem; font-weight:600; color:var(--ink-2); }
+.sr-leg i { width:10px; height:10px; display:inline-block; border-radius:2px; }
+.sr-chart { display:flex; align-items:flex-end; gap:.5rem; height:220px; padding-top:1.5rem; border-bottom:1px solid var(--beige); background:
+    repeating-linear-gradient(to top, transparent 0, transparent calc(25% - 1px), #EFE6D7 calc(25% - 1px), #EFE6D7 25%); }
+.sr-col { flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; height:100%; }
+.sr-bar-o { flex:1; width:100%; display:flex; align-items:flex-end; justify-content:center; }
+.sr-bar { width:68%; max-width:44px; min-height:4px; position:relative; border-radius:2px 2px 0 0; cursor:default; transition:opacity .15s; }
+.sr-bar:hover, .sr-bar:focus-visible { opacity:.8; outline:none; }
+.sr-bar.is-filled { background:var(--chocolate); }
+.sr-bar.is-current { background:var(--gold); }
+.sr-bar.is-empty { background:var(--cream); border:1px solid var(--beige); }
+.sr-bar::after { content:attr(data-tip); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--espresso); color:var(--ivory); font-size:.64rem; font-weight:600; padding:.3rem .55rem; border-radius:3px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .12s; z-index:10; }
+.sr-bar:hover::after, .sr-bar:focus-visible::after { opacity:1; }
+.sr-lbls { display:flex; gap:.5rem; margin-top:.5rem; }
+.sr-lbl { flex:1; text-align:center; font-size:.66rem; font-weight:700; color:var(--taupe); }
+.sr-lbl.is-current { color:var(--caramel); }
 
-.legend{display:flex;gap:1.1rem;margin-bottom:1.1rem;}
-.leg-item{display:flex;align-items:center;gap:.32rem;font-size:.7rem;color:var(--tm);}
-.leg-dot{width:9px;height:9px;border-radius:3px;}
+/* TABLE */
+.sr-table { width:100%; border-collapse:collapse; }
+.sr-table thead th { padding:.75rem 1.25rem; text-align:left; font-size:.64rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--taupe); background:var(--ivory); border-bottom:1px solid var(--line); white-space:nowrap; }
+.sr-table .r { text-align:right; }
+.sr-table tbody tr { border-bottom:1px solid #EFE6D7; transition:background .12s; }
+.sr-table tbody tr:last-child { border-bottom:none; }
+.sr-table tbody tr:hover { background:#FBF8F2; }
+.sr-table tbody td { padding:1rem 1.25rem; font-size:.84rem; vertical-align:middle; }
+.sr-table tfoot td { padding:1rem 1.25rem; font-size:.84rem; background:var(--cream); border-top:2px solid var(--chocolate); font-weight:800; color:var(--espresso); }
+.sr-rank { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:3px; font-size:.72rem; font-weight:800; border:1px solid var(--beige); background:var(--ivory); color:var(--taupe); }
+.sr-rank.is-1 { background:var(--gold); border-color:var(--gold); color:#fff; }
+.sr-rank.is-2 { background:var(--chocolate); border-color:var(--chocolate); color:var(--ivory); }
+.sr-rank.is-3 { background:var(--caramel); border-color:var(--caramel); color:#fff; }
+.sr-baker { display:flex; align-items:center; gap:.7rem; min-width:0; }
+.sr-av { width:36px; height:36px; border-radius:50%; background:var(--espresso); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.78rem; overflow:hidden; flex-shrink:0; }
+.sr-av img { width:100%; height:100%; object-fit:cover; }
+.sr-name { font-weight:700; font-size:.84rem; color:var(--espresso); }
+.sr-email { font-size:.7rem; color:var(--ink-2); word-break:break-all; }
+.sr-rev { font-weight:800; color:var(--ok); }
+.sr-ord { font-weight:700; color:var(--espresso); }
+.sr-avg { font-weight:600; color:var(--ink-2); }
+.sr-share { display:flex; align-items:center; gap:.6rem; }
+.sr-share-track { width:100px; height:6px; background:var(--cream); border-radius:1px; overflow:hidden; }
+.sr-share-bar { display:block; height:100%; background:var(--gold); }
+.sr-share-n { font-size:.74rem; font-weight:700; color:var(--ink-2); }
+.sr-dash { color:var(--beige); }
+.sr-st { display:inline-flex; align-items:center; gap:.4rem; padding:.24rem .65rem; border-radius:3px; font-size:.7rem; font-weight:700; border:1px solid transparent; white-space:nowrap; }
+.sr-st-on { background:var(--ok-bg); color:var(--ok); border-color:var(--ok-bd); }
+.sr-st-off { background:var(--cream); color:var(--taupe); border-color:var(--beige); }
+.sr-empty td { text-align:center; padding:3.5rem 1rem !important; color:var(--taupe); }
 
-.bar-chart{display:flex;align-items:flex-end;gap:.4rem;height:180px;}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;height:100%;}
-.bar-outer{flex:1;width:100%;display:flex;align-items:flex-end;}
-.bar{width:100%;border-radius:5px 5px 0 0;min-height:4px;position:relative;transition:opacity .18s;cursor:default;}
-.bar:hover{opacity:.75;}
-.bar::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:var(--espresso);color:#fff;font-size:.58rem;font-weight:600;padding:.18rem .42rem;border-radius:5px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .14s;z-index:10;}
-.bar:hover::after{opacity:1;}
-.bar.filled{background:linear-gradient(180deg,var(--gold-light),var(--gold));}
-.bar.empty{background:var(--surface-3);border:1.5px solid var(--border);}
-.bar-lbl{font-size:.6rem;color:var(--tm);font-weight:600;}
-
-/* BAKER TABLE */
-.bk-table{width:100%;border-collapse:collapse;}
-.bk-table thead th{padding:.65rem 1.25rem;text-align:left;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--tm);font-weight:700;background:var(--surface-3);border-bottom:1.5px solid var(--border);}
-.bk-table thead th.r{text-align:right;}
-.bk-table tbody tr{border-bottom:1px solid var(--border);transition:background .12s;}
-.bk-table tbody tr:last-child{border-bottom:none;}
-.bk-table tbody tr:hover{background:var(--surface-2);}
-.bk-table tbody td{padding:.85rem 1.25rem;font-size:.82rem;color:var(--t1);vertical-align:middle;}
-.bk-table tfoot td{padding:.85rem 1.25rem;font-size:.82rem;}
-.r{text-align:right;}
-
-.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;font-size:.68rem;font-weight:800;font-family:'DM Mono',monospace;}
-.rank-1{background:linear-gradient(135deg,#F0C040,#C89020);color:#fff;}
-.rank-2{background:linear-gradient(135deg,#C8D0D8,#8898A8);color:#fff;}
-.rank-3{background:linear-gradient(135deg,#D8A878,#A07040);color:#fff;}
-.rank-n{background:var(--surface-3);color:var(--tm);border:1.5px solid var(--border);}
-
-.baker-cell{display:flex;align-items:center;gap:.6rem;}
-.b-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--espresso),var(--mocha));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;flex-shrink:0;overflow:hidden;}
-.b-avatar img{width:100%;height:100%;object-fit:cover;}
-.b-name{font-weight:600;font-size:.82rem;color:var(--espresso);}
-.b-email{font-size:.67rem;color:var(--tm);}
-
-.rev-val{font-family:'DM Mono',monospace;font-weight:700;color:var(--teal);}
-.ord-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--espresso);}
-.avg-val{font-family:'DM Mono',monospace;font-size:.76rem;color:var(--tm);}
-
-.share-bar-wrap{display:flex;align-items:center;gap:.5rem;}
-.share-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--gold-light),var(--gold));display:inline-block;min-width:3px;}
-
-.status-active{display:inline-flex;align-items:center;gap:.28rem;padding:.18rem .55rem;border-radius:20px;font-size:.65rem;font-weight:700;background:var(--teal-soft);border:1.5px solid rgba(31,122,108,.28);color:var(--teal);}
-.status-inactive{display:inline-flex;align-items:center;gap:.28rem;padding:.18rem .55rem;border-radius:20px;font-size:.65rem;font-weight:700;background:var(--surface-3);border:1.5px solid var(--bdr-md);color:var(--tm);}
-
-.empty-row td{text-align:center;padding:3rem;color:var(--tm);}
-
-@media(max-width:900px){
-    .stats-grid{grid-template-columns:repeat(2,1fr);}
-    .rpt-body{padding:1.25rem 1rem 3rem;}
+/* RESPONSIVE */
+@media (max-width:980px) {
+    .sr-metrics { grid-template-columns:repeat(2,1fr); }
+    .sr-m, .sr-m:nth-child(3n), .sr-m:nth-last-child(-n+3) { border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
+    .sr-m:nth-child(2n) { border-right:none; }
+    .sr-m:nth-last-child(-n+2) { border-bottom:none; }
 }
+@media (max-width:820px) {
+    .sr-body { padding-left:0; padding-right:0; }
+    .sr-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+    .sr-table, .sr-table tbody, .sr-table tfoot, .sr-table tr, .sr-table td { display:block; width:100%; }
+    .sr-table tbody tr { padding:.9rem 1.1rem; }
+    .sr-table tbody td, .sr-table tfoot td { padding:.4rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem; text-align:right; }
+    .sr-table tbody td::before, .sr-table tfoot td::before { content:attr(data-label); font-size:.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--taupe); flex-shrink:0; text-align:left; }
+    .sr-table td[data-label=""]::before { display:none; }
+    .sr-table tfoot tr { display:block; padding:.9rem 1.1rem; background:var(--cream); border-top:2px solid var(--chocolate); }
+    .sr-table tfoot td { background:transparent; border:none; }
+    .sr-empty td::before { display:none; }
+    .sr-empty td { display:block; }
+}
+@media (max-width:480px) {
+    .sr-metrics { grid-template-columns:1fr; }
+    .sr-m, .sr-m:nth-child(2n), .sr-m:nth-last-child(-n+2) { border-right:none; border-bottom:1px solid var(--line); }
+    .sr-m:last-child { border-bottom:none; }
+    .sr-chart, .sr-lbls { gap:.2rem; }
+    .sr-lbl { font-size:.56rem; }
+}
+/* animations */
+@keyframes sr-rise { from{opacity:0;transform:translatey(12px)} to{opacity:1;transform:none} }
+@keyframes sr-fade { from{opacity:0} to{opacity:1} }
+@keyframes sr-grow { from{transform:scaley(0);opacity:0} to{transform:scaley(1);opacity:1} }
+.sr-panel { animation:sr-rise .55s ease both; }
+.sr-body .sr-panel:nth-child(2) { animation-delay:.12s; }
+.sr-bar { transform-origin:bottom; animation:sr-grow .7s cubic-bezier(.2,.8,.2,1) both; animation-delay:calc(var(--i, 1) * 45ms + 150ms); }
+.sr-lbls { animation:sr-fade .6s .5s ease both; }
+.sr-table tbody tr { animation:sr-fade .5s .3s ease both; }
+.sr-rank, .sr-share-bar { transition:width .3s; }
+@media (prefers-reduced-motion:reduce) { .sr * { transition:none !important; animation:none !important; } }
 </style>
 @endpush
 
@@ -117,70 +146,51 @@
     $totalRev   = $stats['total_revenue'];
     $curMonth   = now()->month;
 @endphp
+<div class="sr ah-page">
 
-{{-- HERO --}}
-<div class="rpt-hero">
-    <div class="hero-inner">
-        <div class="hero-pill"><span class="hero-dot"></span> Analytics · {{ now()->year }}</div>
-        <div class="hero-title"><em>Sales</em> Report</div>
-        <div class="hero-sub">Revenue and order tracking across all bakers — {{ now()->year }}</div>
+<div class="ah-top">
+<header class="ah-hero">
+    <div class="ah-hero-main">
+        <span class="ah-hero-mark"><svg class="ah-ic" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <div>
+            <div class="ah-eyebrow">BakeSphere &middot; Analytics</div>
+            <h1 class="ah-title">Sales Report</h1>
+            <p class="ah-subtitle">Revenue and order tracking across all bakers.</p>
+        </div>
     </div>
+    <div class="ah-side">
+        <span class="ah-side-label"><span class="ah-dot"></span>Fiscal year</span>
+        <span class="ah-side-value">{{ now()->year }}</span>
+    </div>
+</header>
+<section class="ah-ledger ah-ledger--3x2" style="--cols:3" aria-label="Sales metrics">
+    <div class="ah-fig"><div class="ah-fig-lbl">Year Revenue</div><div class="ah-fig-val">₱{{ number_format($stats['total_revenue'], 0) }}</div><div class="ah-fig-note">All completed orders</div></div>
+    <div class="ah-fig ah-fig--caramel"><div class="ah-fig-lbl">Total Orders</div><div class="ah-fig-val">{{ number_format($stats['total_orders']) }}</div><div class="ah-fig-note">Delivered + Completed</div></div>
+    <div class="ah-fig ah-fig--taupe"><div class="ah-fig-lbl">Bakers on Platform</div><div class="ah-fig-val">{{ $stats['total_bakers'] }}</div><div class="ah-fig-note">{{ $stats['active_bakers'] }} active this year</div></div>
+    <div class="ah-fig ah-fig--sage"><div class="ah-fig-lbl">This Month Revenue</div><div class="ah-fig-val">₱{{ number_format($stats['this_month_revenue'], 0) }}</div><div class="ah-fig-note">{{ $monthNames[$curMonth - 1] }} {{ now()->year }}</div></div>
+    <div class="ah-fig ah-fig--burgundy"><div class="ah-fig-lbl">This Month Orders</div><div class="ah-fig-val">{{ $stats['this_month_orders'] }}</div><div class="ah-fig-note">Current month</div></div>
+    <div class="ah-fig"><div class="ah-fig-lbl">Avg Order Value</div><div class="ah-fig-val">₱{{ $stats['total_orders'] > 0 ? number_format($stats['total_revenue'] / $stats['total_orders'], 0) : '0' }}</div><div class="ah-fig-note">Per completed order</div></div>
+</section>
 </div>
 
-<div class="rpt-body">
-
-    {{-- STATS --}}
-    <div class="stats-grid">
-        <div class="scard gold">
-            <div class="scard-lbl">💰 Year Revenue</div>
-            <div class="scard-val">₱{{ number_format($stats['total_revenue'], 0) }}</div>
-            <div class="scard-sub">All completed orders · {{ now()->year }}</div>
-        </div>
-        <div class="scard teal">
-            <div class="scard-lbl">🛒 Total Orders</div>
-            <div class="scard-val">{{ number_format($stats['total_orders']) }}</div>
-            <div class="scard-sub">Delivered + Completed</div>
-        </div>
-        <div class="scard mocha">
-            <div class="scard-lbl">👨‍🍳 Bakers on Platform</div>
-            <div class="scard-val">{{ $stats['total_bakers'] }}</div>
-            <div class="scard-sub">{{ $stats['active_bakers'] }} active this year</div>
-        </div>
-        <div class="scard rose">
-            <div class="scard-lbl">📅 This Month Revenue</div>
-            <div class="scard-val">₱{{ number_format($stats['this_month_revenue'], 0) }}</div>
-            <div class="scard-sub">{{ $monthNames[$curMonth - 1] }} {{ now()->year }}</div>
-        </div>
-        <div class="scard blue">
-            <div class="scard-lbl">📦 This Month Orders</div>
-            <div class="scard-val">{{ $stats['this_month_orders'] }}</div>
-            <div class="scard-sub">
-                @if($stats['total_orders'] > 0)
-                    {{ number_format(($stats['this_month_orders'] / $stats['total_orders']) * 100, 1) }}% of year total
-                @else
-                    No orders yet
-                @endif
-            </div>
-        </div>
-        <div class="scard green">
-            <div class="scard-lbl">📊 Avg Order Value</div>
-            <div class="scard-val">₱{{ $stats['total_orders'] > 0 ? number_format($stats['total_revenue'] / $stats['total_orders'], 0) : '0' }}</div>
-            <div class="scard-sub">Per completed order</div>
-        </div>
-    </div>
+<div class="sr-body">
 
     {{-- MONTHLY CHART --}}
-    <div class="section">
-        <div class="section-hd">
-            <span class="section-title">Monthly Revenue</span>
-            <span class="section-badge">{{ now()->year }}</span>
+    <section class="sr-panel" aria-labelledby="sr-h-monthly">
+        <div class="sr-panel-h">
+            <h2 class="sr-panel-t" id="sr-h-monthly">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 17V9M8 17V4M13 17v-6M18 17H2" stroke-linecap="round"/></svg>
+                Monthly Revenue
+            </h2>
+            <span class="sr-tag">{{ now()->year }}</span>
         </div>
-        <div class="section-body">
-            <div class="legend">
-                <div class="leg-item"><div class="leg-dot" style="background:var(--gold);"></div> Revenue</div>
-                <div class="leg-item"><div class="leg-dot" style="background:var(--surface-3);border:1.5px solid var(--border);"></div> No data</div>
+        <div class="sr-panel-b">
+            <div class="sr-legend">
+                <span class="sr-leg"><i style="background:var(--chocolate);"></i> Revenue</span>
+                <span class="sr-leg"><i style="background:var(--gold);"></i> Current month</span>
+                <span class="sr-leg"><i style="background:var(--cream);border:1px solid var(--beige);"></i> No data</span>
             </div>
-            <div class="bar-chart">
+            <div class="sr-chart" role="img" aria-label="Monthly revenue bar chart for {{ now()->year }}">
                 @for($m = 1; $m <= 12; $m++)
                 @php
                     $row  = $byMonth->get($m);
@@ -190,36 +200,45 @@
                         ? $monthNames[$m-1].': ₱'.number_format($rev,0).' ('.($row->orders ?? 0).' orders)'
                         : $monthNames[$m-1].': No completed orders';
                 @endphp
-                <div class="bar-col">
-                    <div class="bar-outer">
-                        <div class="bar {{ $rev > 0 ? 'filled' : 'empty' }}"
+                <div class="sr-col" style="--i:{{ $m }}">
+                    <div class="sr-bar-o">
+                        <div class="sr-bar {{ $rev > 0 ? ($m === $curMonth ? 'is-current' : 'is-filled') : 'is-empty' }}"
                              style="height:{{ $pct }}%"
-                             data-tip="{{ $tip }}">
+                             tabindex="0"
+                             data-tip="{{ $tip }}"
+                             aria-label="{{ $tip }}">
                         </div>
                     </div>
-                    <span class="bar-lbl">{{ $monthNames[$m-1] }}</span>
                 </div>
                 @endfor
             </div>
+            <div class="sr-lbls" aria-hidden="true">
+                @for($m = 1; $m <= 12; $m++)
+                <span class="sr-lbl {{ $m === $curMonth ? 'is-current' : '' }}">{{ $monthNames[$m-1] }}</span>
+                @endfor
+            </div>
         </div>
-    </div>
+    </section>
 
     {{-- BAKER BREAKDOWN --}}
-    <div class="section">
-        <div class="section-hd">
-            <span class="section-title">Baker Earnings Breakdown</span>
-            <span class="section-badge">{{ $bakers->count() }} bakers</span>
+    <section class="sr-panel" aria-labelledby="sr-h-bakers">
+        <div class="sr-panel-h">
+            <h2 class="sr-panel-t" id="sr-h-bakers">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 3h10v4a5 5 0 0 1-10 0zM5 5H2.5v1.5A2.5 2.5 0 0 0 5 9M15 5h2.5v1.5A2.5 2.5 0 0 1 15 9M10 12v3M6.5 17h7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Baker Earnings Breakdown
+            </h2>
+            <span class="sr-tag">{{ $bakers->count() }} bakers</span>
         </div>
-        <table class="bk-table">
+        <table class="sr-table">
             <thead>
                 <tr>
-                    <th style="width:40px;">#</th>
-                    <th>Baker</th>
-                    <th class="r">Revenue</th>
-                    <th class="r">Orders</th>
-                    <th class="r">Avg / Order</th>
-                    <th>Share of Total</th>
-                    <th>Status</th>
+                    <th scope="col" style="width:56px;">#</th>
+                    <th scope="col">Baker</th>
+                    <th scope="col" class="r">Revenue</th>
+                    <th scope="col" class="r">Orders</th>
+                    <th scope="col" class="r">Avg / Order</th>
+                    <th scope="col">Share of Total</th>
+                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -232,14 +251,12 @@
                     $rank  = $i + 1;
                 @endphp
                 <tr>
-                    <td>
-                        <span class="rank-badge {{ $rank <= 3 ? 'rank-'.$rank : 'rank-n' }}">
-                            {{ $rank <= 3 ? ['🥇','🥈','🥉'][$rank-1] : $rank }}
-                        </span>
+                    <td data-label="#">
+                        <span class="sr-rank {{ $rank <= 3 ? 'is-'.$rank : '' }}">{{ $rank }}</span>
                     </td>
-                    <td>
-                        <div class="baker-cell">
-                            <div class="b-avatar">
+                    <td data-label="Baker">
+                        <div class="sr-baker">
+                            <div class="sr-av">
                                 @if($baker->profile_photo)
                                     <img src="{{ asset('storage/'.$baker->profile_photo) }}" alt="">
                                 @else
@@ -247,67 +264,64 @@
                                 @endif
                             </div>
                             <div>
-                                <div class="b-name">{{ $baker->first_name }} {{ $baker->last_name }}</div>
-                                <div class="b-email">{{ $baker->email }}</div>
+                                <div class="sr-name">{{ $baker->first_name }} {{ $baker->last_name }}</div>
+                                <div class="sr-email">{{ $baker->email }}</div>
                             </div>
                         </div>
                     </td>
-                    <td class="r">
-                        <span class="rev-val">{{ $rev > 0 ? '₱'.number_format($rev, 2) : '—' }}</span>
+                    <td class="r" data-label="Revenue">
+                        <span class="sr-rev">{{ $rev > 0 ? '₱'.number_format($rev, 2) : '—' }}</span>
                     </td>
-                    <td class="r">
-                        <span class="ord-val">{{ $ord > 0 ? $ord : '—' }}</span>
+                    <td class="r" data-label="Orders">
+                        <span class="sr-ord">{{ $ord > 0 ? $ord : '—' }}</span>
                     </td>
-                    <td class="r">
-                        <span class="avg-val">{{ $avg > 0 ? '₱'.number_format($avg, 2) : '—' }}</span>
+                    <td class="r" data-label="Avg / Order">
+                        <span class="sr-avg">{{ $avg > 0 ? '₱'.number_format($avg, 2) : '—' }}</span>
                     </td>
-                    <td>
+                    <td data-label="Share of Total">
                         @if($share > 0)
-                        <div class="share-bar-wrap">
-                            <span class="share-bar" style="width:{{ max($share,1) }}%;max-width:100px;"></span>
-                            <span style="font-size:.7rem;color:var(--tm);font-family:'DM Mono',monospace;">
-                                {{ number_format($share, 1) }}%
-                            </span>
+                        <div class="sr-share">
+                            <span class="sr-share-track"><span class="sr-share-bar" style="width:{{ min(max($share,1),100) }}%;"></span></span>
+                            <span class="sr-share-n">{{ number_format($share, 1) }}%</span>
                         </div>
                         @else
-                            <span style="font-size:.72rem;color:var(--bdr-md);">—</span>
+                            <span class="sr-dash">—</span>
                         @endif
                     </td>
-                    <td>
+                    <td data-label="Status">
                         @if($ord > 0)
-                            <span class="status-active">● Active</span>
+                            <span class="sr-st sr-st-on">
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Active
+                            </span>
                         @else
-                            <span class="status-inactive">○ No orders</span>
+                            <span class="sr-st sr-st-off">
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/></svg>
+                                No orders
+                            </span>
                         @endif
                     </td>
                 </tr>
                 @empty
-                <tr class="empty-row"><td colspan="7">No bakers found.</td></tr>
+                <tr class="sr-empty"><td colspan="7">No bakers found.</td></tr>
                 @endforelse
             </tbody>
             @if($bakers->where('total_orders', '>', 0)->count() > 0)
             <tfoot>
-                <tr style="background:var(--surface-3);border-top:2px solid var(--border);">
-                    <td colspan="2" style="font-weight:700;color:var(--espresso);padding:.85rem 1.25rem;">
-                        Platform Total
+                <tr>
+                    <td colspan="2" data-label="">Platform Total</td>
+                    <td class="r" data-label="Revenue"><span class="sr-rev">₱{{ number_format($totalRev, 2) }}</span></td>
+                    <td class="r" data-label="Orders"><span class="sr-ord">{{ $stats['total_orders'] }}</span></td>
+                    <td class="r" data-label="Avg / Order">
+                        <span class="sr-avg">₱{{ $stats['total_orders'] > 0 ? number_format($totalRev / $stats['total_orders'], 2) : '0.00' }}</span>
                     </td>
-                    <td class="r" style="padding:.85rem 1.25rem;">
-                        <span class="rev-val" style="font-size:.88rem;">₱{{ number_format($totalRev, 2) }}</span>
-                    </td>
-                    <td class="r" style="padding:.85rem 1.25rem;">
-                        <span class="ord-val" style="font-size:.88rem;">{{ $stats['total_orders'] }}</span>
-                    </td>
-                    <td class="r" style="padding:.85rem 1.25rem;">
-                        <span class="avg-val">
-                            ₱{{ $stats['total_orders'] > 0 ? number_format($totalRev / $stats['total_orders'], 2) : '0.00' }}
-                        </span>
-                    </td>
-                    <td colspan="2" style="padding:.85rem 1.25rem;"></td>
+                    <td colspan="2" data-label=""></td>
                 </tr>
             </tfoot>
             @endif
         </table>
-    </div>
+    </section>
 
+</div>
 </div>
 @endsection

@@ -49,6 +49,18 @@ Route::middleware('guest')->group(function () {
     Route::get('/baker/register',  [BakerRegisterController::class, 'showRegistrationForm'])->name('baker.register');
     Route::post('/baker/register', [BakerRegisterController::class, 'store'])->name('baker.register.submit');
 
+    // Password reset
+    Route::get('/forgot-password',        [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password',       [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password',        [\App\Http\Controllers\Auth\NewPasswordController::class, 'store'])->name('password.update');
+
+    // Password reset
+    Route::get('/forgot-password',        [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password',       [\App\Http\Controllers\Auth\PasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password',        [\App\Http\Controllers\Auth\NewPasswordController::class, 'store'])->name('password.update');
+
 
     Route::get('/auth/google',          [GoogleController::class, 'redirect'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
@@ -57,6 +69,12 @@ Route::middleware('guest')->group(function () {
 // ─── PUBLIC: Smart email provider check ───────────────────────────────────────
 Route::post('/check-email-provider', [LoginController::class, 'checkEmailProvider'])
     ->name('check.email.provider');
+
+// ─── CONFIRM PASSWORD (logged-in users) ───────────────────────────────────────
+Route::middleware('auth')->group(function () {
+    Route::get('/confirm-password',  [\App\Http\Controllers\Auth\ConfirmablePasswordController::class, 'show'])->name('password.confirm');
+    Route::post('/confirm-password', [\App\Http\Controllers\Auth\ConfirmablePasswordController::class, 'store']);
+});
 
 // ─── LOGOUT ───────────────────────────────────────────────────────────────────
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
@@ -380,6 +398,11 @@ Route::post('/availability', [BakerProfileController::class, 'toggleAvailability
     Route::get('/orders/{order}/state-poll',
         [\App\Http\Controllers\OrderStatePollController::class, 'bakerPoll']
     )->name('orders.state-poll');
+
+    // Read-only 3D cake preview — reuses the customer cake-builder controller/view
+    // (safe: index() has no auth-specific or customer-specific logic) so bakers
+    // can rotate/zoom an order's cake using its saved draft_config via postMessage.
+    Route::get('/cake-preview', [CakeBuilderController::class, 'index'])->name('cake-preview');
 });
 
 // ─── SHARED CHAT ROUTES ───────────────────────────────────────────────────────
@@ -411,6 +434,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('ingredients', IngredientController::class);
     Route::patch('ingredients/{ingredient}/status', [IngredientController::class, 'updateStatus'])->name('ingredients.status');
+    Route::patch('ingredients/{id}/restore', [IngredientController::class, 'restore'])->name('ingredients.restore');
+    Route::delete('ingredients/{id}/force',  [IngredientController::class, 'forceDelete'])->name('ingredients.force-delete'); 
+    Route::patch('ingredients/{id}/restore', [IngredientController::class, 'restore'])->name('ingredients.restore');
+    Route::delete('ingredients/{id}/force',  [IngredientController::class, 'forceDelete'])->name('ingredients.force-delete'); 
     Route::resource('orders',      OrderController::class);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
     Route::resource('products',  ProductController::class);

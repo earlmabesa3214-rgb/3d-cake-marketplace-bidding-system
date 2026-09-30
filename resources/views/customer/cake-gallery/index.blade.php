@@ -99,17 +99,63 @@ html::-webkit-scrollbar, body::-webkit-scrollbar{
     animation:cgHintFall 1.8s ease-in-out infinite;
 }
 @keyframes cgHintFall{ 0%{transform:scaleY(0);transform-origin:top;opacity:0;} 40%{opacity:1;} 100%{transform:scaleY(1);transform-origin:top;opacity:0;} }
-.cg-dots{
+.cg-jump{
     position:absolute; right:1.6rem; top:50%; transform:translateY(-50%); z-index:4;
-    display:flex; flex-direction:column; gap:.85rem;
+    display:flex; flex-direction:column; gap:.35rem;
+    background:rgba(12,7,4,.4);
+    backdrop-filter:blur(8px);
+    padding:.7rem .6rem;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.08);
 }
-.cg-dot{
-    width:8px; height:8px; border-radius:50%; border:none; padding:0; cursor:pointer;
-    background:rgba(255,255,255,.28);
-    transition:background .3s var(--cg-ease), transform .3s var(--cg-ease);
+.cg-jump-item{
+    display:flex; align-items:center; gap:.55rem;
+    background:transparent; border:none; cursor:pointer;
+    padding:.5rem .7rem; border-radius:10px;
+    color:rgba(255,255,255,.55);
+    font-family:'Fraunces', Georgia, serif;
+    font-size:.78rem; text-align:left; white-space:nowrap;
+    transition:background .25s var(--cg-ease), color .25s var(--cg-ease);
 }
-.cg-dot.is-active{ background:var(--cg-copper-glow); transform:scale(1.5); }
-@media (max-width:760px){ .cg-dots{ right:.9rem; } }
+.cg-jump-item .dot{
+    width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); flex-shrink:0;
+    transition:background .25s var(--cg-ease), transform .25s var(--cg-ease);
+}
+.cg-jump-item:hover{ background:rgba(255,255,255,.08); color:#fff; }
+.cg-jump-item.is-active{ background:rgba(244,201,137,.16); color:var(--cg-copper-glow); }
+.cg-jump-item.is-active .dot{ background:var(--cg-copper-glow); transform:scale(1.4); }
+@media (max-width:900px){
+    .cg-jump{ right:.6rem; padding:.5rem .4rem; gap:.2rem; }
+    .cg-jump-item{ font-size:0; padding:.5rem; gap:0; }
+    .cg-jump-item .dot{ width:8px; height:8px; }
+}
+
+.cg-specs{
+    position:absolute; left:1.6rem; top:50%; transform:translateY(-50%) translateX(-12px); z-index:4;
+    max-width:230px;
+    background:rgba(12,7,4,.55);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:18px;
+    padding:1.3rem 1.4rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .5s var(--cg-ease), transform .5s var(--cg-ease);
+}
+.cg-specs.is-visible{ opacity:1; transform:translateY(-50%) translateX(0); pointer-events:auto; }
+.cg-specs-title{
+    font-family:'Fraunces', Georgia, serif; font-weight:600; font-size:1rem; color:#fff; margin-bottom:.7rem;
+}
+.cg-specs-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.5rem; }
+.cg-specs-list li{
+    display:flex; align-items:flex-start; gap:.5rem;
+    font-size:.76rem; line-height:1.4; color:rgba(255,255,255,.75);
+}
+.cg-specs-list li::before{
+    content:''; width:5px; height:5px; border-radius:50%; background:var(--cg-copper-glow);
+    margin-top:.45rem; flex-shrink:0;
+}
+@media (max-width:900px){ .cg-specs{ left:.6rem; max-width:165px; padding:1rem 1.1rem; } }
 .cg-loading{
     position:absolute; inset:0; z-index:10; background:#0c0704;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem;
@@ -140,14 +186,19 @@ html::-webkit-scrollbar, body::-webkit-scrollbar{
         </a>
         <span class="cg-scroll-hint" id="cgScrollHint">Scroll to explore</span>
     </div>
-    <div class="cg-dots" id="cgDots">
-        <button type="button" class="cg-dot is-active" data-i="0" aria-label="Gallery overview"></button>
-        <button type="button" class="cg-dot" data-i="1" aria-label="Strawberry cake"></button>
-        <button type="button" class="cg-dot" data-i="2" aria-label="Ube cake"></button>
-        <button type="button" class="cg-dot" data-i="3" aria-label="Chocolate cake"></button>
-        <button type="button" class="cg-dot" data-i="4" aria-label="Themed cake"></button>
-        <button type="button" class="cg-dot" data-i="5" aria-label="Red velvet"></button>
+    <div class="cg-specs" id="cgSpecs">
+        <div class="cg-specs-title" id="cgSpecsTitle"></div>
+        <ul class="cg-specs-list" id="cgSpecsList"></ul>
     </div>
+
+    <nav class="cg-jump" id="cgJump" aria-label="Jump to a cake">
+        <button type="button" class="cg-jump-item is-active" data-i="0"><span class="dot"></span>The Gallery</button>
+        <button type="button" class="cg-jump-item" data-i="1"><span class="dot"></span>Strawberry Cream</button>
+        <button type="button" class="cg-jump-item" data-i="2"><span class="dot"></span>Ube Rosette</button>
+        <button type="button" class="cg-jump-item" data-i="3"><span class="dot"></span>Chocolate Fudge</button>
+        <button type="button" class="cg-jump-item" data-i="4"><span class="dot"></span>Mango Sponge</button>
+        <button type="button" class="cg-jump-item" data-i="5"><span class="dot"></span>Red Velvet</button>
+    </nav>
 
     <div class="cg-loading" id="cgLoading">
         <div class="cg-loading-track"><div class="cg-loading-bar" id="cgLoadingBar"></div></div>
@@ -195,6 +246,14 @@ html::-webkit-scrollbar, body::-webkit-scrollbar{
         "Chocolate Fudge",
         "Mango Sponge",
         "Red Velvet"
+    ];
+    var SCENE_SPECS = [
+        null, // scene 0 — The Gallery: no single-cake specs
+        ["Heart-shaped cake", "Strawberry flavor", "Sugar icing, pink", "Topped with fresh strawberries"],
+        ["Square-shaped cake", "Ube flavor", "Rosette frosting, purple", "Full-top rosette piping"],
+        ["Round cake", "Chocolate flavor", "Textured buttercream, chocolate", "Chocolate drip with choco curls"],
+        ["Round cake", "Mango flavor", "Smooth buttercream, gold", "SpongeBob-themed character toppers"],
+        ["Number cake — \"10\"", "Red velvet flavor", "Sugar icing, red", "Red velvet drip with number candles"]
     ];
     var SCENE_CUSTOMIZE_LINKS = [
         null,
@@ -285,7 +344,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar{
     var sceneLabel = document.getElementById('cgSceneLabel');
     var scrollHint = document.getElementById('cgScrollHint');
     var customizeBtn = document.getElementById('cgCustomizeBtn');
-    var dots = Array.prototype.slice.call(document.querySelectorAll('.cg-dot'));
+    var dots = Array.prototype.slice.call(document.querySelectorAll('.cg-jump-item'));
+    var specsPanel = document.getElementById('cgSpecs');
+    var specsTitle = document.getElementById('cgSpecsTitle');
+    var specsList = document.getElementById('cgSpecsList');
 
     var webglOK = (function () {
         try {
@@ -568,6 +630,17 @@ html::-webkit-scrollbar, body::-webkit-scrollbar{
         } else {
             customizeBtn.classList.remove('is-visible');
             customizeBtn.removeAttribute('href');
+        }
+
+        var specs = SCENE_SPECS[currentScene];
+        if (specs) {
+            specsTitle.textContent = SCENE_NAMES[currentScene];
+            specsList.innerHTML = specs.map(function (line) {
+                return '<li>' + line + '</li>';
+            }).join('');
+            specsPanel.classList.add('is-visible');
+        } else {
+            specsPanel.classList.remove('is-visible');
         }
     }
 

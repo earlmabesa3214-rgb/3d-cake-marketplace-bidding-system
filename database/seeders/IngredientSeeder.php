@@ -16,9 +16,7 @@ class IngredientSeeder extends Seeder
         $modelBasedCategories = ['shape', 'drip', 'fruit', 'choco', 'sprinkle', 'candle', 'deco'];
 
         $items = [
-            ['section'=>'shape','name'=>'Round 6 inch','emoji'=>'🎂','price'=>350,'unit'=>'base price','desc'=>'Classic 6-inch round cake, serves 8–10 guests.'],
-            ['section'=>'shape','name'=>'Round 8 inch','emoji'=>'🎂','price'=>550,'unit'=>'base price','desc'=>'8-inch round cake, serves 12–15 guests.'],
-            ['section'=>'shape','name'=>'Round 10 inch','emoji'=>'🎂','price'=>800,'unit'=>'base price','desc'=>'Large 10-inch round, serves 20–25 guests.'],
+
             ['section'=>'shape','name'=>'Square','emoji'=>'🟫','price'=>650,'unit'=>'base price','desc'=>'8-inch square cake with clean modern edges.'],
             ['section'=>'shape','name'=>'Heart','emoji'=>'❤️','price'=>750,'unit'=>'base price','desc'=>'Heart-shaped cake for weddings and anniversaries.'],
             ['section'=>'shape','name'=>'Two-tier Round','emoji'=>'🎂','price'=>1800,'unit'=>'base price','desc'=>'Two-tier round (6in + 8in stacked). Serves 25–30.'],

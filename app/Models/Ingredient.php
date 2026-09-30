@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ingredient extends Model
 {
+    use SoftDeletes;
     const STATUSES = ['draft', 'coming_soon', 'active', 'inactive'];
     const COMPONENT_TYPES = ['model_based', 'material_based'];
     const PLACEMENTS = ['top_center', 'top_left', 'top_right', 'front_center', 'side_left', 'side_right', 'base'];

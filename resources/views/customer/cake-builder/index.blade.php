@@ -1,10 +1,10 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cake Builder — BakeSphere</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
 /* ============================================================
    BAKESPHERE — ATELIER CONFIGURATOR
@@ -13,54 +13,34 @@
    a floating step rail, a full-bleed cake stage, and a ticket-
    style order card. Built on top of the untouched builder logic.
    ============================================================ */
-
 :root {
-    --brown-deep:    #3B1F0E;
-    --brown-mid:     #6B3A1F;
-    --caramel:       #A0673A;
-    --caramel-light: #C9A17C;
-    --warm-white:    #FFFFFF;
-    --cream:         #F7F4EF;
+    --espresso:#24150F; --dark-chocolate:#3A241A; --warm-ivory:#F7F2E9; --cream:#EFE6D7;
+    --caramel:#A96F42; --champagne-gold:#B89452; --deep-burgundy:#54252C; --taupe:#9A897A; --soft-beige:#D8C8B7;
 
---bg:        #F7F1E8;
-    --surface:   #FFFFFF;
-    --border:    #E0D2BC;
-    --border-dk: #C9AF8C;
-    --text:      #2E1A0D;
-    --text-muted:#8A7B6C;
-    --accent:    #A0673A;
-    --accent-dk: #7A4C28;
-    --accent-lt: #F5EFE6;
-    --gold:      #B08A3E;
-    --gold-lt:   #F7F1E2;
-    --teal:      #1F7A6C;
-    --teal-soft: #E4F2EF;
-    --rail-w:    84px;
-    --studio-w:  380px;
-    --ticket-w:  350px;
-    --nav-h:     60px;
-    --radius:    18px;
-    --radius-sm: 12px;
-    --radius-lg: 26px;
-    --radius-pill: 999px;
+    --brown-deep:#24150F; --brown-mid:#3A241A; --caramel-light:#D8B98A; --warm-white:#FBF8F2;
+    --bg:#F7F2E9; --surface:#FFFDF9; --border:#E4D8C6; --border-dk:#CDBBA3;
+    --text:#24150F; --text-muted:#9A897A; --text-mid:#6F5848;
+    --accent:#A96F42; --accent-dk:#3A241A; --accent-lt:#F3EADB;
+    --gold:#B89452; --gold-lt:#F5EEDD;
+    --teal:#3A241A; --teal-soft:#F3EADB;
 
-    --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
-    --sp-5: 20px; --sp-6: 24px; --sp-7: 32px; --sp-8: 40px;
+    --rail-w:84px; --studio-w:400px; --ticket-w:340px; --nav-h:60px;
+    --radius:6px; --radius-sm:4px; --radius-lg:10px; --radius-pill:3px;
 
-    --shadow-xs: 0 1px 2px rgba(59,31,14,0.05);
-    --shadow-sm: 0 3px 10px rgba(59,31,14,0.08);
-    --shadow-md: 0 10px 26px rgba(59,31,14,0.12);
-    --shadow-lg: 0 24px 60px rgba(59,31,14,0.22);
-    --shadow-glow: 0 0 0 2px rgba(200,137,74,0.35);
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-7:32px; --sp-8:40px;
 
-    --ease: cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --transition: 0.16s var(--ease);
-    --transition-md: 0.28s var(--ease-out);
+    --shadow-xs:0 1px 2px rgba(36,21,15,.05);
+    --shadow-sm:0 3px 10px rgba(36,21,15,.08);
+    --shadow-md:0 10px 26px rgba(36,21,15,.12);
+    --shadow-lg:0 24px 60px rgba(36,21,15,.24);
+    --shadow-glow:0 0 0 1px rgba(184,148,82,.8);
 
-    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-mono:    'DM Mono', 'Plus Jakarta Sans', monospace;
+    --ease:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+    --transition:.16s var(--ease); --transition-md:.28s var(--ease-out);
+
+    --font-display:'Plus Jakarta Sans',system-ui,sans-serif;
+    --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
+    --font-mono:'Plus Jakarta Sans',system-ui,sans-serif;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -290,6 +270,11 @@ input[type=range].size-range::-webkit-slider-thumb { -webkit-appearance: none; w
 input[type=range].size-range::-webkit-slider-thumb:hover { transform: scale(1.12); }
 .size-ticks { display: flex; justify-content: space-between; margin-top: 6px; }
 .size-tick { font-size: .60rem; color: var(--text-muted); font-family: var(--font-mono); }
+.size-category-card { margin-top: 12px; background: var(--warm-white); border: 1.5px solid var(--border-dk); border-radius: 12px; padding: 12px 14px; }
+.size-category-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.size-category-name { font-family: var(--font-display); font-size: .84rem; font-weight: 800; color: var(--brown-deep); }
+.size-category-range { font-family: var(--font-mono); font-size: .68rem; font-weight: 700; color: var(--caramel); background: var(--accent-lt); padding: 2px 9px; border-radius: var(--radius-pill); white-space: nowrap; }
+.size-category-desc { font-size: .68rem; color: var(--text-muted); font-family: var(--font-display); margin-top: 4px; }
 
 /* ================= NUMBER PICKER ================= */
 .number-picker-wrap { display: none; margin-top: 12px; background: var(--cream); border: none; border-radius: 14px; padding: 15px 16px 14px; }
@@ -375,6 +360,17 @@ input[type=range].size-range::-webkit-slider-thumb:hover { transform: scale(1.12
 .addon-opt.coming-soon:not(.active) .a-name,
 .addon-opt.coming-soon:not(.active) .a-price { color: var(--text-muted); }
 .addon-opt.coming-soon:not(.active):hover { opacity: .82; filter: grayscale(.2); }
+.addon-opt.addon-locked:not(.active) { opacity: .45; filter: grayscale(.65); pointer-events: none; position: relative; cursor: not-allowed; }
+.addon-opt.addon-locked:not(.active) .a-icon,
+.addon-opt.addon-locked:not(.active) .a-name,
+.addon-opt.addon-locked:not(.active) .a-price { color: var(--text-muted); }
+.addon-opt.addon-locked:not(.active)::after {
+    content: '';
+    position: absolute; top: 6px; right: 7px;
+    width: 13px; height: 13px;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewbox='0 0 24 24' fill='none' stroke='%23a0673a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='5' y='11' width='14' height='9' rx='2'/%3e%3cpath d='m8 11v7a4 4 0 0 1 8 0v4'/%3e%3c/svg%3e") center/contain no-repeat;
+    opacity: .9; pointer-events: none;
+}
 
 /* ================= DRIP FLAVOR SUB-PANEL ================= */
 .drip-flavor-panel { display: none; margin-top: 9px; background: var(--bg); border: 1.5px solid rgba(31,122,108,.22); border-radius: 14px; padding: 11px 12px; }
@@ -606,16 +602,18 @@ input[type=range].rot-range::-webkit-slider-thumb { -webkit-appearance: none; wi
 
 .viewer-hint {
     position: absolute; top: 18px; left: 50%; transform: translateX(-50%); bottom: auto;
-    background: rgba(40,20,8,0.42);
+    background: rgba(20,10,4,0.82);
     backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3);
-    border: 1px solid rgba(232,176,122,0.18);
+    border: 1px solid rgba(232,176,122,0.35);
     border-radius: var(--radius-pill);
     padding: 6px 16px;
-    font-size: .68rem; color: rgba(232,176,122,0.75);
+    font-size: .68rem; color: rgba(255,224,180,0.95);
+    font-weight: 600;
     white-space: nowrap;
     z-index: 10;
     font-family: var(--font-display);
     transition: top .2s ease, opacity .3s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.35);
 }
 .slice-toggle-wrap {
     position: absolute; top: 56px; left: 50%; transform: translateX(-50%);
@@ -1068,10 +1066,335 @@ body.preview-mode .viewer::after { content: none !important; }
 body.preview-mode,
 body.preview-mode html { background: transparent !important; }
 body.preview-mode #model-container canvas { background: transparent !important; }
-    </style>
+
+/* ============ TRACKER 3D VIEWER MODE (?view_request=ID) ============ */
+body.tracker-mode{ border-top:0 !important; background:transparent !important; height:100vh !important; overflow:hidden !important; }
+body.tracker-mode nav,
+body.tracker-mode .panel,
+body.tracker-mode .toast,
+body.tracker-mode .viewer-badge,
+body.tracker-mode .viewer-hint,
+body.tracker-mode #btnHelpTutorial,
+body.tracker-mode #tutOverlay,
+body.tracker-mode #brightnessControl,
+body.tracker-mode .fruit-tray,
+body.tracker-mode .choco-tray,
+body.tracker-mode #fruitRotPanel,
+body.tracker-mode #chocoRotInlinePanel,
+body.tracker-mode #characterMovePanel,
+body.tracker-mode #fruitCoordLiveBadge,
+body.tracker-mode #mobileSummaryBtn,
+body.tracker-mode #mobileSummarySheet{ display:none !important; }
+body.tracker-mode .builder{ display:block !important; padding:0 !important; gap:0 !important; }
+body.tracker-mode .viewer{
+    position:fixed !important; inset:0 !important; width:100% !important; height:100% !important;
+    margin:0 !important; border-radius:0 !important; box-shadow:none !important; animation:none !important;
+}
+body.tracker-mode .slice-toggle-wrap{ top:14px !important; }
+/* ================= BAKESPHERE ATELIER ================= */
+body{ border-top:0; }
+
+/* -- navigation -- */
+nav{ background:var(--espresso); border-bottom:1px solid rgba(184,148,82,.45); }
+.btn-back{ border:1px solid rgba(184,148,82,.5); background:transparent; text-transform:uppercase; letter-spacing:.12em; font-size:.66rem; }
+.btn-back:hover{ background:rgba(184,148,82,.12); color:var(--caramel-light); border-color:var(--champagne-gold); }
+.nav-brand{ font-weight:800; letter-spacing:.02em; }
+.nav-brand em{ font-weight:300; color:var(--champagne-gold); }
+.nav-center{ gap:26px; }
+.nav-step{ font-family:var(--font-display); font-size:.62rem; letter-spacing:.18em; color:rgba(247,242,233,.4); gap:8px; padding-bottom:6px; border-bottom:1px solid transparent; }
+.nav-step .ns-n{ color:var(--champagne-gold); font-weight:700; opacity:.7; }
+.nav-step.active{ color:var(--warm-ivory); border-bottom-color:var(--champagne-gold); }
+.nav-step.active .ns-n{ opacity:1; }
+@media (max-width:1180px){ .nav-step:not(.active){ display:none; } }
+
+/* -- layout -- */
+.builder{ gap:var(--sp-5); padding:var(--sp-5) var(--sp-5) 0; }
+@media (min-width:1301px){ :root{ --studio-w:420px; --ticket-w:340px; } }
+
+/* -- panel headers -- */
+.panel-header{ background:var(--bg); padding:var(--sp-2) 0 var(--sp-4); border-bottom:1px solid var(--champagne-gold); margin-bottom:var(--sp-4); }
+.panel-title{ font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.24em; color:var(--espresso); }
+.panel-title svg, .panel-title::before{ display:none !important; }
+
+/* -- left panel: one flat sheet, editorial sections -- */
+.builder > .panel:first-child .panel-body{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:0 26px 8px; gap:0; box-shadow:var(--shadow-sm); counter-reset:studio-step;
+}
+.builder > .panel:first-child .panel-body > div{
+    background:transparent; border:0; border-bottom:1px solid var(--border); border-radius:0; box-shadow:none;
+    padding:26px 0 28px;
+}
+.builder > .panel:first-child .panel-body > div:last-child{ border-bottom:0; }
+.builder > .panel:first-child .panel-body > div:hover{ box-shadow:none; }
+
+.section-label{
+    display:flex; flex-direction:column; align-items:flex-start; gap:4px;
+    background:none; padding:0; margin:0 0 16px; border:0; border-radius:0;
+    font-size:1.08rem; font-weight:800; letter-spacing:-.01em; text-transform:none; color:var(--espresso);
+    counter-increment:studio-step;
+}
+.section-label::before{
+    content:counter(studio-step, decimal-leading-zero) " / STUDIO"; position:static; width:auto; height:auto; transform:none; background:none; box-shadow:none; border-radius:0;
+    font-size:.58rem; font-weight:700; letter-spacing:.24em; color:var(--champagne-gold); display:block;
+}
+.section-label::after{ content:none; display:none; }
+.section-req{ display:none; }
+
+/* editorial helper text */
+.builder > .panel:first-child .panel-body > div > p{
+    background:none; padding:0; margin:-8px 0 14px !important; font-size:.74rem !important; color:var(--text-mid) !important; line-height:1.55;
+}
+
+/* -- shape / tier tiles -- */
+.shape-grid{ gap:8px; }
+.shape-opt{ background:var(--warm-white); border:1px solid var(--border); border-radius:var(--radius); padding:16px 6px 12px; box-shadow:none; }
+.shape-opt svg{ color:var(--dark-chocolate); }
+.shape-opt:hover{ border-color:var(--champagne-gold); transform:none; box-shadow:none; }
+.shape-opt .sh-name{ font-size:.66rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+.shape-opt.active{ background:var(--gold-lt); border-color:var(--champagne-gold); box-shadow:inset 0 0 0 1px var(--champagne-gold); }
+.shape-opt.active::after{ content:''; top:0; right:0; left:0; width:auto; height:2px; background:var(--champagne-gold); border-radius:0; font-size:0; }
+
+/* -- option pills (cake type etc.) -- */
+.opt{ background:var(--warm-white); border:1px solid var(--border); border-radius:var(--radius-sm); font-size:.74rem; letter-spacing:.02em; color:var(--text-mid); }
+.opt:hover{ border-color:var(--champagne-gold); background:var(--gold-lt); color:var(--espresso); }
+.opt.active{ background:var(--espresso); border-color:var(--espresso); color:var(--warm-ivory); box-shadow:none; }
+.opt.active::after{ color:var(--champagne-gold); }
+
+/* -- add-on tiles -- */
+.addon-opt{ background:var(--warm-white); border:1px solid var(--border); border-radius:var(--radius-sm); box-shadow:none; }
+.addon-opt:hover{ background:var(--gold-lt); border-color:var(--champagne-gold); transform:none; box-shadow:none; }
+.addon-opt.active{ background:var(--gold-lt); border-color:var(--champagne-gold); box-shadow:inset 0 0 0 1px var(--champagne-gold); }
+.addon-opt.active .a-name{ color:var(--espresso); }
+.addon-opt.active .addon-check{ background:var(--champagne-gold); border-color:var(--champagne-gold); }
+.a-name{ font-weight:700; }
+.a-price{ font-size:.66rem; letter-spacing:.04em; color:var(--text-muted); }
+.a-icon{ color:var(--dark-chocolate); }
+.addon-check{ border-radius:2px; }
+.addon-check svg{ stroke:#fff; }
+
+/* -- sliders: champagne gold -- */
+.size-slider-wrap{ background:transparent; padding:14px 0 0; }
+.size-slider-label{ font-size:.6rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--text-muted); }
+.size-slider-val{ font-size:1.25rem; font-weight:800; color:var(--espresso); }
+input[type=range].size-range, input[type=range].rot-range{ height:3px; background:var(--soft-beige); }
+input[type=range].size-range::-webkit-slider-thumb, input[type=range].rot-range::-webkit-slider-thumb{ background:var(--champagne-gold); border:3px solid var(--warm-ivory); box-shadow:0 2px 8px rgba(36,21,15,.35); }
+.size-tick{ font-size:.58rem; letter-spacing:.06em; }
+.size-category-card{ border:0; border-top:1px solid var(--border); border-radius:0; background:none; padding:10px 0 0; }
+.size-category-name{ font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; }
+
+/* -- number picker -- */
+.number-picker-wrap{ background:transparent; padding:14px 0 0; }
+.digit-mode-toggle{ border:1px solid var(--border-dk); border-radius:var(--radius-sm); }
+.digit-mode-btn{ font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; background:var(--warm-white); }
+.digit-mode-btn.active{ background:var(--espresso); color:var(--warm-ivory); }
+.num-opt, .num-opt-sm, .candle-num-opt{ background:var(--warm-white); border:1px solid var(--border); border-radius:var(--radius-sm); font-weight:700; }
+.num-opt:hover, .num-opt-sm:hover, .candle-num-opt:hover{ border-color:var(--champagne-gold); background:var(--gold-lt); color:var(--espresso); }
+.num-opt.active, .num-opt-sm.active, .candle-num-opt.active{ background:var(--espresso); border-color:var(--espresso); color:var(--champagne-gold); }
+.dual-digit-preview{ color:var(--espresso); font-weight:800; }
+
+/* -- frosting guide (luxury palette; was blue) + sub-headers -- */
+.frosting-guide{ background:var(--warm-white); border:1px solid var(--border); border-left:2px solid var(--champagne-gold); border-radius:var(--radius-sm); padding:14px 16px; }
+.frosting-guide-title{ color:var(--espresso); text-transform:uppercase; letter-spacing:.2em; font-size:.62rem; }
+.frosting-step-num{ background:var(--espresso); color:var(--champagne-gold); border-radius:2px; }
+.frosting-step-label{ color:var(--espresso); text-transform:uppercase; letter-spacing:.1em; }
+.frosting-step-desc{ color:var(--text-mid); }
+.frosting-guide-note{ background:var(--gold-lt); border-color:rgba(184,148,82,.35); color:var(--dark-chocolate); }
+.frosting-section-label{ background:none; border:0; border-radius:0; padding:0 0 6px; margin:16px 0 10px; display:flex; width:auto; font-size:.6rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--champagne-gold); border-bottom:1px solid var(--border); }
+.frosting-section-label::after{ display:none; }
+
+/* -- contextual sub-panels (icing colour, drip, rosette, etc.): unify palette -- */
+.icing-panel, .drip-flavor-panel, .candle-picker-panel, .orient-panel, .rot-panel,
+#ombreColorPanel, #rosettePlacementPanel, #shellBorderColorPanel, #tierDecorPanel,
+#plaqueShapePanel, #tobleroneFlavorPanel, #characterPickerPanel, #candlePickerPanel{
+    background:var(--cream) !important; border:1px solid var(--border) !important; border-left:2px solid var(--champagne-gold) !important;
+    border-radius:var(--radius-sm) !important; margin-top:12px !important; padding:14px !important;
+}
+.icing-header, .candle-picker-header, .orient-panel-header, .drip-flavor-header, .dual-col-label, .number-picker-label{
+    font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--champagne-gold) !important;
+}
+.icing-color-opt{ border-radius:2px; }
+.icing-color-opt.active{ border-color:var(--espresso); box-shadow:0 0 0 2px var(--champagne-gold); }
+.drip-flavor-opt{ background:var(--warm-white); border-radius:var(--radius-sm); }
+.drip-flavor-opt.active{ background:var(--espresso); border-color:var(--espresso); color:var(--warm-ivory); }
+.fondant-notice, .frosting-combo-hint{ background:var(--gold-lt); border:1px solid rgba(184,148,82,.35); border-radius:var(--radius-sm); color:var(--dark-chocolate); }
+.orient-toggle{ border:1px solid var(--border-dk); border-radius:var(--radius-sm); }
+.orient-btn{ background:var(--warm-white); color:var(--text-mid); letter-spacing:.06em; }
+.orient-btn.active{ background:var(--espresso); color:var(--champagne-gold); }
+.rot-preset-btn{ background:var(--warm-white); border:1px solid var(--border-dk); color:var(--dark-chocolate); border-radius:var(--radius-sm); }
+.rot-preset-btn:hover{ background:var(--gold-lt); }
+.rot-apply-btn, .rot-panel.rot-gold .rot-apply-btn{ background:var(--espresso); color:var(--warm-ivory); border-radius:var(--radius-sm); letter-spacing:.06em; }
+.rot-apply-btn:hover{ background:var(--dark-chocolate); }
+
+/* -- collapsible add-on groups: thin accordion rows -- */
+.addon-section-lbl{ font-size:.66rem; letter-spacing:.2em; color:var(--espresso); }
+.addon-section-lbl.addon-collapse-toggle, .addon-section-lbl.addon-collapse-toggle:hover, .addon-section-lbl.addon-collapse-toggle.open{
+    background:none; border:0; border-bottom:1px solid var(--border); border-radius:0; box-shadow:none;
+    padding:16px 2px; margin:0 !important; font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--espresso);
+}
+.addon-section-lbl.addon-collapse-toggle:hover{ color:var(--caramel); }
+.addon-section-lbl.addon-collapse-toggle.open{ border-bottom-color:var(--champagne-gold); }
+.addon-section-lbl.addon-collapse-toggle svg{ color:var(--champagne-gold); }
+.addon-section-lbl .addon-collapse-arrow{ color:var(--champagne-gold); }
+.addon-collapse-body{ background:transparent !important; border:0 !important; border-radius:0 !important; padding:16px 0 8px !important; margin:0 !important; }
+
+/* -- instructional clutter stays hidden (unchanged behaviour) -- */
+.panel-subtitle, .frosting-combo-hint .frosting-combo-sub, .fondant-notice-sub, .orient-hint,
+.fruits-drag-notice, #fruitsDragNotice, #leafDragNotice, #chocoPlaceNotice, #gramFruitTierHint,
+.ferrero-drag-notice, .kitkat-drag-notice, .oreo-drag-notice, .bar-shard-drag-notice, .candle-drag-notice,
+.candle-active-badge:not(#characterActiveBadge), .size-category-range, .size-category-desc,
+span[style*="font-size:.58rem"]{ display:none !important; }
+.frosting-combo-hint{ display:none; }
+.frosting-combo-hint.visible{ display:flex; }
+
+/* -- JS-built rows: Size / Height / per-tier flavors (keep these classes) -- */
+.acc-orig{ display:none !important; }
+#sizeSliderWrap, #heightSliderWrap{ padding:0 !important; margin:0 !important; background:none !important; }
+#sizeSliderWrap{ margin-top:14px !important; }
+#tierLayerRows{ gap:0 !important; }
+.acc-card{ border:0; padding:0; background:none; }
+.acc-row{ display:flex; align-items:center; gap:10px; width:100%; padding:15px 2px; background:none; border:0; border-bottom:1px solid var(--border);
+    font-family:var(--font-display); font-size:.74rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--espresso); cursor:pointer; text-align:left; }
+.acc-row:hover{ color:var(--caramel); }
+.acc-title{ flex-shrink:0; }
+.acc-val{ margin-left:auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.76rem; font-weight:500; letter-spacing:0; text-transform:none; color:var(--text-mid); text-align:right; }
+.acc-arrow{ font-size:.66rem; color:var(--champagne-gold); transition:transform .2s; flex-shrink:0; }
+.acc-open > .acc-row{ border-bottom-color:var(--champagne-gold); }
+.acc-open > .acc-row .acc-arrow{ transform:rotate(90deg); }
+.acc-body{ display:none; padding:16px 0 10px; }
+.acc-open > .acc-body{ display:block; }
+.acc-pills{ display:flex; flex-wrap:wrap; gap:8px; }
+.acc-pill{ padding:9px 15px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--warm-white); font-family:var(--font-display); font-size:.78rem; font-weight:600; color:var(--text-mid); cursor:pointer; }
+.acc-pill:hover{ border-color:var(--champagne-gold); color:var(--espresso); }
+.acc-pill.active{ background:var(--espresso); border-color:var(--espresso); color:var(--champagne-gold); }
+.acc-layers{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.acc-layers-label{ font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--champagne-gold); }
+.acc-body select{ border-radius:var(--radius-sm) !important; border:1px solid var(--border-dk) !important; background:var(--warm-white) !important; }
+
+/* -- 3D stage: digital showroom (background only; canvas stays transparent) -- */
+.viewer{
+    margin:var(--sp-4) 0; border-radius:var(--radius-lg); border:1px solid rgba(184,148,82,.5); box-shadow:var(--shadow-lg);
+    background:
+        radial-gradient(ellipse 55% 40% at 50% 0%, rgba(255,244,222,.75) 0%, rgba(255,244,222,0) 70%),
+        radial-gradient(ellipse 90% 45% at 50% 100%, rgba(58,36,26,.30) 0%, rgba(58,36,26,0) 70%),
+        linear-gradient(180deg, #F7F2E9 0%, #EFE6D7 45%, #D8C8B7 78%, #B79F86 100%);
+}
+.viewer::before{ height:30%; background:linear-gradient(to top, rgba(36,21,15,.28) 0%, rgba(36,21,15,0) 100%); }
+.viewer::after{ background:radial-gradient(ellipse 120% 90% at 50% 100%, rgba(36,21,15,.16) 0%, transparent 70%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.35), inset 0 0 70px rgba(36,21,15,.10); }
+.viewer-badge, .viewer-hint, .slice-toggle-wrap, .view-btn, .model-status{
+    background:rgba(36,21,15,.72); border:1px solid rgba(184,148,82,.45); border-radius:var(--radius-sm);
+}
+.viewer-badge{ padding:10px 16px; }
+.badge-flavor{ font-size:.66rem; letter-spacing:.2em; color:var(--champagne-gold); }
+.badge-shape{ color:rgba(247,242,233,.75); letter-spacing:.04em; }
+.viewer-hint{ font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(247,242,233,.9); }
+.slice-toggle-btn{ font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; border-radius:2px; }
+.slice-toggle-btn.active{ background:var(--champagne-gold); color:var(--espresso); }
+.view-btn{ color:var(--caramel-light); }
+.view-btn:hover{ background:rgba(184,148,82,.25); color:var(--warm-ivory); transform:none; }
+
+/* -- loading state -- */
+.loading-cake-tier{ background:linear-gradient(100deg, rgba(184,148,82,.18) 0%, rgba(184,148,82,.6) 40%, rgba(184,148,82,.18) 70%); background-size:200% 100%; border-radius:4px; box-shadow:0 3px 10px rgba(36,21,15,.15); }
+.loading-cake-plate{ background:rgba(36,21,15,.18); }
+.loading-spinner{ border-color:rgba(184,148,82,.2); border-top-color:var(--champagne-gold); }
+.loading-text{ font-size:.66rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--dark-chocolate); }
+
+/* -- decoration trays: compact espresso bar -- */
+.fruit-tray, .choco-tray, .ferrero-tray, .kitkat-tray, .oreo-tray, .bar-shard-tray{
+    background:rgba(36,21,15,.9); border:1px solid rgba(184,148,82,.5); border-radius:var(--radius-sm); padding:7px 12px; box-shadow:0 8px 24px rgba(36,21,15,.4);
+}
+.fruit-tray-label, .choco-tray-label{ font-size:.56rem; letter-spacing:.22em; color:var(--champagne-gold); }
+.fruit-draggable, .ferrero-draggable, .kitkat-draggable, .oreo-draggable, .bar-shard-draggable, .toblerone-draggable, .candle-draggable{
+    width:38px; height:38px; border-radius:var(--radius-sm); background:rgba(247,242,233,.06); border:1px solid rgba(184,148,82,.35); color:var(--caramel-light);
+}
+.fruit-draggable:hover, .ferrero-draggable:hover, .kitkat-draggable:hover, .oreo-draggable:hover, .bar-shard-draggable:hover, .toblerone-draggable:hover, .candle-draggable:hover{
+    background:rgba(184,148,82,.22); border-color:var(--champagne-gold); transform:translateY(-1px);
+}
+.fruit-clear-btn, .choco-clear-btn{ border-radius:var(--radius-sm); border-color:rgba(247,242,233,.3); color:rgba(247,242,233,.8); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; }
+.drop-ring, .ferrero-drop-ring, .kitkat-drop-ring, .oreo-drop-ring, .bar-shard-drop-ring, .toblerone-drop-ring, .candle-drop-ring{ border-color:rgba(184,148,82,.9); }
+
+/* -- order summary: flat luxury sheet -- */
+.builder > .panel:last-child .panel-body{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px 0 24px; gap:18px; box-shadow:var(--shadow-sm);
+}
+.builder > .panel:last-child .panel-body > div{ margin:0 24px; background:transparent; border:0; border-radius:0; box-shadow:none; padding:0; }
+.builder > .panel:last-child .config-card{ display:none; }   /* replaced by #cakeSummary */
+.config-card-header, .price-block-header{
+    border:0; border-bottom:1px solid var(--champagne-gold); padding:0 0 8px; margin-bottom:6px;
+    font-size:.6rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--champagne-gold);
+}
+.sum-group{ margin-bottom:16px; }
+.sum-title{ font-size:.6rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--champagne-gold); padding-bottom:4px; margin-bottom:2px; }
+#cakeSummary .cfg-row{ border-top:1px solid var(--border); padding:8px 0; }
+#cakeSummary .cfg-key{ font-size:.74rem; font-weight:500; letter-spacing:0; text-transform:none; color:var(--text-muted); }
+.cfg-val{ font-size:.78rem; font-weight:700; color:var(--espresso); }
+.cfg-row, .price-row{ padding-left:0; padding-right:0; }
+.cfg-row + .cfg-row, .price-row + .price-row{ border-top:1px solid var(--border); }
+.cfg-key, .pr-label{ font-size:.66rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); }
+.pr-val{ font-weight:700; color:var(--espresso); font-variant-numeric:tabular-nums; }
+.cfg-chip{ border-radius:2px; letter-spacing:.04em; }
+.cfg-chip.chip-accent, .cfg-chip.chip-teal{ background:var(--accent-lt); color:var(--dark-chocolate); }
+.cfg-chip.chip-gold{ background:var(--gold-lt); color:#6E5424; }
+.sw{ display:inline-block; width:11px; height:11px; border-radius:50%; border:1px solid rgba(0,0,0,.18); vertical-align:-1px; margin:0 2px; }
+
+.builder > .panel:last-child .panel-body > .price-total-block{
+    background:var(--espresso); border:1px solid var(--champagne-gold); border-radius:var(--radius); padding:22px 24px; box-shadow:0 12px 28px rgba(36,21,15,.3);
+}
+.price-total-block::before{ background:radial-gradient(ellipse 70% 100% at 100% 0%, rgba(184,148,82,.2) 0%, transparent 60%); }
+.price-total-block::after{ display:none; }
+.pt-label{ font-size:.6rem; letter-spacing:.26em; color:var(--champagne-gold); font-weight:700; }
+.pt-currency{ font-size:1.3rem; color:var(--champagne-gold); font-weight:700; }
+.pt-number{ font-size:2.6rem; font-weight:800; color:var(--warm-ivory); letter-spacing:-.02em; }
+
+/* -- CTAs -- */
+.btn-proceed-lg{ background:var(--champagne-gold); color:var(--espresso); border:1px solid var(--champagne-gold); border-radius:var(--radius-sm); font-size:.74rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; box-shadow:0 8px 20px rgba(184,148,82,.35); }
+.btn-proceed-lg:hover{ background:var(--espresso); color:var(--champagne-gold); box-shadow:0 12px 26px rgba(36,21,15,.35); }
+.btn-load-draft{ border:1px solid var(--border-dk); border-radius:var(--radius-sm); font-size:.66rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--text-mid); }
+.btn-load-draft:hover{ border-color:var(--champagne-gold); color:var(--espresso); background:var(--gold-lt); }
+
+/* -- toast, tutorial -- */
+.toast{ background:var(--espresso); border:1px solid var(--champagne-gold); border-radius:var(--radius-sm); font-size:.72rem; letter-spacing:.06em; }
+.tut-modal{ border-radius:var(--radius-lg); border:1px solid var(--champagne-gold); }
+.tut-eyebrow{ letter-spacing:.24em; color:var(--champagne-gold); }
+.tut-btn-next{ background:var(--espresso); border-radius:var(--radius-sm); letter-spacing:.14em; text-transform:uppercase; font-size:.74rem; }
+.tut-btn-back{ border-radius:var(--radius-sm); }
+.tut-preview-num{ border-radius:2px; color:var(--champagne-gold); }
+.tut-welcome-mark, .tut-closing-mark{ background:var(--espresso); }
+
+/* -- scrollbars, focus, selection -- */
+.panel{ scrollbar-color:var(--border-dk) transparent; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible, .shape-opt:focus-visible, .opt:focus-visible,
+.addon-opt:focus-visible, .icing-color-opt:focus-visible, input:focus-visible{ outline:2px solid var(--champagne-gold); outline-offset:2px; }
+::selection{ background:rgba(184,148,82,.3); color:var(--espresso); }
+
+/* -- responsive: preview → controls → summary; touch-friendly -- */
+@media (max-width:980px){ .builder{ padding:var(--sp-4) var(--sp-4) 0; } }
+@media (max-width:768px){
+    .builder{ padding:12px 12px 90px; gap:14px; }
+    .viewer{ height:78vw; min-height:320px; max-height:520px; margin:0 0 4px; }
+    .builder > .panel:first-child .panel-body{ padding:0 18px 8px; }
+    .opt, .addon-opt, .shape-opt, .num-opt, .digit-mode-btn, .orient-btn, .acc-pill, .acc-row{ min-height:44px; }
+    #mobileSummaryBtn{ background:var(--espresso) !important; color:var(--champagne-gold) !important; border:1px solid var(--champagne-gold); border-radius:var(--radius-sm) !important; letter-spacing:.1em; }
+    #mobileSummaryDrawer{ border-radius:var(--radius-lg) var(--radius-lg) 0 0 !important; }
+}
+
+</style>
+</style>
+<style>
+.is-coming-soon { position: relative; opacity: .6; cursor: not-allowed !important; filter: grayscale(.6); }
+.is-coming-soon:hover { border-color: inherit; background: inherit; }
+.soon-badge {
+    position: absolute; top: 4px; right: 6px; padding: 2px 8px;
+    font-size: 10px; font-weight: 700; border-radius: 999px;
+    background: #fde68a; color: #92400e; pointer-events: none;
+}
+</style>
 </head>
 <body>
-<script>if(new URLSearchParams(window.location.search).has('view_draft')) document.body.classList.add('preview-mode');</script>
+<script>
+if(new URLSearchParams(window.location.search).has('view_draft')) document.body.classList.add('preview-mode');
+if(new URLSearchParams(window.location.search).has('view_request')) document.body.classList.add('tracker-mode');
+</script>
 
 <!-- ================= TUTORIAL OVERLAY ================= -->
 <div class="tut-overlay" id="tutOverlay">
@@ -1120,7 +1443,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </div>
                 </div>
                            <div style="margin-top:18px;padding:12px 16px;background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;font-size:.86rem;color:#6B4C08;font-family:var(--font-body);line-height:1.65;display:flex;align-items:flex-start;gap:10px;">
-                    <span style="font-size:1.15rem;flex-shrink:0;margin-top:1px;"><i class="ic" data-ic="warn"></i></span>                    <span><strong>Note:</strong> Some cake components may not be compatible or suitable for combination in an actual cake. The 3D Cake Designer is intended only for visualization purposes, so certain combinations may appear in the 3D preview even though they may not be practically applicable or accurately represent the final cake design.</span>
+                    <span style="font-size:1.15rem;flex-shrink:0;margin-top:1px;"><i class="ic" data-ic="warn"></i></span>                    <span><strong>Note:</strong> The 3D preview is for visualization only. Some combinations may not be possible in a real cake.</span>
                 </div>
             </div>     <div class="tut-slide" data-step="2">
                 <div class="tut-step-layout">
@@ -1218,11 +1541,12 @@ body.preview-mode #model-container canvas { background: transparent !important; 
         <a href="{{ route('customer.dashboard') }}" class="nav-brand">Bake<em>Sphere</em></a>
     </div>
     <div class="nav-center">
-        <div class="nav-step active"><div class="step-dot"></div>Design</div>
-        <div class="step-line"></div>
-        <div class="nav-step"><div class="step-dot"></div>Review</div>
-        <div class="step-line"></div>
-        <div class="nav-step"><div class="step-dot"></div>Submit</div>
+        <div class="nav-step active"><span class="ns-n">01</span>Shape</div>
+        <div class="nav-step"><span class="ns-n">02</span>Size</div>
+        <div class="nav-step"><span class="ns-n">03</span>Flavor</div>
+        <div class="nav-step"><span class="ns-n">04</span>Frosting</div>
+        <div class="nav-step"><span class="ns-n">05</span>Details</div>
+        <div class="nav-step"><span class="ns-n">06</span>Review</div>
     </div>
   <div class="nav-right">
     </div>
@@ -1235,7 +1559,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
         <div class="panel-header">
             <div class="panel-title">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-                Customize your own Cake
+                Build Your Cake
             </div>
            
         </div>
@@ -1243,7 +1567,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
     {{-- 1. SHAPE --}}
             <div>
-        <div class="section-label">Cake Shape <span class="section-req">required</span></div>
+        <div class="section-label">Cake Shape</div>
                 <div class="shape-grid" id="opts-shape">
                   <div class="shape-opt active" data-val="Round"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><line x1="3" y1="12" x2="3" y2="16"/><line x1="21" y1="12" x2="21" y2="16"/><ellipse cx="12" cy="8.5" rx="9" ry="3.5"/><line x1="3" y1="8.5" x2="3" y2="12"/><line x1="21" y1="8.5" x2="21" y2="12"/></svg><span class="sh-name">Round</span></div>
                   <div class="shape-opt" data-val="Square"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="13" width="18" height="6" rx="1"/><rect x="3" y="8" width="18" height="5" rx="1"/><rect x="5" y="4" width="14" height="4" rx="1"/></svg><span class="sh-name">Square</span></div>
@@ -1258,6 +1582,23 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     </svg>
                     <span class="sh-name">Bundt</span>
                 </div>
+
+                {{-- Shapes added in admin that the builder has no 3D model for yet --}}
+                @php
+                    $builtInShapes = ['Round', 'Square', 'Heart', 'Number', 'Bundt'];
+                    $extraShapes = $components->get('shape', collect())->filter(fn($c) =>
+                        $c->status === 'coming_soon'
+                        && !in_array($c->name, $builtInShapes)
+                        && !preg_match('/^Round \d+"$/', $c->name)
+                        && stripos($c->name, 'tier') === false
+                    );
+                @endphp
+                @foreach($extraShapes as $c)
+                <div class="shape-opt" data-val="{{ $c->name }}">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="6" width="16" height="12" rx="2"/></svg>
+                    <span class="sh-name">{{ $c->name }}</span>
+                </div>
+                @endforeach
                 </div>
                 <div class="size-slider-wrap visible" id="sizeSliderWrap">
                     <div class="size-slider-header">
@@ -1268,6 +1609,23 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     <div class="size-ticks">
                         <span class="size-tick">4"</span><span class="size-tick">5"</span><span class="size-tick">6"</span>
                         <span class="size-tick">7"</span><span class="size-tick">8"</span><span class="size-tick">9"</span><span class="size-tick">10"</span>
+                    </div>
+                    <div class="size-category-card" id="sizeCategoryCard">
+                        <div class="size-category-row">
+                            <span class="size-category-name" id="sizeCategoryName">Small Cake</span>
+                            <span class="size-category-range" id="sizeCategoryRange">6"–6"</span>
+                        </div>
+                        <div class="size-category-desc" id="sizeCategoryDesc">Perfect for small celebrations</div>
+                    </div>
+                </div>
+                <div class="size-slider-wrap visible" id="heightSliderWrap" style="margin-top:10px;">
+                    <div class="size-slider-header">
+                     <span class="size-slider-label">Cake Height</span>
+                        <span class="size-slider-val"><span id="heightDisplay">100</span>%</span>
+                    </div>
+                    <input type="range" class="size-range" id="heightRange" min="60" max="160" step="5" value="100">
+                    <div class="size-ticks">
+                        <span class="size-tick">Short</span><span class="size-tick"></span><span class="size-tick">Normal</span><span class="size-tick"></span><span class="size-tick"></span><span class="size-tick"></span><span class="size-tick">Tall</span>
                     </div>
                 </div>
                 <div class="number-picker-wrap" id="numberPickerWrap">
@@ -1329,18 +1687,19 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
     {{-- 2. CAKE TYPE (Textured now lives here too) --}}
             <div>
-                <div class="section-label">Cake Type <span class="section-req">required</span></div>
+                <div class="section-label">Cake Type</div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose your cake base or specialty cake.</p>
         <div class="opts" id="opts-cake-type" style="margin-bottom:2px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px;">
-                    @foreach($components->get('cake_type', collect()) as $i => $c)
-                    <div class="opt {{ $i === 0 ? 'active' : '' }}" data-cake-type="{{ $c->name }}">{{ $c->name }}</div>
+                    @php $firstactivetype = $components->get('cake_type', collect())->firstwhere('status', 'active')?->name; @endphp
+@foreach($components->get('cake_type', collect()) as $i => $c)
+                    <div class="opt {{ $c->name === $firstactivetype ? 'active' : '' }}" data-cake-type="{{ $c->name }}">{{ $c->name }}</div>
                     @endforeach
                 </div>
             </div>
 
     {{-- 3. CAKE TIER --}}
             <div id="cakeTierSection">
-                <div class="section-label">Cake Tier</div>
+                <div class="section-label">Tiers</div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Leave on <strong>Single</strong> unless you want a stacked cake. Applies to <strong>Round</strong>, <strong>Square</strong> and <strong>Heart</strong> as of now.</p>
                 <div class="shape-grid" id="opts-tier" style="grid-template-columns:repeat(3,1fr);">
                     <div class="shape-opt active" data-tier="Single"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="16" rx="8" ry="4"/><rect x="4" y="10" width="16" height="6" rx="1"/><path d="M6 10c0-3 2-5 6-5s6 2 6 5"/></svg><span class="sh-name">Single</span></div>
@@ -1351,7 +1710,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
             {{-- 4. CAKE STYLE --}}
             <div>
-                <div class="section-label">Cake Style <span class="section-req">required</span></div>
+                <div class="section-label">Cake Style</div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 10px;font-family:var(--font-display);">Choose the<strong> overall finish</strong> or look of your cake.</p>
                 <div class="addon-grid" id="opts-cake-style">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="style">
@@ -1378,7 +1737,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 </div>
           <div class="fondant-notice" id="fondantNotice">
                     <span class="fondant-notice-icon"><i class="ic" data-ic="square"></i></span>                    <div>
-                        <span class="fondant-notice-title">Fondant selected — solo only</span>
+                        <span class="fondant-notice-title">Fondant replaces other icing options</span>
                         <span class="fondant-notice-sub">Fondant replaces all frosting/icing options. Tap Fondant again to deselect.</span>
                     </div>
                 </div>
@@ -1407,7 +1766,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
 
     {{-- 5. LAYER (Filling always visible, locked until 2+ layers) --}}
             <div id="cakeLayersSection">
-                <div class="section-label">Cake Layers</div>
+                <div class="section-label">Flavor &amp; Layers</div>
                 <p style="font-size:.68rem;color:var(--text-muted);margin:0 0 8px;font-family:var(--font-display);">Choose how many layers each tier has. Lines on the side of the cake show the layers.</p>
                 <div id="tierLayerRows" style="display:flex;flex-direction:column;gap:8px;"></div>
                 <div id="fillingSection" style="margin-top:14px;transition:opacity .2s;">
@@ -1445,14 +1804,14 @@ body.preview-mode #model-container canvas { background: transparent !important; 
         'Biscoff'=>'#C8752A','Carrot'=>'#E8791E','Banana'=>'#F0DE7A',
     ];
     $flavorComponents = $components->get('flavor', collect());
-    $firstFlavor = $flavorComponents->first();
+    $firstFlavor = $flavorComponents->firstwhere('status', 'active');
 @endphp
 
             {{-- ADD-ONS --}}
             <div>
-                <div class="section-label">Add-ons <span style="font-size:.6rem;color:var(--text-muted);font-weight:400;margin-left:auto;">optional</span></div>
+                <div class="section-label">Decorations</div>
 
-                <div class="addon-section-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="5" r="2.6"/><circle cx="12" cy="19" r="2.6"/><circle cx="5" cy="12" r="2.6"/><circle cx="19" cy="12" r="2.6"/></svg> Icing Decorations</div>
+                <div class="addon-section-lbl"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="5" r="2.6"/><circle cx="12" cy="19" r="2.6"/><circle cx="5" cy="12" r="2.6"/><circle cx="19" cy="12" r="2.6"/></svg> Borders &amp; Icing</div>
 
                 <div class="addon-grid" id="opts-frosting-base">
                     <div class="addon-opt frosting-opt active" data-val="Smooth Buttercream" data-price="0" data-group="base">
@@ -1492,11 +1851,63 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <div class="icing-color-opt"                    data-icing-color="#2C1810" data-icing-name="Chocolate" style="background:#2C1810;"></div>
                     </div>
                     <div class="icing-color-label" id="icingColorLabel">White</div>
+                    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(196,154,60,.25);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-family:var(--font-mono);">Icing Size</span>
+                            <span id="icingSizeVal" style="font-family:var(--font-mono);font-size:.76rem;font-weight:700;color:var(--caramel);">100%</span>
+                        </div>
+                        <input type="range" class="size-range" id="icingSizeRange" min="20" max="100" step="1" value="100">
+                        <div style="display:flex;justify-content:space-between;margin-top:3px;">
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Smaller (toward center)</span>
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Default</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(196,154,60,.25);">
+                        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">Half Cake View</div>
+                        <div id="icingHalfViewGroup" style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                            <button type="button" class="half-view-btn active" data-half-side="" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Full</button>
+                            <button type="button" class="half-view-btn" data-half-side="left" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Left half</button>
+                            <button type="button" class="half-view-btn" data-half-side="right" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Right half</button>
+                        </div>
+                        <div style="font-size:.60rem;color:var(--text-muted);margin-top:6px;font-family:var(--font-display);line-height:1.4;">🔗 Can combine with Shell Border and/or Rosette Border — any 2 of these 3 together, never all 3 at once. When paired with Rosette Border, picking a half here auto-splits Rosette Border to the opposite half.</div>
+                    </div>
                 </div>
-
+                <div class="icing-panel" id="shellBorderColorPanel" style="background:linear-gradient(135deg,#F0F7FF 0%,#E8F2FF 100%);border-color:rgba(48,100,200,.18);">
+                    <div class="icing-header" style="color:#1A3A80;">Choose Shell Border color</div>
+                    <div class="icing-color-grid" id="shellBorderColorGrid" style="grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;">
+                        <div class="icing-color-opt light-color active" data-shell-color="#FFFFFF" data-shell-color-name="White"    style="background:#FFFFFF;border-color:#D5C8B8;"></div>
+                        <div class="icing-color-opt light-color"        data-shell-color="#FFCCE0" data-shell-color-name="Pink"     style="background:#FFCCE0;"></div>
+                        <div class="icing-color-opt light-color"        data-shell-color="#C8E6FF" data-shell-color-name="Sky Blue" style="background:#C8E6FF;"></div>
+                        <div class="icing-color-opt light-color"        data-shell-color="#D4C8FF" data-shell-color-name="Lavender" style="background:#D4C8FF;"></div>
+                        <div class="icing-color-opt"                    data-shell-color="#F5C842" data-shell-color-name="Gold"     style="background:#F5C842;"></div>
+                        <div class="icing-color-opt"                    data-shell-color="#2C1810" data-shell-color-name="Chocolate" style="background:#2C1810;"></div>
+                    </div>
+                    <div class="icing-color-label" id="shellBorderColorLabel">White</div>
+                    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(48,100,200,.20);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-family:var(--font-mono);">Shell Border Size</span>
+                            <span id="shellBorderSizeVal" style="font-family:var(--font-mono);font-size:.76rem;font-weight:700;color:var(--caramel);">100%</span>
+                        </div>
+                        <input type="range" class="size-range" id="shellBorderSizeRange" min="20" max="100" step="1" value="100">
+                        <div style="display:flex;justify-content:space-between;margin-top:3px;">
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Smaller (toward center)</span>
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Default</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(48,100,200,.20);">
+                        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">Half Cake View</div>
+                        <div id="shellBorderHalfViewGroup" style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                            <button type="button" class="half-view-btn active" data-half-side="" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Full</button>
+                            <button type="button" class="half-view-btn" data-half-side="left" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Left half</button>
+                            <button type="button" class="half-view-btn" data-half-side="right" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Right half</button>
+                        </div>
+                        <div style="font-size:.60rem;color:var(--text-muted);margin-top:6px;font-family:var(--font-display);line-height:1.4;">🔗 Can pair with Sugar Icing <em>or</em> Rosette Border — only one at a time, never both together. When paired with Rosette Border, picking a half here auto-splits rosette border to the opposite half.</div>
+                    </div>
+                </div>
 
          <div class="candle-picker-panel" id="rosettePlacementPanel" style="background:linear-gradient(135deg,#FDF0F5 0%,#FBEAF0 100%);border-color:rgba(216,120,150,.32);">
        <div class="candle-picker-header"><i class="ic" data-ic="rose"></i> Rosette placement <span id="rosetteNumberDigitNotice" style="display:none;font-size:.58rem;font-weight:400;margin-left:6px;color:#B02040;">(rosettes only available for single-digit Number cakes)</span></div>
+        <div style="font-size:.62rem;color:#B0648A;font-family:var(--font-body);line-height:1.5;margin:-2px 0 8px;">🔗 Rosette <strong>Border</strong> can combine with Sugar Icing and/or Shell Border — any 2 of these 3 together, never all 3 at once. Half Cake View only works for the <strong>Border</strong> placement, and pairing auto-splits both to opposite halves.</div>
                                    <div class="candle-num-grid" id="opts-rosette-placement" style="grid-template-columns:repeat(3,1fr);">
                         <div class="candle-num-opt active" data-rosette-placement="Border" style="font-size:.58rem;">Border</div>
                         <div class="candle-num-opt" data-rosette-placement="Full Top" style="font-size:.58rem;">Full</div>
@@ -1505,6 +1916,26 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <div class="candle-num-opt" data-rosette-placement="Cluster Left" style="font-size:.54rem;">Cluster L</div>
                     </div>
                   <div class="candle-active-badge" id="rosettePlacementBadge">Selected: Border</div>
+                    <div class="size-slider-wrap visible" id="rosetteBorderSizeWrap" style="display:none;margin-top:10px;background:var(--warm-white);border:none;border-radius:14px;padding:12px 14px 11px;">
+                        <div class="size-slider-header">
+                            <span class="size-slider-label">Rosette Size</span>
+                            <span class="size-slider-val"><span id="rosetteBorderSizeVal">100</span>%</span>
+                        </div>
+                        <input type="range" class="size-range" id="rosetteBorderSizeRange" min="20" max="100" step="1" value="100">
+                        <div style="display:flex;justify-content:space-between;margin-top:3px;">
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Smaller (toward center)</span>
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Default</span>
+                        </div>
+                    </div>
+                    <div id="rosetteHalfViewWrap" style="display:none;margin-top:9px;">
+                        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">Half Cake View (Border only)</div>
+                        <div id="rosetteHalfViewGroup" style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                            <button type="button" class="half-view-btn active" data-half-side="" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Full</button>
+                            <button type="button" class="half-view-btn" data-half-side="left" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Left half</button>
+                            <button type="button" class="half-view-btn" data-half-side="right" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Right half</button>
+                        </div>
+                        <div style="font-size:.60rem;color:var(--text-muted);margin-top:6px;font-family:var(--font-display);line-height:1.4;">Tip: only applies to Rosette <strong>Border</strong>. If combined with Sugar Icing or Shell Border, the other side is set for you automatically.</div>
+                    </div>
  
                     <div class="frosting-section-label" style="margin-top:10px;"><i class="ic" data-ic="sparkles"></i> Combo placements <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:4px;">(pick one, optional)</span></div>
                                    <div class="candle-num-grid" id="opts-rosette-combo" style="grid-template-columns:1fr;gap:6px;">
@@ -1531,7 +1962,13 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     <div class="icing-color-label" id="rosetteColorLabel">White</div>
                 </div>
 
-                <div class="frosting-section-label" style="margin-top:10px;">Texture <span style="font-size:.58rem;color:var(--text-muted);font-weight:400;margin-left:6px;">optional add-on</span></div>
+                <div class="icing-panel" id="tierDecorPanel" style="background:linear-gradient(135deg,#F4F8F2 0%,#EAF3EE 100%);border:1.5px solid rgba(31,122,108,.25);">
+    <div class="icing-header" style="color:var(--teal);"><i class="ic" data-ic="cake"></i> Choose which tier gets what</div>
+    <div style="font-size:.64rem;color:var(--text-muted);font-family:var(--font-display);line-height:1.5;margin:-2px 0 9px;">Tier 1 is the bottom tier. Tap a tier to turn it on or off for each decoration, e.g. Sugar Icing on Tier 1, Shell Border on Tier 2, Rosette Border on Tier 3.</div>
+    <div id="tierDecorRows" style="display:flex;flex-direction:column;gap:10px;"></div>
+</div>
+
+<div class="frosting-section-label" style="margin-top:10px;">Texture</div>
                 <div class="addon-grid" id="opts-frosting-special">
                     <div class="addon-opt frosting-opt" data-val="Textured Buttercream" data-price="150" data-group="texture">
                         <div class="a-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M4 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M4 20c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg></div>
@@ -1678,6 +2115,27 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                             <div class="addon-check" style="margin-top:2px;"><svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2"><polyline points="2 6 5 9 10 3"/></svg></div>
                         </div>
                     </div>
+                    <div id="fruitBorderSizeWrap" style="margin-top:9px;background:var(--warm-white);border:1.5px solid var(--border-dk);border-radius:12px;padding:10px 12px 9px;display:flex;flex-direction:column;gap:9px;">
+                        <div style="font-size:.66rem;font-weight:700;color:var(--brown-mid);font-family:var(--font-display);text-transform:uppercase;letter-spacing:.05em;">Border Size — per fruit</div>
+                        @foreach(['Mango Slice'=>'Mango Cube','Kiwi Slice'=>'Kiwi Slice','Peach Slice'=>'Peach Slice','Banana Slice'=>'Banana Slice'] as $fkey => $flabel)
+                        <div class="fruit-border-size-row" data-fruit-slider="{{ $fkey }}" style="display:none;">
+                            <div class="size-slider-header" style="margin-bottom:2px;">
+                                <span class="size-slider-label" style="font-size:.68rem;">{{ $flabel }}</span>
+                                <span class="size-slider-val"><span class="fruit-border-size-val">100</span>%</span>
+                            </div>
+                            <input type="range" class="size-range fruit-border-size-range" min="20" max="100" step="1" value="100">
+                            <div class="fruit-half-view-group" data-fruit-key="{{ $fkey }}" style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:8px;overflow:hidden;margin-top:6px;">
+                                <button type="button" class="half-view-btn active" data-half-side="" style="flex:1;padding:5px 2px;font-size:.62rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">full</button>
+                                <button type="button" class="half-view-btn" data-half-side="left" style="flex:1;padding:5px 2px;font-size:.62rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">left half</button>
+                                <button type="button" class="half-view-btn" data-half-side="right" style="flex:1;padding:5px 2px;font-size:.62rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">right half</button>
+                            </div>
+                        </div>
+                        @endforeach
+                        <div style="display:flex;justify-content:space-between;">
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Smaller (toward center)</span>
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Default</span>
+                        </div>
+                    </div>
                     <div id="fruitGramsTotalNote" style="display:none;margin-top:9px;padding:7px 10px;background:rgba(200,137,74,.15);border-radius:8px;font-size:.70rem;color:#7A4A1E;font-family:var(--font-display);align-items:center;gap:6px;flex-direction:row;">
                         <span style="font-size:1.1rem;"><i class="ic" data-ic="scale"></i></span>                        <span id="fruitGramsTotalText"></span>
                     </div>
@@ -1692,7 +2150,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <span style="font-size:1.05rem;"><i class="ic" data-ic="grapes"></i></span>                        <span>All Fruits — Assorted Full Top</span>
                     </button>
                 </div>
-<div class="addon-section-lbl" style="margin-top:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="8" y1="6" x2="8" y2="20"/><line x1="16" y1="6" x2="16" y2="20"/><line x1="2" y1="13" x2="22" y2="13"/></svg> Chocolate Decorations</div>
+<div class="addon-section-lbl" style="margin-top:10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><line x1="8" y1="6" x2="8" y2="20"/><line x1="16" y1="6" x2="16" y2="20"/><line x1="2" y1="13" x2="22" y2="13"/></svg> Chocolates</div>
                 <div style="background:var(--gold-lt);border:1px solid rgba(196,154,60,.28);border-radius:12px;padding:10px 12px;">
                     <p style="font-size:.72rem;font-weight:700;color:#6B4C08;margin:0 0 10px;font-family:var(--font-display);">Tap a decoration to add it — then tap the cake preview to place it</p>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="opts-choco">
@@ -1806,6 +2264,25 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                         <button class="choco-curls-place-btn active" data-placement="middle" style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--gold);color:#fff;transition:all .15s;">Middle</button>
                         <button class="choco-curls-place-btn"        data-placement="sides"  style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Sides</button>
                         <button class="choco-curls-place-btn"        data-placement="both"   style="flex:1;padding:7px 4px;font-size:.72rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid rgba(196,154,60,.36);cursor:pointer;background:var(--surface);color:var(--text-muted);transition:all .15s;">Both</button>
+                    </div>
+                    <div class="size-slider-wrap visible" id="chocoCurlsSidesSizeWrap" style="display:none;margin-top:9px;background:var(--warm-white);border:none;border-radius:12px;padding:10px 12px 9px;">
+                        <div class="size-slider-header">
+                            <span class="size-slider-label">Sides Size</span>
+                            <span class="size-slider-val"><span id="chocoCurlsSidesSizeVal">100</span>%</span>
+                        </div>
+                        <input type="range" class="size-range" id="chocoCurlsSidesSizeRange" min="20" max="100" step="1" value="100">
+                        <div style="display:flex;justify-content:space-between;margin-top:3px;">
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Smaller (toward center)</span>
+                            <span style="font-size:.58rem;color:var(--text-muted);font-family:var(--font-mono);">Default</span>
+                        </div>
+                        <div style="margin-top:9px;padding-top:9px;border-top:1px dashed rgba(196,154,60,.25);">
+                            <div style="font-size:.60rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-family:var(--font-mono);margin-bottom:6px;">Half Cake View</div>
+                            <div id="chocoCurlsHalfViewGroup" style="display:flex;gap:0;border:1.5px solid var(--border-dk);border-radius:9px;overflow:hidden;">
+                                <button type="button" class="half-view-btn active" data-half-side="" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;cursor:pointer;background:var(--caramel);color:#fff;">Full</button>
+                                <button type="button" class="half-view-btn" data-half-side="left" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Left half</button>
+                                <button type="button" class="half-view-btn" data-half-side="right" style="flex:1;padding:7px 4px;font-size:.70rem;font-weight:600;font-family:var(--font-display);border:none;border-left:1.5px solid var(--border-dk);cursor:pointer;background:var(--surface);color:var(--text-muted);">Right half</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -2081,7 +2558,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 <div class="loading-cake-tier loading-cake-tier-1" id="loadingCakeTier1"></div>
                 <div class="loading-cake-plate"></div>
             </div>
-            <div class="loading-text" id="loadingText">Building 3D preview…</div>
+            <div class="loading-text" id="loadingText">Your cake is being built…</div>
         </div>
         <div class="viewer-badge">
             <div class="badge-flavor" id="badgeFlavor">Vanilla</div>
@@ -2154,7 +2631,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                 Summary
             </div>
-            <div class="panel-subtitle">Your current configuration</div>
+            
         </div>
         <div class="panel-body">
             <div class="config-card">
@@ -2166,8 +2643,8 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                               <div class="cfg-row"><span class="cfg-key">Shape</span><span class="cfg-val" id="selShape">Round 6"</span></div>
                 <div class="cfg-row" id="selFlavorRow"><span class="cfg-key">Flavour</span><span class="cfg-val" id="selFlavor">Vanilla</span></div>
                 <div class="cfg-row" id="selFillingRow"><span class="cfg-key">Filling</span><span class="cfg-val" id="selFilling">No Filling</span></div>
-                <div class="cfg-row"><span class="cfg-key">Cake Style</span><span class="cfg-val" id="selCakeStyle">Smooth Buttercream</span></div>
-                <div class="cfg-row"><span class="cfg-key">Frosting</span><span class="cfg-val" id="selFrosting">Default</span></div>
+                <div class="cfg-row"><span class="cfg-key">Frosting</span><span class="cfg-val" id="selCakeStyle">Smooth Buttercream</span></div>
+                <div class="cfg-row"><span class="cfg-key">Borders &amp; Icing</span><span class="cfg-val" id="selFrosting">Default</span></div>
                 <div class="cfg-row" id="selIcingRow" style="display:none;"><span class="cfg-key">Icing Color</span><span class="cfg-val" id="selIcingColor">White</span></div>
            
             </div>
@@ -2185,7 +2662,7 @@ body.preview-mode #model-container canvas { background: transparent !important; 
             <div class="price-block">
                 <div class="price-block-header">Pricing Breakdown</div>
                 <div class="price-rows">
-                    <div class="price-row"><span class="pr-label">Base (Shape)</span><span class="pr-val" id="priceBase">₱350</span></div>
+                    <div class="price-row"><span class="pr-label">Cake</span><span class="pr-val" id="priceBase">₱350</span></div>
                     <div class="price-row frosting-extra-row" id="priceFrostingRow" style="display:none;"><span class="pr-label">Frosting extras</span><span class="pr-val" id="priceFrosting">₱0</span></div>
                     <div class="price-row"><span class="pr-label">Add-ons</span><span class="pr-val zero" id="priceAddons">₱0</span></div>
                 </div>
@@ -2207,16 +2684,35 @@ body.preview-mode #model-container canvas { background: transparent !important; 
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                     Save Draft
                 </button>
-                <button class="btn-load-draft" id="btnLoadDraft">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Load Saved Draft
-                </button>
+     
             </div>
         </div>
     </div>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div id="genericRemoveConfirmModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(30,15,5,0.55);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:26px 28px;max-width:360px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);font-family:var(--font-display);">
+        <h3 style="margin:0 0 10px;font-size:1.05rem;color:var(--brown-deep);">Remove all <span id="genericRemoveConfirmLabel"></span>?</h3>
+        <p style="margin:0 0 18px;font-size:.84rem;color:var(--brown-mid);line-height:1.6;">This removes every piece you've placed on the cake. This can't be undone.</p>
+        <div style="display:flex;gap:8px;justify-content:center;">
+            <button id="genericRemoveCancelBtn" style="padding:9px 18px;border-radius:9px;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;border:1.5px solid var(--caramel);color:var(--caramel);">Cancel</button>
+            <button id="genericRemoveConfirmBtn" style="padding:9px 18px;border-radius:9px;font-size:.8rem;font-weight:700;cursor:pointer;background:#C0392B;color:#fff;border:none;">Remove All</button>
+        </div>
+    </div>
+</div>
+
+<div id="fruitRemoveConfirmModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(30,15,5,0.55);align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:26px 28px;max-width:360px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);font-family:var(--font-display);">
+        <h3 style="margin:0 0 10px;font-size:1.05rem;color:var(--brown-deep);">Remove all <span id="fruitRemoveConfirmCount"></span>?</h3>
+        <p style="margin:0 0 18px;font-size:.84rem;color:var(--brown-mid);line-height:1.6;">This removes every piece you've placed on the cake. This can't be undone.</p>
+        <div style="display:flex;gap:8px;justify-content:center;">
+            <button id="fruitRemoveCancelBtn" style="padding:9px 18px;border-radius:9px;font-size:.8rem;font-weight:700;cursor:pointer;background:transparent;border:1.5px solid var(--caramel);color:var(--caramel);">Cancel</button>
+            <button id="fruitRemoveConfirmBtn" style="padding:9px 18px;border-radius:9px;font-size:.8rem;font-weight:700;cursor:pointer;background:#C0392B;color:#fff;border:none;">Remove All</button>
+        </div>
+    </div>
+</div>
 <form id="proceedForm" method="POST" action="{{ route('customer.cake-builder.saveAndProceed') }}">
     @csrf
     <input type="hidden" name="config" id="configInput">
@@ -2296,21 +2792,39 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script type="module">import * as THREE        from '/js/three/three.module.js';
 import { GLTFLoader }    from '/js/three/GLTFLoader.js';
+window._GLTFLoaderClass = GLTFLoader; // lets the tracker viewer (classic script) observe GLB byte progress
 import { OrbitControls } from '/js/three/OrbitControls.js';
 
 const container = document.getElementById('model-container');
 const loadingEl = document.getElementById('modelLoading');
 const loadingTx = document.getElementById('loadingText');
 const statusEl  = document.getElementById('modelStatus');
-const isPreview = document.body.classList.contains('preview-mode');
+// Tracker mode (this baker preview, and the customer order-tracker widget)
+// also runs "lite": it skips the decorative stage-lighting rig, tiled floor,
+// glow props and physical cake stand — same as the Saved Draft preview —
+// so it loads fast and stays smooth on modest hardware.
+const isPreview = document.body.classList.contains('preview-mode') || document.body.classList.contains('tracker-mode');
 
+// PERF: preserveDrawingBuffer was forcing the browser/driver to retain and
+// resolve the drawing buffer on every single frame — real, continuous cost
+// paid by every user for a feature only used a couple of times per session
+// (the draft-save and order-submit snapshot captures). Both capture call
+// sites (search "Capture canvas at beauty-shot angle" and the draft-preview
+// capture) already call renderer.render(...) once, synchronously, and read
+// the canvas via ctx.drawImage(canvas,...) in that same synchronous block —
+// before the browser ever gets a chance to present/clear the frame — so the
+// captured pixels are valid without preserveDrawingBuffer. (A true "arm a
+// flag, wait for the next frame, then read" capture mode isn't possible here
+// anyway: preserveDrawingBuffer is a WebGL context-creation attribute and
+// can't be toggled at runtime without destroying and recreating the whole
+// renderer/context.)
 const renderer = new THREE.WebGLRenderer({
     antialias: false,
     alpha: true,
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: false,
     powerPreference: 'high-performance',
 });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPreview ? 1.0 : 1.5));
 renderer.setSize(container.clientWidth, container.clientHeight);
 renderer.outputEncoding      = THREE.sRGBEncoding;
 renderer.toneMapping         = THREE.ACESFilmicToneMapping;
@@ -2338,7 +2852,16 @@ const scene  = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(36, container.clientWidth / container.clientHeight, 0.01, 100);
 camera.position.set(0, 1.8, 8.5);
 const controls = new OrbitControls(camera, renderer.domElement);
-const _basePixelRatio = Math.min(window.devicePixelRatio, 1.5);
+// Resting (non-interaction) pixel ratio cap. Still bounded by isPreview's
+// existing 1.0 cap and the hardware's actual devicePixelRatio, but now also
+// bounded by whatever CakePerf's current adaptive quality tier allows —
+// CakePerf is defined further below but this function isn't CALLED until
+// events fire later, by which time it's fully initialized.
+function getBasePixelRatio(){
+    const tierCap = (window.CakePerf && typeof window.CakePerf.getPixelRatioCap === 'function')
+        ? window.CakePerf.getPixelRatioCap() : 1.5;
+    return Math.min(window.devicePixelRatio, isPreview ? 1.0 : 1.5, tierCap);
+}
 let _interactionLowResTimer = null;
 let _isOrbiting = false;
 // Kiwi (and Banana) place real loaded GLB models per piece, unlike Mango/Peach
@@ -2355,7 +2878,9 @@ window._isHeavyDecorLoad = isHeavyDecorLoad;
 controls.addEventListener('start', ()=>{
     _isOrbiting = true;
     const heavy = isHeavyDecorLoad();
-    renderer.setPixelRatio(heavy ? Math.min(window.devicePixelRatio, 0.65) : Math.min(window.devicePixelRatio, 1));
+    const tierCap = (window.CakePerf && typeof window.CakePerf.getPixelRatioCap === 'function')
+        ? window.CakePerf.getPixelRatioCap() : 1.5;
+    renderer.setPixelRatio(heavy ? Math.min(window.devicePixelRatio, 0.65, tierCap) : Math.min(window.devicePixelRatio, 1, tierCap));
     if(_interactionLowResTimer) clearTimeout(_interactionLowResTimer);
     if(typeof window._requestRender==='function') window._requestRender(1000);
 });
@@ -2363,7 +2888,7 @@ controls.addEventListener('end', ()=>{
     _isOrbiting = false;
     if(_interactionLowResTimer) clearTimeout(_interactionLowResTimer);
     _interactionLowResTimer = setTimeout(()=>{
-        renderer.setPixelRatio(_basePixelRatio);
+        renderer.setPixelRatio(getBasePixelRatio());
         renderer.shadowMap.needsUpdate = true;
         if(window.CakeSlice) window.CakeSlice.reapply();
         if(typeof window._requestRender==='function') window._requestRender(400);
@@ -2409,8 +2934,11 @@ spot.position.set(...cfg.pos);
 spot.angle      = 0.16;
 spot.penumbra   = 0.75;
 spot.decay      = 3.2;
-    spot.castShadow = (i === 1); // only center casts shadow
-    if(i === 1){
+    // Lite/preview mode (this modal and the customer tracker) skips the
+    // shadow map entirely — no floor/stand there to catch it anyway, and
+    // it's real GPU cost for a viewer that's judged on smoothness.
+    spot.castShadow = (i === 1) && !isPreview;
+    if(i === 1 && !isPreview){
        spot.shadow.mapSize.set(512, 512);
         spot.shadow.camera.near = 0.5;
         spot.shadow.camera.far  = 18;
@@ -2760,6 +3288,308 @@ window._requestRender = function(durationMs){
     const target = performance.now() + (durationMs || 500);
     if (target > _renderUntil) _renderUntil = target;
 };
+// ============================================================
+// CAKE PERFORMANCE MANAGER
+// ============================================================
+// Centralized adaptive-quality layer. It never removes, hides, or refuses
+// to render any cake component the customer selected — it only changes how
+// *cheaply* the same scene is drawn: pixel ratio, shadow map resolution,
+// which decorations cast real-time shadows, secondary light count, and how
+// often purely-decorative animation (flame flicker, candle light shimmer)
+// updates. Every knob has a HIGH-tier value that reproduces the original,
+// pre-optimization behavior exactly, so on a capable device nothing changes.
+const CakePerf = (function(){
+    const ORDER = ['PERFORMANCE', 'LOW', 'MEDIUM', 'HIGH'];
+    const TIERS = {
+        HIGH:        { pixelRatioCap: 1.5,  shadowMapSize: 512, shadowEnabled: true,  decorShadows: true,  animEvery: 1, secondaryLights: true  },
+        MEDIUM:      { pixelRatioCap: 1.25, shadowMapSize: 384, shadowEnabled: true,  decorShadows: true,  animEvery: 1, secondaryLights: true  },
+        LOW:         { pixelRatioCap: 1.0,  shadowMapSize: 256, shadowEnabled: true,  decorShadows: false, animEvery: 2, secondaryLights: false },
+        PERFORMANCE: { pixelRatioCap: 0.75, shadowMapSize: 0,   shadowEnabled: false, decorShadows: false, animEvery: 3, secondaryLights: false },
+    };
+    // FPS → quality-tier mapping thresholds (rolling average, see below).
+    function tierForFps(fps){
+        if (fps >= 55) return 'HIGH';
+        if (fps >= 40) return 'MEDIUM';
+        if (fps >= 25) return 'LOW';
+        return 'PERFORMANCE';
+    }
+
+    // ---- one-time device heuristic, used only until real FPS data exists ----
+    // Cores/memory alone miss a common real-world case: a laptop with a
+    // decent CPU/RAM but weak/integrated graphics (Intel UHD/HD, older
+    // Iris, etc.) — exactly the "lower/mid-range Windows laptop" case this
+    // pass is meant to help. WEBGL_debug_renderer_info is best-effort: many
+    // browsers restrict or block it for fingerprinting reasons, in which
+    // case this silently falls back to the original cores/memory check —
+    // nothing regresses, it just can't see the GPU on those browsers.
+    function detectWeakGPU(){
+        try{
+            const gl = renderer.getContext();
+            const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+            if (!dbg) return false;
+            const rendererStr = String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+            return /intel|uhd graphics|hd graphics|iris|mali|adreno|powervr|apple gpu|llvmpipe|swiftshader|microsoft basic render/.test(rendererStr);
+        } catch(e){ return false; } // never let a probe failure affect startup
+    }
+    function guessInitialQuality(){
+        const cores = navigator.hardwareConcurrency || 4;
+        const mem   = navigator.deviceMemory || 4; // Chromium-only; undefined elsewhere falls back to 4
+        if (cores <= 4 || mem <= 4 || detectWeakGPU()) return 'MEDIUM';
+        return 'HIGH';
+    }
+
+    let quality = guessInitialQuality();
+    let lastChangeAt = performance.now();
+    let belowSince = null, aboveSince = null;
+    let avgFps = 60; // EMA, seeded optimistically so the very first frames don't trigger a downgrade
+    let lastComplexity = { score:0, level:'LOW COMPLEXITY', meshCount:0, triCount:0, matCount:0, texCount:0, shadowCasters:0, decorCount:0 };
+    let lastComplexityAt = 0;
+
+    // ---- lightweight complexity score (recomputed a few times/sec, not per-frame) ----
+    function computeComplexity(){
+        let meshCount = 0, triCount = 0, shadowCasters = 0;
+        const matSet = new Set(), texSet = new Set();
+        scene.traverse(o=>{
+            if (!o.isMesh && !o.isInstancedMesh) return;
+            meshCount++;
+            const geo = o.geometry;
+            if (geo){
+                const posAttr = geo.attributes && geo.attributes.position;
+                const vertCount = geo.index ? geo.index.count : (posAttr ? posAttr.count : 0);
+                triCount += Math.floor(vertCount/3) * (o.isInstancedMesh ? Math.max(1,o.count) : 1);
+            }
+            const mats = Array.isArray(o.material) ? o.material : [o.material];
+            mats.forEach(m=>{ if(m){ matSet.add(m); if(m.map) texSet.add(m.map); } });
+            if (o.castShadow) shadowCasters++;
+        });
+        const decorCount = fruitModels.length + ferreroModels.length + kitkatModels.length + oreoModels.length +
+            (typeof barShardModels!=='undefined'?barShardModels.length:0) +
+            (typeof tobleroneModels!=='undefined'?tobleroneModels.length:0) +
+            candleModels.length + characterModels.length;
+        const score = (triCount/4000) + meshCount*0.8 + matSet.size*0.5 + texSet.size*1.5 + shadowCasters*1.2 + decorCount*0.6;
+        let level = 'LOW COMPLEXITY';
+        if (score > 900) level = 'EXTREME COMPLEXITY';
+        else if (score > 450) level = 'HIGH COMPLEXITY';
+        else if (score > 150) level = 'MEDIUM COMPLEXITY';
+        return { score, level, meshCount, triCount, matCount: matSet.size, texCount: texSet.size, shadowCasters, decorCount };
+    }
+
+    // ---- static fallback "shadow" used only when real shadow mapping is off ----
+    // The scene already has a real ShadowMaterial contact-shadow plane
+    // (shadowCatcher) that only draws where the real shadow map says to —
+    // it goes invisible if shadow mapping itself is off. This is a cheap
+    // pre-baked radial gradient disc so the cake still reads as grounded
+    // instead of looking like it's floating when shadows are disabled.
+    let fakeContactShadow = null;
+    function buildFakeContactShadow(){
+        if (isPreview) return null;
+        const size = 128;
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(size/2,size/2,0, size/2,size/2,size/2);
+        grad.addColorStop(0,   'rgba(20,10,4,0.50)');
+        grad.addColorStop(0.7, 'rgba(20,10,4,0.20)');
+        grad.addColorStop(1,   'rgba(20,10,4,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0,0,size,size);
+        const tex = new THREE.CanvasTexture(canvas);
+        const mesh = new THREE.Mesh(
+            new THREE.CircleGeometry(2.0, 32),
+            new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+        );
+        mesh.rotation.x = -Math.PI/2;
+        mesh.position.y = -1.17;
+        mesh.visible = false;
+        mesh.frustumCulled = false;
+        mesh.userData.isBackgroundProp = true;
+        scene.add(mesh);
+        return mesh;
+    }
+
+    // ---- apply a quality tier to the renderer/scene ----
+    function applyShadowTier(cfg){
+        if (isPreview) return; // preview/tracker mode already runs shadow-free; don't fight it
+        if (!fakeContactShadow) fakeContactShadow = buildFakeContactShadow();
+        if (!cfg.shadowEnabled){
+            renderer.shadowMap.enabled = false;
+            if (fakeContactShadow) fakeContactShadow.visible = true;
+        } else {
+            renderer.shadowMap.enabled = true;
+            if (fakeContactShadow) fakeContactShadow.visible = false;
+            const mainSpot = spotLights[1];
+            if (mainSpot.shadow.mapSize.width !== cfg.shadowMapSize){
+                mainSpot.shadow.mapSize.set(cfg.shadowMapSize, cfg.shadowMapSize);
+                if (mainSpot.shadow.map){ mainSpot.shadow.map.dispose(); mainSpot.shadow.map = null; }
+            }
+            renderer.shadowMap.needsUpdate = true;
+        }
+    }
+    function applyDecorationShadows(enabled){
+        const groups = [];
+        [fruitModels, ferreroModels, kitkatModels, oreoModels,
+         (typeof barShardModels!=='undefined'?barShardModels:[]),
+         (typeof tobleroneModels!=='undefined'?tobleroneModels:[]),
+         candleModels, characterModels].forEach(arr=>{
+            arr.forEach(m=>{ if(m && m.group) groups.push(m.group); });
+        });
+        groups.forEach(g=>{
+            g.traverse(c=>{
+                if (c.isMesh || c.isInstancedMesh) c.castShadow = enabled;
+            });
+        });
+        if (!isPreview) renderer.shadowMap.needsUpdate = true;
+    }
+    function applySecondaryLights(enabled){
+        if (typeof fillLightRight !== 'undefined') fillLightRight.visible = enabled;
+        if (typeof backWall !== 'undefined') backWall.visible = enabled;
+        if (typeof tableBouce !== 'undefined') tableBouce.visible = enabled || TIERS[quality] !== TIERS.PERFORMANCE;
+    }
+    function applyQuality(newQuality){
+        quality = newQuality;
+        const cfg = TIERS[quality];
+        renderer.setPixelRatio(getBasePixelRatio());
+        applyShadowTier(cfg);
+        applySecondaryLights(cfg.secondaryLights);
+        // Deferred by one frame: this is called once synchronously during
+        // CakePerf's own module-init (see "applyQuality(quality)" below),
+        // which happens before the fruitModels/ferreroModels/kitkatModels/
+        // oreoModels/candleModels/characterModels consts further down this
+        // same module have executed their declarations. requestAnimationFrame
+        // guarantees the whole script has finished its synchronous pass first.
+        requestAnimationFrame(()=> applyDecorationShadows(cfg.decorShadows));
+        if (typeof window._requestRender === 'function') window._requestRender(300);
+    }
+    applyQuality(quality); // establish the initial tier's shadow/light/pixel-ratio state immediately
+
+    // ---- complexity-based quality ceiling ----
+    // FPS alone can't see a hitch coming — the rolling average only reacts
+    // AFTER frames have already been slow. An extremely complex cake (huge
+    // decoration counts, lots of unique materials/textures) can look fine
+    // for a few seconds at HIGH before the GC/driver catches up and it
+    // craters. This caps the MAXIMUM tier reachable by current scene
+    // complexity, independent of what FPS alone would allow, so a heavy
+    // cake never gets to sit somewhere it can't actually sustain.
+    const COMPLEXITY_CEILING_IDX = {
+        'EXTREME COMPLEXITY': ORDER.indexOf('LOW'),
+        'HIGH COMPLEXITY':    ORDER.indexOf('MEDIUM'),
+        'MEDIUM COMPLEXITY':  ORDER.indexOf('HIGH'),
+        'LOW COMPLEXITY':     ORDER.indexOf('HIGH'),
+    };
+    function getComplexityCeilingIdx(){
+        const idx = COMPLEXITY_CEILING_IDX[lastComplexity.level];
+        return (idx === undefined) ? ORDER.indexOf('HIGH') : idx;
+    }
+
+    // ---- per-frame FPS sample + hysteresis-gated tier changes ----
+    function tick(deltaSec){
+        if (deltaSec > 0){
+            const instFps = 1/deltaSec;
+            avgFps = avgFps*0.9 + instFps*0.1;
+        }
+        const now = performance.now();
+
+        // Recompute complexity BEFORE it's used to clamp this tick's target —
+        // recomputed at most once/sec, same cadence as before, just moved
+        // earlier in the function so the ceiling below is never a full tick
+        // stale relative to the FPS-based target.
+        if (now - lastComplexityAt > 1000){
+            lastComplexity = computeComplexity();
+            lastComplexityAt = now;
+        }
+
+        const target = tierForFps(avgFps);
+        const curIdx = ORDER.indexOf(quality);
+        const ceilIdx = getComplexityCeilingIdx();
+        // The ceiling can only ever pull the target DOWN, never push it up —
+        // a simple cake that's coincidentally running at low FPS (e.g. a
+        // slow GPU) still follows the normal FPS-based downgrade path.
+        const targetIdx = Math.min(ORDER.indexOf(target), ceilIdx);
+
+        // Emergency escape hatch: if FPS has actually collapsed (sub-15, the
+        // point where the tab risks becoming unresponsive), drop to
+        // PERFORMANCE immediately rather than waiting out the normal
+        // hysteresis window — crash/freeze protection takes priority over
+        // smooth transitions.
+        if (avgFps < 15 && quality !== 'PERFORMANCE' && now - lastChangeAt > 400){
+            applyQuality('PERFORMANCE');
+            lastChangeAt = now; belowSince = null; aboveSince = null;
+            return;
+        }
+
+        if (targetIdx < curIdx){
+            aboveSince = null;
+            if (belowSince === null) belowSince = now;
+            // Sustained ~1.2s below the current tier's floor before downgrading.
+            // EXTREME complexity cakes get no extra grace here — the whole
+            // point of the complexity score is to protect exactly this case.
+            if (now - belowSince > 1200 && now - lastChangeAt > 800){
+                applyQuality(ORDER[Math.max(0, curIdx-1)]);
+                lastChangeAt = now; belowSince = null;
+            }
+        } else if (targetIdx > curIdx){
+            belowSince = null;
+            if (aboveSince === null) aboveSince = now;
+            // Sustained ~3s comfortably above before upgrading — longer if the
+            // scene is very complex, so a heavy cake doesn't bounce straight
+            // back into a tier it can't actually sustain.
+            const graceMs = lastComplexity.level === 'EXTREME COMPLEXITY' ? 6000 : 3000;
+            if (now - aboveSince > graceMs && now - lastChangeAt > 2000){
+                applyQuality(ORDER[Math.min(ORDER.length-1, curIdx+1)]);
+                lastChangeAt = now; aboveSince = null;
+            }
+        } else {
+            belowSince = null; aboveSince = null;
+        }
+
+        updateDebugPanel(now);
+    }
+
+    // ---- debug panel (window.BAKESPHERE_DEBUG = true) ----
+    let panelEl = null, panelVisible = false, lastPanelUpdate = 0;
+    function ensurePanel(){
+        if (panelEl) return panelEl;
+        panelEl = document.createElement('div');
+        panelEl.id = 'bakesphereDebugPanel';
+        panelEl.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:99999;background:rgba(10,8,6,0.86);color:#9EFFA0;font:11px/1.5 "DM Mono",monospace;padding:10px 12px;border-radius:8px;white-space:pre;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,0.4);';
+        document.body.appendChild(panelEl);
+        return panelEl;
+    }
+    function updateDebugPanel(now){
+        const shouldShow = !!window.BAKESPHERE_DEBUG;
+        if (shouldShow !== panelVisible){
+            panelVisible = shouldShow;
+            if (shouldShow) ensurePanel().style.display = 'block';
+            else if (panelEl) panelEl.style.display = 'none';
+        }
+        if (!panelVisible) return;
+        if (now - lastPanelUpdate < 250) return; // ~4x/sec is plenty for a readout
+        lastPanelUpdate = now;
+        const mem = (performance.memory) ? `${Math.round(performance.memory.usedJSHeapSize/1048576)}MB / ${Math.round(performance.memory.jsHeapSizeLimit/1048576)}MB` : 'n/a';
+        ensurePanel().textContent =
+`FPS: ${Math.round(avgFps)}
+QUALITY: ${quality}
+PIXEL RATIO: ${renderer.getPixelRatio().toFixed(2)}
+OBJECTS: ${lastComplexity.meshCount}
+TRIANGLES: ${Math.round(lastComplexity.triCount/1000)}K
+MATERIALS: ${lastComplexity.matCount}  TEXTURES: ${lastComplexity.texCount}
+DECORATIONS: ${lastComplexity.decorCount}
+COMPLEXITY: ${lastComplexity.level} (${Math.round(lastComplexity.score)})
+SHADOWS: ${TIERS[quality].shadowEnabled ? (quality==='HIGH'?'FULL':'REDUCED') : 'DISABLED (static fallback)'}
+JS HEAP: ${mem}`;
+    }
+
+    return {
+        tick,
+        getQuality: ()=>quality,
+        getPixelRatioCap: ()=>TIERS[quality].pixelRatioCap,
+        getAnimEvery: ()=>TIERS[quality].animEvery,
+        getComplexity: ()=>lastComplexity,
+        getAvgFps: ()=>avgFps,
+    };
+})();
+window.CakePerf = CakePerf;
+
 // Declared HERE (not just at its original later spot) because animate()
 // below reads it every frame. let/const bindings are inaccessible until the
 // line that declares them actually executes — typeof does NOT protect
@@ -2767,6 +3597,7 @@ window._requestRender = function(durationMs){
 // later declaration, animate() would throw on every frame forever, which is
 // exactly what happened. Declaring it up here guarantees it's always ready.
 let isLoading = false;
+let _animFrameCounter = 0;
 function animate(){
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
@@ -2806,7 +3637,14 @@ function animate(){
         window._heavyFrameSkip = !window._heavyFrameSkip;
         if (window._heavyFrameSkip) return;
     }
-    if(candleModels.length){
+    _animFrameCounter++;
+    // On LOW/PERFORMANCE, update the flicker/shimmer animation only every
+    // Nth *rendered* frame instead of skipping the render itself — the flame
+    // keeps moving, just at a lower update rate, which costs far less CPU
+    // (a traverse + several Math.sin calls per candle per frame) while still
+    // "feeling alive" as the spec asks for.
+    const animEvery = (window.CakePerf && typeof window.CakePerf.getAnimEvery === 'function') ? window.CakePerf.getAnimEvery() : 1;
+    if(candleModels.length && (_animFrameCounter % animEvery === 0)){
         for(let ci=0; ci<candleModels.length; ci++){
             candleModels[ci].group.traverse(node => {
                 if (node.userData && node.userData.isFlameLayer) {
@@ -2832,7 +3670,20 @@ function animate(){
     }
 
     renderer.render(scene, camera);
+
+    // FPS is measured only across frames that actually reach renderer.render()
+    // — the on-demand render loop above returns early most of the time while
+    // idle, and idle frames reflect the display's refresh rate, not the
+    // scene's actual rendering cost. Measuring only real render-to-render
+    // gaps is what makes the adaptive quality decisions meaningful.
+    const _now = performance.now();
+    if (window.CakePerf){
+        const renderDelta = (_lastRenderAt != null) ? (_now - _lastRenderAt) / 1000 : 0;
+        window.CakePerf.tick(renderDelta);
+    }
+    _lastRenderAt = _now;
 }
+let _lastRenderAt = null;
 animate();
 const SHAPE_SLUG = {
     'Round':          'round',
@@ -3110,7 +3961,13 @@ function _disposeDecorGroup(g, keepGeometry){
     if(!g) return;
     g.traverse(obj=>{
         if(!obj.isMesh && !obj.isInstancedMesh) return;
-        if(!keepGeometry && obj.geometry && obj.geometry !== window._peanutBaseGeo){
+        // Shared/cached base geometries (peanut dodecahedron, sprinkle rod,
+        // sprinkle pearl — reused across every future rebuild via a global
+        // cache) must never be disposed here or the next rebuild would try
+        // to draw with a disposed GPU buffer. They're tagged isSharedTemplate
+        // at creation time instead of being matched by identity one-by-one.
+        const isSharedGeo = obj.geometry && (obj.geometry === window._peanutBaseGeo || (obj.geometry.userData && obj.geometry.userData.isSharedTemplate));
+        if(!keepGeometry && obj.geometry && !isSharedGeo){
             obj.geometry.dispose();
         }
         // Skip disposal for meshes reusing a shared template material
@@ -3126,12 +3983,15 @@ window._disposeDecorGroup = _disposeDecorGroup;
 function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapIntensity,emissiveHex='#000'){
     group.traverse(child=>{
         if(!child.isMesh) return;
+        const _prevClipPlanes = child.material ? child.material.clippingPlanes : null;
+        const _prevClipIntersection = child.material ? child.material.clipIntersection : false;
         disposeMaterial(child.material); // ← added: free the old material/textures first
         child.material=new THREE.MeshStandardMaterial({
             color:new THREE.Color(colorHex), roughness, metalness,
             transparent:opacity<1.0, opacity, envMapIntensity:envMapIntensity??0.6,
             emissive:new THREE.Color(emissiveHex), emissiveIntensity:.05
         });
+        if(_prevClipPlanes){ child.material.clippingPlanes = _prevClipPlanes; child.material.clipIntersection = _prevClipIntersection; }
         child.castShadow=child.receiveShadow=true;
     });
 }
@@ -3142,6 +4002,10 @@ function applyGLBMaterial(group,colorHex,roughness,metalness,opacity,envMapInten
 function revealIcingWithWipe(group, duration){
     if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()){ window.CakeSlice.reapply(); return; }
     if(!group) return;
+    if(typeof state !== 'undefined' && state.halfView && state.halfView.sugarIcing){
+        if(typeof window._applyHalfViewFor==='function') window._applyHalfViewFor('sugarIcing');
+        return;
+    }
     duration = duration || 1800;
     renderer.localClippingEnabled = true;
     group.updateMatrixWorld(true);
@@ -3170,12 +4034,13 @@ function revealIcingWithWipe(group, duration){
                 const mats = Array.isArray(m.material) ? m.material : [m.material];
                 mats.forEach(mm=>{ if(mm){ mm.clippingPlanes = []; mm.needsUpdate = true; } });
             });
+            if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
         }
     }
     requestAnimationFrame(frame);
 }
 window._triggerIcingReveal = function(duration){ revealIcingWithWipe(currentIcing, duration); };
-// Synchronously clips a GLB group down to fully hidden — called the instant the
+// Synchronously clips a GLB group down to fully hidden — called the    instant the
 // icing mesh is created/colored, in the same tick, so it never renders fully
 // visible even for a single frame before the reveal animation takes over.
 function hideGroupInstantly(group){
@@ -3196,8 +4061,12 @@ function hideGroupInstantly(group){
 // being piped around the cake in a circle, using a per-fragment angle discard
 // (via onBeforeCompile) instead of a flat clip plane, so it can sweep a full
 // 360° smoothly (a plain clip plane can't do more than a 180° half-reveal). ──
-function revealShellCircular(group, duration){
+function revealShellCircular(group, duration, halfViewKey){
     if(!group) return;
+    if(halfViewKey && typeof state !== 'undefined' && state.halfView && state.halfView[halfViewKey]){
+        if(typeof window._applyHalfViewFor==='function') window._applyHalfViewFor(halfViewKey);
+        return;
+    }
     duration = duration || 2200;
     const meshes = [];
     group.traverse(c=>{ if(c.isMesh) meshes.push(c); });
@@ -3262,12 +4131,12 @@ function revealShellCircular(group, duration){
                 const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
                 mats.forEach(mat=>{ if(mat){ mat.onBeforeCompile = ()=>{}; mat.needsUpdate = true; } });
             });
+            if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
         }
     }
     requestAnimationFrame(frame);
 }
-window._triggerShellReveal = function(duration){ revealShellCircular(currentFrost, duration); };
-// Used for the initial default Shell Border, e.g. right after the tutorial
+window._triggerShellReveal = function(duration){ revealShellCircular(currentFrost, duration, 'shellBorder'); };// Used for the initial default Shell Border, e.g. right after the tutorial
 // closes — hides the already-loaded frost mesh instantly then sweeps it back
 // in, since by that point the model finished loading long before any reveal
 // flag was set (the normal load-hook path never fires for it).
@@ -3368,6 +4237,347 @@ function revealDripFlow(group, duration){
     requestAnimationFrame(frame);
 }
 window._triggerDripReveal = function(duration){ revealDripFlow(currentDrip, duration); };
+// ── Icing resize (Shell Border / Sugar Icing) — scales the overlay mesh
+// horizontally only (X/Z), like Blender's S→X, and recenters it on the
+// cake so it shrinks toward the middle instead of drifting off-axis.
+// Shifts every vertex of a ring mesh (or group of ring meshes) inward along
+// its own radial direction from the cake's center, by a fixed world-unit
+// amount — NOT a proportional scale. This is what lets the ring's overall
+// diameter shrink toward center while every spike/piece keeps its true
+// original size and shape (no squashing, no thinning).
+const _radialInvMat = new THREE.Matrix4();
+function applyRadialInset(group, cakeCenter, scale, maxInsetFraction, skipNormals){
+    if(!group) return;
+    group.updateMatrixWorld(true);
+    const cakeRef = currentBase || currentFrost;
+    let cakeRadiusRef = 1;
+    if(cakeRef){
+        cakeRef.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(cakeRef);
+        cakeRadiusRef = Math.max(box.max.x-box.min.x, box.max.z-box.min.z)*0.5;
+    }
+    const insetAmount = cakeRadiusRef * (maxInsetFraction||0.35) * (1-scale);
+    const worldPos = new THREE.Vector3();
+    group.traverse(node=>{
+        if(!node.isMesh) return;
+        const geo = node.geometry;
+        if(!geo || !geo.attributes || !geo.attributes.position) return;
+        if(!node.userData._radialOrigPos){
+            node.userData._radialOrigPos = geo.attributes.position.array.slice();
+        }
+        const orig = node.userData._radialOrigPos;
+        const posAttr = geo.attributes.position;
+        const count = posAttr.count;
+        // matrix + inverse computed ONCE per mesh (was once per vertex)
+        const m = node.matrixWorld.elements;
+        const inv = _radialInvMat.copy(node.matrixWorld).invert().elements;
+        const ccx = cakeCenter.x, ccz = cakeCenter.z;
+        for(let i=0;i<count;i++){
+            const ox = orig[i*3], oy = orig[i*3+1], oz = orig[i*3+2];
+            const wx = m[0]*ox + m[4]*oy + m[8]*oz  + m[12];
+            const wy = m[1]*ox + m[5]*oy + m[9]*oz  + m[13];
+            const wz = m[2]*ox + m[6]*oy + m[10]*oz + m[14];
+            const dx = wx - ccx, dz = wz - ccz;
+            const r = Math.sqrt(dx*dx+dz*dz);
+            let nx = wx, nz = wz;
+            if(r > 0.0001){
+                const ratio = Math.max(0.02, r - insetAmount) / r;
+                nx = ccx + dx*ratio;
+                nz = ccz + dz*ratio;
+            }
+            posAttr.setXYZ(i,
+                inv[0]*nx + inv[4]*wy + inv[8]*nz  + inv[12],
+                inv[1]*nx + inv[5]*wy + inv[9]*nz  + inv[13],
+                inv[2]*nx + inv[6]*wy + inv[10]*nz + inv[14]);
+        }
+        posAttr.needsUpdate = true;
+        if(!skipNormals) geo.computeVertexNormals();
+    });
+}
+window._applyIcingScale = function(fast){
+    if(typeof state === 'undefined') return;
+    const isWholeCakeFrost = state.frostings && state.frostings.has('Fondant Smooth');
+    const targets = [];
+    if(currentBase && currentFrost && currentFrost !== currentBase && !isWholeCakeFrost){
+        targets.push({ g: currentFrost, scale: (state.shellBorderScale !== undefined) ? state.shellBorderScale : 1.0 });
+    }
+    if(currentIcing && currentIcing !== currentBase){
+        targets.push({ g: currentIcing, scale: (state.icingScale !== undefined) ? state.icingScale : 1.0 });
+    }
+    if(!targets.length) return;
+    const cakeRef = currentBase || currentFrost || currentIcing;
+    if(!cakeRef) return;
+    cakeRef.updateMatrixWorld(true);
+    const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+    const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+    targets.forEach(t=>{
+        applyRadialInset(t.g, cakeCenter, t.scale, 0.35, !!fast);
+    });
+    if(typeof window._requestRender==='function') window._requestRender(300);
+};
+
+// ── Rosette (Border) size-toward-center ──
+window._applyRosetteBorderScale = function(fast){
+    if(typeof state === 'undefined' || typeof currentRosette === 'undefined' || !currentRosette) return;
+    if(!(state.frostings && state.frostings.has('Rosettes'))) return;
+    if(state.rosettePlacement !== 'Border') return;
+    const scale = (state.rosetteBorderScale !== undefined) ? state.rosetteBorderScale : 1.0;
+    const g = currentRosette;
+    const cakeRef = currentBase || currentFrost;
+    if(!cakeRef) return;
+    cakeRef.updateMatrixWorld(true);
+    const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+    const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+    applyRadialInset(g, cakeCenter, scale, 0.35, !!fast);
+    if(typeof window._requestRender==='function') window._requestRender(300);
+};
+
+// ── Choco Curls (Sides) size-toward-center — only touches the "around" piece ──
+window._applyChocoCurlsSidesScale = function(){
+    if(typeof state === 'undefined') return;
+    if(!(state.addons && state.addons.has('Chocolate Curls'))) return;
+    if(state.chocoCurlsPlacement !== 'sides' && state.chocoCurlsPlacement !== 'both') return;
+    if(typeof currentChocoCurls === 'undefined' || !currentChocoCurls || !currentChocoCurls.length) return;
+    const scale = (state.chocoCurlsSidesScale !== undefined) ? state.chocoCurlsSidesScale : 1.0;
+    const cakeRef = currentBase || currentFrost;
+    if(!cakeRef) return;
+    cakeRef.updateMatrixWorld(true);
+    const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+    const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+    currentChocoCurls.filter(g=>g.userData._isAroundPiece).forEach(g=>{
+        applyRadialInset(g, cakeCenter, scale, 0.35);
+    });
+    if(typeof window._requestRender==='function') window._requestRender(300);
+};
+
+// ── Fruit Border (Mango/Kiwi/Peach/Banana) size-toward-center ──
+// IMPORTANT: X/Z only, Y is never touched. Kiwi/Banana borders are baked
+// into one merged mesh with ABSOLUTE world-space vertex heights (for perf) —
+// scaling that mesh's Y axis shrinks those baked heights toward world
+// origin, which is what made them visibly float upward off the cake as the
+// slider dropped. Mango/Peach are per-piece groups so it was harmless for
+// them, but leaving Y alone everywhere keeps all four fruits' true height/
+// shape identical regardless of size, and keeps the fix uniform.
+function _scaleFruitBorderGroupArray(arr, cakeCenter, scale){
+    if(!arr || !arr.length) return;
+    arr.forEach(g=>{
+        let usedMergedPath = false;
+        g.traverse(child=>{
+            if(child.isMesh && child.userData._pieceCenters){
+                _radialInsetMergedFruitMesh(child, cakeCenter, scale);
+                usedMergedPath = true;
+            }
+        });
+        if(usedMergedPath) return;
+        // Individual-piece group (Mango/Peach) — no scaling, size stays the
+        // same, only X/Z position moves toward center.
+        if(!g.userData._fruitBasePos){
+            g.userData._fruitBasePos = g.position.clone();
+        }
+        const basePos = g.userData._fruitBasePos;
+        g.position.set(
+            cakeCenter.x + (basePos.x - cakeCenter.x) * scale,
+            basePos.y,
+            cakeCenter.z + (basePos.z - cakeCenter.z) * scale
+        );
+        g.updateMatrixWorld(true);
+    });
+}
+window._applyFruitBorderScale = function(fruitName){
+    if(typeof state === 'undefined') return;
+    const names = fruitName ? [fruitName] : ['Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'];
+    const cakeRef = currentBase || currentFrost;
+    if(!cakeRef) return;
+    cakeRef.updateMatrixWorld(true);
+    const cakeBox = new THREE.Box3().setFromObject(cakeRef);
+    const cakeCenter = cakeBox.getCenter(new THREE.Vector3());
+    names.forEach(name=>{
+        const scale = (state.fruitBorderScale && state.fruitBorderScale[name] !== undefined) ? state.fruitBorderScale[name] : 1.0;
+        const placement = (window._gramFruitPlacement && window._gramFruitPlacement[name]) || 'middle';
+        if(placement === 'border' && window._gramFruitGroups && window._gramFruitGroups[name]){
+            _scaleFruitBorderGroupArray(window._gramFruitGroups[name], cakeCenter, scale);
+        }
+        if(window._tierFruitBorderGroups){
+            Object.keys(window._tierFruitBorderGroups).forEach(tierIdx=>{
+                const arr = window._tierFruitBorderGroups[tierIdx];
+                if(arr && arr._fruitName === name) _scaleFruitBorderGroupArray(arr, cakeCenter, scale);
+            });
+        }
+    });
+    if(typeof window._requestRender==='function') window._requestRender(300);
+};
+// Kiwi/Banana borders are ONE baked merged mesh (many pieces flattened into
+// one draw call for performance) rather than one group per piece — moving
+// the merged group's own .position does nothing, since its vertices are
+// already baked in absolute world coordinates and the group sits at (0,0,0).
+// This shifts each piece's OWN vertices toward the cake center individually,
+// using the per-piece center recorded at build time, so every piece keeps
+// its exact shape/rotation and only slides inward as a rigid whole.
+function _radialInsetMergedFruitMesh(mesh, cakeCenter, scale){
+    const posAttr = mesh.geometry.attributes.position;
+    if(!posAttr || !mesh.userData._pieceCenters || !mesh.userData._origPositions) return;
+    if(!mesh.userData._workingPositions){
+        mesh.userData._workingPositions = new Float32Array(mesh.userData._origPositions.length);
+    }
+    const orig = mesh.userData._origPositions;
+    const work = mesh.userData._workingPositions;
+    const centers = mesh.userData._pieceCenters;
+    const vertCount = mesh.userData._vertCountPerPiece;
+    for(let ti=0; ti<centers.length; ti++){
+        const origCenter = centers[ti];
+        const newX = cakeCenter.x + (origCenter.x - cakeCenter.x) * scale;
+        const newZ = cakeCenter.z + (origCenter.z - cakeCenter.z) * scale;
+        const dx = newX - origCenter.x, dz = newZ - origCenter.z;
+        const base = ti * vertCount * 3;
+        for(let i=0;i<vertCount;i++){
+            const idx = base + i*3;
+            work[idx]   = orig[idx]   + dx;
+            work[idx+1] = orig[idx+1];
+            work[idx+2] = orig[idx+2] + dz;
+        }
+    }
+    posAttr.array.set(work);
+    posAttr.needsUpdate = true;
+}
+// ── HALF-CAKE VIEW ── shows only Left or Right of ONE specific decoration
+// (never the whole cake) via a vertical clip plane through the cake's own
+// center. side: null = full, 'left' = keep -X half, 'right' = keep +X half.
+// ── Half-view cut done in the shader (discard), NOT via clippingPlanes,
+// so it can coexist with the slice wedge (which needs clippingPlanes). ──
+const _halfClipState = new WeakMap();
+function _setMatHalfClip(mat, cx, side){
+    if(!mat) return;
+    const dir = side === 'left' ? 1 : side === 'right' ? -1 : 0;
+    let st = _halfClipState.get(mat);
+    if(!st){
+        if(dir === 0) return;
+        st = { cx, dir, shader:null, hook:null };
+        _halfClipState.set(mat, st);
+    }
+    st.cx = cx; st.dir = dir;
+    if(st.shader){
+        st.shader.uniforms.uHalfCx.value  = cx;
+        st.shader.uniforms.uHalfDir.value = dir;
+    }
+    // (re)install the hook if it was never installed, or if a reveal animation replaced it
+    if(dir !== 0 && mat.onBeforeCompile !== st.hook){
+        const prev = mat.onBeforeCompile;
+        const hook = function(shader, rend){
+            if(typeof prev === 'function') prev.call(mat, shader, rend); // keep plate-clip etc.
+            shader.uniforms.uHalfCx  = { value: st.cx };
+            shader.uniforms.uHalfDir = { value: st.dir };
+            shader.vertexShader = shader.vertexShader
+                .replace('#include <common>', '#include <common>\nvarying float vHalfWorldX;')
+                .replace('#include <begin_vertex>', '#include <begin_vertex>\nvHalfWorldX = (modelMatrix * vec4(transformed, 1.0)).x;');
+            shader.fragmentShader = shader.fragmentShader
+                .replace('#include <common>', '#include <common>\nvarying float vHalfWorldX;\nuniform float uHalfCx;\nuniform float uHalfDir;')
+                .replace('#include <clipping_planes_fragment>',
+                    'if(uHalfDir > 0.5 && vHalfWorldX > uHalfCx) discard;\n' +
+                    'if(uHalfDir < -0.5 && vHalfWorldX < uHalfCx) discard;\n' +
+                    '#include <clipping_planes_fragment>');
+            st.shader = shader;
+        };
+        st.hook = hook;
+        mat.onBeforeCompile = hook;
+        mat.customProgramCacheKey = function(){ return 'halfclip|' + String(prev); };
+        mat.needsUpdate = true;
+    }
+}
+function applyHalfClip(objOrArray, side){
+    const targets = Array.isArray(objOrArray) ? objOrArray : [objOrArray];
+    const cakeRef = currentBase || currentFrost;
+    let cx = 0;
+    if(cakeRef){
+        cakeRef.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(cakeRef);
+        cx = (box.min.x+box.max.x)*0.5;
+    }
+    targets.forEach(obj=>{
+        if(!obj) return;
+        obj.traverse(c=>{
+            if(!c.isMesh) return;
+            const mats = Array.isArray(c.material) ? c.material : [c.material];
+            mats.forEach(m=>_setMatHalfClip(m, cx, side));
+        });
+    });
+    if(renderer) renderer.shadowMap.needsUpdate = true;
+    if(typeof window._requestRender==='function') window._requestRender(300);
+}
+// old implementation kept below, no longer called
+function _applyHalfClipLegacyUnused(objOrArray, side){
+    const targets = Array.isArray(objOrArray) ? objOrArray : [objOrArray];
+    const cakeRef = currentBase || currentFrost;
+    let cx = 0;
+    if(cakeRef){
+        cakeRef.updateMatrixWorld(true);
+        const box = new THREE.Box3().setFromObject(cakeRef);
+        cx = (box.min.x+box.max.x)*0.5;
+    }
+    renderer.localClippingEnabled = true;
+    targets.forEach(obj=>{
+        if(!obj) return;
+        obj.traverse(c=>{
+            if(!c.isMesh) return;
+            const mats = Array.isArray(c.material) ? c.material : [c.material];
+            mats.forEach(m=>{
+                if(!m) return;
+                if(!side){
+                    m.clippingPlanes = [];
+                } else {
+                    const normal = side === 'left' ? new THREE.Vector3(-1,0,0) : new THREE.Vector3(1,0,0);
+                    const constant = side === 'left' ? cx : -cx;
+                    m.clippingPlanes = [new THREE.Plane(normal, constant)];
+                }
+                m.needsUpdate = true;
+            });
+        });
+    });
+    if(renderer) renderer.shadowMap.needsUpdate = true;
+    if(typeof window._requestRender==='function') window._requestRender(300);
+}
+function _collectFruitBorderGroups(name){
+    const arr = [];
+    if(window._gramFruitGroups && window._gramFruitGroups[name]) arr.push(...window._gramFruitGroups[name]);
+    if(window._tierFruitBorderGroups){
+        Object.keys(window._tierFruitBorderGroups).forEach(tierIdx=>{
+            const tArr = window._tierFruitBorderGroups[tierIdx];
+            if(tArr && tArr._fruitName === name) arr.push(...tArr);
+        });
+    }
+    return arr;
+}
+function applyHalfViewFor(key){
+    if(typeof state === 'undefined' || !state.halfView) return;
+    const side = state.halfView[key];
+    if(key==='shellBorder') applyHalfClip(currentFrost, side);
+    else if(key==='sugarIcing') applyHalfClip(currentIcing, side);
+    else if(key==='rosetteSides'){
+        // Half Cake View for the rosette only ever applies while the Border
+        // placement is active — Full Top / Sides / Cluster Right / Cluster
+        // Left must always render whole, even if a half was previously
+        // chosen while on Border.
+        const rosetteHalfSide = (typeof state !== 'undefined' && state.rosettePlacement === 'Border') ? side : null;
+        if(typeof currentRosette !== 'undefined' && currentRosette){
+            const pieces = [currentRosette];
+            if(currentRosette.userData && currentRosette.userData.sideTiles) pieces.push(...currentRosette.userData.sideTiles);
+            applyHalfClip(pieces, rosetteHalfSide);
+        }
+    }
+    else if(key==='chocoCurlsSides'){
+        const pieces = (typeof currentChocoCurls!=='undefined' && currentChocoCurls) ? currentChocoCurls.filter(g=>g.userData && g.userData._isAroundPiece) : [];
+        applyHalfClip(pieces, side);
+    }
+    else if(key==='mangoBorder')  applyHalfClip(_collectFruitBorderGroups('Mango Slice'), side);
+    else if(key==='kiwiBorder')   applyHalfClip(_collectFruitBorderGroups('Kiwi Slice'), side);
+    else if(key==='peachBorder')  applyHalfClip(_collectFruitBorderGroups('Peach Slice'), side);
+    else if(key==='bananaBorder') applyHalfClip(_collectFruitBorderGroups('Banana Slice'), side);
+}
+window._applyHalfViewFor = applyHalfViewFor;
+window._reapplyAllHalfViews = function(){
+    ['shellBorder','sugarIcing','rosetteSides','chocoCurlsSides','mangoBorder','kiwiBorder','peachBorder','bananaBorder'].forEach(k=>{
+        if(state.halfView && state.halfView[k]) applyHalfViewFor(k);
+    });
+};
 // ── Choco Curls "shredding" reveal — each fragment gets a random hash value;
 // as the threshold rises from 0 to 1, curls appear to scatter/settle into
 // place piece by piece, like shavings being shredded onto the cake, instead
@@ -3375,6 +4585,10 @@ window._triggerDripReveal = function(duration){ revealDripFlow(currentDrip, dura
 function revealChocoCurlsShred(pieces, duration){
     if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()){
         (pieces||[]).forEach(p=>{ if(typeof window._applySliceToNewObject==='function') window._applySliceToNewObject(p); });
+        return;
+    }
+    if(typeof state !== 'undefined' && state.halfView && state.halfView.chocoCurlsSides){
+        if(typeof window._applyHalfViewFor==='function') window._applyHalfViewFor('chocoCurlsSides');
         return;
     }
     duration = duration || 1400;
@@ -3426,6 +4640,7 @@ function revealChocoCurlsShred(pieces, duration){
                 const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
                 mats.forEach(mat=>{ if(mat){ mat.onBeforeCompile = ()=>{}; mat.needsUpdate = true; } });
             });
+            if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
         }
     }
     requestAnimationFrame(frame);
@@ -3438,14 +4653,11 @@ function applyGLBMaterialKeepMaps(group,colorHex,roughness,metalness,opacity,env
     group.traverse(child=>{
         if(!child.isMesh) return;
         const old = child.material;
-        // Deliberately NOT keeping the baked diffuse "map" — it carries its own base
-        // tone which was multiplying against colorHex and washing the Bundt out paler
-        // than every other cake shape. Keeping only normalMap/roughnessMap preserves
-        // the rippled bump detail while letting colorHex land exactly like it does
-        // for every other frosting layer.
         const oldNormalMap    = old && old.normalMap    ? old.normalMap    : null;
         const oldRoughnessMap = old && old.roughnessMap ? old.roughnessMap : null;
         const oldNormalScale  = old && old.normalScale  ? old.normalScale.clone() : null;
+        const _prevClipPlanes = old ? old.clippingPlanes : null;
+        const _prevClipIntersection = old ? old.clipIntersection : false;
         child.material=new THREE.MeshStandardMaterial({
             color:new THREE.Color(colorHex), roughness, metalness,
             transparent:opacity<1.0, opacity, envMapIntensity:envMapIntensity??0.6,
@@ -3453,6 +4665,7 @@ function applyGLBMaterialKeepMaps(group,colorHex,roughness,metalness,opacity,env
             normalMap: oldNormalMap, roughnessMap: oldRoughnessMap,
         });
         if(oldNormalScale) child.material.normalScale.copy(oldNormalScale);
+        if(_prevClipPlanes){ child.material.clippingPlanes = _prevClipPlanes; child.material.clipIntersection = _prevClipIntersection; }
         child.material.needsUpdate = true;
         child.castShadow=child.receiveShadow=true;
     });
@@ -3591,7 +4804,75 @@ function applyOmbreGradient(group, topHex, bottomHex, roughness, metalness, opac
         child.castShadow = child.receiveShadow = true;
     });
 }
-function recolorGLB(flavorName,frostingsArr,dripFlavor,icingColorHex,ombreTopColor,ombreBottomColor){
+// Tags every Textured mesh with its real tier (by height). Splits a mesh only if it
+// truly spans two tiers. Never reparents anything, and never throws.
+function _tagTextureTiers(texGroup, tierCount){
+    if(texGroup.userData._texTierCount === tierCount) return;
+    texGroup.updateMatrixWorld(true);
+    let tops = null;
+    try{ tops = _getTierTopYs(tierCount); }catch(e){ tops = null; }
+    if(!tops || tops.length !== tierCount){
+        const tb = new THREE.Box3().setFromObject(texGroup);
+        tops = [];
+        for(let i=0;i<tierCount;i++) tops.push(tb.min.y + (tb.max.y - tb.min.y) * (i+1)/tierCount);
+    }
+    const gaps = [];
+    for(let i=0;i<tierCount-1;i++) gaps.push(tops[i+1]-tops[i]);
+    const step = Math.max(0.05, gaps.length ? Math.min(...gaps) : 0.5);
+    const bounds = [];
+    for(let i=0;i<tierCount-1;i++) bounds.push(tops[i] + 0.03*step);
+    const tierOfY = y => { for(let i=0;i<bounds.length;i++){ if(y <= bounds[i]) return i; } return tierCount-1; };
+
+    const meshes = [];
+    texGroup.traverse(c=>{ if(c.isMesh) meshes.push(c); });
+    const box = new THREE.Box3();
+    meshes.forEach(mesh=>{
+        box.setFromObject(mesh);
+        const centerTier = tierOfY((box.min.y + box.max.y) / 2);
+        const crosses = bounds.some(b => box.min.y < b - 0.15*step && box.max.y > b + 0.15*step);
+        if(crosses){
+            try{
+                const parts = _splitMeshByTier(mesh, tierOfY, tierCount);
+                parts.forEach(p=>{ p.userData._texTier = (p.userData._tierIdx !== undefined) ? p.userData._tierIdx : centerTier; });
+                return;
+            }catch(e){ console.warn('[Textured] split failed, using center tier', e); }
+        }
+        mesh.userData._texTier = centerTier;
+    });
+    texGroup.userData._texTierCount = tierCount;
+}
+// Colors each Textured mesh with ITS tier's frosting flavor. Returns false on any failure.
+function _recolorTexturePerTier(texGroup, pal, flavorName){
+    try{
+        const tierCount = (state.tier === 'Three-tier') ? 3 : 2;
+        _tagTextureTiers(texGroup, tierCount);
+        const texStyle = FROSTING_STYLES['Textured Buttercream'];
+        texGroup.traverse(node=>{
+            if(!node.isMesh) return;
+            const ti = Math.max(0, Math.min(tierCount-1, (node.userData._texTier|0)));
+            const tName = (state.tierFrostings && state.tierFrostings[ti]) || flavorName;
+            const tPal = FLAVORS[tName] || pal;
+            const env = Math.max(.20,(tPal.top.envMapIntensity??0.6)+texStyle.envBoost);
+            applyGLBMaterialKeepMaps(node, tPal.crust.hex, texStyle.roughness, texStyle.metalness, 1.0, env, tPal.sponge.emissive??'#000');
+        });
+        return true;
+    }catch(err){
+        console.error('[Textured] per-tier recolor failed', err);
+        return false;
+    }
+}
+// Wrapper: an error inside recolor can no longer abort the whole update, and since
+// recolor swaps materials, the slice wedge + half-views are put back in the same tick
+// (before the next paint), so nothing flashes.
+function recolorGLB(...args){
+    try{ _recolorGLBInner(...args); }
+    catch(err){ console.error('[recolorGLB] failed', err); }
+    try{
+        if(window.CakeSlice && window.CakeSlice.isEnabled && window.CakeSlice.isEnabled()) window.CakeSlice.reapply();
+        if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
+    }catch(e){}
+}
+function _recolorGLBInner(flavorName,frostingsArr,dripFlavor,icingColorHex,ombreTopColor,ombreBottomColor){
     flavorName = flavorName || 'Vanilla'; // safety fallback
     const pal=FLAVORS[flavorName]||FLAVORS['Vanilla'];
     const hasTextured  =frostingsArr.includes('Textured Buttercream');
@@ -3658,9 +4939,10 @@ if(currentBase && hasSemiNakedR && !frostingsArr.includes('Fondant Smooth')){
     });
 }
 if(currentFrost && hasSemiNakedR){
-    const useShellColor = hasSmooth && icingColorHex;
+    const shellColorHexSN = (typeof state !== 'undefined' && state.shellBorderColor) ? state.shellBorderColor : null;
+    const useShellColor = hasSmooth && shellColorHexSN;
     const SHELL_BORDER_DEFAULT = '#F5EFE2';
-    const frostTint = new THREE.Color(useShellColor ? (SUGAR_ICING_COLORS[icingColorHex] || icingColorHex) : SHELL_BORDER_DEFAULT);
+    const frostTint = new THREE.Color(useShellColor ? (SUGAR_ICING_COLORS[shellColorHexSN] || shellColorHexSN) : SHELL_BORDER_DEFAULT);
     currentFrost.traverse(child=>{
         if(!child.isMesh) return;
         if(child.material){
@@ -3905,19 +5187,39 @@ if(window._pendingFondantReveal){
             // color if one was chosen, otherwise a fixed neutral default that
             // never changes when the flavor changes.
        const isNakedOrOmbre = frostingsArr.includes('Ombre Style');
-            const useShellColor  = hasSmooth && !isNakedOrOmbre && icingColorHex;
+            const shellColorHex = (typeof state !== 'undefined' && state.shellBorderColor) ? state.shellBorderColor : null;
+            const useShellColor  = hasSmooth && !isNakedOrOmbre && shellColorHex;
             const SHELL_BORDER_DEFAULT = '#F5EFE2';
-                       const frostColorHex  = useShellColor ? (SUGAR_ICING_COLORS[icingColorHex] || icingColorHex) : SHELL_BORDER_DEFAULT;
+                       const frostColorHex  = useShellColor ? (SUGAR_ICING_COLORS[shellColorHex] || shellColorHex) : SHELL_BORDER_DEFAULT;
 applyGLBMaterial(currentFrost, frostColorHex, style.roughness, style.metalness, style.opacity??1.0, frostEnv);
             if(window._pendingShellReveal) hideGroupInstantly(currentFrost);
         }
     }
-    if(currentTexture){
+    if(currentTexture && typeof state !== 'undefined' && state.tier !== 'Single' && _recolorTexturePerTier(currentTexture, pal, flavorName)){
+        // colored per tier above
+    } else if(currentTexture){
         const texStyle = FROSTING_STYLES['Textured Buttercream'];
-        const texEnv = Math.max(.20,(pal.top.envMapIntensity??0.6)+texStyle.envBoost);
-        // Textured now uses the flavor's true cake color (crust) instead of the pale frosting tint,
-        // so it visually matches the selected flavor (e.g. chocolate looks chocolate-colored).
-        applyGLBMaterialKeepMaps(currentTexture, pal.crust.hex, texStyle.roughness, texStyle.metalness, 1.0, texEnv, pal.sponge.emissive??'#000');
+        // Textured now uses the flavor's true cake color (crust) instead of the pale frosting tint.
+        // On a tiered cake, color each tier's texture with THAT tier's own
+        // frosting flavor (state.tierFrostings) instead of only the global
+        // flavor — same per-tier pattern the base sponge/frosting uses above.
+        if(typeof state !== 'undefined' && state.tier !== 'Single' && Array.isArray(state.tierFrostings)){
+            const _tierGroupsForTexture = [];
+            if(_tierGroupsForTexture.length > 1){
+                _tierGroupsForTexture.forEach((tg, idx)=>{
+                    const tName = state.tierFrostings[idx] || flavorName;
+                    const tPal = FLAVORS[tName] || pal;
+                    const tTexEnv = Math.max(.20,(tPal.top.envMapIntensity??0.6)+texStyle.envBoost);
+                    applyGLBMaterialKeepMaps(tg, tPal.crust.hex, texStyle.roughness, texStyle.metalness, 1.0, tTexEnv, tPal.sponge.emissive??'#000');
+                });
+            } else {
+                const texEnv = Math.max(.20,(pal.top.envMapIntensity??0.6)+texStyle.envBoost);
+                applyGLBMaterialKeepMaps(currentTexture, pal.crust.hex, texStyle.roughness, texStyle.metalness, 1.0, texEnv, pal.sponge.emissive??'#000');
+            }
+        } else {
+            const texEnv = Math.max(.20,(pal.top.envMapIntensity??0.6)+texStyle.envBoost);
+            applyGLBMaterialKeepMaps(currentTexture, pal.crust.hex, texStyle.roughness, texStyle.metalness, 1.0, texEnv, pal.sponge.emissive??'#000');
+        }
     }
  if(currentIcing){
         const icingRich = SUGAR_ICING_COLORS[icingColorHex] || icingColorHex || '#F8F6F2';
@@ -3927,10 +5229,11 @@ applyGLBMaterial(currentFrost, frostColorHex, style.roughness, style.metalness, 
         // before the rising-wipe reveal animation starts a moment later.
         if(window._pendingIcingReveal) hideGroupInstantly(currentIcing);
     }
-   if(currentDrip){
+       if(currentDrip){
         applyGLBMaterial(currentDrip,  dripFlavor?(DRIP_FLAVOR_COLORS[dripFlavor]||pal.drip.hex):pal.drip.hex, pal.drip.roughness??0.10, pal.drip.metalness??0.05, 1.0, .80);
         if(window._pendingDripReveal) hideGroupInstantly(currentDrip);
     }
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
 }
 
 function buildCakePlateStand(cakeRadius){
@@ -4133,6 +5436,21 @@ function buildFullPreloadQueue(){
     ['Strawberry','Blueberry','Raspberry','Cherry','kiwi','banana'].forEach(f=>urls.add(`/models/${f}.glb`));
     return Array.from(urls);
 }
+// Which cache a given /models/<file>.glb actually lands in at real
+// placement time — this MUST match the loader each feature calls
+// (loadFruitGLB / loadDecoGLB / loadGLB), or the prefetch below warms a
+// cache nothing ever reads from and the download happens twice for
+// nothing. Rosette pieces and everything else fall through to the
+// default (loadGLB/glbCache), which is what the cake-assembly code uses.
+const _PREFETCH_FRUIT_SYSTEM_FILES = new Set(['ferrero','Toblerone','Strawberry','Blueberry','Raspberry','Cherry','kiwi','banana']);
+const _PREFETCH_DECO_SYSTEM_FILES  = new Set(['kitkat','oreo_cookie']);
+function _prefetchByCorrectCache(url){
+    const base = url.replace(/^.*\//,'').replace(/\.glb$/,'');
+    if (_PREFETCH_FRUIT_SYSTEM_FILES.has(base)) return window._prefetchFruitGLB(url);
+    if (_PREFETCH_DECO_SYSTEM_FILES.has(base))  return window._prefetchDecoGLB(url);
+    if (!glbCache[url]) return loadGLB(url, {prefetch:true}).catch(()=>{});
+    return Promise.resolve();
+}
 function preloadAllDecorationAssets(){
     const queue = buildFullPreloadQueue();
     let i = 0;
@@ -4141,9 +5459,7 @@ function preloadAllDecorationAssets(){
         if(i >= queue.length) return;
         const slice = queue.slice(i, i+BATCH);
         i += BATCH;
-        slice.forEach(url=>{
-            if(!glbCache[url]) loadGLB(url, {prefetch:true}).catch(()=>{}); // silent — missing files just won't warm the cache
-        });
+        slice.forEach(url=>{ const p = _prefetchByCorrectCache(url); if (p && p.catch) p.catch(()=>{}); });
         const schedule = window.requestIdleCallback || (fn=>setTimeout(fn, 120));
         schedule(runBatch);
     }
@@ -4163,32 +5479,36 @@ const _glbLoadProgress = {};
 let _glbBatchCompletedBytes = 0;
 let _glbBatchTotalFilesExpected = 0;
 let _glbBatchFilesCompleted = 0;
+let _glbBatchLastFraction = 0;
 function _resetGLBBatchProgress(expectedFileCount){
     _glbBatchCompletedBytes = 0;
     _glbBatchFilesCompleted = 0;
     _glbBatchTotalFilesExpected = expectedFileCount || 0;
+    _glbBatchLastFraction = 0;
+    if(typeof window._bsOnBatchProgress === 'function') window._bsOnBatchProgress(0);
 }
 function _updateAggregateLoadProgress(){
-    let inFlightLoaded=0, inFlightTotal=0, anyTotal=false;
+    // Sum of each in-flight file's own fraction (only files whose size is known;
+    // capped below 1 because a file only counts as "done" when it finishes).
+    let inFlightSum = 0, inFlightLoaded = 0, inFlightTotal = 0;
     Object.values(_glbLoadProgress).forEach(p=>{
         inFlightLoaded += p.loaded;
-        if(p.total>0){ inFlightTotal += p.total; anyTotal = true; }
+        if(p.total>0){ inFlightTotal += p.total; inFlightSum += Math.min(0.99, p.loaded/p.total); }
     });
+    let fraction = null;
     if(_glbBatchTotalFilesExpected > 0){
-        // File-count-based progress: each finished file counts as one whole
-        // "unit," and the current in-flight file contributes its own
-        // fractional progress toward the next unit. This stays monotonic
-        // (always increases) across an entire multi-file batch.
-        const perFileFraction = anyTotal && inFlightTotal>0
-            ? Math.min(1, inFlightLoaded/inFlightTotal)
-            : 0;
-        const overallFraction = (_glbBatchFilesCompleted + perFileFraction) / _glbBatchTotalFilesExpected;
-        const pct = Math.min(100, Math.round(overallFraction*100));
-        loadingTx.textContent = `Loading… ${pct}%`;
-    } else if(anyTotal && inFlightTotal>0){
-        const pct = Math.min(100, Math.round((inFlightLoaded/inFlightTotal)*100));
-        loadingTx.textContent = `Loading… ${pct}%`;
+        // Finished files count as whole units, in-flight files add their real
+        // byte fraction. Unknown totals (0) simply contribute 0 — never NaN.
+        fraction = (_glbBatchFilesCompleted + inFlightSum) / _glbBatchTotalFilesExpected;
+    } else if(inFlightTotal > 0){
+        fraction = inFlightLoaded / inFlightTotal;
     }
+    if(fraction === null || !isFinite(fraction)) return;
+    fraction = Math.max(_glbBatchLastFraction, Math.min(1, Math.max(0, fraction))); // monotonic, 0..1
+    _glbBatchLastFraction = fraction;
+    // In tracker mode the tracker viewer owns the overlay text (combined %).
+    if(typeof window._bsOnBatchProgress === 'function'){ window._bsOnBatchProgress(fraction); return; }
+    loadingTx.textContent = `Loading cake… ${Math.round(fraction*100)}%`;
 }
 // ── Concurrency-limited GLB loading ──
 // A Three-tier cake with Rosettes/Drip active can fire 6-9 GLB requests at
@@ -4248,6 +5568,28 @@ function _queueGLBLoad(loadFn, isPrefetch){
 // files the new configuration actually needs. Anything already in flight is
 // left alone; it'll just land in the cache harmlessly.
 window._clearGLBPrefetchQueue = function(){ _glbPrefetchQueue.length = 0; };
+// Reads a fetch() Response body chunk-by-chunk so the loading bar gets REAL byte
+// progress (the old fetch().arrayBuffer() path never reported anything, which is
+// why _glbLoadProgress stayed empty). Falls back to a plain arrayBuffer() when
+// streaming isn't available; an unknown Content-Length (0) is handled upstream.
+// Prefetches never drive the visible loading bar.
+async function _readResponseWithProgress(res, url, isPrefetch){
+    if(isPrefetch || !res.body || typeof res.body.getReader !== 'function') return res.arrayBuffer();
+    const total = parseInt(res.headers.get('Content-Length') || '0', 10) || 0;
+    const reader = res.body.getReader();
+    const chunks = []; let loaded = 0;
+    _glbLoadProgress[url] = { loaded: 0, total: total };
+    for(;;){
+        const r = await reader.read();
+        if(r.done) break;
+        chunks.push(r.value); loaded += r.value.length;
+        _glbLoadProgress[url] = { loaded: loaded, total: total };
+        _updateAggregateLoadProgress();
+    }
+    const out = new Uint8Array(loaded); let off = 0;
+    for(const c of chunks){ out.set(c, off); off += c.length; }
+    return out.buffer;
+}
 function _loadGLBAttemptQueued(url, isPrefetch){
     return _queueGLBLoad(()=> new Promise((resolve,reject)=>{
         // Use fetch + arrayBuffer instead of GLTFLoader's own XHR path first,
@@ -4263,7 +5605,7 @@ function _loadGLBAttemptQueued(url, isPrefetch){
                 err._isNotFound = res.status === 404;
                 throw err;
             }
-            return res.arrayBuffer();
+            return _readResponseWithProgress(res, url, isPrefetch);
         }).then(buf=>{
             new GLTFLoader().parse(buf, '', gltf=>{
                 stripOutlierMeshes(gltf.scene, url);
@@ -4351,7 +5693,13 @@ function loadGLB(url, opts){
         if(!isPrefetch) _glbBatchFilesCompleted++, _updateAggregateLoadProgress();
         return safeCloneObject3D(glbCache[url]);
     }
-    if(glbLoadingPromises[url]) return glbLoadingPromises[url].then(scene=>safeCloneObject3D(scene));
+    if(glbLoadingPromises[url]) return glbLoadingPromises[url].then(scene=>{
+        if(!isPrefetch){ _glbBatchFilesCompleted++; _updateAggregateLoadProgress(); }
+        return safeCloneObject3D(scene);
+    }, err=>{
+        if(!isPrefetch){ _glbBatchFilesCompleted++; _updateAggregateLoadProgress(); }
+        throw err;
+    });
     const p = _loadGLBRaw(url, 1, isPrefetch).then(scene=>{
         glbCache[url]=scene;
         delete glbLoadingPromises[url];
@@ -4383,7 +5731,13 @@ function positionGroup(group, inches, heightMult){
     const hSize=Math.max(size.x,size.z);
     const targetDiameter = inchesToWorldScale(inches || 6);
     const scale=hSize>0.0001?targetDiameter/hSize:1.0;
-    group.scale.set(scale, scale * (heightMult || 1.0), scale); group.updateMatrixWorld(true);
+    // Height is decoupled from Round Size — the vertical scale is always
+    // computed against a fixed 6" reference diameter, so changing Round Size
+    // only widens/narrows the cake (x/z). Only the Cake Height slider
+    // (heightMult) changes vertical size.
+    const referenceDiameter = inchesToWorldScale(6);
+    const heightScale = hSize>0.0001 ? referenceDiameter/hSize : scale;
+    group.scale.set(scale, heightScale * (heightMult || 1.0), scale); group.updateMatrixWorld(true);
     const box2=new THREE.Box3().setFromObject(group), center=box2.getCenter(new THREE.Vector3());
     group.position.set(-center.x,-box2.min.y,-center.z); group.updateMatrixWorld(true);
     const box3=new THREE.Box3().setFromObject(group), midY=(box3.min.y+box3.max.y)*.5;
@@ -4395,7 +5749,11 @@ function positionMultiGroup(inches, heightMult, ...groups){
     const cs=cb.getSize(new THREE.Vector3()), hSize=Math.max(cs.x,cs.z);
     const targetDiameter = inchesToWorldScale(inches || 6);
     const scale=hSize>0.0001?targetDiameter/hSize:1.0;
-    groups.forEach(g=>{g.scale.set(scale,scale*(heightMult||1.0),scale);g.updateMatrixWorld(true);});
+    // Same decoupling as positionGroup — vertical scale is independent of
+    // the diameter-based scale, keyed off a fixed 6" reference instead.
+    const referenceDiameter = inchesToWorldScale(6);
+    const heightScale = hSize>0.0001 ? referenceDiameter/hSize : scale;
+    groups.forEach(g=>{g.scale.set(scale,heightScale*(heightMult||1.0),scale);g.updateMatrixWorld(true);});
     const sb=new THREE.Box3(); groups.forEach(g=>sb.expandByObject(g));
     const ox=-sb.getCenter(new THREE.Vector3()).x, oy=-sb.min.y, oz=-sb.getCenter(new THREE.Vector3()).z;
        groups.forEach(g=>{g.position.set(ox,oy,oz);g.updateMatrixWorld(true);});
@@ -4717,6 +6075,119 @@ function updateCheesecakeCrust(cakeType){
     currentCheesecakeCrust = crust;
 }
 
+// ── PER-TIER DECORATION FILTER (Two-tier / Three-tier only) ──
+// Rings are built and fitted exactly as before; pieces on unselected tiers are just hidden,
+// so the selected ones stay in the exact same position.
+function _getTierTopYs(tierCount){
+    const ref = currentBase || currentFrost;
+    if(!ref) return null;
+    ref.updateMatrixWorld(true);
+    let tops = null;
+    const groups = getTierGroups(ref);
+    if(groups.length === tierCount){
+        tops = groups.map(g => new THREE.Box3().setFromObject(g).max.y);
+    } else {
+        const b = new THREE.Box3().setFromObject(ref);
+        try{
+            const prof = _sliceSampleRadiusProfile(0, (b.min.x+b.max.x)/2, (b.min.z+b.max.z)/2, b.min.y, b.max.y, 90);
+            const segs = _sliceDetectTierSegments(prof);
+            if(segs.length === tierCount) tops = segs.map(s => prof[s.end].y);
+        }catch(e){}
+        if(!tops){
+            tops = [];
+            for(let i=0;i<tierCount;i++) tops.push(b.min.y + (b.max.y-b.min.y)*(i+1)/tierCount);
+        }
+    }
+    return tops.sort((a,b)=>a-b);
+}
+// Splits one mesh that spans several tiers into one mesh per tier (by triangle height).
+function _splitMeshByTier(mesh, tierOfY, tierCount){
+    if(!mesh.parent) return [mesh];
+    const src = mesh.geometry.index ? mesh.geometry.toNonIndexed() : mesh.geometry;
+    const pos = src.attributes.position;
+    mesh.updateMatrixWorld(true);
+    const v = new THREE.Vector3();
+    const buckets = Array.from({length:tierCount}, ()=>[]);
+    for(let t=0; t<pos.count; t+=3){
+        let cy = 0;
+        for(let k=0;k<3;k++){ v.fromBufferAttribute(pos, t+k).applyMatrix4(mesh.matrixWorld); cy += v.y; }
+        buckets[tierOfY(cy/3)].push(t);
+    }
+    const out = [];
+    buckets.forEach((tris, ti)=>{
+        if(!tris.length) return;
+        const g = new THREE.BufferGeometry();
+        Object.keys(src.attributes).forEach(name=>{
+            const a = src.attributes[name], size = a.itemSize;
+            const arr = new Float32Array(tris.length*3*size);
+            let o = 0;
+            tris.forEach(t=>{
+                for(let k=0;k<3;k++){
+                    const i = t+k;
+                    arr[o++] = a.getX(i);
+                    if(size>1) arr[o++] = a.getY(i);
+                    if(size>2) arr[o++] = a.getZ(i);
+                    if(size>3) arr[o++] = a.getW(i);
+                }
+            });
+            g.setAttribute(name, new THREE.BufferAttribute(arr, size));
+        });
+        const mat = Array.isArray(mesh.material) ? mesh.material.map(m=>m.clone()) : mesh.material.clone();
+        const piece = new THREE.Mesh(g, mat);
+        piece.position.copy(mesh.position); piece.quaternion.copy(mesh.quaternion); piece.scale.copy(mesh.scale);
+        piece.castShadow = mesh.castShadow; piece.receiveShadow = mesh.receiveShadow;
+        piece.userData._tierIdx = ti;
+        mesh.parent.add(piece);
+        out.push(piece);
+    });
+    if(src !== mesh.geometry) src.dispose();
+    mesh.parent.remove(mesh);
+    return out;
+}
+function applyTierDecorFilter(st, rosettePieces){
+    const tierCount = st.tier === 'Three-tier' ? 3 : 2;
+    const tops = _getTierTopYs(tierCount);
+    if(!tops) return;
+    const gaps = tops.slice(1).map((t,i)=>t-tops[i]);
+    const step = Math.min(...gaps);
+    if(!(step > 0.05)) return;
+    // A ring sits at the top rim of its own tier (its piping rises a little above it),
+    // so a piece belongs to tier i until it is 40% of the way up the next tier.
+    const tierOfY = y => { for(let i=0;i<tierCount-1;i++){ if(y <= tops[i] + 0.4*gaps[i]) return i; } return tierCount-1; };
+    const allowedFor = key => {
+        const a = ((st.tierDecor && st.tierDecor[key]) || []).filter(t=>t<tierCount);
+        return new Set(a.length ? a : [...Array(tierCount).keys()]);
+    };
+    const box = new THREE.Box3();
+    const filterGroup = (group, allowed)=>{
+        if(!group) return;
+        group.updateMatrixWorld(true);
+        const meshes = [];
+        group.traverse(c=>{ if(c.isMesh) meshes.push(c); });
+        meshes.forEach(mesh=>{
+            box.setFromObject(mesh);
+            let targets = [mesh];
+            if((box.max.y - box.min.y) > step*0.6 && tierOfY(box.min.y) !== tierOfY(box.max.y)){
+                targets = _splitMeshByTier(mesh, tierOfY, tierCount);
+            }
+            targets.forEach(m=>{
+                if(m.userData._tierIdx !== undefined){
+                    m.visible = allowed.has(m.userData._tierIdx);
+                } else {
+                    box.setFromObject(m);
+                    m.visible = allowed.has(tierOfY((box.min.y+box.max.y)/2));
+                }
+            });
+        });
+    };
+    const fr = st.frostings || [];
+    if(currentBase && currentFrost && currentFrost!==currentBase && fr.includes('Smooth Buttercream')) filterGroup(currentFrost, allowedFor('shell'));
+    if(currentIcing && currentIcing!==currentBase && fr.includes('Sugar Icing')) filterGroup(currentIcing, allowedFor('icing'));
+    if(fr.includes('Rosettes')) rosettePieces.forEach(p=>{ if(p.placement==='Border') filterGroup(p.glb, allowedFor('rosette')); });
+    console.log('[TierDecor]', {tops, shell:[...allowedFor('shell')], icing:[...allowedFor('icing')], rosette:[...allowedFor('rosette')]});
+    renderer.shadowMap.needsUpdate = true;
+    if(typeof window._requestRender==='function') window._requestRender(1000);
+}
 async function updateScene(state){
 const {shape,flavor,frostings,hasDrip,dripFlavor,icingColor,ombreTopColor,ombreBottomColor,rosettePlacement,rosetteColor}=state;
     // Bundt is allowed to be genuinely bare (no base icing at all) — every
@@ -4738,17 +6209,24 @@ if(isNumber){
         newKey=`num_${numStr}_${flavor}_${needFrostGLB?frostSuffix:'nobc'}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}_${numStyleKey}${numTexKey}${numRosetteKey}`;
 } else {
  const slug=shape==='Two-tier Square'?'two-tier_square':shape==='Three-tier Square'?'three-tier_square':shape==='Two-tier Heart'?'two-tier_heart':shape==='Three-tier Heart'?'three-tier_heart':(SHAPE_SLUG[shape]||'round');
-      const sizeKey=(shape==='Round'||shape==='Square'||shape==='Two-tier Square'||shape==='Three-tier Square'||shape==='Heart'||shape==='Two-tier Heart'||shape==='Three-tier Heart')?`_${state.roundSize||6}in`:'';
-const shellBorderKey = (frostingsArr.includes('Semi-naked Style') && frostingsArr.includes('Smooth Buttercream')) ? '_withshell' : '_noshell';
+      const _sizeKeyIsSingleTierResizable = (shape==='Round'||shape==='Square'||shape==='Heart') && state.tier==='Single';
+const sizeKey=(_sizeKeyIsSingleTierResizable?`_${state.roundSize||6}in`:'') + `_${Math.round((state.heightMult||1)*100)}h`;
+const shellBorderKey = frostingsArr.includes('Smooth Buttercream') ? '_withshell' : '_noshell';
 const _cakeStyleKey = frostingsArr.includes('Semi-naked Style') ? 'sn' : frostingsArr.includes('Fondant Smooth') ? 'fn' : 'bc';
 const _texturedKey = frostingsArr.includes('Textured Buttercream') ? '_tx' : '_ntx'; 
 const _rosetteOn  = frostingsArr.includes('Rosettes') && !frostingsArr.includes('Fondant Smooth');
 const _rosetteKey = _rosetteOn ? `_rosette_${(rosettePlacement||'Border').replace(/\s+/g,'')}_${rosetteColor||'ni'}` : '_norosette';
-newKey=`${slug}${sizeKey}_${flavor}_${_cakeStyleKey}_${needFrostGLB?frostSuffix:'nobc'}${shellBorderKey}${_texturedKey}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}${_rosetteKey}`;
+newKey=`${slug}${sizeKey}_${flavor}_${_cakeStyleKey}_${needFrostGLB?frostSuffix:'nobc'}${shellBorderKey}${_texturedKey}_${isSugarIcing?icingColor:'ni'}_${hasDrip?dripFlavor:'nd'}${_rosetteKey}${(state.tier&&state.tier!=='Single'&&state.tierDecor)?'_td'+['shell','icing','rosette'].map(k=>(state.tierDecor[k]||[]).join('')).join('-'):''}`;
     }
 if(loadedKey===newKey&&sceneRoot.children.length>0){
 recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
     updateCheesecakeCrust(state.cakeType);
+    if(window.CakeSlice && typeof window.CakeSlice.reapply==='function') window.CakeSlice.reapply();
+    // Reapply Half Cake View AFTER the slice wedge — reapply() above resets
+    // clippingPlanes on every decoration, which would otherwise wipe an
+    // active Left/Right half selection on a plain recolor (e.g. changing a
+    // tier's flavor/filling while sliced — this is the path THAT case hits).
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
     if(typeof window._requestRender==='function') window._requestRender(3000);
     return;
 }
@@ -4759,9 +6237,14 @@ if(prevKeyNoFlavor===newKeyNoFlavor&&sceneRoot.children.length>0){
     loadedKey=newKey;
    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
     updateCheesecakeCrust(state.cakeType);
+    if(window.CakeSlice && typeof window.CakeSlice.reapply==='function') window.CakeSlice.reapply();
+    // Same fix as the identical-key fast path above: keep the customer's
+    // Half Cake View choice after the slice wedge is reapplied.
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
     if(typeof window._requestRender==='function') window._requestRender(3000);
     return;
 }
+
     if(isLoading){pendingState=state;return;}
     isLoading=true; sceneRoot.visible=false;
     loadingEl.style.cssText='display:flex;opacity:1;'; loadingTx.textContent='Building 3D preview…'; statusEl.classList.add('hidden');
@@ -5072,7 +6555,7 @@ sceneRoot.add(baseWrapper);
                             if(rgU) rosetteWrapper.add(rgU);
                                               sceneRoot.add(rosetteWrapper); currentRosette=rosetteWrapper;
                             applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
-                            if(window._pendingRosetteReveal){ hideGroupInstantly(currentRosette); currentRosette.userData.pendingReveal = true; window._pendingRosetteReveal = false; }
+                            currentRosette.userData.needsInitialHide = true;
                         }
                     }
               const yBefore2=baseWrapper.position.y;
@@ -5084,6 +6567,11 @@ sceneRoot.add(baseWrapper);
                         if(currentTexture){currentTexture.position.y+=yDelta2;currentTexture.updateMatrixWorld(true);}
                         if(currentDrip){currentDrip.position.y+=yDelta2;currentDrip.updateMatrixWorld(true);}
                         if(currentRosette){currentRosette.position.y+=yDelta2;currentRosette.updateMatrixWorld(true);}
+                    }
+                    if(currentRosette && currentRosette.userData.needsInitialHide){
+                        currentRosette.userData.needsInitialHide = false;
+                        hideGroupInstantly(currentRosette);
+                        currentRosette.userData.pendingReveal = true;
                     }
                  recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
                     usedGLB=true; showStatus('Loaded ✓');
@@ -5257,7 +6745,7 @@ sceneRoot.add(baseWrapper);
                             }
                             sceneRoot.add(currentRosette);
                             applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
-                            if(window._pendingRosetteReveal){ hideGroupInstantly(currentRosette); currentRosette.userData.pendingReveal = true; window._pendingRosetteReveal = false; }
+                            currentRosette.userData.needsInitialHide = true;
                         }
                     }
 
@@ -5271,6 +6759,11 @@ sceneRoot.add(baseWrapper);
                         if(currentDrip){currentDrip.position.y+=yDelta3;currentDrip.updateMatrixWorld(true);}
                         if(currentRosette){currentRosette.position.y+=yDelta3;currentRosette.updateMatrixWorld(true);}
                     }
+                    if(currentRosette && currentRosette.userData.needsInitialHide){
+                        currentRosette.userData.needsInitialHide = false;
+                        hideGroupInstantly(currentRosette);
+                        currentRosette.userData.pendingReveal = true;
+                    }
                    recolorGLB(flavor,frostingsArr,dripFlavor,icingColor,ombreTopColor,ombreBottomColor);
                     usedGLB=true; showStatus('Loaded ✓');
                 }
@@ -5283,10 +6776,11 @@ const originalShape = shape;
 _isBundtActive = (slug === 'bundt');
 // Heart (single, two-tier, and three-tier) all get the same extra height
 // stretch so each tier matches the height of a single round cake.
-const HEART_HEIGHT_MULT = (originalShape === 'Heart' || originalShape === 'Two-tier Heart' || originalShape === 'Three-tier Heart')
+const _userHeightMult = (typeof state.heightMult === 'number' && isFinite(state.heightMult) && state.heightMult > 0) ? state.heightMult : 1.0;
+const HEART_HEIGHT_MULT = ((originalShape === 'Heart' || originalShape === 'Two-tier Heart' || originalShape === 'Three-tier Heart')
     ? (window._heartHeightMultOverride ?? 1.3)
-    : 1.0;
-const THREE_TIER_HEIGHT_MULT = (shape === 'Three-tier Round') ? 1.2 : 1.0;
+    : 1.0) * _userHeightMult;
+const THREE_TIER_HEIGHT_MULT = ((shape === 'Three-tier Round') ? 1.2 : 1.0) * _userHeightMult;
 const needFrost = shouldLoadFrostingGLB(frostingsArr);
 const hasFondant    = frostingsArr.includes('Fondant Smooth');
 const hasSemiNaked  = frostingsArr.includes('Semi-naked Style');
@@ -5320,7 +6814,7 @@ const frostURL = hasFondant
     ? `/models/fondant_${fondantSlugOverride}.glb`
     : (hasSemiNaked && (slug === 'round' || slug === 'two-tier' || slug === 'three-tier' || slug === 'square' || slug === 'heart' || slug === 'two-tier_square' || slug === 'three-tier_square' || slug === 'two-tier_heart' || slug === 'three-tier_heart'))
             ? (hasShellBorder ? `/models/frosting_${slug}_smooth.glb` : null)
-  : (isSugarIcing && !hasSemiNaked)
+  : (isSugarIcing && !hasSemiNaked && !hasShellBorder)
             ? null
             : (slug === 'bundt')
                 ? (hasShellBorder ? `/models/bundt_smoothbc.glb` : null)
@@ -5334,7 +6828,7 @@ const textureURL = hasTextured
     : null;
 console.log('[SemiNaked Debug] hasShellBorder:', hasShellBorder, '| frostURL:', frostURL);
 console.log('[Fondant Debug] hasFondant:', hasFondant, '| frostURL:', frostURL, '| slug:', slug);
-const activeCakeStyle = frostingsArr.find(f => ['Semi-naked Style','Fondant Smooth','Smooth Buttercream'].includes(f)) || 'Smooth Buttercream';
+const activeCakeStyle = hasFondant ? 'Fondant Smooth' : (hasSemiNaked ? 'Semi-naked Style' : 'Smooth Buttercream');
 // Icing files for square tiers use a different naming order than every other
 // asset (icing_square_two-tier.glb / icing_square_three-tier.glb) instead of
 // the usual icing_<slug>.glb pattern — map those two cases explicitly.
@@ -5346,7 +6840,7 @@ const isHeartTierIcing = (slug === 'two-tier_heart' || slug === 'three-tier_hear
 const icingURL = isSugarIcing
     ? (slug === 'bundt'
         ? `/models/bundt_icing.glb`
-        : activeCakeStyle === 'Semi-naked Style' && !hasShellBorder && !isSquareTier && !isHeartTierIcing
+        : activeCakeStyle === 'Semi-naked Style' && (!hasShellBorder || slug === 'two-tier' || slug === 'three-tier') && !isSquareTier && !isHeartTierIcing
             ? `/models/icing_${icingSlugOverride}_seminaked.glb`
             : `/models/icing_${icingSlugOverride}.glb`)
     : null;
@@ -5438,6 +6932,7 @@ if(idxRosetteStart >= 0){
     }
 }
 
+const _excludeFrostIcingFromGroup = (slug === 'round' || slug === 'square' || slug === 'heart') && state.tier === 'Single' && !hasFondant && !hasSemiNakedR;
 const toPos = [];
 if(hasFondant){
     // fondant_<slug>.glb is already the WHOLE cake (base + fondant skin) —
@@ -5448,9 +6943,9 @@ if(hasFondant){
     if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
 } else {
     if(baseGLB  && glbHasMesh(baseGLB)) { currentBase  = baseGLB;  sceneRoot.add(currentBase);  toPos.push(currentBase);  }
-    if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); toPos.push(currentFrost); }
+    if(frostGLB && glbHasMesh(frostGLB)) { currentFrost = frostGLB; sceneRoot.add(currentFrost); if(!_excludeFrostIcingFromGroup) toPos.push(currentFrost); }
 }
-if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); toPos.push(currentIcing); }
+if(icingGLB && glbHasMesh(icingGLB)) { currentIcing = icingGLB; sceneRoot.add(currentIcing); if(!_excludeFrostIcingFromGroup) toPos.push(currentIcing); }
 if(dripGLB  && glbHasMesh(dripGLB))  {
     currentDrip = dripGLB; sceneRoot.add(currentDrip);
     // Single-tier Round ONLY: do NOT push into toPos. drip_round.glb's raw
@@ -5468,6 +6963,7 @@ if(dripGLB  && glbHasMesh(dripGLB))  {
 }
 if(textureGLB && glbHasMesh(textureGLB)) { currentTexture = textureGLB; sceneRoot.add(currentTexture); toPos.push(currentTexture); }
 const rosetteIsCombo = rosettePieces.length > 1;
+const _skipRosetteReveal = window._skipRosetteRevealNextBuild;
 if(rosettePieces.length === 1) {
     // Single placement (no combo) — keep this EXACTLY like before: the raw
     // loaded piece goes straight into the scene with no wrapper group, so
@@ -5476,7 +6972,15 @@ if(rosettePieces.length === 1) {
     currentRosette = rosettePieces[0].glb;
     sceneRoot.add(currentRosette);
     applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
-    if(window._pendingRosetteReveal){ hideGroupInstantly(currentRosette); currentRosette.userData.pendingReveal = true; window._pendingRosetteReveal = false; }
+    // Always animate the reveal whenever the rosette is freshly rebuilt —
+    // regardless of what triggered the rebuild (color, placement, tier,
+    // shape, or Cake Height) — EXCEPT when the rebuild was only caused by
+    // toggling Shell Border/Sugar Icing while combined with Rosette Sides,
+    // in which case the rosette itself didn't change and shouldn't replay
+    // its reveal. Actual hiding happens once it's fully positioned/scaled
+    // (see fitRosetteToCake), never here — hiding a mesh before its final
+    // transform is what caused the pre-animation flash.
+    currentRosette.userData.needsInitialHide = !_skipRosetteReveal;
 } else if(rosettePieces.length > 1) {
     // Combo placement (e.g. Border+Sides) — needs two independent pieces,
     // so only THIS case gets wrapped in a group.
@@ -5484,15 +6988,86 @@ if(rosettePieces.length === 1) {
     rosettePieces.forEach(p => currentRosette.add(p.glb));
     sceneRoot.add(currentRosette);
     applyGLBMaterial(currentRosette, boostRosetteColor(rosetteColor || '#FFFFFF'), 0.58, 0.01, 1.0, 0.40);
-    if(window._pendingRosetteReveal){ hideGroupInstantly(currentRosette); currentRosette.userData.pendingReveal = true; window._pendingRosetteReveal = false; }
+    currentRosette.userData.needsInitialHide = !_skipRosetteReveal;
 }
+window._skipRosetteRevealNextBuild = false;
 // Only frost gets texture preservation skipped — base always recolors
 if(hasSemiNaked && currentFrost) currentFrost.userData.keepOriginalTexture = true;
 
+// World-space Y of the cake stand's plate top surface — mirrors the math in
+// addStandToScene (TABLE_Y + STAND_BOTTOM + PLATE_TOP_LOCAL).
+function getPlateTopY(){
+    return -1.18 + 0.255 + 0.018;
+}
+// Discards any rosette fragment that dips below the plate surface — done as a
+// per-fragment shader discard (like the reveal animations use) rather than a
+// THREE clippingPlanes entry, so it never conflicts with the wedge-slice
+// clipping planes that also get applied to the rosette mesh.
+function applyRosettePlateClip(){
+    if(!currentRosette) return;
+    const plateY = getPlateTopY() + 0.006; // tiny margin so the cut isn't razor-flush
+    currentRosette.traverse(c=>{
+        if(!c.isMesh) return;
+        const mats = Array.isArray(c.material) ? c.material : [c.material];
+        mats.forEach(mat=>{
+            if(!mat || mat.userData.hasPlateClip) return;
+            mat.userData.hasPlateClip = true;
+            mat.onBeforeCompile = (shader)=>{
+                shader.uniforms.uPlateClipY = { value: plateY };
+                shader.vertexShader = shader.vertexShader
+                    .replace('#include <common>', '#include <common>\nvarying vec3 vPlateWorldPos;')
+                    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPlateWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+                shader.fragmentShader = shader.fragmentShader
+                    .replace('#include <common>', '#include <common>\nvarying vec3 vPlateWorldPos;\nuniform float uPlateClipY;')
+                    .replace('#include <clipping_planes_fragment>', 'if(vPlateWorldPos.y < uPlateClipY) discard;\n#include <clipping_planes_fragment>');
+            };
+            mat.needsUpdate = true;
+        });
+    });
+}
 // Fits the loaded rosette (single piece or combo group) to the ACTUAL final
 // diameter/position of whichever cake mesh is passed in — used for the normal
 // path AND reused for semi-naked cakes so Rosettes behave identically no
 // matter which cake style is active.
+// Invisibly discards any part of a rosette mesh that falls below the cake
+// stand's plate surface, via a per-fragment world-space check in the
+// fragment shader — so the ring stays at its natural, cake-hugging
+// position and only the sliver crossing the plate line disappears, like
+// it was cut off by the plate. This is completely independent of THREE's
+// material.clippingPlanes array, so it never conflicts with the cake-slice
+// wedge cut or the piping reveal animations, which both use that array
+// temporarily for their own effects.
+function _clipRosettePieceAtPlate(rootObj){
+    const plateY = getPlateTopY() + 0.004; // tiny margin so the cut isn't razor-flush
+    rootObj.traverse(c=>{
+        if(!c.isMesh) return;
+        const mats = Array.isArray(c.material) ? c.material : [c.material];
+        mats.forEach(mat=>{
+            if(!mat || mat.userData.hasPlateFloorClip) return;
+            mat.userData.hasPlateFloorClip = true;
+            mat.onBeforeCompile = (shader)=>{
+                shader.uniforms.uPlateFloorY = { value: plateY };
+                shader.vertexShader = shader.vertexShader
+                    .replace('#include <common>', '#include <common>\nvarying vec3 vPlateFloorWorldPos;')
+                    .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPlateFloorWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+                shader.fragmentShader = shader.fragmentShader
+                    .replace('#include <common>', '#include <common>\nvarying vec3 vPlateFloorWorldPos;\nuniform float uPlateFloorY;')
+                    .replace('#include <clipping_planes_fragment>', `
+                        if(vPlateFloorWorldPos.y < uPlateFloorY) discard;
+                        #include <clipping_planes_fragment>`);
+            };
+            mat.needsUpdate = true;
+        });
+    });
+}
+// Invisibly discards any fragment of a rosette mesh whose WORLD-SPACE Y is
+// below the cake stand's real plate-top surface. This never touches the
+// mesh's position, rotation, or scale — it only stops those fragments from
+// being drawn — so the rosette's original cake-hugging placement is fully
+// preserved at every size/height combination. Runs independently of
+// THREE's clippingPlanes array (used elsewhere for the cake-slice wedge and
+// piping-reveal animations), so it can't conflict with either.
+
 function fitRosetteToCake(cakeRef){
     if(!currentRosette || !cakeRef) return;
     const rosetteUnits = rosetteIsCombo
@@ -5556,7 +7131,7 @@ function fitRosetteToCake(cakeRef){
 
 
         };
-   const ROSETTE_BORDER_ADJUST = {
+ const ROSETTE_BORDER_ADJUST = {
     'two-tier':   { diamMult: 1.05, yNudge: 0.24 },
     'three-tier': { diamMult: 1.05, yNudge: 0.38 },
     'two-tier_square':   { diamMult: 1.0, yNudge: 0.19 },
@@ -5585,7 +7160,34 @@ function fitRosetteToCake(cakeRef){
             ? roseDiamMult * DRIP_CLEARANCE_MULT[placement]
             : roseDiamMult;
         const roseScale = rawRoseDiam > 0.0001 ? (cakeDiamNow*roseDiamMultFinal)/rawRoseDiam : 1.0;
-        child.scale.setScalar(roseScale);
+        if(placement === 'Sides' && state.tier === 'Single'){
+            // A single 'Sides' piece is ONE row of rosette petals. Real cake
+            // decorators pipe rosettes at a fixed physical size and add more
+            // ROWS to cover a taller cake — they don't stretch each rosette
+            // taller just because the cake is wider. The old uniform scale
+            // tied this row's height to cakeDiamNow, so a wide cake produced
+            // a proportionally TALLER row even though cake height itself
+            // (see positionGroup) never changes with Round Size — only with
+            // Cake Height %. That mismatch is exactly what pushed the ring
+            // below the cake and into the plate on wide/short cakes.
+            // Fix: scale X/Z off the cake's real diameter (unchanged — the
+            // ring still wraps snugly), but scale Y off a FIXED reference
+            // diameter equal to a 4" cake — the exact size already confirmed
+            // to look right — so one row's physical height no longer grows
+            // with Round Size. The row-stacking logic below still fills
+            // whatever real vertical space the cake has with however many
+            // of these fixed-height rows are needed.
+            // SINGLE-TIER ONLY — Two-tier/Three-tier fall through to the
+            // original `else` branch below and keep their existing uniform
+            // roseScale, positioning, row-stacking, and proportions untouched.
+            const REFERENCE_DIAM_FOR_ROSETTE_HEIGHT = inchesToWorldScale(4);
+            const roseScaleY = rawRoseDiam > 0.0001
+                ? (REFERENCE_DIAM_FOR_ROSETTE_HEIGHT * roseDiamMultFinal) / rawRoseDiam
+                : roseScale;
+            child.scale.set(roseScale, roseScaleY, roseScale);
+        } else {
+            child.scale.setScalar(roseScale);
+        }
         child.updateMatrixWorld(true);
         const scaledRoseBox  = new THREE.Box3().setFromObject(child);
         const scaledRoseSize = scaledRoseBox.getSize(new THREE.Vector3());
@@ -5623,9 +7225,121 @@ function fitRosetteToCake(cakeRef){
 } else {
     targetY = cakeBoxNow.max.y - scaledRoseBox.min.y - roseSink;
 }
-        child.position.set(targetX, targetY, targetZ);
+            child.position.set(targetX, targetY, targetZ);
         child.updateMatrixWorld(true);
+        // Position/scale for 'Sides' is intentionally left untouched here —
+        // it's what makes the ring hug the cake correctly at normal
+        // proportions. On a short-relative-to-diameter cake, the ring's own
+        // bottom edge can fall below the cake's real bottom edge and into
+        // the plate. Instead of moving the ring, invisibly discard only the
+        // fragments below the plate's real top surface, so the rosette's
+        // attachment to the cake is never altered.
+        if(placement === 'Sides') _clipRosettePieceAtPlate(child);
+        if(placement === 'Sides'){
+            if(child.userData.sideTiles && child.userData.sideTiles.length){
+                child.userData.sideTiles.forEach(tile=>{
+                    _disposeDecorGroup(tile, false);
+                    if(tile.parent) tile.parent.remove(tile);
+                });
+            }
+            child.userData.sideTiles = [];
+
+            child.updateMatrixWorld(true);
+            // Treat the WHOLE band (however many rows are actually baked
+            // into the source GLB) as one repeatable unit, and stack full
+            // copies of it downward until we reach the cake's bottom edge.
+            // This works regardless of Round Size or Cake Height, and never
+            // depends on successfully detecting internal row boundaries —
+            // that detection was fragile and silently skipped duplication
+            // whenever it failed, leaving a bare gap on shorter cakes.
+            const bandHeight  = Math.max(0.0001, scaledRoseBox.max.y - scaledRoseBox.min.y);
+            const bandBottomY = child.position.y + scaledRoseBox.min.y;
+            const cakeBottomY = cakeBoxNow.min.y;
+            const gapBelow     = bandBottomY - cakeBottomY;
+
+            // Always add at least one more row down to the cake's real
+            // bottom edge — even on a short cake — so the Sides rosette
+            // border keeps its full two-line look instead of collapsing
+            // to a single ring. The stacked row is still clamped to the
+            // plate surface below, so it never pokes through it.
+            if(gapBelow > 0.001){
+                // Rows must be spaced within a bounded range of the band's
+                // own natural height — too tight and rows visibly overlap
+                // (doubled-up look), too loose and a bare gap shows through.
+                // Instead of a single fixed step, we clamp the spacing so it
+                // self-adjusts across every Round Size / Cake Height combo.
+                const nominalStep = bandHeight * 0.96; // ideal, snug spacing
+                const minStep     = bandHeight * 0.88; // tighter than this = visible doubled/overlap look
+                const maxStep     = bandHeight * 0.99; // spacing can NEVER reach/exceed the row's own
+                                                        // height — anything at or above 1.0x opens a
+                                                        // visible gap between rows, since each row only
+                                                        // covers exactly bandHeight of vertical space
+                // Lowest a row's bottom edge is ever allowed to sit — flush
+                // with the cake's real bottom edge (where the plate is).
+                const rowMinY = cakeBoxNow.min.y - scaledRoseBox.min.y;
+                const totalDrop = child.position.y - rowMinY;
+
+                let extraRows = Math.max(1, Math.min(24, Math.round(totalDrop / nominalStep)));
+                let evenStep  = totalDrop / extraRows;
+
+                // Too crowded (overlap) — remove rows until spacing opens up.
+                while(extraRows > 1 && evenStep < minStep){
+                    extraRows--;
+                    evenStep = totalDrop / extraRows;
+                }
+                // Too sparse (gap) — add rows until spacing tightens up.
+                while(evenStep > maxStep && extraRows < 24){
+                    extraRows++;
+                    evenStep = totalDrop / extraRows;
+                }
+
+                const newSideTiles = [];
+                for(let row = 1; row <= extraRows; row++){
+                    const tile = child.clone(true);
+                    tile.userData.sideTiles = []; // never carry a stale copy forward
+                    tile.traverse(n=>{
+                        if(!n.isMesh) return;
+                        n.geometry = n.geometry.clone();
+                        if(Array.isArray(n.material)) n.material = n.material.map(m=>m.clone());
+                        else if(n.material) n.material = n.material.clone();
+                    });
+                                   tile.position.copy(child.position);
+                                tile.position.y = (row === extraRows) ? rowMinY : (child.position.y - (evenStep * row));
+                    tile.updateMatrixWorld(true);
+                    // Same principle as the base ring above: keep each stacked
+                    // row's original position exactly as computed, and let the
+                    // plate-floor clip hide whatever crosses the plate line,
+                    // instead of shifting the tile's position.
+                    child.parent.add(tile);
+                    _clipRosettePieceAtPlate(tile);
+                
+                    if(typeof window._applySliceToNewObject === 'function') window._applySliceToNewObject(tile);
+                    if(currentRosette && currentRosette.userData && currentRosette.userData.needsInitialHide){
+                        try{ hideGroupInstantly(tile); tile.userData.needsReveal = true; }catch(e){}
+                    }
+                    newSideTiles.push(tile);
+                }
+                child.userData.sideTiles = newSideTiles;
+            }
+        }
     });
+    applyRosettePlateClip();
+    // First real fit after a fresh build — hide it NOW with correct final
+    // geometry, then flag it for the reveal sweep. A later re-fit call
+    // (e.g. the post-load "settle" pass) finds this already false and
+    // leaves an in-progress/finished reveal alone.
+    if(currentRosette.userData.needsInitialHide){
+        currentRosette.userData.needsInitialHide = false;
+        hideGroupInstantly(currentRosette);
+        try{
+            const _extraTiles = [];
+            if(currentRosette.userData.sideTiles) _extraTiles.push(...currentRosette.userData.sideTiles);
+            if(currentRosette.children) currentRosette.children.forEach(c=>{ if(c.userData && c.userData.sideTiles) _extraTiles.push(...c.userData.sideTiles); });
+            _extraTiles.forEach(tile=>{ try{ hideGroupInstantly(tile); }catch(e){} });
+            currentRosette.userData._extraTilesToReveal = _extraTiles;
+        }catch(e){}
+        currentRosette.userData.pendingReveal = true;
+    }
 }
 
 // ── Per-tier correction for the single-piece heart Border rosette ──
@@ -5679,9 +7393,11 @@ function nudgeRosetteBorderPerTier(rosetteGroup, cakeRef, tierCount, nudgeFracti
 }
 if(toPos.length > 0 || hasFondant){
             sceneRoot.updateMatrixWorld(true);
-const _inches = (shape==='Round') ? (state.roundSize||6)
-    : (shape==='Square' || shape==='Two-tier Square' || shape==='Three-tier Square') ? (state.roundSize||6)
-    : (shape==='Heart' || shape==='Two-tier Heart' || shape==='Three-tier Heart') ? ((state.roundSize||6) * 1.25)
+const _inches = (state.tier !== 'Single')
+    ? ((shape==='Two-tier Heart' || shape==='Three-tier Heart') ? 7.5 : 6)
+    : (shape==='Round') ? (state.roundSize||6)
+    : (shape==='Square') ? (state.roundSize||6)
+    : (shape==='Heart') ? ((state.roundSize||6) * 1.25)
     : (shape==='Number') ? 5 : 6;
 if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                 // ── FONDANT: use positionGroup for consistent sizing ──
@@ -5717,11 +7433,18 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                 }
                 currentFrost.updateMatrixWorld(true);
                 const HEART_FONDANT_DRIP_NUDGE_MAP = {
-                    'heart':             { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
-                    'two-tier_heart':    { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
-                    'three-tier_heart':  { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'round':              { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'square':             { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'heart':              { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'two-tier':           { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'three-tier':         { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'two-tier_square':    { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'three-tier_square':  { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'two-tier_heart':     { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
+                    'three-tier_heart':   { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 },
                 };
-                const HEART_FONDANT_DRIP_NUDGE = HEART_FONDANT_DRIP_NUDGE_MAP[slug];
+                const HEART_FONDANT_DRIP_NUDGE = HEART_FONDANT_DRIP_NUDGE_MAP[slug] || { yNudge: 0.01, xNudge: 0, zNudge: 0, diamMult: 1.02 };
+
                 // Multi-tier heart drip icicles are exported per-tier (same as the
                 // fondant shell) — fit each tier's icicle ring to its matching base
                 // tier instead of scaling the whole drip mesh as one block, or the
@@ -5782,47 +7505,21 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                     // it OUT of this generic ring-fitting loop. Every other case (Square tiers,
                     // Heart tiers, or Round WITH Shell Border) reuses the same ring-fit overlays
                     // system Shell Border already uses successfully.
-                    const _icingUsesDedicatedRoundFile = isSugarIcing && !hasShellBorder && !isSquareTier && !isHeartTierIcing;
-                    // icing_two-tier_heart.glb / icing_three-tier_heart.glb are single
-                    // continuous drape meshes (NOT split per tier like Shell Border's file),
-                    // so they must NOT go through the per-tier ring fit — that fit's
-                    // "clone into N pieces" fallback chops one continuous drape into
-                    // independently-rescaled fragments, breaking coverage on lower tiers.
+                 const _icingUsesDedicatedRoundFile = isSugarIcing && ((!hasShellBorder && slug === 'round') || slug === 'two-tier' || slug === 'three-tier');
+                    // icing_two-tier_heart.glb / icing_three-tier_heart.glb ship as ONE
+                    // continuous drape mesh rather than one object per tier — but
+                    // fitRingOverlayTiersToBaseTiers already has a built-in fallback for
+                    // exactly this case (it clones the single mesh once per base tier).
+                    // That's the SAME per-tier fitting Shell Border already uses
+                    // successfully on tiered Heart cakes, so route Sugar Icing through it
+                    // too instead of a single uniform whole-cake scale, which is what was
+                    // leaving it sparse/bunched on the Semi-naked heart tiers.
                     const _isHeartTierWholeMeshIcing = (slug === 'two-tier_heart' || slug === 'three-tier_heart');
-                    if(currentIcing && !_icingUsesDedicatedRoundFile && !_isHeartTierWholeMeshIcing) overlays.push(currentIcing);
+                    if(currentIcing && !_icingUsesDedicatedRoundFile) overlays.push(currentIcing);
                     positionGroup(currentBase, _inches, HEART_HEIGHT_MULT);
-                    if(currentIcing && _isHeartTierWholeMeshIcing){
-                        currentIcing.position.set(0,0,0); currentIcing.rotation.set(0,0,0); currentIcing.scale.set(1,1,1);
-                        currentIcing.updateMatrixWorld(true);
-                        const baseBoxHI = new THREE.Box3().setFromObject(currentBase);
-                        const baseDiamHI = Math.max(baseBoxHI.max.x-baseBoxHI.min.x, baseBoxHI.max.z-baseBoxHI.min.z);
-                        const baseHeightHI = baseBoxHI.max.y - baseBoxHI.min.y;
-                        const rawIcingBoxHI = new THREE.Box3().setFromObject(currentIcing);
-                        const rawIcingDiamHI = Math.max(rawIcingBoxHI.max.x-rawIcingBoxHI.min.x, rawIcingBoxHI.max.z-rawIcingBoxHI.min.z);
-                        // UNIFORM scale only (X/Y/Z together) — the icing file has its rim
-                        // bands baked in at fixed positions relative to each tier. Scaling
-                        // Y independently from X/Z (as before) stretched/squashed those
-                        // baked-in bands away from the tier rims, dragging them to sit
-                        // mid-tier instead of at the top edge of each tier.
-                        const scaleHI = rawIcingDiamHI>0.0001 ? baseDiamHI/rawIcingDiamHI : 1.0;
-                        currentIcing.scale.setScalar(scaleHI);
-                        currentIcing.updateMatrixWorld(true);
-                        const scaledIcingBoxHI = new THREE.Box3().setFromObject(currentIcing);
-                        const scaledIcingCenterHI = scaledIcingBoxHI.getCenter(new THREE.Vector3());
-                        const baseCenterHI = baseBoxHI.getCenter(new THREE.Vector3());
-                        // Vertical nudge, as a fraction of the whole cake's own height —
-                        // reuses the value already tuned for this shape in
-                        // SUGAR_ICING_Y_EXTRA_SEMINAKED (three-tier_heart: -0.1) instead of
-                        // sitting flush at the top edge (0 offset), which was the original
-                        // position bug reported for this cake.
-                        const _heartIcingYExtra = (slug === 'three-tier_heart') ? -0.10 : (slug === 'two-tier_heart') ? 0.10 : 0;
-                        currentIcing.position.set(
-                            baseCenterHI.x - scaledIcingCenterHI.x,
-                            (baseBoxHI.max.y - scaledIcingBoxHI.max.y) + (baseHeightHI * _heartIcingYExtra),
-                            baseCenterHI.z - scaledIcingCenterHI.z
-                        );
-                        currentIcing.updateMatrixWorld(true);
-                    }
+                    // currentIcing is now fitted per-tier inside the overlays.forEach loop
+                    // above (same path Shell Border already uses successfully on tiered
+                    // Heart cakes) — no separate uniform-scale pass needed here anymore.
                     // The Shell Border / Sugar Icing overlay files are authored against the
                     // REGULAR (non-semi-naked) base file, so for multi-tier shapes their raw
                     // per-tier proportions don't line up with the semi-naked base. Fit each
@@ -5885,8 +7582,8 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
     'three-tier': 1.0,
     'two-tier_square':   1.0,
     'three-tier_square': 1.0,
-    'two-tier_heart':    0.96,
-    'three-tier_heart':  0.90,
+    'two-tier_heart':    1.0,
+    'three-tier_heart':  1.0,
 };
        const SUGAR_ICING_Y_EXTRA_SEMINAKED = {
                         round:      0.05,
@@ -5896,8 +7593,8 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         'three-tier': -0.05,
                         'two-tier_square':   0.03,
                         'three-tier_square': -0.01,
-                        'two-tier_heart':    0.10,
-                        'three-tier_heart':  -0.1,
+                        'two-tier_heart':    0.02,
+                        'three-tier_heart':  -0.03,
                     };
                     const icingDiamMult = SUGAR_ICING_DIAM_MULT_SEMINAKED[slug] ?? 1.0;
                     const icingYExtra = SUGAR_ICING_Y_EXTRA_SEMINAKED[slug] ?? 0;
@@ -5905,9 +7602,9 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         'two-tier_heart':    0.02,
                         'three-tier_heart':  0.02,
                     };
-                       const SUGAR_ICING_TIER_SINK_EXTRA = {
-    'two-tier_heart':    [0.10, 0.02],
-    'three-tier_heart':  [0.10, 0.06, 0.02],
+                                              const SUGAR_ICING_TIER_SINK_EXTRA = {
+    'two-tier_heart':    0.02,
+    'three-tier_heart':  0.02,
 };
                     // Heart icing tiers need much more per-tier tuning than Shell Border —
                     // bottom/middle tiers sit deeper relative to their own base tier box than
@@ -5948,7 +7645,9 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                             // semi-naked base — diameter-scaled and top-aligned per tier,
                             // so it hugs each tier's own real rim instead of floating above
                             // the cake or matching only the bottom tier's width.
-                            if(fitRingOverlayTiersToBaseTiers(g, _actualBaseTiersSN, diamMultForG, extraSinkFrac)) return;
+                            const _fitOk = fitRingOverlayTiersToBaseTiers(g, _actualBaseTiersSN, diamMultForG, extraSinkFrac);
+                            console.log('[SN ring fit]', slug, isIcingOverlay ? 'icing' : 'shell', 'per-tier fit ok =', _fitOk);
+                            if(_fitOk) return;
                         }
                         g.position.set(0,0,0); g.rotation.set(0,0,0); g.scale.set(1,1,1);
                         g.updateMatrixWorld(true);
@@ -5979,7 +7678,7 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         // index 0 = bottom tier — leave untouched (already correct).
                         // only tier 2 (and tier 3, if present) get nudged upward
                         // (negative = up) to line up with their real tier rim.
-                                          const _icingTierNudge = slug === 'three-tier_heart' ? [0, -0.05, -0.2] : [0.03, 0.01];
+                                          const _icingTierNudge = slug === 'three-tier_heart' ? [0, 0, 0] : [0, 0];
                         if(_actualBaseTiersSN && _actualBaseTiersSN.length === _icingTierNudge.length){
                             currentIcing.updateMatrixWorld(true);
                             const tierBoxes = _actualBaseTiersSN.map(t => new THREE.Box3().setFromObject(t));
@@ -6047,7 +7746,28 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         currentIcing.position.copy(currentBase.position);
                         currentIcing.rotation.copy(currentBase.rotation);
                         currentIcing.updateMatrixWorld(true);
-                        // remove it from the generic overlays loop above's effect by re-marking so
+                        // ── per-tier fine-tune (Round semi-naked Sugar Icing) ──
+// diamMult: <1 pulls the icing inward, >1 pushes it outward
+// yNudge:   fraction of cake diameter, positive = down, negative = up
+const SEMINAKED_TIER_ICING_TWEAK = {
+    'two-tier':   { diamMult: 1.0, yNudge: 0 },
+    'three-tier': { diamMult: 1.0, yNudge: 0 },
+};
+const _tw = SEMINAKED_TIER_ICING_TWEAK[slug];
+if(_tw && (_tw.diamMult !== 1 || _tw.yNudge !== 0)){
+    const _bBoxTw  = new THREE.Box3().setFromObject(currentBase);
+    const _bDiamTw = Math.max(_bBoxTw.max.x-_bBoxTw.min.x, _bBoxTw.max.z-_bBoxTw.min.z);
+    const _preC = new THREE.Box3().setFromObject(currentIcing).getCenter(new THREE.Vector3());
+    currentIcing.scale.x *= _tw.diamMult;
+    currentIcing.scale.z *= _tw.diamMult;
+    currentIcing.updateMatrixWorld(true);
+    const _postC = new THREE.Box3().setFromObject(currentIcing).getCenter(new THREE.Vector3());
+    currentIcing.position.x += _preC.x - _postC.x;
+    currentIcing.position.z += _preC.z - _postC.z;
+    currentIcing.position.y -= _bDiamTw * _tw.yNudge;
+    currentIcing.updateMatrixWorld(true);
+}
+// remove it from the generic overlays loop above's effect by re-marking so
                         // it isn't double-fitted — overlays array no longer includes currentIcing,
                         // so this is the only positioning pass it gets.
                     }
@@ -6102,7 +7822,11 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                     if(yDelta !== 0){
                         overlays.forEach(g => { g.position.y += yDelta; g.updateMatrixWorld(true); });
                         if(currentDrip){ currentDrip.position.y += yDelta; currentDrip.updateMatrixWorld(true); }
-                        if(currentIcing && (_icingIsDedicatedSeminaked || _isHeartTierWholeMeshIcing)){ currentIcing.position.y += yDelta; currentIcing.updateMatrixWorld(true); }
+                        // currentIcing is only shifted here separately when it's the dedicated
+                        // Round seminaked file (excluded from overlays) — heart-tier icing is
+                        // now inside overlays above and already got its yDelta from that loop,
+                        // so adding it again here would double-shift it.
+                        if(currentIcing && _icingIsDedicatedSeminaked){ currentIcing.position.y += yDelta; currentIcing.updateMatrixWorld(true); }
                     }
                         [currentBase, ...overlays, ...(currentDrip?[currentDrip]:[])].forEach(g => { g.visible = true; });
                                        fitRosetteToCake(currentBase);
@@ -6121,16 +7845,16 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
     _rosetteUnitsHB.forEach(({obj:_rUnit, placement:_rPlacement})=>{
         if(_rPlacement === 'Border'){
             const _tierCountHB = slug === 'three-tier_heart' ? 3 : 2;
-            const _nudgeHB = slug === 'three-tier_heart' ? [-0.07, -0.035, 0] : [-0.04, 0];
+            const _nudgeHB = slug === 'three-tier_heart' ? [-0.01, -0.01, 0] : [0, 0];
             nudgeRosetteBorderPerTier(_rUnit, toPos[0], _tierCountHB, _nudgeHB);
         }
         if(_rPlacement === 'Sides' && slug === 'three-tier_heart'){
             // Copied to match the smooth-buttercream value exactly (was -0.01) —
             // semi-naked now sits in the same spot as smooth BC for this placement.
-            nudgeRosetteBorderPerTier(_rUnit, currentBase, 3, [0.01, 0.03, 0.015]);
+            nudgeRosetteBorderPerTier(_rUnit, currentBase, 3, [0.08, 0.07, 0.03]);
         }
         if(_rPlacement === 'Sides' && slug === 'two-tier_heart'){
-            nudgeRosetteBorderPerTier(_rUnit, toPos[0], -0.01, [0.09, -0.03]);
+            nudgeRosetteBorderPerTier(_rUnit, toPos[0], 2, [0.03, 0.02]);
         }
     });
 }
@@ -6143,7 +7867,7 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         // have a very different footprint than bundt.glb alone, and sizing
                         // off the combined box was shrinking the visible cake and leaving
                         // overlay decorations (like Choco Curls) floating above it.
-                        positionGroup(currentBase, _inches);
+                        positionGroup(currentBase, _inches, HEART_HEIGHT_MULT);
                         toPos.slice(1).forEach(g=>{
                             g.scale.copy(currentBase.scale);
                             g.position.copy(currentBase.position);
@@ -6163,7 +7887,7 @@ if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
                         }
                                   } else if(toPos.length >= 2){
                         positionMultiGroup(_inches, HEART_HEIGHT_MULT, ...toPos);
-                                                 if(currentBase && slug === 'round'){
+                        if(currentBase && slug === 'round' && !_excludeFrostIcingFromGroup){
                             const _baseTopBox = new THREE.Box3().setFromObject(currentBase);
                             // Textured Buttercream is a full side-wall sleeve, not a thin rim
                             // ring — it's already correctly aligned by positionMultiGroup.
@@ -6215,13 +7939,29 @@ fitRosetteToCake(toPos[0]);
                                 const _refDiamSR = Math.max(_refBoxSR.max.x-_refBoxSR.min.x, _refBoxSR.max.z-_refBoxSR.min.z);
                                 const _rawDripBoxSR  = new THREE.Box3().setFromObject(currentDrip);
                                 const _rawDripDiamSR = Math.max(_rawDripBoxSR.max.x-_rawDripBoxSR.min.x, _rawDripBoxSR.max.z-_rawDripBoxSR.min.z);
+                                // Horizontal (X/Z) scale still wraps to the cake's ACTUAL current
+                                // diameter, so the drip ring always hugs the cake's edge correctly.
                                 const _dripScaleSR = _rawDripDiamSR > 0.0001 ? (_refDiamSR * 1.02) / _rawDripDiamSR : 1.0;
-                                currentDrip.scale.setScalar(_dripScaleSR);
+                                // Vertical (Y) scale — icicle LENGTH — is measured against a FIXED
+                                // 6" reference diameter (decoupling it from Round Size, so a wide
+                                // cake doesn't get spiky-huge icicles and a narrow cake doesn't get
+                                // stubby ones), but then multiplied by HEART_HEIGHT_MULT (the SAME
+                                // height multiplier the cake body itself uses). The cake's actual
+                                // physical height depends only on Cake Height %, not Round Size — so
+                                // the icicle length must track that same % to stay proportional to
+                                // the cake instead of overlapping past the bottom on a short cake or
+                                // looking too short on a tall one.
+                                const _dripReferenceDiamSR = inchesToWorldScale(6);
+                                const _dripScaleYSR = _rawDripDiamSR > 0.0001 ? ((_dripReferenceDiamSR * 1.02) / _rawDripDiamSR) * HEART_HEIGHT_MULT : 1.0;
+                                currentDrip.scale.set(_dripScaleSR, _dripScaleYSR, _dripScaleSR);
                                 currentDrip.updateMatrixWorld(true);
                                 const _scaledDripBoxSR = new THREE.Box3().setFromObject(currentDrip);
                                 const _scaledDripCenterSR = _scaledDripBoxSR.getCenter(new THREE.Vector3());
                                 const _refCenterSR = _refBoxSR.getCenter(new THREE.Vector3());
-                                                             const _dripRoundYNudge = _refDiamSR * 0.008;
+                                // Nudge amount also uses the fixed reference diameter, so the
+                                // drip's vertical seating against the cake's top edge stays
+                                // consistent too, not just its icicle length.
+                                const _dripRoundYNudge = _dripReferenceDiamSR * 0.008;
                                 currentDrip.position.set(
                                     _refCenterSR.x - _scaledDripCenterSR.x,
                                     (_refBoxSR.max.y - _scaledDripBoxSR.max.y) + _dripRoundYNudge,
@@ -6241,14 +7981,14 @@ fitRosetteToCake(toPos[0]);
                             _rosetteUnitsHB2.forEach(({obj:_rUnit2, placement:_rPlacement2})=>{
                                 if(_rPlacement2 === 'Border'){
                                     const _tierCountHB = slug === 'three-tier_heart' ? 3 : 2;
-                                    const _nudgeHB = slug === 'three-tier_heart' ? [-0.07, -0.035, 0] : [-0.04, 0];
+                                    const _nudgeHB = slug === 'three-tier_heart' ? [-0.01, -0.01, 0] : [0, 0];
                                     nudgeRosetteBorderPerTier(_rUnit2, toPos[0], _tierCountHB, _nudgeHB);
                                 }
                                 if(_rPlacement2 === 'Sides' && slug === 'three-tier_heart'){
-                                    nudgeRosetteBorderPerTier(_rUnit2, currentBase, 3, [0.01, 0.03, 0.015]);
+                                    nudgeRosetteBorderPerTier(_rUnit2, currentBase, 3, [0.09, 0.07, 0.04]);
                                 }
                                 if(_rPlacement2 === 'Sides' && slug === 'two-tier_heart'){
-                                    nudgeRosetteBorderPerTier(_rUnit2, toPos[0], -0.01, [0.09, -0.03]);
+                                    nudgeRosetteBorderPerTier(_rUnit2, toPos[0], 2, [0.03, 0.02]);
                                 }
                             });
                         }
@@ -6256,13 +7996,55 @@ fitRosetteToCake(toPos[0]);
                 }
                 }
             }
-     recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
+     if(_excludeFrostIcingFromGroup && currentBase){
+        const _rimRefBox = new THREE.Box3().setFromObject(currentBase);
+        const _rimRefCenter = _rimRefBox.getCenter(new THREE.Vector3());
+        const _rimRefDiam = Math.max(_rimRefBox.max.x - _rimRefBox.min.x, _rimRefBox.max.z - _rimRefBox.min.z);
+        const _RIM_NUDGE_FRAC = { frost: 0.04, icing: 0.07 };
+        [
+            { g: currentFrost, nudgeFrac: _RIM_NUDGE_FRAC.frost, isIcing:false },
+            { g: currentIcing, nudgeFrac: _RIM_NUDGE_FRAC.icing, isIcing:true },
+        ].forEach(({g, nudgeFrac, isIcing})=>{
+            if(!g) return;
+            // Heart's Sugar Icing (single tier, ButterCream style) now copies
+            // the base cake's own final transform directly — the same trick
+            // Semi-naked Heart's dedicated icing_heart_seminaked.glb file
+            // uses, which is what gives Semi-naked's icing its full, even
+            // wraparound coverage. Shell Border (currentFrost) is untouched.
+            if(isIcing && originalShape === 'Heart'){
+                g.scale.copy(currentBase.scale);
+                g.position.copy(currentBase.position);
+                g.rotation.copy(currentBase.rotation);
+                g.updateMatrixWorld(true);
+                return;
+            }
+            g.position.set(0,0,0); g.rotation.set(0,0,0); g.scale.set(1,1,1);
+            g.updateMatrixWorld(true);
+            const _rimRawBox = new THREE.Box3().setFromObject(g);
+            const _rimRawDiam = Math.max(_rimRawBox.max.x-_rimRawBox.min.x, _rimRawBox.max.z-_rimRawBox.min.z);
+            const _rimScale = _rimRawDiam > 0.0001 ? _rimRefDiam/_rimRawDiam : 1.0;
+            g.scale.setScalar(_rimScale);
+            g.updateMatrixWorld(true);
+            const _rimScaledBox = new THREE.Box3().setFromObject(g);
+            const _rimScaledCenter = _rimScaledBox.getCenter(new THREE.Vector3());
+            g.position.set(
+                _rimRefCenter.x - _rimScaledCenter.x,
+                (_rimRefBox.max.y - _rimScaledBox.max.y) + (_rimRefDiam * nudgeFrac),
+                _rimRefCenter.z - _rimScaledCenter.z
+            );
+            g.updateMatrixWorld(true);
+        });
+    }
+    recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
             usedGLB = true; showStatus('Loaded ✓');
         } else if(hasFondant && currentFrost && glbHasMesh(currentFrost)){
        recolorGLB(flavor, frostingsArr, dripFlavor, icingColor, ombreTopColor, ombreBottomColor);
             usedGLB = true; showStatus('Loaded ✓');
         }
   if(!usedGLB){ showNoPreview(shape); }
+        if(usedGLB && state.tier && state.tier !== 'Single' && state.tierDecor){
+            try{ applyTierDecorFilter(state, rosettePieces); }catch(e){ console.warn('[TierDecor]', e); }
+        }
         updateCheesecakeCrust(state.cakeType);
     }
 // Rebuild the slice wedge/clip planes on the freshly-built meshes BEFORE the
@@ -6289,6 +8071,13 @@ if(window.CakeSlice){
         }
     }catch(e){ console.warn('[CakeSlice] pre-visible rebuild failed', e); }
 }
+// Apply the customer's saved sizes + half-views BEFORE the cake becomes visible,
+// so rebuilt decorations never flash at default size / full view.
+try{
+    if(typeof window._applyIcingScale==='function') window._applyIcingScale();
+    if(typeof window._applyRosetteBorderScale==='function') window._applyRosetteBorderScale();
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
+}catch(e){ console.warn('[pre-visible restore]', e); }
 loadedKey=newKey; sceneRoot.visible=true;
     invalidateCakeMeshesCache();
 isLoading=false;
@@ -6344,25 +8133,56 @@ requestAnimationFrame(()=>{
         if(typeof window._reapplyChocoCurls==='function') window._reapplyChocoCurls(state.tier, state.baseShape || state.shape);
         if(typeof window._reapplyPlaque==='function') window._reapplyPlaque();
         if(typeof window._reapplyCharacterTopper==='function') window._reapplyCharacterTopper();
+        if(typeof window._applyIcingScale==='function') window._applyIcingScale();
+        if(typeof window._applyRosetteBorderScale==='function') window._applyRosetteBorderScale();
+        if(typeof window._applyChocoCurlsSidesScale==='function') window._applyChocoCurlsSidesScale();
+        if(typeof window._applyFruitBorderScale==='function'){
+            ['Mango Slice','Kiwi Slice','Peach Slice','Banana Slice'].forEach(n=>window._applyFruitBorderScale(n));
+        }
         // The slice wedge was already rebuilt synchronously above, before the
         // cake was made visible — just make sure clipping survives any
-        // reveal-animation cleanup that ran in between.
+        // reveal-animation cleanup that ran in between. This MUST run before
+        // _reapplyAllHalfViews() below — CakeSlice.reapply() overwrites a
+        // decoration's clippingPlanes wholesale with the wedge-only planes,
+        // so if it ran last it would silently erase any active Left/Right
+        // half-view choice.
         if(window.CakeSlice && state.sliceEnabled !== false){
             try{ window.CakeSlice.reapply(); }catch(e){ console.warn('[CakeSlice] reapply after load failed', e); }
         }
-        if(window._pendingIcingReveal && currentIcing){
-            window._pendingIcingReveal = false;
-            hideGroupInstantly(currentIcing);
-            revealIcingWithWipe(currentIcing, 1800);
-        }
-              if(window._pendingShellReveal && currentFrost){
-            window._pendingShellReveal = false;
-            revealShellCircular(currentFrost, 2200);
-        }
-          if(currentRosette && currentRosette.userData && currentRosette.userData.pendingReveal){
-            currentRosette.userData.pendingReveal = false;
-            revealShellCircular(currentRosette, 2200);
-        }
+        if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
+      if(window._pendingIcingReveal && currentIcing){
+    window._pendingIcingReveal = false;
+    if(state.halfView && state.halfView.sugarIcing){
+        if(typeof window._applyHalfViewFor==='function') window._applyHalfViewFor('sugarIcing');
+    } else {
+        hideGroupInstantly(currentIcing);
+        revealIcingWithWipe(currentIcing, 1800);
+    }
+}
+
+if(window._pendingShellReveal && currentFrost){
+    window._pendingShellReveal = false;
+    if(state.halfView && state.halfView.shellBorder){
+        if(typeof window._applyHalfViewFor==='function') window._applyHalfViewFor('shellBorder');
+   } else {
+        hideGroupInstantly(currentFrost);
+        revealShellCircular(currentFrost, 2200, 'shellBorder');
+    }
+}
+        if(currentRosette && currentRosette.userData && currentRosette.userData.pendingReveal){
+    currentRosette.userData.pendingReveal = false;
+    if(state.halfView && state.halfView.rosetteSides){
+        if(typeof window._applyHalfViewFor==='function') window._applyHalfViewFor('rosetteSides');
+        currentRosette.userData._extraTilesToReveal = [];
+    } else {
+        hideGroupInstantly(currentRosette);
+        revealShellCircular(currentRosette, 2200, 'rosetteSides');
+        try{
+            (currentRosette.userData._extraTilesToReveal || []).forEach(tile=>{ try{ revealShellCircular(tile, 2200, 'rosetteSides'); }catch(e){} });
+            currentRosette.userData._extraTilesToReveal = [];
+        }catch(e){}
+    }
+}
         if(window._pendingFondantReveal && currentFrost){
             window._pendingFondantReveal = false;
         }
@@ -6374,6 +8194,19 @@ requestAnimationFrame(()=>{
                               : (typeof currentFrost !== 'undefined' && currentFrost) ? currentFrost
                               : null;
             if(cakeRefNow) fitRosetteToCake(cakeRefNow);
+            if(typeof window._applyRosetteBorderScale==='function') window._applyRosetteBorderScale();
+            if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
+            try{
+                const _unrevealedTiles = [];
+                if(currentRosette.userData.sideTiles) _unrevealedTiles.push(...currentRosette.userData.sideTiles.filter(t=>t.userData && t.userData.needsReveal));
+                if(currentRosette.children) currentRosette.children.forEach(c=>{
+                    if(c.userData && c.userData.sideTiles) _unrevealedTiles.push(...c.userData.sideTiles.filter(t=>t.userData && t.userData.needsReveal));
+                });
+                _unrevealedTiles.forEach(tile=>{
+                    tile.userData.needsReveal = false;
+                    revealShellCircular(tile, 2200);
+                });
+            }catch(e){}
         }
     });
 if(pendingState){const n=pendingState;pendingState=null;updateScene(n);}
@@ -6458,6 +8291,24 @@ function buildCylinderSprinkles() {
     const ROD_R = 0.010;
     const ROD_L = 0.052;
 
+    // PERF: one shared rod geometry + one material per color, batched onto
+    // the GPU via InstancedMesh — previously every rod allocated its own
+    // CylinderGeometry + MeshStandardMaterial (up to ~440 unique GPU
+    // resources for a single "both" placement on a busy cake), which was a
+    // major contributor to FPS drops/crash risk on complex cakes. Placement,
+    // jitter and per-piece orientation are unchanged; only how the results
+    // are batched for rendering has changed.
+    if (!window._sprinkleRodBaseGeo) {
+        window._sprinkleRodBaseGeo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+        window._sprinkleRodBaseGeo.userData.isSharedTemplate = true;
+    }
+    const rodGeo = window._sprinkleRodBaseGeo;
+    const rodMats = COLORS.map(c => new THREE.MeshStandardMaterial({
+        color: c, roughness: 0.28, metalness: 0.08, envMapIntensity: 1.0,
+    }));
+    const dummy = new THREE.Object3D();
+    const byColor = COLORS.map(() => []);
+
     if (sprinklePlacement.cylinder === 'top' || sprinklePlacement.cylinder === 'both') {
         const topPoints = _buildSurfacePoints(0.095);
         for (let i = topPoints.length - 1; i > 0; i--) {
@@ -6467,18 +8318,12 @@ function buildCylinderSprinkles() {
         const topCount = Math.min(220, topPoints.length);
         for (let i = 0; i < topCount; i++) {
             const { x, y, z } = topPoints[i];
-            const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
-            const mat = new THREE.MeshStandardMaterial({
-                color: COLORS[Math.floor(Math.random() * COLORS.length)],
-                roughness: 0.28, metalness: 0.08, envMapIntensity: 1.0,
-            });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.rotation.z = Math.PI / 2;
-            mesh.rotation.y = Math.random() * Math.PI * 2;
-            mesh.rotation.x = (Math.random() - 0.5) * 0.12;
-            mesh.position.set(x, y + ROD_R * 0.5, z);
-            mesh.castShadow = true;
-            group.add(mesh);
+            const colorIdx = Math.floor(Math.random() * COLORS.length);
+            dummy.position.set(x, y + ROD_R * 0.5, z);
+            dummy.rotation.set((Math.random() - 0.5) * 0.12, Math.random() * Math.PI * 2, Math.PI / 2);
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            byColor[colorIdx].push(dummy.matrix.clone());
         }
     }
 
@@ -6505,30 +8350,33 @@ function buildCylinderSprinkles() {
                 const y = cakeBox.min.y + heightFrac * cakeH;
                 const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
                 if (!hit) continue;
-                const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
-                const mat = new THREE.MeshStandardMaterial({
-                    color: COLORS[Math.floor(Math.random() * COLORS.length)],
-                    roughness: 0.28, metalness: 0.08, envMapIntensity: 1.0,
-                });
-                const mesh = new THREE.Mesh(geo, mat);
+                const colorIdx = Math.floor(Math.random() * COLORS.length);
                 // Lay the rod on its SIDE (tip the cylinder axis 90° off vertical),
                 // then spin it randomly in the plane of the wall so each piece points
                 // a different horizontal-ish direction — like a sprinkle stuck flat
                 // against frosting, never poking straight out like a quill.
-                mesh.rotation.z = Math.PI / 2;
-                mesh.rotation.y = Math.random() * Math.PI * 2;
-                mesh.rotation.x = (Math.random() - 0.5) * 0.5;
                 const cylOut = ROD_R * 0.9; // sits mostly embedded, just barely proud of the wall
-                mesh.position.set(
+                dummy.position.set(
                     hit.x + Math.cos(angle) * cylOut,
                     hit.y + (Math.random() - 0.5) * 0.012,
                     hit.z + Math.sin(angle) * cylOut
                 );
-                mesh.castShadow = true;
-                group.add(mesh);
+                dummy.rotation.set((Math.random() - 0.5) * 0.5, Math.random() * Math.PI * 2, Math.PI / 2);
+                dummy.scale.set(1, 1, 1);
+                dummy.updateMatrix();
+                byColor[colorIdx].push(dummy.matrix.clone());
             }
         }
     }
+
+    byColor.forEach((matrices, idx) => {
+        if (matrices.length === 0) return;
+        const inst = new THREE.InstancedMesh(rodGeo, rodMats[idx], matrices.length);
+        inst.castShadow = true;
+        matrices.forEach((m, i) => inst.setMatrixAt(i, m));
+        inst.instanceMatrix.needsUpdate = true;
+        group.add(inst);
+    });
 
     scene.add(group);
     sprinklesMeshes.cylinder = group;
@@ -6552,6 +8400,32 @@ function buildPearlSprinkles() {
     const group     = new THREE.Group();
     const PEARL_MIN = 0.015;
     const PEARL_MAX = 0.024;
+
+    // PERF: one shared unit-sphere geometry (per-instance size applied via
+    // the instance's scale, exactly like the surface radius used to vary
+    // per-mesh) instead of a fresh SphereGeometry for every pearl, batched
+    // into InstancedMeshes grouped by color. Top and side placements keep
+    // their own material set since they use slightly different
+    // emissiveIntensity, matching the original look exactly.
+    if (!window._sprinklePearlBaseGeo) {
+        window._sprinklePearlBaseGeo = new THREE.SphereGeometry(1, 9, 9);
+        window._sprinklePearlBaseGeo.userData.isSharedTemplate = true;
+    }
+    const pearlGeo = window._sprinklePearlBaseGeo;
+    const makePearlMats = (intensity) => PEARL_COLORS.map(pal => new THREE.MeshStandardMaterial({
+        color:             new THREE.Color(pal.color),
+        emissive:          new THREE.Color(pal.emissive),
+        emissiveIntensity: intensity,
+        roughness:         0.05,
+        metalness:         0.12,
+        envMapIntensity:   1.6,
+    }));
+    const topMats  = makePearlMats(0.08);
+    const sideMats = makePearlMats(0.07);
+    const dummy = new THREE.Object3D();
+    const byColorTop  = PEARL_COLORS.map(() => []);
+    const byColorSide = PEARL_COLORS.map(() => []);
+
 if (sprinklePlacement.pearl === 'top' || sprinklePlacement.pearl === 'both') {
         const topPoints = _buildSurfacePoints(0.085);
         for (let i = topPoints.length - 1; i > 0; i--) {
@@ -6561,21 +8435,13 @@ if (sprinklePlacement.pearl === 'top' || sprinklePlacement.pearl === 'both') {
         const topCount = Math.min(180, topPoints.length);
         for (let i = 0; i < topCount; i++) {
             const { x, y, z } = topPoints[i];
-            const pal  = PEARL_COLORS[Math.floor(Math.random() * PEARL_COLORS.length)];
+            const colorIdx = Math.floor(Math.random() * PEARL_COLORS.length);
             const size = PEARL_MIN + Math.random() * (PEARL_MAX - PEARL_MIN);
-            const geo  = new THREE.SphereGeometry(size, 9, 9);
-            const mat  = new THREE.MeshStandardMaterial({
-                color:             new THREE.Color(pal.color),
-                emissive:          new THREE.Color(pal.emissive),
-                emissiveIntensity: 0.08,
-                roughness:         0.05,
-                metalness:         0.12,
-                envMapIntensity:   1.6,
-            });
-            const mesh = new THREE.Mesh(geo, mat);
-mesh.position.set(x, y + size * 0.5, z);
-            mesh.castShadow = true;
-            group.add(mesh);
+            dummy.position.set(x, y + size * 0.5, z);
+            dummy.rotation.set(0, 0, 0);
+            dummy.scale.set(size, size, size);
+            dummy.updateMatrix();
+            byColorTop[colorIdx].push(dummy.matrix.clone());
         }
     }
 
@@ -6601,29 +8467,38 @@ if (sprinklePlacement.pearl === 'sides' || sprinklePlacement.pearl === 'both') {
                 const y = cakeBox.min.y + heightFrac * cakeH;
                 const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
                 if (!hit) continue;
-                const pal  = PEARL_COLORS[Math.floor(Math.random() * PEARL_COLORS.length)];
+                const colorIdx = Math.floor(Math.random() * PEARL_COLORS.length);
                 const size = PEARL_MIN + Math.random() * (PEARL_MAX - PEARL_MIN);
-                const geo  = new THREE.SphereGeometry(size, 9, 9);
-                const mat  = new THREE.MeshStandardMaterial({
-                    color:             new THREE.Color(pal.color),
-                    emissive:          new THREE.Color(pal.emissive),
-                    emissiveIntensity: 0.07,
-                    roughness:         0.05,
-                    metalness:         0.12,
-                    envMapIntensity:   1.6,
-                });
-                const mesh = new THREE.Mesh(geo, mat);
                 const pearlOut = size * 0.5;
-                mesh.position.set(
+                dummy.position.set(
                     hit.x + Math.cos(angle) * pearlOut,
                     hit.y,
                     hit.z + Math.sin(angle) * pearlOut
                 );
-                mesh.castShadow = true;
-                group.add(mesh);
+                dummy.rotation.set(0, 0, 0);
+                dummy.scale.set(size, size, size);
+                dummy.updateMatrix();
+                byColorSide[colorIdx].push(dummy.matrix.clone());
             }
         }
     }
+
+    byColorTop.forEach((matrices, idx) => {
+        if (matrices.length === 0) return;
+        const inst = new THREE.InstancedMesh(pearlGeo, topMats[idx], matrices.length);
+        inst.castShadow = true;
+        matrices.forEach((m, i) => inst.setMatrixAt(i, m));
+        inst.instanceMatrix.needsUpdate = true;
+        group.add(inst);
+    });
+    byColorSide.forEach((matrices, idx) => {
+        if (matrices.length === 0) return;
+        const inst = new THREE.InstancedMesh(pearlGeo, sideMats[idx], matrices.length);
+        inst.castShadow = true;
+        matrices.forEach((m, i) => inst.setMatrixAt(i, m));
+        inst.instanceMatrix.needsUpdate = true;
+        group.add(inst);
+    });
 
     scene.add(group);
     sprinklesMeshes.pearl = group;
@@ -6640,6 +8515,18 @@ function buildChocoSprinkles() {
     const ROD_R = 0.010;
     const ROD_L = 0.050;
 
+    // PERF: shared geometry + a single material (choco sprinkles are all one
+    // color) batched into one InstancedMesh — was up to ~440 unique
+    // geometries/materials for one draw call's worth of visual result.
+    if (!window._chocoSprinkleBaseGeo) {
+        window._chocoSprinkleBaseGeo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
+        window._chocoSprinkleBaseGeo.userData.isSharedTemplate = true;
+    }
+    const chocoGeo = window._chocoSprinkleBaseGeo;
+    const chocoMat = new THREE.MeshStandardMaterial({ color: CHOCO_COLOR, roughness: 0.32, metalness: 0.06, envMapIntensity: 0.85 });
+    const dummy = new THREE.Object3D();
+    const matrices = [];
+
     if (sprinklePlacement.chocoSprinkle === 'top' || sprinklePlacement.chocoSprinkle === 'both') {
         const topPoints = _buildSurfacePoints(0.095);
         for (let i = topPoints.length - 1; i > 0; i--) {
@@ -6649,15 +8536,11 @@ function buildChocoSprinkles() {
         const topCount = Math.min(220, topPoints.length);
         for (let i = 0; i < topCount; i++) {
             const { x, y, z } = topPoints[i];
-            const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
-            const mat = new THREE.MeshStandardMaterial({ color: CHOCO_COLOR, roughness: 0.32, metalness: 0.06, envMapIntensity: 0.85 });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.rotation.z = Math.PI / 2;
-            mesh.rotation.y = Math.random() * Math.PI * 2;
-            mesh.rotation.x = (Math.random() - 0.5) * 0.12;
-            mesh.position.set(x, y + ROD_R * 0.5, z);
-            mesh.castShadow = true;
-            group.add(mesh);
+            dummy.position.set(x, y + ROD_R * 0.5, z);
+            dummy.rotation.set((Math.random() - 0.5) * 0.12, Math.random() * Math.PI * 2, Math.PI / 2);
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            matrices.push(dummy.matrix.clone());
         }
     }
     if (sprinklePlacement.chocoSprinkle === 'sides' || sprinklePlacement.chocoSprinkle === 'both') {
@@ -6679,21 +8562,24 @@ function buildChocoSprinkles() {
                 const y = cakeBox.min.y + heightFrac * cakeH;
                 const hit = _snapToSide(cakeCX, cakeCZ, angle, y);
                 if (!hit) continue;
-                 const geo = new THREE.CylinderGeometry(ROD_R, ROD_R, ROD_L, 7);
-                const mat = new THREE.MeshStandardMaterial({ color: CHOCO_COLOR, roughness: 0.32, metalness: 0.06, envMapIntensity: 0.85 });
-                const mesh = new THREE.Mesh(geo, mat);
                 // Lay the rod on its side and spin it randomly in the wall's plane —
                 // flush against the frosting, random horizontal-ish orientation,
                 // never poking straight outward.
-                mesh.rotation.z = Math.PI / 2;
-                mesh.rotation.y = Math.random() * Math.PI * 2;
-                mesh.rotation.x = (Math.random() - 0.5) * 0.5;
                 const cylOut = ROD_R * 0.9;
-                mesh.position.set(hit.x + Math.cos(angle) * cylOut, hit.y + (Math.random() - 0.5) * 0.012, hit.z + Math.sin(angle) * cylOut);
-                mesh.castShadow = true;
-                group.add(mesh);
+                dummy.position.set(hit.x + Math.cos(angle) * cylOut, hit.y + (Math.random() - 0.5) * 0.012, hit.z + Math.sin(angle) * cylOut);
+                dummy.rotation.set((Math.random() - 0.5) * 0.5, Math.random() * Math.PI * 2, Math.PI / 2);
+                dummy.scale.set(1, 1, 1);
+                dummy.updateMatrix();
+                matrices.push(dummy.matrix.clone());
             }
         }
+    }
+    if (matrices.length > 0) {
+        const inst = new THREE.InstancedMesh(chocoGeo, chocoMat, matrices.length);
+        inst.castShadow = true;
+        matrices.forEach((m, i) => inst.setMatrixAt(i, m));
+        inst.instanceMatrix.needsUpdate = true;
+        group.add(inst);
     }
     scene.add(group);
     sprinklesMeshes.chocoSprinkle = group;
@@ -6922,6 +8808,12 @@ function _snapToSurfaceWithNormal(x, z){
             normal.applyMatrix3(nm).normalize();
         }
         if(normal.y < 0) normal.negate();
+        // Fruit should lie flat: pull the normal mostly toward straight up so piped
+        // borders / bumps don't tilt pieces. Bundt keeps its real slope.
+        const _isBundtFruit = (typeof state !== 'undefined' && state.shape === 'Bundt');
+        if(!_isBundtFruit){
+            normal.lerp(new THREE.Vector3(0,1,0), 0.85).normalize();
+        }
     }
     return { point: hit.point, normal };
 }
@@ -7560,6 +9452,26 @@ function buildBananaSliceFallbackMesh(){
     g.add(mesh);
     return g;
 }
+// Rotates a loaded slice model so its THINNEST axis points up (Y), so it lies flat
+// no matter how the GLB was exported. Returns a wrapper group; the model's box
+// center is kept in place.
+function _layFlatWrap(fg){
+    fg.updateMatrixWorld(true);
+    const b0 = new THREE.Box3().setFromObject(fg);
+    const s  = b0.getSize(new THREE.Vector3());
+    const wrap = new THREE.Group();
+    wrap.add(fg);
+    if(!(s.y <= s.x && s.y <= s.z)){
+        const c0 = b0.getCenter(new THREE.Vector3());
+        if(s.x <= s.z) fg.rotation.z =  Math.PI/2;   // thin axis is X -> make it Y
+        else           fg.rotation.x = -Math.PI/2;   // thin axis is Z -> make it Y
+        wrap.updateMatrixWorld(true);
+        const c1 = new THREE.Box3().setFromObject(wrap).getCenter(new THREE.Vector3());
+        fg.position.add(c0.sub(c1));
+    }
+    wrap.updateMatrixWorld(true);
+    return wrap;
+}
 async function _makeGramFruitMesh(fruitName, sizeMult){
     if(fruitName==='Mango Slice') return buildMangoCubeMesh(sizeMult);
     if(fruitName==='Peach Slice') return buildPeachSliceMesh();
@@ -7608,6 +9520,7 @@ async function _makeGramFruitMesh(fruitName, sizeMult){
         usedFallback = true;
     }
 
+    if(!usedFallback && fg) fg = _layFlatWrap(fg);
     if(usedFallback && fruitName==='Banana Slice'){
         console.warn('[GramFruit] Banana Slice model bounds unusable — using procedural fallback shape');
         fg = buildBananaSliceFallbackMesh();
@@ -7681,7 +9594,8 @@ async function _getFruitTemplate(fruitName){
     const url = urlMap[fruitName];
     if(!url){ window._fruitGLBTemplateCache[fruitName] = null; return null; }
     try{
-        const raw = await loadFruitGLB(url); // independent clone, safe to mutate
+        let raw = await loadFruitGLB(url); // independent clone, safe to mutate
+        raw = _layFlatWrap(raw);           // lie flat regardless of export orientation
         raw.updateMatrixWorld(true);
         const rb = new THREE.Box3().setFromObject(raw);
         const sz = rb.getSize(new THREE.Vector3());
@@ -7779,6 +9693,7 @@ async function buildMergedGramFruitMeshFast(fruitName, points, useAngleForBorder
         const angle = useAngleForBorder ? p.angle : undefined;
         return _computeSeatedMatrix(template, p, p.normal, fruitName, angle);
     });
+    const pieceCenters = transforms.map(m => new THREE.Vector3().setFromMatrixPosition(m));
 
     const group = new THREE.Group();
     const _v = new THREE.Vector3(), _n = new THREE.Vector3();
@@ -7815,9 +9730,13 @@ async function buildMergedGramFruitMeshFast(fruitName, points, useAngleForBorder
         if(normals) geo.setAttribute('normal', new THREE.BufferAttribute(normals,3));
         if(uvs) geo.setAttribute('uv', new THREE.BufferAttribute(uvs,2));
 
-        const mesh = new THREE.Mesh(geo, sub.material); // shared, un-cloned material
+        const mesh = new THREE.Mesh(geo, sub.material.clone()); // cloned so half-view / slice clipping never leaks into the shared template
         mesh.castShadow = false; mesh.receiveShadow = false;
-        mesh.userData.sharedTemplateMaterial = true; // tells disposal to skip this material
+        // Recorded so the Border Size slider can slide each baked piece
+        // toward the cake center rigidly (see _radialInsetMergedFruitMesh).
+        mesh.userData._pieceCenters = pieceCenters;
+        mesh.userData._origPositions = positions.slice();
+        mesh.userData._vertCountPerPiece = vertCount;
         group.add(mesh);
     });
 
@@ -7892,7 +9811,9 @@ window.buildGramFruitDecoration = async function(fruitName, grams, forcedCount, 
             }catch(err){ console.error('[GramFruit]', fruitName, err); }
         }
     }
+    if(typeof window._applyFruitBorderScale==='function') window._applyFruitBorderScale(fruitName);
     if(window.cakeslice && typeof window.cakeslice.refreshdecorations==='function') window.cakeslice.refreshdecorations();
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
     if(typeof window._requestRender==='function') window._requestRender(500);
 };
 window.clearGramFruitDecoration = function(fruitName){
@@ -8032,6 +9953,7 @@ window.buildTierFruitBorder = async function(tierIdx, fruitName){
         window._tierFruitBorderGroups[tierIdx].forEach(g=>{ _disposeDecorGroup(g,false); scene.remove(g); });
     }
     window._tierFruitBorderGroups[tierIdx] = [];
+    window._tierFruitBorderGroups[tierIdx]._fruitName = fruitName;
     if(!fruitName || fruitName === 'None') return;
 
     const info = _getTierWorldInfo(tierIdx);
@@ -8110,7 +10032,9 @@ window.buildTierFruitBorder = async function(tierIdx, fruitName){
             window._tierFruitBorderGroups[tierIdx].push(mesh);
         }catch(err){ console.error('[TierFruitBorder]', fruitName, tierIdx, err); }
     }
+    if(typeof window._applyFruitBorderScale==='function') window._applyFruitBorderScale(fruitName);
     if(window.cakeslice && typeof window.cakeslice.refreshdecorations==='function') window.cakeslice.refreshdecorations();
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
     if(typeof window._requestRender==='function') window._requestRender(500);
 };
 window.clearTierFruitBorder = function(tierIdx){
@@ -8261,6 +10185,25 @@ window._reapplySprinkles = function() {
 const decoGLBCache={};
 const decoGLBLoadingPromises={};
 function _cloneDecoScene(scene){const c=scene.clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});return c;}
+// Warms decoGLBCache directly (no clone) — used by the page-load prefetch
+// queue so KitKat/Oreo are actually cached under the SAME map loadDecoGLB
+// checks at real placement time. Registered on window because the preload
+// queue that calls this is built earlier in the script, before this const
+// exists — by the time it's actually invoked (well after full script eval)
+// this closure is ready, but referencing the bare function name from an
+// earlier-defined function would still work too; window._ is just explicit.
+window._prefetchDecoGLB = function(url){
+    if(decoGLBCache[url] || decoGLBLoadingPromises[url]) return Promise.resolve();
+    const p=new Promise((resolve)=>{
+        new GLTFLoader().load(url,gltf=>{
+            decoGLBCache[url]=gltf.scene;
+            delete decoGLBLoadingPromises[url];
+            resolve(gltf.scene);
+        },undefined,()=>{delete decoGLBLoadingPromises[url];resolve(null);}); // prefetch failures stay silent
+    });
+    decoGLBLoadingPromises[url]=p;
+    return p;
+};
 function loadDecoGLB(url){
     if(decoGLBCache[url]) return Promise.resolve(_cloneDecoScene(decoGLBCache[url]));
     if(decoGLBLoadingPromises[url]) return decoGLBLoadingPromises[url].then(_cloneDecoScene);
@@ -8502,8 +10445,17 @@ if(!parts){
             const targetDiam = cakeDiameter * part.diamMult;
             const targetY    = part.sitOnTop ? cakeBox.max.y : cakeCenter.y;
 
+            // "Around" pieces wrap the whole tier stack, so their vertical span
+            // must stretch/shrink together with the Cake Height slider — otherwise
+            // the band keeps its default-height proportions while the tiers it's
+            // supposed to hug grow or shrink, and it drifts off the seam. "Center"
+            // pieces just sit flat on the top surface and should keep their
+            // natural (unstretched) shape regardless of cake height.
+            const _wrapsStack = part.file.includes('around');
+            const _heightMult = (typeof state !== 'undefined' && typeof state.heightMult === 'number' && isFinite(state.heightMult) && state.heightMult > 0) ? state.heightMult : 1.0;
+
             const scale = rawDiam > 0.0001 ? targetDiam / rawDiam : 1.0;
-            fg.scale.setScalar(scale);
+            fg.scale.set(scale, _wrapsStack ? scale * _heightMult : scale, scale);
             fg.updateMatrixWorld(true);
 
            const scaledBox    = new THREE.Box3().setFromObject(fg);
@@ -8511,7 +10463,10 @@ if(!parts){
             const scaledSize   = scaledBox.getSize(new THREE.Vector3());
             // Sink the piece into the frosting relative to ITS OWN height.
             const sinkAmount = part.sitOnTop ? scaledSize.y * (part.sinkFrac ?? 0.48) : 0;
-            const yNudgeAmount = cakeDiameter * (part.yNudge || 0);
+            // yNudge is a vertical seam-alignment correction — scale it by the
+            // same heightMult as the band itself so it keeps landing on the
+            // right seam no matter how tall/short the cake is set to.
+            const yNudgeAmount = cakeDiameter * (part.yNudge || 0) * (_wrapsStack ? _heightMult : 1.0);
             // xNudge/zNudge — horizontal offsets, same fraction-of-diameter convention
             // as yNudge. diamMult only changes SIZE (the piece is always re-centered on
             // the cake's X/Z center afterward), so these are the only way to shift it
@@ -8542,11 +10497,13 @@ if(!parts){
                 c.receiveShadow = true;
             });
 
+            fg.userData._isAroundPiece = /around/.test(part.file);
             scene.add(fg);
             currentChocoCurls.push(fg);
         }
 
         currentChocoCurlsPlacement = placement;
+        if(typeof window._applyChocoCurlsSidesScale==='function') window._applyChocoCurlsSidesScale();
         if(animate) revealChocoCurlsShred(currentChocoCurls, 1400);
         return true;
     }catch(err){
@@ -9020,6 +10977,7 @@ function getCakeMeshes(){
     const m=[];
     sceneRoot.traverse(c=>{
         if(!c.isMesh) return;
+        if(!c.visible) return;
         let node=c,isStand=false;
         while(node){if(node.userData&&node.userData.isStand){isStand=true;break;}node=node.parent;}
         if(!isStand) m.push(c);
@@ -9035,6 +10993,7 @@ function getSprinkleTargetMeshes(){
     const m=[];
     sceneRoot.traverse(c=>{
         if(!c.isMesh) return;
+        if(!c.visible) return;
         let node=c,isExcluded=false;
         while(node){
             if(node.userData && node.userData.isStand){isExcluded=true;break;}
@@ -9070,6 +11029,22 @@ function _positionDecoGroup(fg,sp,fh){fg.position.set(sp.x,sp.y,sp.z);}
 const fruitGLBCache={};
 const fruitGLBLoadingPromises={};
 function _cloneFruitScene(scene){const c=scene.clone(true);c.traverse(x=>{if(x.isMesh&&x.material)x.material=x.material.clone();});return c;}
+// Warms fruitGLBCache directly (no clone) — mirrors _prefetchDecoGLB above.
+// Ferrero/Toblerone/fruit slices all load through loadFruitGLB→fruitGLBCache
+// at real placement time, so the preload queue must warm THIS map for the
+// prefetch to have any effect for those files.
+window._prefetchFruitGLB = function(url){
+    if(fruitGLBCache[url] || fruitGLBLoadingPromises[url]) return Promise.resolve();
+    const p=new Promise((resolve)=>{
+        new GLTFLoader().load(url,gltf=>{
+            fruitGLBCache[url]=gltf.scene;
+            delete fruitGLBLoadingPromises[url];
+            resolve(gltf.scene);
+        },undefined,()=>{delete fruitGLBLoadingPromises[url];resolve(null);}); // prefetch failures stay silent
+    });
+    fruitGLBLoadingPromises[url]=p;
+    return p;
+};
 function loadFruitGLB(url){
     if(fruitGLBCache[url]) return Promise.resolve(_cloneFruitScene(fruitGLBCache[url]));
     if(fruitGLBLoadingPromises[url]) return fruitGLBLoadingPromises[url].then(_cloneFruitScene);
@@ -10090,6 +12065,12 @@ window._threeCamera   = camera;
 window._threeControls = controls;
 window._threeRenderer = renderer;
 window._threeScene    = scene;
+// Real bounds of the built cake (base/frosting/drip), so the tracker camera can orbit and zoom around its true center.
+window._getCakeBounds = function(){
+    const b = new THREE.Box3().setFromObject(sceneRoot);
+    if(b.isEmpty()) return null;
+    return { center: b.getCenter(new THREE.Vector3()), size: b.getSize(new THREE.Vector3()) };
+};
 window.placeFruitAtFraction = async function(fruitName, xFrac, zFrac, spinDeg){
     const {cx,cz,r} = getCakeCenterAndRadius();
     const targetX = cx + xFrac*r;
@@ -10189,6 +12170,7 @@ window.placeTobleroneAtFraction = async function(xFrac, zFrac, flavor){
 };
 window._requestShadowUpdate = function(){ if(renderer) renderer.shadowMap.needsUpdate = true; };
 window.isCakeSceneReady=function(){ return !!(currentBase || currentFrost); };
+window.isCakeBuilding=function(){ return !!isLoading; }; // true while updateScene() is still assembling the cake
 window.updateModel=(state)=>updateScene(state);
 window.resetCamera=()=>{
     const tier = state ? state.tier : 'Single';
@@ -10355,7 +12337,7 @@ function getSliceBands(flavor, filling){
 function _sliceGetProfileMeshes(){
     const groups = [currentBase, currentFrost, currentIcing].filter(Boolean);
     const meshes = [];
-    groups.forEach(g=>g.traverse(c=>{ if(c.isMesh) meshes.push(c); }));
+    groups.forEach(g=>g.traverse(c=>{ if(c.isMesh && c.visible) meshes.push(c); }));
     return meshes;
 }
 function _sliceSampleRadiusProfile(thetaRad, cx, cz, yMin, yMax, samples){
@@ -11295,6 +13277,92 @@ window._dumpScene = function(){
 <script>
 const TIER_INDEX = {'Single':0,'Two-tier':1,'Three-tier':2};
 function getTierIdx(){ return TIER_INDEX[state.tier] ?? 0; }
+// Hide options the admin deactivated
+const DISABLED = @json($disabledNames ?? []);
+// Admin name -> name used inside the builder
+const NAME_ALIAS = {
+    'Shell Border': 'Smooth Buttercream',
+    'Fondant': 'Fondant Smooth',
+    'Semi-naked': 'Semi-naked Style',
+    'Ombre': 'Ombre Style',
+    'Textured': 'Textured Buttercream',
+    'Add Drip': 'Drip',
+    'Cylinder Mix': 'Cylinder Sprinkles',
+    'Pearl Mix': 'Sphere Sprinkles',
+    'Ferrero': 'Ferrero-style Ball',
+    'KitKat': 'Kitkat Sticks',
+    'Oreo': 'Oreo Cookie',
+    'Bar Shard': 'Chocolate Bar Shard',
+    'Toblerone': 'Toblerone Triangle',
+    'Mango Cube': 'Mango Slice'
+};
+const DISABLED_SET = new Set(DISABLED.map(n => NAME_ALIAS[n] || n));
+document.querySelectorAll('[data-val]').forEach(el => {
+    if (DISABLED_SET.has(el.dataset.val)) el.style.display = 'none';
+});
+
+// Coming Soon: visible, badged, not selectable
+const COMING_SOON     = @json($comingSoonNames ?? []);
+const COMING_SOON_SET = new Set(COMING_SOON.map(n => NAME_ALIAS[n] || n));
+function isComingSoon(name){ return COMING_SOON_SET.has(name); }
+
+document.querySelectorAll('[data-val],[data-cake-type],[data-filling]').forEach(el => {
+    const name = el.dataset.val || el.dataset.cakeType || el.dataset.filling;
+    if (!isComingSoon(name)) return;
+    el.classList.add('is-coming-soon');
+    el.classList.remove('active');
+    el.setAttribute('aria-disabled', 'true');
+    el.title = 'Coming Soon';
+    el.insertAdjacentHTML('beforeend', '<span class="soon-badge">Coming Soon</span>');
+});
+
+// Capture phase runs before every existing click handler, so none of them fire
+document.addEventListener('click', e => {
+    if (e.target.closest('.is-coming-soon')) { e.preventDefault(); e.stopPropagation(); }
+}, true);
+
+// Coming Soon components the builder has no tile for yet (added in admin) → add a locked tile
+@php
+    $soonItems = $components->flatten(1)->where('status', 'coming_soon')
+        ->map(fn($c) => ['category' => $c->category, 'name' => $c->name, 'emoji' => $c->emoji])
+        ->values();
+@endphp
+const SOON_ITEMS = @json($soonItems);
+const SOON_CONTAINERS = {
+    cake_style: () => document.getElementById('opts-cake-style'),
+    base_icing: () => document.getElementById('opts-frosting-base'),
+    texture:    () => document.getElementById('opts-frosting-special'),
+    drip:       () => document.getElementById('dripToggleBtn')?.parentElement,
+    sprinkle:   () => document.getElementById('opts-sprinkles'),
+    fruit:      () => document.getElementById('opts-fruits'),
+    choco:      () => document.getElementById('opts-choco'),
+};
+const soonEsc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+SOON_ITEMS.forEach(item => {
+    const getBox = SOON_CONTAINERS[item.category];
+    const box = getBox && getBox();
+    if (!box) return;
+
+    // Skip if the builder already has a tile for it (the marking code above handles those)
+    const key = NAME_ALIAS[item.name] || item.name;
+    const exists = Array.from(box.querySelectorAll('[data-val]'))
+        .some(el => el.dataset.val === key || el.dataset.val === item.name);
+    if (exists) return;
+
+    const vertical = item.category === 'fruit' || item.category === 'choco';
+    const tile = document.createElement('div');
+    tile.className = 'addon-opt is-coming-soon';
+    tile.dataset.soon = item.name;          // not data-val, so no builder logic touches it
+    tile.setAttribute('aria-disabled', 'true');
+    tile.title = 'Coming Soon';
+    if (vertical) tile.style.cssText = 'flex-direction:column;align-items:center;padding:10px 6px;gap:6px;border-radius:12px;';
+    tile.innerHTML =
+        '<div class="a-icon">' + soonEsc(item.emoji || '✨') + '</div>' +
+        '<div class="a-info"><span class="a-name">' + soonEsc(item.name) + '</span></div>' +
+        '<span class="soon-badge">Coming Soon</span>';
+    box.appendChild(tile);
+});
 const CAKE_STYLE_DB   = @json($tierPriceMaps['cake_style']);
 const BASE_ICING_DB   = @json($tierPriceMaps['base_icing']);
 const TEXTURE_DB      = @json($tierPriceMaps['texture']);
@@ -11337,7 +13405,7 @@ function refreshTierPriceLabels(){
         if(!el) return;
         const span = el.classList.contains('a-price') ? el : el.querySelector('.a-price');
         if(!span) return;
-        const suffix = opts && opts.suffix ? ' · '+opts.suffix : '';
+        const suffix = '';
         span.textContent = price===0 ? `Default · Included${suffix}` : `+₱${price.toLocaleString()}${suffix}`;
         if(el.dataset) el.dataset.price = price;
     }
@@ -11370,6 +13438,59 @@ function refreshTierPriceLabels(){
     });
 }
 function tierCountFor(tier){ return tier==='Three-tier'?3:tier==='Two-tier'?2:1; }
+const CAKE_SIZE_CATEGORIES = [
+    {min:4,max:5,name:'Bento Cake',desc:'A cute personal-sized treat'},
+    {min:6,max:6,name:'Small Cake',desc:'Perfect for small celebrations'},
+    {min:7,max:8,name:'Regular Cake',desc:'Great for standard celebrations'},
+    {min:9,max:10,name:'Large Cake',desc:'Ideal for bigger gatherings'},
+];
+function getCakeSizeCategory(size){
+    return CAKE_SIZE_CATEGORIES.find(c=>size>=c.min&&size<=c.max) || CAKE_SIZE_CATEGORIES[CAKE_SIZE_CATEGORIES.length-1];
+}
+function updateSizeLabelBadge(){
+    const cat = getCakeSizeCategory(state.roundSize);
+    const nameEl = document.getElementById('sizeCategoryName');
+    const rangeEl = document.getElementById('sizeCategoryRange');
+    const descEl = document.getElementById('sizeCategoryDesc');
+    if(nameEl) nameEl.textContent = cat.name;
+    if(rangeEl) rangeEl.textContent = `${cat.min}"–${cat.max}"`;
+    if(descEl) descEl.textContent = cat.desc;
+}
+function syncSizeSliderVisibility(){
+    const isResizableShape = (state.shape==='Round'||state.shape==='Square'||state.shape==='Heart');
+    const showSize = isResizableShape && state.tier==='Single';
+    // Cake Height now follows the same restriction as Round Size — Number and
+    // Bundt cakes keep a fixed, non-adjustable height (previously this only
+    // checked tier, so the Height slider stayed visible/usable for those
+    // shapes even though resizing isn't supported for them).
+    const showHeight = isResizableShape && state.tier==='Single';
+    document.getElementById('sizeSliderWrap').classList.toggle('visible', showSize);
+    document.getElementById('heightSliderWrap').classList.toggle('visible', showHeight);
+    if(!showHeight && state.heightMult !== 1.0){
+        // Reset to the default 100% height whenever the slider is hidden —
+        // this now covers Number/Bundt cakes AND Two-tier/Three-tier
+        // Round/Square/Heart, so a tiered cake always renders at its fixed
+        // default height instead of inheriting a custom height left over
+        // from Single-tier mode.
+        state.heightMult = 1.0;
+        const heightRangeEl = document.getElementById('heightRange');
+        const heightDisplayEl = document.getElementById('heightDisplay');
+        if(heightRangeEl) heightRangeEl.value = 100;
+        if(heightDisplayEl) heightDisplayEl.textContent = 100;
+    }
+    if(!showSize && state.roundSize !== 6){
+        // Same idea for size — Two-tier/Three-tier (and Number/Bundt) always
+        // use their fixed default base size, never a leftover Round Size
+        // value from Single-tier mode. This also fixes Square/Heart tiered
+        // pricing, which was scaling off the stale state.roundSize.
+        state.roundSize = 6;
+        const sizeRangeEl = document.getElementById('sizeRange');
+        const sizeDisplayEl = document.getElementById('sizeDisplay');
+        if(sizeRangeEl) sizeRangeEl.value = 6;
+        if(sizeDisplayEl) sizeDisplayEl.textContent = 6;
+    }
+    updateSizeLabelBadge();
+}
 const LAYER_LINE_LABEL = {1:'No lines',2:'1 line',3:'3 lines'};
 function renderTierLayerRows(){
     const section = document.getElementById('cakeLayersSection');
@@ -11410,6 +13531,7 @@ function renderTierLayerRows(){
             const opt = document.createElement('option');
             opt.value = name;
             opt.textContent = name;
+            if (isComingSoon(name)) { opt.disabled = true; opt.textContent = name + ' (Coming Soon)'; }
             if(currentVal === name) opt.selected = true;
             select.appendChild(opt);
         });
@@ -11455,7 +13577,7 @@ function renderTierLayerRows(){
         fieldsWrap.style.cssText = 'display:flex;flex-direction:column;gap:16px;';
 
         // Base Cake Flavour — colors the INSIDE crumb (only visible when sliced)
-        fieldsWrap.appendChild(makeFieldRow(ICONS.base, 'Base Cake Flavour', flavorNames, state.tierFlavors[i]||state.flavor, (val)=>{
+        fieldsWrap.appendChild(makeFieldRow(ICONS.base, 'Cake Flavor', flavorNames, state.tierFlavors[i]||state.flavor, (val)=>{
             state.tierFlavors[i] = val;
             if(i===0) state.innerFlavor = val;
             updateAll();
@@ -11475,12 +13597,12 @@ function renderTierLayerRows(){
         if(!hasMultiLayer){
             const hint = document.createElement('div');
             hint.style.cssText = 'font-size:.66rem;color:var(--text-muted);font-family:var(--font-display);margin-top:-8px;display:flex;align-items:center;';
-            hint.innerHTML = ICONS.lock + 'Set 2+ layers on this tier to unlock a filling';
+            hint.innerHTML = ICONS.lock + 'Add a 2nd layer to choose a filling';
             fieldsWrap.appendChild(hint);
         }
 
         // Frosting — colors the OUTSIDE of this tier
-        fieldsWrap.appendChild(makeFieldRow(ICONS.frosting, 'Frosting', flavorNames, state.tierFrostings[i]||state.flavor, (val)=>{
+        fieldsWrap.appendChild(makeFieldRow(ICONS.frosting, 'Frosting Flavor', flavorNames, state.tierFrostings[i]||state.flavor, (val)=>{
             state.tierFrostings[i] = val;
             if(i===0) state.flavor = val; // keep tier 1 in sync with the rest of the app
             updateAll();
@@ -11597,21 +13719,26 @@ const PLAQUE_SHAPE_FILES = {
 };
 const CAKE_STYLE_VALS_INIT = ['Smooth Buttercream','Semi-naked Style','Fondant Smooth'];
 const state={
-    shape:'Round', tier:'Single', roundSize:6,
+    shape:'Round', tier:'Single', roundSize:6, heightMult:1.0,
     numberDigits:1, numberChoice:0, numberTens:1, numberUnits:0,
-    cakeType:@json($components->get('cake_type', collect())->first()->name ?? 'Sponge Cake'),
+    cakeType:@json($components->get('cake_type', collect())->firstWhere('status', 'active')->name ?? 'Sponge Cake'),
        flavor:@json($firstFlavor->name ?? 'Vanilla'),
     innerFlavor:@json($firstFlavor->name ?? 'Vanilla'),
     filling:'No Filling',
     frostings:new Set(),
     addons:new Map(),
     hasDrip:false, dripFlavor:'Vanilla',
-icingColor:'#FFFFFF', icingColorName:'White', hasCustomIcingColor:false,
+      icingColor:'#FFFFFF', icingColorName:'White', hasCustomIcingColor:false, icingScale:1.0,
+    shellBorderScale:1.0, comboOrder:[],
+    shellBorderColor:'#FFFFFF', shellBorderColorName:'White',
     rosettePlacement:'Border', rosetteColor:'#FFFFFF', rosetteColorName:'White',
+    rosetteBorderScale:1.0, chocoCurlsSidesScale:1.0,
+    fruitBorderScale:{'Mango Slice':1.0,'Kiwi Slice':1.0,'Peach Slice':1.0,'Banana Slice':1.0},
     ombreTopColor:'#F7A8C4', ombreBottomColor:'#8A6AC8',
     placedFruits:[],
     fruitGrams:{},
     tierFruitBorders:['None','None','None'], // per-tier border fruit for Two-tier/Three-tier
+    tierDecor:{shell:[0,1,2],icing:[0,1,2],rosette:[0,1,2]}, // which tiers get Shell Border / Sugar Icing / Rosette Border
     allFruitsAssorted:false,
     placedFerrero:[],
     kitkatOrientation:'standing',
@@ -11625,6 +13752,7 @@ placedBarShard:[],
   chocoCurlsPlacement:'middle',
   sliceEnabled:false,
   sliceRotation:60,
+  halfView: { shellBorder:null, sugarIcing:null, rosetteSides:null, chocoCurlsSides:null, mangoBorder:null, kiwiBorder:null, peachBorder:null, bananaBorder:null },
   tierLayers:[1,1,1], // index 0 = bottom tier, 1 = middle, 2 = top
 tierFlavors:[@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla')], // per-tier BASE CAKE FLAVOR (inside crumb color)
 tierFrostings:[@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla'),@json($firstFlavor->name ?? 'Vanilla')], // per-tier FROSTING (outside color)
@@ -11635,6 +13763,52 @@ plaqueShape: 'Square',
     characterSize: 4,
 };
 function showToast(msg,duration=2800){const t=document.getElementById('toast');t.innerHTML=emojiToSvg(msg);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),duration);}
+
+// ── Generic "are you sure?" confirmation before removing placed decorations ──
+let _pendingGenericRemoval = null;
+function confirmBeforeRemove(count, label, onConfirm){
+    if(!count || count <= 0){ onConfirm(); return; }
+    const modal = document.getElementById('genericRemoveConfirmModal');
+    const labelEl = document.getElementById('genericRemoveConfirmLabel');
+    if(!modal || !labelEl){ onConfirm(); return; }
+    labelEl.textContent = `${count} ${label}${count>1?'s':''}`;
+    _pendingGenericRemoval = onConfirm;
+    modal.style.display = 'flex';
+}
+(function bindGenericRemoveModal(){
+    const cancelBtn  = document.getElementById('genericRemoveCancelBtn');
+    const confirmBtn = document.getElementById('genericRemoveConfirmBtn');
+    const modal      = document.getElementById('genericRemoveConfirmModal');
+    if(cancelBtn) cancelBtn.addEventListener('click', ()=>{ modal.style.display='none'; _pendingGenericRemoval=null; });
+    if(confirmBtn) confirmBtn.addEventListener('click', ()=>{
+        if(_pendingGenericRemoval) _pendingGenericRemoval();
+        modal.style.display='none';
+        _pendingGenericRemoval=null;
+    });
+})();
+
+// ── Fruit-specific "are you sure?" (Strawberry/Blueberry/Raspberry/Cherry) ──
+let _pendingFruitRemoval = null;
+function confirmBeforeRemoveFruit(count, label, onConfirm){
+    if(!count || count <= 0){ onConfirm(); return; }
+    const modal = document.getElementById('fruitRemoveConfirmModal');
+    const labelEl = document.getElementById('fruitRemoveConfirmCount');
+    if(!modal || !labelEl){ onConfirm(); return; }
+    labelEl.textContent = `${count} ${label}${count>1?'s':''}`;
+    _pendingFruitRemoval = onConfirm;
+    modal.style.display = 'flex';
+}
+(function bindFruitRemoveModal(){
+    const cancelBtn  = document.getElementById('fruitRemoveCancelBtn');
+    const confirmBtn = document.getElementById('fruitRemoveConfirmBtn');
+    const modal      = document.getElementById('fruitRemoveConfirmModal');
+    if(cancelBtn) cancelBtn.addEventListener('click', ()=>{ modal.style.display='none'; _pendingFruitRemoval=null; });
+    if(confirmBtn) confirmBtn.addEventListener('click', ()=>{
+        if(_pendingFruitRemoval) _pendingFruitRemoval();
+        modal.style.display='none';
+        _pendingFruitRemoval=null;
+    });
+})();
 
 function playIcingBagAnimation(){
     const viewer = document.getElementById('viewerEl');
@@ -11704,11 +13878,18 @@ document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(el=
       document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
 state.shape = newShape;
-        if(state.shape === 'Bundt'){
+               if(state.shape === 'Bundt'){
             state.frostings.delete('Textured Buttercream');
             if(state.frostings.has(FONDANT_VAL)){
                 state.frostings.delete(FONDANT_VAL);
                 state.frostings.add('Semi-naked Style');
+            }
+            // Bundt cakes default to a brown (Chocolate) color instead of
+            // staying on whatever flavor was active before switching shapes.
+            if(prevShape !== 'Bundt'){
+                state.flavor = 'Chocolate';
+                state.tierFlavors[0] = 'Chocolate';
+                state.tierFrostings[0] = 'Chocolate';
             }
         }
         syncFrostingUI(); // refresh Shell Border lock state (restricted for Bundt)
@@ -11730,7 +13911,7 @@ state.shape = newShape;
         const lblMap = {'Round':'Round Size','Square':'Square Size','Heart':'Heart Size','Number':'Number Size'};
         const lbl = document.getElementById('sizeLabelText');
         if(lbl) lbl.textContent = lblMap[state.shape] || 'Cake Size';
-        document.getElementById('sizeSliderWrap').classList.toggle('visible', state.shape==='Round'||state.shape==='Square'||state.shape==='Heart');
+        syncSizeSliderVisibility();
         document.getElementById('numberPickerWrap').classList.toggle('visible', state.shape==='Number');
         if(shapeChanged){
             if(typeof window.clearAllTierFruitBorders==='function') window.clearAllTierFruitBorders();
@@ -11782,7 +13963,9 @@ document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=
         if(state.shape !== 'Round' && state.shape !== 'Square' && state.shape !== 'Heart' && el.dataset.tier !== 'Single') return;
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(x=>x.classList.remove('active'));
         el.classList.add('active');
-        state.tier = el.dataset.tier;
+              state.tier = el.dataset.tier;
+        state.tierDecor = {shell:[0,1,2],icing:[0,1,2],rosette:[0,1,2]};
+        syncSizeSliderVisibility();
         if(typeof window._clearGLBPrefetchQueue==='function') window._clearGLBPrefetchQueue();
 
         const newTierCount = tierCountFor(state.tier);
@@ -11810,16 +13993,62 @@ document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=
             }
         });
         syncFruitGramUI();
+        // Recompute Shell Border / Sugar Icing / Rosette ring sizing for the
+        // new tier — without this, sizing from the previous tier configuration
+        // stays applied and the icing/border can render shrunk or misplaced.
+        syncFrostingUI();
         updateAll();
         showToast(`Prices updated for ${state.tier} cake`, 1800);
     });
 });
 
-document.getElementById('sizeRange').addEventListener('input',function(){
+// ── Debounced heavy update for sliders that trigger a full cake rebuild ──
+// Round Size / Cake Height changes the model's cache key on every tick,
+// forcing a full GLB reload + rosette rebuild each time. Dragging the
+// slider fired that on every pixel of movement, which is what caused the
+// lag. Now the label updates instantly (cheap), but the actual 3D rebuild
+// only runs after the user pauses for a moment — and always fires once
+// more right when they release the slider, so the final value is exact.
+let _sizeHeightDebounceTimer = null;
+function _debouncedCakeRebuild(delay){
+    if(_sizeHeightDebounceTimer) clearTimeout(_sizeHeightDebounceTimer);
+    _sizeHeightDebounceTimer = setTimeout(()=>{
+        _sizeHeightDebounceTimer = null;
+        updateAll();
+    }, delay || 160);
+}
+let _sizeHeightNormalsSaved = false;
+function _ensureToppingNormalsSavedOnce(){
+    if(_sizeHeightNormalsSaved) return;
+    _sizeHeightNormalsSaved = true;
     if(typeof window._saveAllToppingNormals==='function') window._saveAllToppingNormals();
+}
+
+document.getElementById('sizeRange').addEventListener('input',function(){
+    _ensureToppingNormalsSavedOnce();
     state.roundSize=parseInt(this.value);
     document.getElementById('sizeDisplay').textContent=state.roundSize;
-    updateAll();
+    updateSizeLabelBadge();
+    _debouncedCakeRebuild(160);
+});
+document.getElementById('sizeRange').addEventListener('change',function(){
+    _sizeHeightNormalsSaved = false;
+    if(_sizeHeightDebounceTimer) clearTimeout(_sizeHeightDebounceTimer);
+    _sizeHeightDebounceTimer = null;
+    updateAll(); // final, exact rebuild the instant the user lets go
+});
+
+document.getElementById('heightRange').addEventListener('input',function(){
+    _ensureToppingNormalsSavedOnce();
+    state.heightMult=parseInt(this.value)/100;
+    document.getElementById('heightDisplay').textContent=this.value;
+    _debouncedCakeRebuild(160);
+});
+document.getElementById('heightRange').addEventListener('change',function(){
+    _sizeHeightNormalsSaved = false;
+    if(_sizeHeightDebounceTimer) clearTimeout(_sizeHeightDebounceTimer);
+    _sizeHeightDebounceTimer = null;
+    updateAll(); // final, exact rebuild the instant the user lets go
 });
 function refreshDualPreview(){document.getElementById('dualPreview').childNodes[0].textContent=`${state.numberTens}${state.numberUnits}`;}
 document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('opts-number').querySelectorAll('.num-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.numberChoice=parseInt(el.dataset.val);if(typeof window._updateChocoCurlsPlacementAvailability==='function')window._updateChocoCurlsPlacementAvailability();updateAll();});});
@@ -11974,14 +14203,21 @@ allFrostingOpts().forEach(el=>{
 
         const BASE_ICINGS = ['Smooth Buttercream', SUGAR_ICING_VAL, 'Rosettes'];
         if(BASE_ICINGS.includes(v)){
-            // Click to select, click again to deselect. Only one base icing at a time.
+            // Click to select, click again to deselect.
+            // Rosette placed at "Sides" can be combined with Shell Border OR
+            // Sugar Icing at the same time (each keeps its own color) — every
+            // other combination stays exclusive, one base icing at a time.
             const wasOn = state.frostings.has(v);
-            BASE_ICINGS.forEach(b => state.frostings.delete(b));
-            if(!wasOn){
-                state.frostings.add(v);
-                if(v === 'Smooth Buttercream') window._pendingShellReveal = true;
-                else if(v === SUGAR_ICING_VAL) window._pendingIcingReveal = true;
-                else {
+            const rosetteCanCombine = state.rosettePlacement === 'Sides' || state.rosettePlacement === 'Border';
+            if(v === 'Rosettes'){
+                if(wasOn){
+                    state.frostings.delete('Rosettes');
+                } else {
+                    if(!rosetteCanCombine){
+                        state.frostings.delete('Smooth Buttercream');
+                        state.frostings.delete(SUGAR_ICING_VAL);
+                    }
+                    state.frostings.add('Rosettes');
                     window._pendingRosetteReveal = true;
                     if(rosetteComboBlockedReason(state.rosettePlacement)){
                         const ROSETTE_ORDER = ['Border','Full Top','Sides','Cluster Right','Cluster Left'];
@@ -11995,6 +14231,29 @@ allFrostingOpts().forEach(el=>{
                         }
                     }
                 }
+            } else {
+                if(!rosetteCanCombine) state.frostings.delete('Rosettes');
+                if(wasOn){
+                    state.frostings.delete(v);
+                } else {
+
+                    state.frostings.add(v);
+                    if(v === 'Smooth Buttercream') window._pendingShellReveal = true;
+                    else window._pendingIcingReveal = true;
+                }
+                // Only the Shell Border/Sugar Icing coat changed — if Rosette
+                // is still combined with it (placement "Sides"), the rosette
+                // mesh itself is unaffected, so skip its reveal animation on
+                // the upcoming rebuild instead of replaying it.
+                if(rosetteCanCombine && state.frostings.has('Rosettes')){
+                    window._skipRosetteRevealNextBuild = true;
+                }
+            }
+            // Newly turning on a combo pairing should immediately inherit
+            // the opposite half from whichever partner already has one set.
+            if(!wasOn){
+                const newComboKey = v==='Rosettes' ? 'rosetteSides' : (v==='Smooth Buttercream' ? 'shellBorder' : 'sugarIcing');
+                applyComboHalfViewDefault(newComboKey);
             }
         } else {
             // Textured — toggle
@@ -12011,6 +14270,106 @@ allFrostingOpts().forEach(el=>{
 });
 function activeCakeStyleFn(){
     return CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
+}
+// Concentric sizing: 1st picked = 100%, 2nd = 60%, 3rd = 20% so rings never overlap.
+function tierDecorDefs(){
+    return [
+        {key:'shell',   label:'Shell Border',   isOn:()=>state.frostings.has('Smooth Buttercream')},
+        {key:'icing',   label:'Sugar Icing',    isOn:()=>state.frostings.has(SUGAR_ICING_VAL)},
+        {key:'rosette', label:'Rosette Border', isOn:()=>state.frostings.has('Rosettes') && state.rosettePlacement.split('+').includes('Border')},
+    ];
+}
+function renderTierDecorPanel(){
+    const panel = document.getElementById('tierDecorPanel');
+    const wrap  = document.getElementById('tierDecorRows');
+    if(!panel || !wrap) return;
+    const active = tierDecorDefs().filter(d=>d.isOn());
+    const show = state.tier !== 'Single' && !state.frostings.has(FONDANT_VAL) && active.length > 0;
+    panel.classList.toggle('visible', show);
+    wrap.innerHTML = '';
+    if(!show) return;
+    const count = tierCountFor(state.tier);
+    active.forEach(def=>{
+        const cur = (state.tierDecor[def.key]||[]).filter(t=>t<count);
+        const row = document.createElement('div');
+        row.innerHTML = `<div style="font-size:.66rem;font-weight:700;color:var(--brown-mid);font-family:var(--font-display);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">${def.label}</div>`;
+        const grp = document.createElement('div');
+        grp.style.cssText = 'display:flex;gap:6px;';
+        for(let t=0;t<count;t++){
+            const on = cur.includes(t);
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = 'Tier '+(t+1);
+            b.style.cssText = `flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid ${on?'var(--teal)':'var(--border)'};background:${on?'var(--teal)':'var(--surface)'};color:${on?'#fff':'var(--text-muted)'};font-size:.72rem;font-weight:700;cursor:pointer;font-family:var(--font-display);transition:all .15s;`;
+            b.addEventListener('click', ()=>{
+                let arr = (state.tierDecor[def.key]||[]).filter(x=>x<count);
+                if(arr.includes(t)){
+                    if(arr.length === 1){ showToast('⚠ Keep at least one tier — or untick '+def.label+' above', 2600); return; }
+                    arr = arr.filter(x=>x!==t);
+                } else {
+                    arr = arr.concat(t).sort((a,b)=>a-b);
+                }
+                state.tierDecor[def.key] = arr;
+                if(def.key === 'shell') window._pendingShellReveal = true;
+                if(def.key === 'icing') window._pendingIcingReveal = true;
+                syncComboRingScales();
+                updateAll();
+            });
+            grp.appendChild(b);
+        }
+        row.appendChild(grp);
+        wrap.appendChild(row);
+    });
+}
+function syncComboRingScales(){
+    const RING_SCALES = [1.0, 0.6, 0.2];
+    // Fixed, canonical priority — NEVER based on click order, so Shell Border +
+    // Sugar Icing always render the same way no matter which one you toggled first.
+    const FIXED_ORDER = ['shell','icing','rosette'];
+    const isActive = k => {
+        if(state.frostings.has(FONDANT_VAL)) return false;
+        if(k==='shell')   return state.frostings.has('Smooth Buttercream');
+        if(k==='icing')   return state.frostings.has(SUGAR_ICING_VAL);
+        if(k==='rosette') return state.frostings.has('Rosettes') && state.rosettePlacement==='Border';
+        return false;
+    };
+    const setScale = (k, scale) => {
+        const pct = Math.round(scale*100);
+        const put = (rangeId, valId, text) => {
+            const r = document.getElementById(rangeId), v = document.getElementById(valId);
+            if(r) r.value = pct;
+            if(v) v.textContent = text;
+        };
+        if(k==='shell')   { state.shellBorderScale = scale;  put('shellBorderSizeRange','shellBorderSizeVal', pct+'%'); }
+        if(k==='icing')   { state.icingScale = scale;        put('icingSizeRange','icingSizeVal', pct+'%'); }
+        if(k==='rosette') { state.rosetteBorderScale = scale; put('rosetteBorderSizeRange','rosetteBorderSizeVal', String(pct)); }
+    };
+    // Always recompute from scratch — this also fixes stale sizing left over
+    // from a previous tier/shape (e.g. Sugar Icing stuck at 60% after
+    // switching to Two-tier because nothing had "changed" from the app's
+    // point of view).
+    const activeKeys = FIXED_ORDER.filter(isActive);
+    state.comboOrder = activeKeys; // kept for backward compatibility only
+    state._manualRingScale = state._manualRingScale || {};
+    [['shell','shellBorderSizeRange'],['icing','icingSizeRange'],['rosette','rosetteBorderSizeRange']].forEach(([k,id])=>{
+        const el = document.getElementById(id);
+        if(el && !el._manualBound){
+            el._manualBound = true;
+            el.addEventListener('input', ()=>{ state._manualRingScale[k] = true; }); // only fires when the customer drags it
+        }
+    });
+    FIXED_ORDER.forEach(k=>{ if(!activeKeys.includes(k)){ state._manualRingScale[k] = false; setScale(k, 1.0); } }); // reset only what is no longer active
+    // Only shrink a ring when another active decoration shares one of ITS tiers.
+    // Decorations on different tiers all stay at 100% so they sit exactly where they do alone.
+    const _tierCnt = tierCountFor(state.tier);
+    const _tiersOf = k => state.tier==='Single' ? [0] : (state.tierDecor[k]||[]).filter(t=>t<_tierCnt);
+    activeKeys.forEach((k,i)=>{
+        const mine = _tiersOf(k);
+        const rank = activeKeys.slice(0,i).filter(o=>_tiersOf(o).some(t=>mine.includes(t))).length;
+        if(!(state._manualRingScale && state._manualRingScale[k])) setScale(k, RING_SCALES[rank] ?? 0.2);
+    });
+    if(typeof window._applyIcingScale==='function') window._applyIcingScale();
+    if(typeof window._applyRosetteBorderScale==='function') window._applyRosetteBorderScale();
 }
 function syncFrostingUI(){
     if(state.shape === 'Bundt'){
@@ -12132,8 +14491,10 @@ document.getElementById('opts-frosting-base').querySelectorAll('.frosting-opt').
     if(isSemiNaked || isBundtShapeTex) state.frostings.delete('Textured Buttercream');
 
 // ── Icing color panel — also available for Shell Border (Smooth Buttercream) ──
-       const showShellBorderColor = state.frostings.has('Smooth Buttercream') && !isSugarIcing;
-    document.getElementById('icingPanel').classList.toggle('visible', (isSugarIcing || showShellBorderColor) && !fondantActive);
+    document.getElementById('icingPanel').classList.toggle('visible', isSugarIcing && !fondantActive);
+    const showShellBorderColor = state.frostings.has('Smooth Buttercream') && !fondantActive;
+    const shellPanelEl = document.getElementById('shellBorderColorPanel');
+    if(shellPanelEl) shellPanelEl.classList.toggle('visible', showShellBorderColor);
 
     // ── Ombre color panel ──
     document.getElementById('ombreColorPanel').classList.toggle('visible', activeCakeStyle === 'Ombre Style' && !fondantActive);
@@ -12190,9 +14551,12 @@ const isNumberShape = state.shape === 'Number';
             state.rosettePlacement = 'Border';
         }
    
-        document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement], #opts-rosette-combo-number [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement===state.rosettePlacement));
+              document.querySelectorAll('#opts-rosette-placement [data-rosette-placement], #opts-rosette-combo [data-rosette-placement]').forEach(x=>x.classList.toggle('active', x.dataset.rosettePlacement===state.rosettePlacement));
         const badge = document.getElementById('rosettePlacementBadge');
-        if(badge) badge.textContent = 'Selected: ' + state.rosettePlacement.replace('+',' + ');
+        if(badge) badge.textContent = 'Selected: ' + state.rosettePlacement.replace('+',' + ');        const rosetteBorderSizeWrap = document.getElementById('rosetteBorderSizeWrap');
+        if(rosetteBorderSizeWrap) rosetteBorderSizeWrap.style.display = (rosetteOn && state.rosettePlacement==='Border') ? 'block' : 'none';
+        const rosetteHalfViewWrap = document.getElementById('rosetteHalfViewWrap');
+        if(rosetteHalfViewWrap) rosetteHalfViewWrap.style.display = (rosetteOn && state.rosettePlacement==='Border') ? 'block' : 'none';
         const rosetteNotice = document.getElementById('rosetteNumberDigitNotice');
         if(rosetteNotice) rosetteNotice.style.display = 'none';
         if(rosettePanelEl){
@@ -12209,6 +14573,8 @@ const isNumberShape = state.shape === 'Number';
     } else {
         hint.classList.remove('visible');
     }
+    if(typeof syncHalfViewLocks === 'function') syncHalfViewLocks();
+    syncComboRingScales();
 }
 document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>{
     el.addEventListener('click',()=>{
@@ -12217,6 +14583,74 @@ document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').f
         state.hasCustomIcingColor=true;
         document.getElementById('icingColorLabel').textContent=el.dataset.icingName;
         updateAll();
+    });
+});
+document.getElementById('shellBorderColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>{
+    el.addEventListener('click',()=>{
+        document.getElementById('shellBorderColorGrid').querySelectorAll('.icing-color-opt').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        state.shellBorderColor = el.dataset.shellColor;
+        state.shellBorderColorName = el.dataset.shellColorName;
+        document.getElementById('shellBorderColorLabel').textContent = el.dataset.shellColorName;
+        updateAll();
+    });
+});
+let _icingScaleRAF = null;
+function _queueIcingScale(){
+    if(_icingScaleRAF) return;
+    _icingScaleRAF = requestAnimationFrame(()=>{
+        _icingScaleRAF = null;
+        if(typeof window._applyIcingScale==='function') window._applyIcingScale(true); // fast: skip normals while dragging
+    });
+}
+function _finishIcingScale(){
+    if(_icingScaleRAF){ cancelAnimationFrame(_icingScaleRAF); _icingScaleRAF = null; }
+    if(typeof window._applyIcingScale==='function') window._applyIcingScale(); // full pass on release
+}
+document.getElementById('icingSizeRange').addEventListener('input', function(){
+    const pct = parseInt(this.value);
+    state.icingScale = pct/100;
+    document.getElementById('icingSizeVal').textContent = pct + '%';
+    _queueIcingScale();
+});
+document.getElementById('icingSizeRange').addEventListener('change', _finishIcingScale);
+document.getElementById('shellBorderSizeRange').addEventListener('input', function(){
+    const pct = parseInt(this.value);
+    state.shellBorderScale = pct/100;
+    document.getElementById('shellBorderSizeVal').textContent = pct + '%';
+    _queueIcingScale();
+});
+document.getElementById('shellBorderSizeRange').addEventListener('change', _finishIcingScale);
+let _rosetteBorderScaleRAF = null;
+document.getElementById('rosetteBorderSizeRange').addEventListener('input', function(){
+    const pct = parseInt(this.value);
+    state.rosetteBorderScale = pct/100;
+    document.getElementById('rosetteBorderSizeVal').textContent = pct;
+    if(_rosetteBorderScaleRAF) return; // an update is already queued for the next frame
+    _rosetteBorderScaleRAF = requestAnimationFrame(()=>{
+        _rosetteBorderScaleRAF = null;
+        if(typeof window._applyRosetteBorderScale==='function') window._applyRosetteBorderScale(true);
+    });
+});
+document.getElementById('rosetteBorderSizeRange').addEventListener('change', function(){
+    if(_rosetteBorderScaleRAF){ cancelAnimationFrame(_rosetteBorderScaleRAF); _rosetteBorderScaleRAF = null; }
+    if(typeof window._applyRosetteBorderScale==='function') window._applyRosetteBorderScale(); // full pass: recompute normals
+});
+document.getElementById('chocoCurlsSidesSizeRange').addEventListener('input', function(){
+    const pct = parseInt(this.value);
+    state.chocoCurlsSidesScale = pct/100;
+    document.getElementById('chocoCurlsSidesSizeVal').textContent = pct;
+    if(typeof window._applyChocoCurlsSidesScale==='function') window._applyChocoCurlsSidesScale();
+});
+document.querySelectorAll('.fruit-border-size-row').forEach(row=>{
+    const name  = row.dataset.fruitSlider;
+    const range = row.querySelector('.fruit-border-size-range');
+    const val   = row.querySelector('.fruit-border-size-val');
+    range.addEventListener('input', function(){
+        const pct = parseInt(this.value);
+        state.fruitBorderScale[name] = pct/100;
+        val.textContent = pct;
+        if(typeof window._applyFruitBorderScale==='function') window._applyFruitBorderScale(name);
     });
 });
 
@@ -12295,6 +14729,18 @@ function rosetteComboBlockedReason(comboPlacement){
     }
     return null;
 }
+// Shell Border, Sugar Icing, and Rosette (Border/Sides) can be freely combined
+// TWO AT A TIME — any pair — but never all three together.
+function isRosetteCombiningNow(){
+    return state.frostings.has('Rosettes') && (state.rosettePlacement==='Sides' || state.rosettePlacement==='Border');
+}
+function activeComboIcingCount(){
+    let n = 0;
+    if(state.frostings.has('Smooth Buttercream')) n++;
+    if(state.frostings.has(SUGAR_ICING_VAL)) n++;
+    if(isRosetteCombiningNow()) n++;
+    return n;
+}
 // Visually locks buttons on both sides so the conflict is obvious before a click.
 function syncRosetteAddonLocks(){
     const rosetteOn = state.frostings.has('Rosettes') && !state.frostings.has(FONDANT_VAL);
@@ -12357,6 +14803,8 @@ function bindRosettePlacementOpts(containerId){
             const target = el.dataset.rosettePlacement;
             const reason = rosetteComboBlockedReason(target);
             if(reason){ showToast('⚠ '+reason, 2600); return; }
+            const willCombine = state.frostings.has('Rosettes') && (target==='Sides' || target==='Border');
+
             // Only one placement (single OR combo) can be active at a time —
             // clear ALL THREE grids (single placements + generic combos +
             // number-cake combos), not just the container that was clicked.
@@ -12365,6 +14813,18 @@ function bindRosettePlacementOpts(containerId){
                state.rosettePlacement = target;
             document.getElementById('rosettePlacementBadge').textContent = 'Selected: ' + state.rosettePlacement.replace('+',' + ');
             window._pendingRosetteReveal = true;
+            // Combining Rosettes with Shell Border/Sugar Icing applies to the
+            // plain "Sides" and "Border" placements — drop the base icing if
+            // switching to anything else (Full Top, Cluster, combo, etc.).
+            if(target !== 'Sides' && target !== 'Border'){
+                state.frostings.delete('Smooth Buttercream');
+                state.frostings.delete(SUGAR_ICING_VAL);
+            } else if(willCombine){
+                // Rosette just became combinable with an already-active base
+                // icing — inherit the opposite half immediately.
+                applyComboHalfViewDefault('rosetteSides');
+            }
+            syncFrostingUI();
             updateAll();
         });
     });
@@ -12420,7 +14880,23 @@ document.getElementById('dripToggleBtn').addEventListener('click',()=>{
 });
 document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(el=>{el.addEventListener('click',()=>{document.getElementById('dripFlavorOpts').querySelectorAll('.drip-flavor-opt').forEach(x=>x.classList.remove('active'));el.classList.add('active');state.dripFlavor=el.dataset.dripFlavor;updateAll();});});
 document.getElementById('opts-fruits').querySelectorAll('.addon-opt').forEach(el=>{
-    el.addEventListener('click',()=>{const v=el.dataset.val;if(state.addons.has(v)){state.addons.delete(v);el.classList.remove('active');if(typeof window.removeFruitModelsByName==='function')window.removeFruitModelsByName(v);}else{state.addons.set(v,0);}el.classList.toggle('active',state.addons.has(v));updateFruitTray();updateAll();});
+    el.addEventListener('click',()=>{
+        const v=el.dataset.val;
+        if(state.addons.has(v)){
+            const models=(typeof window.getFruitModels==='function')?window.getFruitModels():[];
+            const count=models.filter(m=>m.fruit===v).length;
+            confirmBeforeRemoveFruit(count, v, ()=>{
+                state.addons.delete(v);
+                el.classList.remove('active');
+                if(typeof window.removeFruitModelsByName==='function')window.removeFruitModelsByName(v);
+                updateFruitTray();updateAll();
+            });
+        } else {
+            state.addons.set(v,0);
+            el.classList.add('active');
+            updateFruitTray();updateAll();
+        }
+    });
 });
 
 function gramFruitPrice(name, grams){
@@ -12470,6 +14946,23 @@ function syncFruitGramUI(){
         });
         if(on){ anyOn=true; total += gramFruitPrice(name,g); parts.push(`${GRAM_FRUIT_LABELS[name]||name} ${g}g`); }
     });
+    document.querySelectorAll('.fruit-border-size-row').forEach(row=>{
+        const name = row.dataset.fruitSlider;
+        const isTieredCake2 = state.tier !== 'Single';
+        const placementForRow = (window._gramFruitPlacement && window._gramFruitPlacement[name]) || 'middle';
+        const showRow = state.addons.has(name) && placementForRow === 'border' && !isTieredCake2;
+        row.style.display = showRow ? '' : 'none';
+        if(showRow){
+            const pct = Math.round((state.fruitBorderScale[name] !== undefined ? state.fruitBorderScale[name] : 1.0) * 100);
+            row.querySelector('.fruit-border-size-range').value = pct;
+            row.querySelector('.fruit-border-size-val').textContent = pct;
+        }
+    });
+    const wrap = document.getElementById('fruitBorderSizeWrap');
+    if(wrap){
+        const anyRowVisible = Array.from(document.querySelectorAll('.fruit-border-size-row')).some(r=>r.style.display !== 'none');
+        wrap.style.display = anyRowVisible ? 'flex' : 'none';
+    }
     const note=document.getElementById('fruitGramsTotalNote'), txt=document.getElementById('fruitGramsTotalText');
     if(note && txt){
         note.style.display = anyOn ? 'flex' : 'none';
@@ -12787,6 +15280,8 @@ document.querySelectorAll('.choco-curls-place-btn').forEach(btn=>{
             b.style.color=on?'#fff':'var(--text-muted)';
             b.style.fontWeight=on?'700':'600';
         });
+        const sidesSizeWrap = document.getElementById('chocoCurlsSidesSizeWrap');
+        if(sidesSizeWrap) sidesSizeWrap.style.display = (placement==='sides'||placement==='both') ? 'block' : 'none';
         // Auto-activate Chocolate Curls if it isn't already (defensive — the
         // panel is normally hidden until the addon is on, but this guarantees
         // real-time behavior regardless of how the click was triggered).
@@ -13141,27 +15636,26 @@ document.getElementById('btnClearCandles').addEventListener('click',()=>{
 document.getElementById('btnClearFruits').addEventListener('click',()=>{attachedFruitIdx=-1;touchAttachedIdx=-1;if(typeof window.setDraggingFruitIdx==='function')window.setDraggingFruitIdx(-1);setCursorGrab(false);dragGhost.style.display='none';dropRing.style.display='none';state.placedFruits=[];placedFruitRecord.length=0;redrawFruits();if(typeof window.clearFruitModels==='function')window.clearFruitModels();showToast('Fruits cleared',1800);});
 // ── CHOCOLATE PLAQUE TOGGLE & SHAPE PICKER ──
 function isPlaqueAllowed(){
-    return state.tier === 'Single' && state.shape !== 'Number';
+    return state.tier === 'Single' && state.shape !== 'Number' && state.shape !== 'Bundt';
 }
 function syncPlaqueAvailability(){
     const allowed = isPlaqueAllowed();  
     const btn = document.getElementById('plaqueToggleBtn');
-    if(btn && !state.addons.has('Chocolate Plaque')){
-        btn.style.opacity = allowed ? '' : '0.38';
-        btn.style.pointerEvents = allowed ? '' : 'none';
-        btn.title = allowed ? '' : 'Only available for single-tier cakes';
-    }
     if(!allowed && state.addons.has('Chocolate Plaque')){
         state.addons.delete('Chocolate Plaque');
         if(btn) btn.classList.remove('active');
         document.getElementById('plaqueShapePanel').classList.remove('visible');
         if(typeof window.clearPlaque==='function') window.clearPlaque();
-        showToast('🍫 Chocolate Plaque removed — only available for single-tier cakes', 2800);
+        showToast('🍫 Chocolate Plaque removed — not available for Bundt, Number, or Two/Three-tier cakes', 2800);
+    }
+    if(btn && !state.addons.has('Chocolate Plaque')){
+        btn.classList.toggle('addon-locked', !allowed);
+        btn.title = allowed ? '' : '🔒 Not available for Bundt, Number, or Two/Three-tier cakes';
     }
 }
 document.getElementById('plaqueToggleBtn').addEventListener('click',()=>{
     if(!isPlaqueAllowed()){
-        showToast('⚠ Chocolate Plaque is only available for single-tier cakes — not Two/Three-tier, Bundt, or Number cakes', 3200);
+        showToast('⚠ Chocolate Plaque is not available for Bundt, Number, or Two/Three-tier cakes', 3200);
         return;
     }
     const v='Chocolate Plaque';
@@ -13394,6 +15888,16 @@ function getBasePrice(){
 }
 function getFillingPrice(){return FILLING_PRICES[state.filling]||0;}
 function getFrostingExtraPrice(){
+    let e = _getFrostingExtraPriceRaw();
+    if(state.tier === 'Single' || state.frostings.has(FONDANT_VAL)) return e;
+    const ti = getTierIdx(), cnt = tierCountFor(state.tier);
+    const share = k => ((state.tierDecor[k]||[]).filter(t=>t<cnt).length || cnt) / cnt;
+    if(state.frostings.has('Smooth Buttercream')) e -= Math.round(FROSTING_SHELL_TIER_PRICES[ti]*(1-share('shell')));
+    if(state.frostings.has(SUGAR_ICING_VAL))      e -= Math.round(FROSTING_SUGAR_TIER_PRICES[ti]*(1-share('icing')));
+    if(state.frostings.has('Rosettes') && state.rosettePlacement==='Border') e -= Math.round(FROSTING_ROSETTE_TIER_PRICES[ti]*(1-share('rosette')));
+    return e;
+}
+function _getFrostingExtraPriceRaw(){
     const ti = getTierIdx();
     let e = 0;
     const activeStyle = CAKE_STYLE_VALS.find(s=>state.frostings.has(s)) || 'Smooth Buttercream';
@@ -13434,6 +15938,7 @@ function getEffectiveSliceRotation(){
 }
 window._getEffectiveSliceRotation = getEffectiveSliceRotation;
 function updateAll(){
+  renderTierDecorPanel();
   syncRosetteAddonLocks();
   const base=getBasePrice(),frostExtra=getFrostingExtraPrice(),fillingPrice=getFillingPrice();
   const ti=getTierIdx();
@@ -13553,8 +16058,7 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*CANDLE_PIECE_PRICE
     if(state.addons.has('Number Candles'))chips.push(`<span class="cfg-chip chip-gold">🕯️ Candles${candleCount>0?' ×'+candleCount:''}</span>`);
     if(state.addons.has('Character Topper'))chips.push(`<span class="cfg-chip chip-accent">🎭 ${characterCount>0?characterCount+'× characters · ₱'+characterTotalPrice.toLocaleString():state.characterTopper}</span>`);
     document.getElementById('addonsSummary').innerHTML=chips.length?emojiToSvg(chips.join('')):'<span class="cfg-val muted" style="font-size:.73rem;">None selected</span>';
-   const shellBorderColorActive = state.frostings.has('Smooth Buttercream') && !isSugarIcing && !isFondant && state.hasCustomIcingColor;
- if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),baseShape:state.shape,flavor:getEffectiveFlavorKey(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:(isSugarIcing||shellBorderColorActive)?state.icingColor:null});}
+    if(typeof window.updateModel==='function'){window.updateModel({...state,shape:getEffectiveShape(),baseShape:state.shape,flavor:getEffectiveFlavorKey(),frostings:[...state.frostings],frosting:[...state.frostings][0],icingColor:isSugarIcing?state.icingColor:null});}
       if(typeof window._requestShadowUpdate==='function') setTimeout(window._requestShadowUpdate, 200);
       if(typeof window._requestRender==='function') window._requestRender();  
        if(window.CakeSlice){
@@ -13568,6 +16072,14 @@ if(state.addons.has('Number Candles'))addonTotal+=candleCount*CANDLE_PIECE_PRICE
             setTimeout(()=>{ if(window.CakeSlice && state.sliceEnabled !== false) window.CakeSlice.reapply(); }, 2600);
         }
     }
+    // Every recolor/rebuild (even the fast recolor-only path) creates brand-new
+    // materials for frost/icing/rosette/choco-curls/fruit-border meshes, which
+    // silently drops any active Left-half/Right-half cut. Reveal animations
+    // (shell piping, rosette piping, choco-curls shred) also reset
+    // clippingPlanes to [] the moment they finish. Reapply immediately, and
+    // again after the longest of those reveals has finished.
+    if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews();
+    setTimeout(()=>{ if(typeof window._reapplyAllHalfViews==='function') window._reapplyAllHalfViews(); }, 2600);
 }
 // Gathers every placed decoration as CAKE-RELATIVE FRACTIONS (not screen
 // pixels), so a draft can be rebuilt later at any camera angle/screen size —
@@ -13620,6 +16132,43 @@ function collectDecorPlacements(){
 
     return out;
 }
+// The complete, rebuildable cake config (used by Save Draft AND by submitted orders).
+function buildDraftConfig(){
+    return {
+        cakeType:state.cakeType, filling:state.filling, shape:state.shape, tier:state.tier, roundSize:state.roundSize,
+        heightMult:state.heightMult,
+        numberDigits:state.numberDigits, numberChoice:state.numberChoice, numberTens:state.numberTens, numberUnits:state.numberUnits,
+        flavor:state.flavor, frostings:[...state.frostings], addons:[...state.addons.keys()],
+        hasDrip:state.hasDrip, dripFlavor:state.dripFlavor,
+        icingColor:state.icingColor, icingColorName:state.icingColorName, hasCustomIcingColor:state.hasCustomIcingColor,
+        shellBorderColor:state.shellBorderColor, shellBorderColorName:state.shellBorderColorName,
+        decorations:collectDecorPlacements(),
+        tierDecor:state.tierDecor,
+        fruitGrams:{...state.fruitGrams},
+        gramFruitPlacement:{...(window._gramFruitPlacement||{})},
+        allFruitsAssorted:!!state.allFruitsAssorted,
+        tierLayers:state.tierLayers.slice(0,3), tierFlavors:state.tierFlavors.slice(0,3),
+        tierFrostings:state.tierFrostings.slice(0,3), tierFillings:state.tierFillings.slice(0,3),
+        tierFruitBorders:state.tierFruitBorders.slice(0,3),
+        halfView:{...state.halfView},
+        shellBorderScale:state.shellBorderScale, icingScale:state.icingScale,
+        rosetteBorderScale:state.rosetteBorderScale, chocoCurlsSidesScale:state.chocoCurlsSidesScale,
+        fruitBorderScale:{...state.fruitBorderScale},
+        kitkatOrientation:state.kitkatOrientation, oreoOrientation:state.oreoOrientation,
+        chocoCurlsPlacement: state.addons.has('Chocolate Curls') ? state.chocoCurlsPlacement : null,
+        plaqueShape: state.addons.has('Chocolate Plaque') ? state.plaqueShape : null,
+        plaqueMessage: state.addons.has('Chocolate Plaque') ? state.plaqueMessage : '',
+        rosettePlacement: state.frostings.has('Rosettes') ? state.rosettePlacement : null,
+        rosetteColor: state.frostings.has('Rosettes') ? state.rosetteColor : null,
+        rosetteColorName: state.frostings.has('Rosettes') ? state.rosetteColorName : null,
+        ombreTopColor: state.frostings.has('Ombre Style') ? state.ombreTopColor : null,
+        ombreBottomColor: state.frostings.has('Ombre Style') ? state.ombreBottomColor : null,
+        sprinklePlacement: window._sprinklePlacement ? {...window._sprinklePlacement} : null,
+        tobleroneFlavor:state.tobleroneFlavor, characterTopper:state.characterTopper,
+        shapeLabel:getShapeLabel(), cakeLabel:getCombinedCakeTypeLabel(),
+        total: parseInt((document.getElementById('priceTotal').textContent||'0').replace(/,/g,''))||0,
+    };
+}
 async function saveDraft(){
     const cfg={
         cakeType:state.cakeType,filling:state.filling,shape:state.shape,tier:state.tier,roundSize:state.roundSize,
@@ -13627,7 +16176,9 @@ async function saveDraft(){
         flavor:state.flavor,frostings:[...state.frostings],addons:[...state.addons.keys()],
         hasDrip:state.hasDrip,dripFlavor:state.dripFlavor,icingColor:state.icingColor,icingColorName:state.icingColorName,
         hasCustomIcingColor:state.hasCustomIcingColor,
+        shellBorderColor:state.shellBorderColor,shellBorderColorName:state.shellBorderColorName,
         decorations:collectDecorPlacements(),
+        tierDecor:state.tierDecor,
         fruitGrams:{...state.fruitGrams},
         kitkatOrientation:state.kitkatOrientation,
         oreoOrientation:state.oreoOrientation,
@@ -13646,6 +16197,7 @@ async function saveDraft(){
         cakeLabel:getCombinedCakeTypeLabel(),
         total: parseInt((document.getElementById('priceTotal').textContent||'0').replace(/,/g,''))||0,
     };
+    Object.assign(cfg, buildDraftConfig());
     document.getElementById('saveDraftConfigInput').value = JSON.stringify(cfg);
 
     // Capture a transparent PNG of the cake exactly as it looks right now,
@@ -13761,13 +16313,13 @@ async function applyDraftConfig(d){
     document.getElementById('opts-shape').querySelectorAll('[data-val]').forEach(el=>el.classList.toggle('active',el.dataset.val===d.shape));
     state.shape=d.shape||'Round';
     if(d.roundSize){state.roundSize=d.roundSize;document.getElementById('sizeRange').value=state.roundSize;document.getElementById('sizeDisplay').textContent=state.roundSize;}
-    document.getElementById('sizeSliderWrap').classList.toggle('visible',state.shape==='Round');
     document.getElementById('numberPickerWrap').classList.toggle('visible',state.shape==='Number');
     if(d.tier){
         state.tier = d.tier;
         document.getElementById('opts-tier').querySelectorAll('[data-tier]').forEach(el=>el.classList.toggle('active', el.dataset.tier===d.tier));
     }
     document.getElementById('cakeTierSection').style.display = (state.shape === 'Round' || state.shape === 'Square' || state.shape === 'Heart') ? '' : 'none';
+    syncSizeSliderVisibility();
 
     if(state.shape==='Number'){
         const digits=d.numberDigits||1;state.numberDigits=digits;const isSingle=digits===1;
@@ -13790,6 +16342,10 @@ async function applyDraftConfig(d){
     state.hasCustomIcingColor=!!d.hasCustomIcingColor;
     document.getElementById('icingColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>el.classList.toggle('active',el.dataset.icingColor===state.icingColor));
     document.getElementById('icingColorLabel').textContent=state.icingColorName;
+    state.shellBorderColor=d.shellBorderColor||'#FFFFFF';
+    state.shellBorderColorName=d.shellBorderColorName||'White';
+    document.getElementById('shellBorderColorGrid').querySelectorAll('.icing-color-opt').forEach(el=>el.classList.toggle('active',el.dataset.shellColor===state.shellBorderColor));
+    document.getElementById('shellBorderColorLabel').textContent=state.shellBorderColorName;
 
     if(d.rosettePlacement){
         state.rosettePlacement = d.rosettePlacement;
@@ -13825,6 +16381,28 @@ async function applyDraftConfig(d){
     document.getElementById('oreoOrientBadge').textContent=state.oreoOrientation==='standing'?'🔘 Standing':'⚫ Lying Flat';
 
     state.tobleroneFlavor = d.tobleroneFlavor || 'Chocolate';
+
+    // ── per-tier flavors, height, sizes, half views (previously not restored) ──
+    if(typeof d.heightMult==='number' && d.heightMult>0){
+        state.heightMult = d.heightMult;
+        const hr=document.getElementById('heightRange'), hd=document.getElementById('heightDisplay');
+        if(hr) hr.value = Math.round(d.heightMult*100);
+        if(hd) hd.textContent = Math.round(d.heightMult*100);
+    }
+    const _pad3 = (arr,def)=>{ const a = Array.isArray(arr) ? arr.slice(0,3) : []; while(a.length<3) a.push(def); return a; };
+    if(d.tierLayers)     state.tierLayers = _pad3(d.tierLayers,1);
+    if(d.tierFlavors){   state.tierFlavors = _pad3(d.tierFlavors,state.flavor); state.innerFlavor = state.tierFlavors[0]; }
+    if(d.tierFrostings){ state.tierFrostings = _pad3(d.tierFrostings,state.flavor); state.flavor = state.tierFrostings[0]; }
+    if(d.tierFillings){  state.tierFillings = _pad3(d.tierFillings,'No Filling'); state.filling = state.tierFillings[0]; }
+    if(d.tierFruitBorders) state.tierFruitBorders = _pad3(d.tierFruitBorders,'None');
+    if(d.halfView) Object.assign(state.halfView, d.halfView);
+    ['shellBorderScale','icingScale','rosetteBorderScale','chocoCurlsSidesScale'].forEach(k=>{ if(typeof d[k]==='number') state[k]=d[k]; });
+    if(d.fruitBorderScale) Object.assign(state.fruitBorderScale, d.fruitBorderScale);
+    state._manualRingScale = {shell:true, icing:true, rosette:true};
+    state.allFruitsAssorted = !!d.allFruitsAssorted;
+    if(d.gramFruitPlacement && window._gramFruitPlacement) Object.assign(window._gramFruitPlacement, d.gramFruitPlacement);
+    renderTierLayerRows(); renderTierFruitBorderRows();
+    if(d.tierDecor){ state.tierDecor = d.tierDecor; syncComboRingScales(); }
     state.fruitGrams = d.fruitGrams || {};
     Object.keys(state.fruitGrams).forEach(k=>{ if(!state.addons.has(k)) state.addons.set(k, 0); });
     if(typeof syncFruitGramUI==='function') syncFruitGramUI();
@@ -13919,6 +16497,12 @@ async function applyDraftConfig(d){
         const badge=document.getElementById('characterActiveBadge');
         if(badge) badge.textContent = `${decor.characters.length} placed — tap any character again to add more`;
     }
+    if(state.allFruitsAssorted && typeof window.buildAllFruitsAssorted==='function'){
+        await window.buildAllFruitsAssorted();
+    } else {
+        Object.keys(state.fruitGrams||{}).forEach(k=>{ if(typeof applyGramFruitVisual==='function') applyGramFruitVisual(k); });
+    }
+    if(typeof syncFruitGramUI==='function') syncFruitGramUI();
     if(d.chocoCurlsPlacement && typeof window.placeChocoCurls==='function'){
         window.placeChocoCurls(d.chocoCurlsPlacement, state.tier, state.shape, false);
     }
@@ -13941,7 +16525,7 @@ async function loadDraft(id){
         showToast('✓ Draft loaded');
     }catch(e){console.error('[loadDraft]',e);showToast('⚠ Could not load draft');}
 }
-document.getElementById('btnLoadDraft').addEventListener('click',()=>loadDraft());
+
 // ── Auto-resume a draft when arriving from the Saved Drafts page (?resume_draft=ID) ──
 (function autoResumeDraft(){
     const params = new URLSearchParams(window.location.search);
@@ -13956,6 +16540,160 @@ document.getElementById('btnLoadDraft').addEventListener('click',()=>loadDraft()
         }
     };
     tryResume(30);
+})();
+
+// ── Interactive, read-only 3D viewer for the order tracker (?view_request=ID) ──
+(function trackerViewer(){
+    if(!new URLSearchParams(window.location.search).has('view_request')) return;
+    let started = false;
+    const post = (type, extra) => { try{ window.parent.postMessage(Object.assign({type}, extra||{}), window.location.origin); }catch(e){} };
+    const LOG = (...a) => console.log('[BakeSphere 3D]', ...a);
+
+    // ── Single combined-progress channel → Baker Order page + local overlay ──
+    let _lastPct = -1;
+    function sendTrackerProgress(percent){
+        let p = Number(percent);
+        if(!isFinite(p)) return;                        // never NaN / Infinity
+        p = Math.max(0, Math.min(100, Math.round(p)));  // clamp 0..100
+        if(p <= _lastPct) return;                       // never backward, no duplicate posts
+        _lastPct = p;
+        post('bakesphere-tracker-progress', { percent: p });
+        const _tx = document.getElementById('loadingText'); if(_tx) _tx.textContent = 'Loading cake… ' + p + '%';
+        LOG('Loading progress:', p + '%');
+    }
+    // Stages: default cake 5-30 → requested cake 30-75 (or 95 if no decorations)
+    //         → decorations 75-97 → finalize 97 → 100 (only once truly ready).
+    let phase = 'default';
+    const RANGE = { default:[5,30], config:[30,95] };
+    // Fed by _updateAggregateLoadProgress() with the REAL byte/file fraction of the current GLB batch.
+    window._bsOnBatchProgress = function(fraction){
+        const r = RANGE[phase]; if(!r) return;
+        const f = Math.max(0, Math.min(1, Number(fraction) || 0));
+        sendTrackerProgress(r[0] + (r[1]-r[0]) * f);
+    };
+
+    async function start(cfg){
+        if(started || !cfg) return;
+        started = true;
+        LOG('Loading started');
+        // wait for the default cake to finish, so decorations land on the real one
+        for(let i=0;i<80;i++){
+            if(typeof window.updateModel==='function' && typeof window.isCakeSceneReady==='function' && window.isCakeSceneReady() && !(window.isCakeBuilding && window.isCakeBuilding())) break;
+            await new Promise(r=>setTimeout(r,150));
+        }
+        phase = 'config'; sendTrackerProgress(30);
+
+        // Decoration stage: each placement counts as one unit, plus REAL byte progress
+        // from any GLTFLoader.load() it triggers (patched only while the draft applies).
+        const _decor = cfg.decorations || {};
+        const decorTotal = ['fruits','ferrero','kitkat','oreo','barShard','toblerone','candles','characters']
+            .reduce((n,k)=> n + (Array.isArray(_decor[k]) ? _decor[k].length : 0), 0);
+        if(decorTotal > 0) RANGE.config[1] = 75;
+        let decorDone = 0;
+        const inflight = new Map();
+        const decorProgress = ()=>{
+            if(!decorTotal) return;
+            let partial = 0; inflight.forEach(v=>{ partial += v; });
+            sendTrackerProgress(75 + 22 * Math.min(1, (decorDone + partial) / decorTotal));
+        };
+        const restoreFns = [];
+        ['placeFruitAtFraction','placeFerreroAtFraction','placeKitkatAtFraction','placeOreoAtFraction',
+         'placeBarShardAtFraction','placeTobleroneAtFraction','placeCandleAtFraction','placeCharacterAtFraction']
+            .forEach(name=>{
+                const orig = window[name];
+                if(typeof orig !== 'function') return;
+                window[name] = async function(...args){
+                    phase = 'decor'; decorProgress();
+                    try{ return await orig.apply(this, args); }
+                    finally{ decorDone++; decorProgress(); }
+                };
+                restoreFns.push(()=>{ window[name] = orig; });
+            });
+        const _GL = window._GLTFLoaderClass;   // exposed by the module script (classic scripts can't see its imports)
+        const _origGLTFLoad = _GL && _GL.prototype.load;
+        if(_origGLTFLoad) _GL.prototype.load = function(url, onLoad, onProgress, onError){
+            const token = {};
+            return _origGLTFLoad.call(this, url,
+                g => { inflight.delete(token); if(onLoad) onLoad(g); },
+                ev => {
+                    if(phase === 'decor' && ev && ev.total > 0 && isFinite(ev.loaded / ev.total)){
+                        inflight.set(token, Math.min(0.99, ev.loaded / ev.total)); decorProgress();
+                    }
+                    if(onProgress) onProgress(ev);
+                },
+                err => { inflight.delete(token); if(onError) onError(err); });
+        };
+        if(_origGLTFLoad) restoreFns.push(()=>{ _GL.prototype.load = _origGLTFLoad; });
+
+        try{ await applyDraftConfig(cfg); }catch(err){ console.error('[TrackerViewer]', err); }
+        finally{ restoreFns.forEach(fn=>{ try{ fn(); }catch(e){} }); }
+
+        // Genuinely ready = cake meshes exist AND updateScene() has finished (isLoading false).
+        for(let i=0;i<200;i++){
+            if(typeof window.isCakeSceneReady==='function' && window.isCakeSceneReady() && !(window.isCakeBuilding && window.isCakeBuilding())) break;
+            await new Promise(r=>setTimeout(r,100));
+        }
+        phase = 'final';
+        LOG('All required assets loaded');
+        sendTrackerProgress(97);
+
+        // read-only: nothing can be picked up or moved, only rotate
+        ['getFruitIndexAtScreen','getFerreroIndexAtScreen','getKitkatIndexAtScreen','getOreoIndexAtScreen',
+         'getBarShardIndexAtScreen','getTobleroneIndexAtScreen','getCandleIndexAtScreen','getCharacterIndexAtScreen']
+            .forEach(fn=>{ window[fn] = ()=>-1; });
+        if(window._threeControls){
+            // Disable zoom only when embedded inline in a scrollable page (the
+            // customer's order tracker), where scroll-to-zoom would hijack the
+            // page's own scroll. The baker's full-screen modal passes
+            // allow_zoom=1 since there's no surrounding page to fight with.
+            const allowZoom = new URLSearchParams(window.location.search).get('allow_zoom') === '1';
+            window._threeControls.enableZoom = allowZoom;
+            window._threeControls.enablePan  = false;
+        }
+        // Steeper, more top-down camera for the baker preview. Also applies to the
+        // reset-view button, since it calls window.resetCamera() at click time.
+        const TRACKER_ELEVATION_DEG = 40; // 0 = eye level, 90 = straight down
+        if(typeof window.resetCamera==='function' && !window._bsTrackerCamPatched){
+            window._bsTrackerCamPatched = true;
+            const _origReset = window.resetCamera;
+            window.resetCamera = function(){
+                _origReset();
+                const cam = window._threeCamera, ctl = window._threeControls;
+                if(!cam || !ctl) return;
+                const off = cam.position.clone().sub(ctl.target);
+                const r = off.length();
+                if(!(r > 0)) return;
+                // Orbit/zoom around the cake's true center, so it sits mid-frame and
+                // zooming in lands on the tiers instead of drifting above them.
+                if(typeof window._getCakeBounds === 'function'){
+                    const b = window._getCakeBounds();
+                    if(b && isFinite(b.center.x + b.center.y + b.center.z)) ctl.target.copy(b.center);
+                }
+                const el = TRACKER_ELEVATION_DEG * Math.PI / 180;
+                const az = Math.atan2(off.x, off.z); // keep the current left/right angle
+                cam.position.set(
+                    ctl.target.x + r * Math.cos(el) * Math.sin(az),
+                    ctl.target.y + r * Math.sin(el),
+                    ctl.target.z + r * Math.cos(el) * Math.cos(az)
+                );
+                ctl.update();
+                if(typeof window._requestRender==='function') window._requestRender();
+            };
+        }
+        if(typeof window.resetCamera==='function') window.resetCamera();
+        setTimeout(()=>{
+            sendTrackerProgress(100);
+            LOG('Sending tracker-loaded');
+            post('bakesphere-tracker-loaded');
+        }, 900);
+    }
+    window.addEventListener('message', e=>{
+        if(e.origin !== window.location.origin || e.source !== window.parent) return;
+        if(e.data && e.data.type === 'bakesphere-tracker-config') start(e.data.config);
+    });
+    LOG('Tracker initialized');
+    post('bakesphere-tracker-ready');
+    sendTrackerProgress(5);
 })();
 
 // ── Read-only preview mode for the Saved Drafts gallery (?view_draft=ID) ──
@@ -14019,6 +16757,140 @@ document.getElementById('btnLoadDraft').addEventListener('click',()=>loadDraft()
     };
     tryPreview(40);
 })();
+// Full, baker-readable order config. Extends the old payload; nothing existing is removed.
+function buildFullOrderConfig(){
+    let cfg = {};
+    try{ cfg = JSON.parse(document.getElementById('configInput').value || '{}'); }catch(e){}
+    const NORMAL_H = 4; // inches tall at 100% height (same value the summary panel uses)
+    const fr = state.frostings, on = k => state.addons.has(k);
+    const fondant = fr.has('Fondant Smooth');
+    const tc = tierCountFor(state.tier);
+    const fmtIn = n => (Number.isInteger(n) ? n : n.toFixed(1)) + '"';
+    const heightIn = Math.round(state.heightMult * NORMAL_H * 2) / 2;
+    const join = a => a.filter(Boolean).join(' · ');
+    const half = k => (state.halfView||{})[k] ? (state.halfView[k]==='left' ? 'left half only' : 'right half only') : '';
+    const pct  = s => (s !== undefined && s < 0.99) ? Math.round(s*100) + '% size' : '';
+    const tiersOf = k => {
+        if(state.tier === 'Single') return '';
+        const a = (state.tierDecor[k]||[]).filter(t => t < tc);
+        return (a.length && a.length < tc) ? 'Tier ' + a.map(t => t+1).join(' & ') : '';
+    };
+    const models = fn => typeof window[fn]==='function' ? window[fn]() : [];
+    const tally = (arr, f) => { const m={}; arr.forEach(x=>{ const k=f(x); m[k]=(m[k]||0)+1; });
+        return Object.entries(m).map(([k,n])=>k+' ×'+n).join(', '); };
+    const placed = arr => arr.length ? '×' + arr.length : 'not placed yet';
+
+    const shapeText = state.shape==='Number' ? getShapeLabel() : getEffectiveShape();
+    const resizable = ['Round','Square','Heart'].includes(state.shape) && state.tier==='Single';
+    const style = fondant ? 'Fondant' : fr.has('Ombre Style') ? 'Ombre' : fr.has('Semi-naked Style') ? 'Semi-naked' : 'Buttercream';
+
+    const cake = [['Type', state.cakeType], ['Shape', shapeText]];
+    if(state.tier !== 'Single') cake.push(['Tiers', state.tier]);
+    if(resizable){ cake.push(['Size', state.roundSize + '"']); cake.push(['Height', fmtIn(heightIn)]); }
+
+    const flavor = [];
+    for(let i=0;i<tc;i++){
+        const L = state.shape==='Bundt' ? 1 : (state.tierLayers[i]||1), fi = state.tierFillings[i];
+        flavor.push([tc>1 ? 'Tier '+(i+1)+(i===0?' (bottom)':i===tc-1?' (top)':'') : 'Cake',
+            join([(state.tierFlavors[i]||state.flavor)+' cake',
+                  L+(L>1?' layers':' layer'),
+                  (L>1 && fi && fi!=='No Filling') ? fi+' filling' : '',
+                  (state.tierFrostings[i]||state.flavor)+' frosting'])]);
+    }
+
+    const frost = [['Style', style]];
+    if(fr.has('Ombre Style') && !fondant) frost.push(['Ombre colors', 'Top ' + state.ombreTopColor + ' → Bottom ' + state.ombreBottomColor]);
+    if(!fondant){
+        if(fr.has('Smooth Buttercream')) frost.push(['Shell border', join([state.shellBorderColorName, pct(state.shellBorderScale), half('shellBorder'), tiersOf('shell')])]);
+        if(fr.has('Sugar Icing'))        frost.push(['Sugar icing',  join([state.icingColorName, pct(state.icingScale), half('sugarIcing'), tiersOf('icing')])]);
+        if(fr.has('Rosettes')){
+            const rp = state.rosettePlacement, hasB = rp.split('+').includes('Border');
+            frost.push(['Rosettes', join([rp.replace('+',' + '), state.rosetteColorName,
+                rp==='Border' ? pct(state.rosetteBorderScale) : '', rp==='Border' ? half('rosetteSides') : '', hasB ? tiersOf('rosette') : ''])]);
+        }
+        if(fr.has('Textured Buttercream')) frost.push(['Texture', 'Textured (colored per tier by its frosting flavor)']);
+    }
+
+    const deco = [];
+    if(state.hasDrip) deco.push(['Drip', state.dripFlavor + ' drip']);
+    if(state.allFruitsAssorted){
+        deco.push(['Fruits', 'Assorted, full top']);
+    } else {
+        const piece = tally(models('getFruitModels'), m => m.fruit);
+        if(piece) deco.push(['Fruits (by piece)', piece]);
+        const HK = {'Mango Slice':'mangoBorder','Kiwi Slice':'kiwiBorder','Peach Slice':'peachBorder','Banana Slice':'bananaBorder'};
+        GRAM_FRUIT_KEYS.forEach(k=>{
+            if(!on(k)) return;
+            let pl = (window._gramFruitPlacement||{})[k] || 'middle';
+            if((state.shape==='Bundt'||state.shape==='Number') && pl==='middle') pl = 'border';
+            if(state.tier!=='Single' && pl==='border') return; // listed per tier below
+            const single = state.tier==='Single';
+            deco.push([GRAM_FRUIT_LABELS[k]||k, join([(state.fruitGrams[k]||GRAM_DEFAULT)+'g',
+                pl==='middle' ? 'center pile' : pl==='full' ? 'full top' : 'border',
+                (pl==='border'&&single) ? pct(state.fruitBorderScale[k]) : '',
+                (pl==='border'&&single) ? half(HK[k]) : ''])]);
+        });
+        if(state.tier!=='Single') for(let i=0;i<tc;i++){
+            const f = state.tierFruitBorders[i];
+            if(f && f!=='None') deco.push(['Tier '+(i+1)+' fruit border', GRAM_FRUIT_LABELS[f]||f]);
+        }
+    }
+    if(on('Ferrero-style Ball'))  deco.push(['Ferrero', placed(models('getFerreroModels'))]);
+    if(on('Kitkat Sticks'))       deco.push(['KitKat', join([placed(models('getKitkatModels')), state.kitkatOrientation==='standing'?'standing':'lying flat'])]);
+    if(on('Oreo Cookie'))         deco.push(['Oreo', join([placed(models('getOreoModels')), state.oreoOrientation==='standing'?'standing':'lying flat'])]);
+    if(on('Chocolate Bar Shard')) deco.push(['Bar shard', placed(models('getBarShardModels'))]);
+    if(on('Toblerone Triangle'))  deco.push(['Toblerone', join([placed(models('getTobleroneModels')), state.tobleroneFlavor])]);
+    if(on('Chocolate Curls')){
+        const p = state.chocoCurlsPlacement, sides = p==='sides'||p==='both';
+        deco.push(['Choco curls', join([p.charAt(0).toUpperCase()+p.slice(1), sides?pct(state.chocoCurlsSidesScale):'', sides?half('chocoCurlsSides'):''])]);
+    }
+    if(on('Chocolate Plaque')){
+        const msg = (state.plaqueMessage||'').trim().replace(/\n+/g,' / ');
+        deco.push(['Choco plaque', join([state.plaqueShape+' plaque', msg ? 'Message: “'+msg+'”' : 'no message'])]);
+    }
+    [['Cylinder Sprinkles','cylinder','Cylinder sprinkles'],['Sphere Sprinkles','pearl','Pearl sprinkles'],
+     ['Chocolate Sprinkles','chocoSprinkle','Choco sprinkles'],['Crushed Peanuts','peanuts','Crushed peanuts']].forEach(([a,t,l])=>{
+        if(!on(a)) return;
+        const p = (window._sprinklePlacement||{})[t] || 'top';
+        deco.push([l, p==='top' ? 'Top' : p==='sides' ? 'Sides' : 'Top & sides']);
+    });
+    if(on('Number Candles')){
+        const nums = models('getCandleModels').map(m=>m.candleNum).sort((a,b)=>a-b);
+        deco.push(['Number candles', nums.length ? nums.map(n=>'#'+n).join(', ') : 'not placed yet']);
+    }
+    if(on('Character Topper')){
+        const ch = models('getCharacterModels');
+        deco.push(['Character toppers', ch.length ? tally(ch, m=>m.key+' '+(m.sizeInches||4)+'"') : 'not placed yet']);
+    }
+
+    const num = id => parseInt((document.getElementById(id).textContent||'0').replace(/[^\d]/g,'')) || 0;
+    const uniqueFlavors = [...new Set(state.tierFlavors.slice(0,tc))];
+    const layersText = state.shape==='Bundt' ? '1' : state.tierLayers.slice(0,tc).join(' / ');
+    const tags = [resizable ? state.roundSize+'" · '+fmtIn(heightIn)+' tall' : (state.tier!=='Single' ? state.tier : ''),
+                  style,
+                  (state.shape!=='Bundt' && state.tierLayers.slice(0,tc).some(n=>n>1)) ? 'Layers ' + layersText : ''].filter(Boolean);
+
+    return Object.assign(cfg, {
+        schema: 2,
+        draft_config: buildDraftConfig(),
+        cake_label: (uniqueFlavors.length>1 ? state.cakeType+' (mixed flavors)' : getCombinedCakeTypeLabel()) + ' · ' + shapeText,
+        hero_tags: tags,
+        size: resizable ? state.roundSize + '"' : '',
+        layers: layersText,
+        tier: state.tier,
+        heightInches: resizable ? heightIn : null,
+        tierFlavors: state.tierFlavors.slice(0,tc),
+        tierFrostings: state.tierFrostings.slice(0,tc),
+        tierFillings: state.tierFillings.slice(0,tc),
+        tierLayers: state.tierLayers.slice(0,tc),
+        baker_summary: [
+            {title:'Cake', rows:cake}, {title:'Flavor & Layers', rows:flavor},
+            {title:'Frosting', rows:frost}, {title:'Decorations', rows:deco}
+        ].filter(g => g.rows.length),
+        price_breakdown: { cake: num('priceBase'), frosting_extras: document.getElementById('priceFrostingRow').style.display==='none' ? 0 : num('priceFrosting'), addons: num('priceAddons') },
+        total: num('priceTotal') || cfg.total   // the real on-screen total (old value skipped per-piece prices)
+    });
+}
 function proceed(){
     const base=getBasePrice(),frostExtra=getFrostingExtraPrice();
     let addonTotal=0; state.addons.forEach(p=>addonTotal+=p);
@@ -14109,6 +16981,8 @@ document.getElementById('configInput').value=JSON.stringify({
         _ctl.update();
     }
 
+    try{ document.getElementById('configInput').value = JSON.stringify(buildFullOrderConfig()); }
+    catch(err){ console.error('[buildFullOrderConfig]', err); } // falls back to the old payload
     document.getElementById('proceedForm').submit();
 }
 if(document.getElementById('btnProceed')) document.getElementById('btnProceed').addEventListener('click',proceed);
@@ -14183,11 +17057,196 @@ syncFrostingUI();
 updateOmbrePreview();
 refreshTierPriceLabels();
 syncPlaqueAvailability();
+syncSizeSliderVisibility();
 renderTierLayerRows();
 renderTierFruitBorderRows();
+function bindHalfViewButtons(containerId, key){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.querySelectorAll('.half-view-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const side = btn.dataset.halfSide || null;
+            state.halfView[key] = side;
+            container.querySelectorAll('.half-view-btn').forEach(b=>{
+                const on = (b.dataset.halfSide||null) === side;
+                b.style.background = on ? 'var(--caramel)' : 'var(--surface)';
+                b.style.color = on ? '#fff' : 'var(--text-muted)';
+            });
+            if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(key);
+        });
+    });
+}
+function syncHalfViewButtonsUI(container, side){
+    if(!container) return;
+    container.querySelectorAll('.half-view-btn').forEach(b=>{
+        const on = (b.dataset.halfSide||null) === side;
+        b.style.background = on ? 'var(--caramel)' : 'var(--surface)';
+        b.style.color = on ? '#fff' : 'var(--text-muted)';
+    });
+}
+function bindHalfViewGroupFor(containerId, key, oppositeKey, oppositeContainerId){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.querySelectorAll('.half-view-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const side = btn.dataset.halfSide || null;
+            state.halfView[key] = side;
+            syncHalfViewButtonsUI(container, side);
+            if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(key);
+            // If the paired decoration is active on the SAME half, flip it to
+            // the opposite half automatically so both stay visible.
+            if(oppositeKey && side && state.halfView[oppositeKey] === side){
+                const flip = side === 'left' ? 'right' : 'left';
+                state.halfView[oppositeKey] = flip;
+                syncHalfViewButtonsUI(document.getElementById(oppositeContainerId), flip);
+                if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(oppositeKey);
+                showToast('Adjusted the other side so both halves stay visible', 2000);
+            }
+        });
+    });
+}
+function bindHalfViewGroupMulti(containerId, key, others){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.querySelectorAll('.half-view-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const side = btn.dataset.halfSide || null;
+            state.halfView[key] = side;
+            syncHalfViewButtonsUI(container, side);
+            if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(key);
+            if(side){
+                others.forEach(o=>{
+                    if(state.halfView[o.key] === side){
+                        const flip = side === 'left' ? 'right' : 'left';
+                        state.halfView[o.key] = flip;
+                        syncHalfViewButtonsUI(document.getElementById(o.containerId), flip);
+                        if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(o.key);
+                        showToast('Adjusted the other side so both halves stay visible', 2000);
+                    }
+                });
+            }
+        });
+    });
+}
+// ── Half Cake View: pairing rules ──
+// When two of Shell Border / Sugar Icing / Rosette Border are combined:
+//  • "Full" is disabled on BOTH (Full+Full, or Full+half, is never allowed
+//    while paired — every combo must show two different, non-overlapping halves).
+//  • Picking a side (left/right) on either one instantly flips the OTHER
+//    paired one to the opposite side if it would otherwise overlap.
+function oppositeHalf(side){ return side==='left' ? 'right' : side==='right' ? 'left' : null; }
+function halfViewContainerId(key){
+    if(key==='shellBorder')  return 'shellBorderHalfViewGroup';
+    if(key==='sugarIcing')   return 'icingHalfViewGroup';
+    if(key==='rosetteSides') return 'rosetteHalfViewGroup';
+    return null;
+}
+function halfViewLabel(key){
+    if(key==='shellBorder')  return 'Shell Border';
+    if(key==='sugarIcing')   return 'Sugar Icing';
+    if(key==='rosetteSides') return 'Rosette Border';
+    return '';
+}
+function isHalfViewKeyActive(key){
+    if(key==='shellBorder')  return state.frostings.has('Smooth Buttercream');
+    if(key==='sugarIcing')   return state.frostings.has(SUGAR_ICING_VAL);
+    if(key==='rosetteSides') return state.frostings.has('Rosettes') && state.rosettePlacement==='Border';
+    return false;
+}
+// Finds whichever OTHER decoration is currently combined with `sourceKey`
+// (each customer can only ever have 2 of these 3 active at once).
+function getActiveComboPartner(sourceKey){
+    const hasShell   = isHalfViewKeyActive('shellBorder');
+    const hasSugar   = isHalfViewKeyActive('sugarIcing');
+    const hasRosette = isHalfViewKeyActive('rosetteSides');
 
+    if(sourceKey === 'shellBorder')  return hasRosette ? 'rosetteSides' : (hasSugar ? 'sugarIcing' : null);
+    if(sourceKey === 'sugarIcing')   return hasRosette ? 'rosetteSides' : (hasShell ? 'shellBorder' : null);
+    if(sourceKey === 'rosetteSides') return hasShell ? 'shellBorder' : (hasSugar ? 'sugarIcing' : null);
+    return null;
+}
+function setHalfViewSide(key, side, containerId){
+    state.halfView[key] = side;
+    syncHalfViewButtonsUI(document.getElementById(containerId), side);
+    if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(key);
+}
+// Enables/disables ONLY the "Full" button in a group — left/right stay clickable always.
+function setFullButtonDisabled(key, disabled){
+    const container = document.getElementById(halfViewContainerId(key));
+    if(!container) return;
+    const fullBtn = container.querySelector('.half-view-btn[data-half-side=""]');
+    if(!fullBtn) return;
+    fullBtn.disabled = disabled;
+    fullBtn.style.opacity = disabled ? '0.35' : '';
+    fullBtn.style.cursor = disabled ? 'not-allowed' : '';
+    fullBtn.style.pointerEvents = disabled ? 'none' : '';
+    fullBtn.title = disabled ? 'Not available while paired with another decoration' : '';
+}
+// Re-checks every possible pair and: (1) disables "Full" on both members of
+// an active pair, (2) makes sure neither member is left sitting on "Full" —
+// if one is, it's auto-assigned a side opposite its partner (or a sensible
+// default of left/right if both are still unset).
+function syncHalfViewLocks(){
+    ['shellBorder','sugarIcing','rosetteSides'].forEach(k=>setFullButtonDisabled(k, false));
+    [].forEach(([a,b])=>{ // pairing lock removed: rings now sit at different sizes
+        if(!isHalfViewKeyActive(a) || !isHalfViewKeyActive(b)) return;
+        setFullButtonDisabled(a, true);
+        setFullButtonDisabled(b, true);
+        const sideA = state.halfView[a], sideB = state.halfView[b];
+        if(!sideA && !sideB){
+            setHalfViewSide(a, 'left', halfViewContainerId(a));
+            setHalfViewSide(b, 'right', halfViewContainerId(b));
+        } else if(!sideA){
+            setHalfViewSide(a, oppositeHalf(sideB), halfViewContainerId(a));
+        } else if(!sideB){
+            setHalfViewSide(b, oppositeHalf(sideA), halfViewContainerId(b));
+        }
+    });
+}
+// Called right when a decoration NEWLY joins an existing pairing (not via
+// its own half-view button) — makes sure Full gets locked and both sides
+// get assigned immediately instead of waiting for a manual click.
+function applyComboHalfViewDefault(newKey){
+    syncHalfViewLocks();
+}
+function bindComboHalfView(containerId, key){
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.querySelectorAll('.half-view-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            if(btn.disabled) return;
+            const side = btn.dataset.halfSide || null;
+            setHalfViewSide(key, side, containerId);
+            const partnerKey = null; // no auto-split anymore
+            if(partnerKey && side && state.halfView[partnerKey] === side){
+                setHalfViewSide(partnerKey, oppositeHalf(side), halfViewContainerId(partnerKey));
+                showToast(halfViewLabel(partnerKey)+' switched to the opposite half so they don\'t overlap', 2000);
+            }
+            syncHalfViewLocks();
+        });
+    });
+}
+bindComboHalfView('icingHalfViewGroup', 'sugarIcing');
+bindComboHalfView('shellBorderHalfViewGroup', 'shellBorder');
+bindComboHalfView('rosetteHalfViewGroup', 'rosetteSides');
+bindHalfViewButtons('chocoCurlsHalfViewGroup', 'chocoCurlsSides');
+const FRUIT_HALF_KEY_MAP = {'Mango Slice':'mangoBorder','Kiwi Slice':'kiwiBorder','Peach Slice':'peachBorder','Banana Slice':'bananaBorder'};
+document.querySelectorAll('.fruit-half-view-group').forEach(group=>{
+    const key = FRUIT_HALF_KEY_MAP[group.dataset.fruitKey];
+    group.querySelectorAll('.half-view-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+            const side = btn.dataset.halfSide || null;
+            state.halfView[key] = side;
+            group.querySelectorAll('.half-view-btn').forEach(b=>{
+                const on = (b.dataset.halfSide||null) === side;
+                b.style.background = on ? 'var(--caramel)' : 'var(--surface)';
+                b.style.color = on ? '#fff' : 'var(--text-muted)';
+            });
+            if(typeof window._applyHalfViewFor === 'function') window._applyHalfViewFor(key);
+        });
+    });
+});
 
-// ── PRESET LOADER (from dashboard featured cards) ──
 (function applyPreset() {
     const params = new URLSearchParams(window.location.search);
     if (!params.has('preset_flavor')) return;
@@ -14209,7 +17268,7 @@ renderTierFruitBorderRows();
     });
     document.getElementById('sizeRange').value = size;
     document.getElementById('sizeDisplay').textContent = size;
-    document.getElementById('sizeSliderWrap').classList.toggle('visible', shape === 'Round');
+    syncSizeSliderVisibility();
     document.getElementById('numberPickerWrap').classList.toggle('visible', shape === 'Number');
 
     // Number cake digits (only relevant when shape === 'Number')
@@ -14522,8 +17581,13 @@ renderTierFruitBorderRows();
 })();
 function tryInit(){if(typeof window.updateModel==='function')updateAll();else setTimeout(tryInit,80);}
 tryInit();
-setTimeout(()=>{ if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape); }, 400);
-setTimeout(()=>{ if(typeof window._preloadAllDecorationAssets==='function') window._preloadAllDecorationAssets(); }, 4000);
+// Skip speculative cache-warming in tracker mode — it exists to make live
+// editing snappy in the interactive builder, and only competes for
+// bandwidth/CPU here, slowing down the one cake actually being shown.
+if(!document.body.classList.contains('tracker-mode')){
+    setTimeout(()=>{ if(typeof window._prefetchRosetteModels==='function') window._prefetchRosetteModels(state.shape); }, 400);
+    setTimeout(()=>{ if(typeof window._preloadAllDecorationAssets==='function') window._preloadAllDecorationAssets(); }, 4000);
+}
 
 
 // ── MOBILE SUMMARY SHEET ──
@@ -14751,7 +17815,7 @@ initMobileSummary();
     skipBtn.addEventListener('click', ()=> closeTutorial(true));
     overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeTutorial(true); });
     if(helpBtn) helpBtn.addEventListener('click', openTutorial);
-    if(!document.body.classList.contains('preview-mode')) openTutorial();
+    if(!document.body.classList.contains('preview-mode') && !document.body.classList.contains('tracker-mode')) openTutorial();
 })();
 </script>
 <script>
@@ -14784,6 +17848,234 @@ initMobileSummary();
             label.classList.toggle('open', isOpen);
         });
     });
+})();
+</script>
+<script>
+/* Cake Builder: compact rows + complete summary. UI layer only. */
+(function(){
+  /* Old slider was in %. Baker-friendly inches: NORMAL_H = inches tall at the old "100%".
+     Calibrate this to your real cake (e.g. 5 if your standard cake is 5" tall). */
+  const NORMAL_H = 4;
+  const HEIGHTS  = [2.5,3,3.5,4,4.5,5,5.5,6];
+  const $ = id => document.getElementById(id);
+  const fmtIn = n => (Number.isInteger(n) ? n : n.toFixed(1)) + '"';
+  const pctToIn = p => Math.round(p / 100 * NORMAL_H * 2) / 2;
+  const inToPct = i => Math.round(i / NORMAL_H * 100);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  /* ---------- Size + Height: collapsible row with choices ---------- */
+  function pickerRow(wrapId, rangeId, o){
+    const wrap = $(wrapId), range = $(rangeId);
+    if(!wrap || !range) return;
+    if(o.prep) o.prep(range);
+    Array.from(wrap.children).forEach(c => c.classList.add('acc-orig')); // keep original slider in DOM (JS still drives it)
+    const head = document.createElement('button');
+    head.type = 'button'; head.className = 'acc-row';
+    head.innerHTML = '<span class="acc-title"></span><span class="acc-val"></span><span class="acc-arrow">▸</span>';
+    const body = document.createElement('div'); body.className = 'acc-body';
+    const pills = document.createElement('div'); pills.className = 'acc-pills';
+    body.appendChild(pills); wrap.append(head, body);
+    o.options.forEach(v => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'acc-pill'; b.textContent = o.label(v); b._v = v;
+      b.addEventListener('click', () => {
+        range.value = o.toRange(v);
+        range.dispatchEvent(new Event('input',  {bubbles:true}));
+        range.dispatchEvent(new Event('change', {bubbles:true}));
+      });
+      pills.appendChild(b);
+    });
+    head.addEventListener('click', () => wrap.classList.toggle('acc-open'));
+    const refresh = () => {
+      head.querySelector('.acc-title').textContent = o.title();
+      head.querySelector('.acc-val').textContent = o.value(+range.value);
+      pills.querySelectorAll('.acc-pill').forEach(p => p.classList.toggle('active', o.toRange(p._v) === +range.value));
+    };
+    const mo = new MutationObserver(refresh);
+    o.watch.forEach(id => $(id) && mo.observe($(id), {childList:true, characterData:true, subtree:true}));
+    refresh();
+  }
+  pickerRow('sizeSliderWrap', 'sizeRange', {
+    options:[4,5,6,7,8,9,10], label:v => v + '"', toRange:v => v,
+    title:() => $('sizeLabelText').textContent,
+    value:v => v + '" · ' + $('sizeCategoryName').textContent,
+    watch:['sizeDisplay','sizeLabelText','sizeCategoryName']
+  });
+  pickerRow('heightSliderWrap', 'heightRange', {
+    options:HEIGHTS, label:fmtIn, toRange:inToPct,
+    prep:r => { r.min = 50; r.max = 170; r.step = 1; },
+    title:() => 'Cake Height', value:v => fmtIn(pctToIn(v)),
+    watch:['heightDisplay']
+  });
+
+  /* ---------- Flavors & Layers: one collapsible row per tier ---------- */
+  const openTiers = new Set([0]);
+  function tierSummary(i){
+    const L = state.shape === 'Bundt' ? 1 : (state.tierLayers[i] || 1), fi = state.tierFillings[i];
+    return [state.tierFlavors[i] || state.flavor, L + (L > 1 ? ' layers' : ' layer'),
+            (L > 1 && fi && fi !== 'No Filling') ? fi : ''].filter(Boolean).join(' · ');
+  }
+  function refreshTierHeads(){
+    document.querySelectorAll('#tierLayerRows .acc-card').forEach((c, i) => {
+      const v = c.querySelector('.acc-val'); if(v) v.textContent = tierSummary(i);
+    });
+  }
+  function enhanceTierRows(){
+    const wrap = $('tierLayerRows'); if(!wrap) return;
+    Array.from(wrap.children).forEach((card, i) => {
+      if(card.classList.contains('acc-card')) return;
+      const top = card.children[0], fields = card.children[1];
+      if(!top || !fields) return;
+      const title = state.tier === 'Single' ? 'Cake' : top.querySelector('span').textContent;
+      const btnGroup = top.querySelector('div');
+      const head = document.createElement('button');
+      head.type = 'button'; head.className = 'acc-row';
+      head.innerHTML = '<span class="acc-title">' + esc(title) + '</span><span class="acc-val"></span><span class="acc-arrow">▸</span>';
+      const layers = document.createElement('div'); layers.className = 'acc-layers';
+      layers.innerHTML = '<span class="acc-layers-label">Layers</span>';
+      layers.appendChild(btnGroup);
+      const body = document.createElement('div'); body.className = 'acc-body';
+      body.append(layers, fields);
+      card.removeAttribute('style');
+      card.className = 'acc-card' + (openTiers.has(i) ? ' acc-open' : '');
+      card.replaceChildren(head, body);
+      head.querySelector('.acc-val').textContent = tierSummary(i);
+      head.addEventListener('click', () => {
+        card.classList.toggle('acc-open');
+        card.classList.contains('acc-open') ? openTiers.add(i) : openTiers.delete(i);
+      });
+      body.addEventListener('change', refreshTierHeads);
+    });
+  }
+  const _render = window.renderTierLayerRows;
+  window.renderTierLayerRows = function(){ const r = _render.apply(this, arguments); enhanceTierRows(); return r; };
+  enhanceTierRows();
+
+  /* ---------- Complete summary ---------- */
+  const join = a => a.filter(Boolean).join(' · ');
+  const half = k => (state.halfView || {})[k] ? (state.halfView[k] === 'left' ? 'left half only' : 'right half only') : '';
+  const pct  = s => (s !== undefined && s < 0.99) ? Math.round(s * 100) + '% size' : '';
+  const tiersOf = k => {
+    if(state.tier === 'Single') return '';
+    const c = tierCountFor(state.tier), a = (state.tierDecor[k] || []).filter(t => t < c);
+    return (a.length && a.length < c) ? 'Tier ' + a.map(t => t + 1).join(' & ') : '';
+  };
+  const models = fn => typeof window[fn] === 'function' ? window[fn]() : [];
+  const tally = (arr, f) => { const m = {}; arr.forEach(x => { const k = f(x); m[k] = (m[k] || 0) + 1; });
+    return Object.entries(m).map(([k, n]) => k + ' ×' + n).join(', '); };
+  const placedText = (arr, f) => arr.length ? (f ? f(arr) : '×' + arr.length) : 'not placed yet';
+
+  function build(){
+    const fr = state.frostings, fondant = fr.has('Fondant Smooth'), tc = tierCountFor(state.tier);
+    const cake = [], flavor = [], frost = [], deco = [];
+
+    cake.push(['Type', state.cakeType]);
+    cake.push(['Shape', state.shape === 'Number' ? getShapeLabel() : getEffectiveShape()]);
+    if(['Round','Square','Heart'].includes(state.shape) && state.tier === 'Single'){
+      cake.push(['Size', state.roundSize + '"']);
+      cake.push(['Height', fmtIn(pctToIn(Math.round(state.heightMult * 100)))]);
+    }
+    for(let i = 0; i < tc; i++){
+      const L = state.shape === 'Bundt' ? 1 : (state.tierLayers[i] || 1), fi = state.tierFillings[i];
+      flavor.push([tc > 1 ? 'Tier ' + (i + 1) + (i === 0 ? ' (bottom)' : i === tc - 1 ? ' (top)' : '') : 'Cake', join([
+        (state.tierFlavors[i] || state.flavor) + ' cake',
+        L + (L > 1 ? ' layers' : ' layer'),
+        (L > 1 && fi && fi !== 'No Filling') ? fi + ' filling' : '',
+        (state.tierFrostings[i] || state.flavor) + ' frosting'])]);
+    }
+
+    if(fondant) frost.push(['Style', 'Fondant']);
+    else if(fr.has('Ombre Style')) frost.push(['Style', 'Ombre <i class="sw" style="background:' + esc(state.ombreTopColor) +
+      '"></i>→<i class="sw" style="background:' + esc(state.ombreBottomColor) + '"></i>', 1]);
+    else frost.push(['Style', fr.has('Semi-naked Style') ? 'Semi-naked' : 'Buttercream']);
+    if(!fondant){
+      if(fr.has('Smooth Buttercream')) frost.push(['Shell border', join([state.shellBorderColorName, pct(state.shellBorderScale), half('shellBorder'), tiersOf('shell')])]);
+      if(fr.has('Sugar Icing')) frost.push(['Sugar icing', join([state.icingColorName, pct(state.icingScale), half('sugarIcing'), tiersOf('icing')])]);
+      if(fr.has('Rosettes')){
+        const rp = state.rosettePlacement, hasB = rp.split('+').includes('Border');
+        frost.push(['Rosettes', join([rp.replace('+', ' + '), state.rosetteColorName,
+          rp === 'Border' ? pct(state.rosetteBorderScale) : '', rp === 'Border' ? half('rosetteSides') : '', hasB ? tiersOf('rosette') : ''])]);
+      }
+      if(fr.has('Textured Buttercream')) frost.push(['Texture', 'Textured']);
+    }
+
+    if(state.hasDrip) deco.push(['Drip', state.dripFlavor + ' drip']);
+    if(state.allFruitsAssorted){
+      deco.push(['Fruits', 'Assorted, full top']);
+    } else {
+      const piece = tally(models('getFruitModels'), m => m.fruit);
+      if(piece) deco.push(['Fruits', piece]);
+      const HK = {'Mango Slice':'mangoBorder','Kiwi Slice':'kiwiBorder','Peach Slice':'peachBorder','Banana Slice':'bananaBorder'};
+      GRAM_FRUIT_KEYS.forEach(k => {
+        if(!state.addons.has(k)) return;
+        let pl = (window._gramFruitPlacement || {})[k] || 'middle';
+        if((state.shape === 'Bundt' || state.shape === 'Number') && pl === 'middle') pl = 'border';
+        if(state.tier !== 'Single' && pl === 'border') return; // shown as per-tier border below
+        const single = state.tier === 'Single';
+        deco.push([GRAM_FRUIT_LABELS[k] || k, join([(state.fruitGrams[k] || GRAM_DEFAULT) + 'g',
+          pl === 'middle' ? 'centre pile' : pl === 'full' ? 'full top' : 'border',
+          (pl === 'border' && single) ? pct(state.fruitBorderScale[k]) : '',
+          (pl === 'border' && single) ? half(HK[k]) : ''])]);
+      });
+      if(state.tier !== 'Single') for(let i = 0; i < tc; i++){
+        const f = state.tierFruitBorders[i];
+        if(f && f !== 'None') deco.push(['Tier ' + (i + 1) + ' fruit border', GRAM_FRUIT_LABELS[f] || f]);
+      }
+    }
+
+    const on = k => state.addons.has(k);
+    if(on('Ferrero-style Ball'))  deco.push(['Ferrero', placedText(models('getFerreroModels'))]);
+    if(on('Kitkat Sticks'))       deco.push(['KitKat', join([placedText(models('getKitkatModels')), state.kitkatOrientation === 'standing' ? 'standing' : 'flat'])]);
+    if(on('Oreo Cookie'))         deco.push(['Oreo', join([placedText(models('getOreoModels')), state.oreoOrientation === 'standing' ? 'standing' : 'flat'])]);
+    if(on('Chocolate Bar Shard')) deco.push(['Bar shard', placedText(models('getBarShardModels'))]);
+    if(on('Toblerone Triangle'))  deco.push(['Toblerone', join([placedText(models('getTobleroneModels')), state.tobleroneFlavor])]);
+    if(on('Chocolate Curls')){
+      const p = state.chocoCurlsPlacement, sides = p === 'sides' || p === 'both';
+      deco.push(['Choco curls', join([p.charAt(0).toUpperCase() + p.slice(1), sides ? pct(state.chocoCurlsSidesScale) : '', sides ? half('chocoCurlsSides') : ''])]);
+    }
+    if(on('Chocolate Plaque')){
+      const msg = (state.plaqueMessage || '').trim().replace(/\n+/g, ' / ');
+      deco.push(['Choco plaque', esc(join([state.plaqueShape, msg ? '“' + msg + '”' : ''])), 1]);
+    }
+    [['Cylinder Sprinkles','cylinder','Cylinder sprinkles'],['Sphere Sprinkles','pearl','Pearl sprinkles'],
+     ['Chocolate Sprinkles','chocoSprinkle','Choco sprinkles'],['Crushed Peanuts','peanuts','Crushed peanuts']].forEach(([a, t, l]) => {
+      if(!on(a)) return;
+      const p = (window._sprinklePlacement || {})[t] || 'top';
+      deco.push([l, p === 'top' ? 'Top' : p === 'sides' ? 'Sides' : 'Top & sides']);
+    });
+    if(on('Number Candles')){
+      const nums = models('getCandleModels').map(m => m.candleNum).sort((a, b) => a - b);
+      deco.push(['Candles', nums.length ? nums.map(n => '#' + n).join(', ') : 'not placed yet']);
+    }
+    if(on('Character Topper')){
+      const ch = models('getCharacterModels');
+      deco.push(['Character topper', ch.length ? tally(ch, m => m.key + ' ' + (m.sizeInches || 4) + '"') : 'not placed yet']);
+    }
+    return [['Cake', cake], ['Flavor & Layers', flavor], ['Frosting', frost], ['Decorations', deco]];
+  }
+
+  function renderSummary(){
+    let box = $('cakeSummary');
+    if(!box){
+      const pb = document.querySelector('.builder > .panel:last-child .price-block');
+      if(!pb) return;
+      box = document.createElement('div'); box.id = 'cakeSummary';
+      pb.parentNode.insertBefore(box, pb);
+    }
+    box.innerHTML = build().filter(g => g[1].length).map(g =>
+      '<div class="sum-group"><div class="sum-title">' + g[0] + '</div>' +
+      g[1].map(r => '<div class="cfg-row"><span class="cfg-key">' + esc(r[0]) + '</span><span class="cfg-val">' +
+        (r[2] ? r[1] : esc(r[1])) + '</span></div>').join('') + '</div>').join('');
+  }
+
+  /* ---------- Keep everything in sync ---------- */
+  let timer = null;
+  const soon = () => { clearTimeout(timer); timer = setTimeout(() => { renderSummary(); refreshTierHeads(); }, 60); };
+  ['click', 'input', 'change'].forEach(ev => document.addEventListener(ev, soon, true)); // half-view buttons, size sliders etc.
+  const _ua = window.updateAll;
+  window.updateAll = function(){ const r = _ua.apply(this, arguments); soon(); return r; };
+  window._updateAll = window.updateAll;
+  renderSummary();
 })();
 </script>
 </body>

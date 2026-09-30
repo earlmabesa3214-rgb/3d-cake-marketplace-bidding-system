@@ -3,241 +3,328 @@
 
 @push('styles')
 <style>
-* { font-family: 'Plus Jakarta Sans', sans-serif !important; }
-:root {
-    --brown-deep:#3B1F0F; --caramel:#C8893A;
-    --warm-white:#FFFDF9; --cream:#F5EFE6;
-    --border:#EAE0D0; --text-muted:#9A7A5A; --text-dark:#2C1A0E;
+/* BakeSphere Admin · Case Workspace (scoped: .rd) */
+.rd, .rd * { font-family:'Plus Jakarta Sans',sans-serif; box-sizing:border-box; }
+.rd {
+    --espresso:#24150F; --chocolate:#3A241A; --ivory:#F7F2E9; --cream:#EFE6D7;
+    --caramel:#A96F42; --gold:#B89452; --burgundy:#54252C; --taupe:#9A897A; --beige:#D8C8B7;
+    --ok:#2F6B4F; --ok-bg:#E6EFE8; --ok-bd:#B9D2C3; --warn:#8A6417; --warn-bg:#F6ECD3; --warn-bd:#E5D29B;
+    --bad:#54252C; --bad-bg:#F1E2E1; --bad-bd:#DDBFBD; --info:#33566F; --info-bg:#E2EAF0; --info-bd:#BCCCD8;
+    --line:#E2D6C4; --ink:#24150F; --ink-2:#5C4738;
+    background:var(--ivory); color:var(--ink); font-variant-numeric:tabular-nums; padding:1.5rem 2.25rem 4rem; max-width:1400px; margin:0 auto;
 }
-.back-link { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.82rem; color:var(--text-muted); text-decoration:none; margin-bottom:1.25rem; transition:color 0.2s; }
-.back-link:hover { color:var(--caramel); }
+.rd svg { width:1em; height:1em; flex-shrink:0; }
+.rd a:focus-visible, .rd button:focus-visible, .rd input:focus-visible, .rd select:focus-visible, .rd textarea:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
 
-.report-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; align-items:start; }
+.rd-back { display:inline-flex; align-items:center; gap:.45rem; font-size:.78rem; font-weight:700; color:var(--ink-2); text-decoration:none; margin-bottom:1.1rem; }
+.rd-back:hover { color:var(--caramel); }
 
-/* ── REPORT HERO ── */
-.report-hero {
-    background:linear-gradient(135deg,#5A1A1A,#8B2E2E);
-    border-radius:20px; padding:1.75rem 2rem; color:white; margin-bottom:1.5rem;
-    display:flex; align-items:center; justify-content:space-between; gap:1rem;
-}
-.rh-left { display:flex; align-items:center; gap:1rem; }
-.rh-icon { width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
-.rh-id   { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; margin-bottom:0.15rem; }
-.rh-sub  { font-size:0.78rem; opacity:0.65; }
-.rh-status { padding:0.4rem 1rem; border-radius:20px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); font-size:0.8rem; font-weight:700; }
+/* HEADER */
+.rd-head { background:var(--espresso); color:var(--ivory); border-bottom:3px solid var(--gold); padding:1.6rem 1.9rem; display:flex; justify-content:space-between; align-items:center; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.rd-head-l { display:flex; align-items:center; gap:1.1rem; }
+.rd-head-ico { width:52px; height:52px; border:1px solid rgba(184,148,82,.55); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:1.5rem; border-radius:4px; }
+.rd-kicker { font-size:.64rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); }
+.rd-id { font-size:1.9rem; font-weight:800; letter-spacing:-.03em; line-height:1.1; color:#fff; margin:.15rem 0 0; }
+.rd-head-meta { display:flex; gap:2rem; flex-wrap:wrap; align-items:center; }
+.rd-meta-k { font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(247,242,233,.5); margin-bottom:.25rem; }
+.rd-meta-v { font-size:.84rem; font-weight:600; color:var(--ivory); }
 
-/* CARDS */
-.card { background:var(--warm-white); border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:1.5rem; }
-.card:last-child { margin-bottom:0; }
-.card-header { padding:1rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0.6rem; }
-.card-header h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; color:var(--brown-deep); margin:0; }
+/* PILLS */
+.rd-pill { display:inline-flex; align-items:center; gap:.4rem; padding:.28rem .7rem; border-radius:3px; font-size:.72rem; font-weight:700; border:1px solid transparent; white-space:nowrap; }
+.rd-pill-pending { background:var(--warn-bg); color:var(--warn); border-color:var(--warn-bd); }
+.rd-pill-reviewed { background:var(--info-bg); color:var(--info); border-color:var(--info-bd); }
+.rd-pill-resolved { background:var(--ok-bg); color:var(--ok); border-color:var(--ok-bd); }
+.rd-pill-dismissed { background:var(--cream); color:var(--ink-2); border-color:var(--beige); }
+.rd-pill-on_hold { background:var(--info-bg); color:var(--info); border-color:var(--info-bd); }
+.rd-pill-approved { background:var(--ok-bg); color:var(--ok); border-color:var(--ok-bd); }
+.rd-pill-rejected { background:var(--bad-bg); color:var(--bad); border-color:var(--bad-bd); }
 
-/* PARTY ROW */
-.party-row { display:flex; gap:1rem; padding:1.25rem 1.5rem; }
-.party-box {
-    flex:1; padding:1rem 1.25rem; border-radius:14px;
-    border:1.5px solid var(--border); background:var(--cream);
-}
-.party-box.reporter-box { border-color:#F5C5BE; background:#FDF5F3; }
-.pb-label  { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); font-weight:700; margin-bottom:0.65rem; }
-.pb-avatar {
-    width:40px; height:40px; border-radius:50%;
-    background:linear-gradient(135deg,#C07840,#E8A96A);
-    color:white; display:flex; align-items:center; justify-content:center;
-    font-weight:700; font-size:1rem; flex-shrink:0; overflow:hidden; margin-bottom:0.6rem;
-}
-.pb-avatar img { width:100%; height:100%; object-fit:cover; }
-.pb-name { font-weight:700; font-size:0.88rem; color:var(--brown-deep); }
-.pb-email { font-size:0.72rem; color:var(--text-muted); margin-top:0.15rem; }
+.rd-flash { display:flex; align-items:center; gap:.6rem; background:var(--ok-bg); border:1px solid var(--ok-bd); color:var(--ok); padding:.8rem 1.1rem; font-size:.82rem; font-weight:600; margin-bottom:1.5rem; }
 
-/* DETAIL ROWS */
-.detail-row { display:flex; justify-content:space-between; align-items:center; padding:0.85rem 1.5rem; border-bottom:1px solid var(--border); gap:1rem; }
-.detail-row:last-child { border-bottom:none; }
-.d-key { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); font-weight:700; }
-.d-val { font-size:0.85rem; color:var(--text-dark); font-weight:500; text-align:right; }
+/* LAYOUT */
+.rd-layout { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:1.5rem; align-items:start; }
+.rd-col { display:flex; flex-direction:column; gap:1.5rem; min-width:0; }
+.rd-aside { position:sticky; top:1rem; }
 
-/* DESCRIPTION */
-.description-box { padding:1.25rem 1.5rem; font-size:0.86rem; color:var(--text-dark); line-height:1.7; }
+/* SECTIONS */
+.rd-sec { background:#fff; border:1px solid var(--line); }
+.rd-sec-h { display:flex; align-items:center; gap:.65rem; padding:.95rem 1.4rem; border-bottom:1px solid var(--line); }
+.rd-sec-h svg { font-size:1.05rem; color:var(--caramel); }
+.rd-sec-h h2 { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--chocolate); }
+.rd-sec.is-dark > .rd-sec-h { background:var(--espresso); border-bottom-color:var(--espresso); }
+.rd-sec.is-dark > .rd-sec-h svg { color:var(--gold); }
+.rd-sec.is-dark > .rd-sec-h h2 { color:var(--ivory); }
 
-/* SCREENSHOT */
-.screenshot-box { padding:1.25rem 1.5rem; }
-.screenshot-box img { max-width:100%; border-radius:12px; border:1px solid var(--border); }
+/* PARTIES */
+.rd-parties { display:grid; grid-template-columns:1fr 1fr; }
+.rd-party { padding:1.3rem 1.4rem; }
+.rd-party + .rd-party { border-left:1px solid var(--line); }
+.rd-party-lbl { font-size:.62rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin-bottom:.9rem; display:flex; align-items:center; gap:.4rem; }
+.rd-party.is-reporter .rd-party-lbl { color:var(--chocolate); }
+.rd-party.is-reported .rd-party-lbl { color:var(--burgundy); }
+.rd-party-row { display:flex; gap:.9rem; align-items:center; }
+.rd-av { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1rem; overflow:hidden; flex-shrink:0; }
+.rd-av img { width:100%; height:100%; object-fit:cover; }
+.is-reporter .rd-av { background:var(--espresso); }
+.is-reported .rd-av { background:var(--caramel); }
+.rd-p-name { font-weight:800; font-size:.92rem; color:var(--espresso); }
+.rd-p-email { font-size:.76rem; color:var(--ink-2); word-break:break-all; margin-top:.15rem; }
+.rd-p-role { display:inline-block; margin-top:.5rem; padding:.16rem .55rem; border:1px solid var(--beige); background:var(--ivory); border-radius:3px; font-size:.66rem; font-weight:700; color:var(--chocolate); }
 
-/* ADMIN ACTION FORM */
-.admin-form-card { background:var(--warm-white); border:1px solid var(--border); border-radius:20px; overflow:hidden; }
-.admin-form-header { padding:1rem 1.5rem; border-bottom:1px solid var(--border); background:linear-gradient(135deg,#3B1F0F,#7A4A28); }
-.admin-form-header h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; color:white; margin:0; }
-.admin-form-body { padding:1.5rem; }
-.form-label { display:block; font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin-bottom:0.5rem; }
-.form-select {
-    width:100%; padding:0.7rem 0.9rem; border:1.5px solid var(--border);
-    border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.86rem;
-    color:var(--text-dark); background:white; margin-bottom:1.1rem;
-}
-.form-select:focus { outline:none; border-color:var(--caramel); }
-.form-textarea {
-    width:100%; padding:0.75rem 0.9rem; border:1.5px solid var(--border);
-    border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.84rem;
-    color:var(--text-dark); resize:vertical; min-height:100px;
-    box-sizing:border-box; margin-bottom:1.1rem;
-}
-.form-textarea:focus { outline:none; border-color:var(--caramel); }
-.save-btn {
-    width:100%; padding:0.75rem; border:none; border-radius:10px;
-    background:linear-gradient(135deg,#3B1F0F,#7A4A28); color:white;
-    font-size:0.875rem; font-weight:700; cursor:pointer;
-    font-family:'DM Sans',sans-serif; transition:all 0.2s;
-}
-.save-btn:hover { opacity:0.9; }
+/* CASE RECORD */
+.rd-dl { margin:0; }
+.rd-dr { display:grid; grid-template-columns:150px 1fr; gap:1rem; padding:.85rem 1.4rem; border-bottom:1px solid #EFE6D7; align-items:center; }
+.rd-dr:last-child { border-bottom:none; }
+.rd-dr dt { font-size:.66rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--taupe); }
+.rd-dr dd { margin:0; font-size:.86rem; font-weight:600; color:var(--ink); }
+.rd-order-ref { color:var(--caramel); font-weight:800; }
+
+/* EVIDENCE */
+.rd-text { padding:1.3rem 1.4rem; font-size:.9rem; line-height:1.75; color:var(--ink); white-space:pre-line; max-width:78ch; }
+.rd-frame { margin:1.3rem 1.4rem; padding:.7rem; background:var(--ivory); border:1px solid var(--beige); }
+.rd-frame img { display:block; max-width:100%; height:auto; margin:0 auto; border:1px solid var(--line); background:#fff; }
+.rd-note { margin:1.3rem 1.4rem; padding:1rem 1.2rem; background:var(--cream); border-left:3px solid var(--gold); font-size:.86rem; line-height:1.7; color:var(--chocolate); }
+.rd-note-flag { display:flex; align-items:center; gap:.4rem; font-size:.62rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--caramel); padding:0 1.4rem; margin-top:1.1rem; }
+
+/* PAYMENT */
+.rd-sub { padding:1.15rem 1.4rem; border-bottom:1px solid var(--line); }
+.rd-sub:last-child { border-bottom:none; }
+.rd-sub-t { font-size:.64rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; color:var(--taupe); margin-bottom:.8rem; display:flex; justify-content:space-between; align-items:center; gap:.75rem; }
+.rd-fin { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.rd-fin-c { padding:.85rem 1rem; background:var(--ivory); border:1px solid var(--line); }
+.rd-fin-c.is-ok { background:var(--ok-bg); border-color:var(--ok-bd); }
+.rd-fin-c.is-bad { background:var(--bad-bg); border-color:var(--bad-bd); }
+.rd-fin-k { font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--taupe); margin-bottom:.3rem; }
+.rd-fin-v { font-size:1.3rem; font-weight:800; letter-spacing:-.02em; color:var(--espresso); display:flex; align-items:center; gap:.4rem; }
+.is-ok .rd-fin-v { color:var(--ok); } .is-bad .rd-fin-v { color:var(--bad); }
+.rd-payout { display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; padding:.9rem 1rem; border:1px solid var(--line); background:var(--ivory); }
+.rd-payout.is-frozen { background:var(--bad-bg); border-color:var(--bad-bd); }
+.rd-payout-s { display:flex; align-items:center; gap:.45rem; font-size:.84rem; font-weight:800; color:var(--ok); }
+.is-frozen .rd-payout-s { color:var(--bad); }
+.rd-payout-m { font-size:.72rem; color:var(--ink-2); margin-top:.2rem; }
+.rd-field { margin-bottom:.8rem; }
+.rd-label { display:block; font-size:.64rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); margin-bottom:.4rem; }
+.rd-input, .rd-textarea { width:100%; padding:.65rem .8rem; border:1px solid var(--beige); border-radius:4px; background:#fff; font-size:.85rem; color:var(--ink); }
+.rd-textarea { resize:vertical; min-height:72px; line-height:1.55; }
+.rd-input:focus, .rd-textarea:focus { border-color:var(--gold); }
+
+.rd-btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; padding:.68rem 1.1rem; border-radius:4px; font-size:.8rem; font-weight:700; cursor:pointer; border:1px solid transparent; transition:background .15s; }
+.rd-btn.is-block { width:100%; }
+.rd-btn-dark { background:var(--espresso); color:var(--ivory); border-color:var(--espresso); } .rd-btn-dark:hover { background:var(--chocolate); }
+.rd-btn-ok { background:var(--ok); color:#fff; border-color:var(--ok); } .rd-btn-ok:hover { background:#265843; }
+.rd-btn-bad { background:var(--burgundy); color:#fff; border-color:var(--burgundy); } .rd-btn-bad:hover { background:#411d23; }
+.rd-btn-ghost-bad { background:#fff; color:var(--bad); border-color:var(--bad-bd); } .rd-btn-ghost-bad:hover { background:var(--bad-bg); }
+.rd-forms { display:grid; gap:1.1rem; }
+.rd-form-box { border:1px solid var(--line); padding:1rem; background:#fff; }
+.rd-form-box.is-approve { border-top:3px solid var(--ok); }
+.rd-form-box.is-reject { border-top:3px solid var(--burgundy); }
+.rd-form-box h3 { margin:0 0 .8rem; font-size:.78rem; font-weight:800; color:var(--espresso); }
+.rd-processed { padding:1rem 1.1rem; border:1px solid var(--line); }
+.rd-processed.is-approved { background:var(--ok-bg); border-color:var(--ok-bd); }
+.rd-processed.is-rejected { background:var(--bad-bg); border-color:var(--bad-bd); }
+.rd-processed-t { display:flex; align-items:center; gap:.5rem; font-size:.86rem; font-weight:800; }
+.is-approved .rd-processed-t { color:var(--ok); } .is-rejected .rd-processed-t { color:var(--bad); }
+.rd-processed-n { font-size:.78rem; color:var(--ink-2); margin-top:.5rem; line-height:1.55; }
+.rd-processed-d { font-size:.7rem; color:var(--taupe); margin-top:.4rem; }
+.rd-empty { padding:1.1rem 1.4rem; font-size:.8rem; color:var(--ink-2); display:flex; align-items:center; gap:.5rem; }
+
+/* ACTION PANEL */
+.rd-fieldset { border:none; padding:0; margin:0 0 1.2rem; }
+.rd-fieldset legend { padding:0; }
+.rd-opts { display:grid; gap:.5rem; }
+.rd-opt { position:relative; }
+.rd-opt input { position:absolute; opacity:0; inset:0; width:100%; height:100%; cursor:pointer; margin:0; }
+.rd-opt-b { display:flex; align-items:center; gap:.65rem; padding:.7rem .9rem; border:1px solid var(--beige); background:#fff; font-size:.82rem; font-weight:600; color:var(--ink-2); transition:all .12s; }
+.rd-opt-b svg { font-size:1rem; color:var(--taupe); }
+.rd-opt:hover .rd-opt-b { border-color:var(--gold); }
+.rd-opt input:checked + .rd-opt-b { border-color:var(--espresso); background:var(--espresso); color:var(--ivory); }
+.rd-opt input:checked + .rd-opt-b svg { color:var(--gold); }
+.rd-opt input:focus-visible + .rd-opt-b { outline:2px solid var(--gold); outline-offset:2px; }
+.rd-opt-hint { font-weight:400; text-transform:none; letter-spacing:0; color:var(--taupe); }
+.rd-cur { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.1rem; padding-bottom:1rem; border-bottom:1px solid var(--line); }
 
 /* TIMELINE */
-.timeline { padding:0; list-style:none; }
-.timeline li { padding:0.85rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:0.65rem; font-size:0.8rem; }
-.timeline li:last-child { border-bottom:none; }
-.tl-dot { width:8px; height:8px; border-radius:50%; background:var(--caramel); flex-shrink:0; margin-top:0.3rem; }
-.tl-event { font-weight:600; color:var(--text-dark); }
-.tl-time  { font-size:0.7rem; color:var(--text-muted); margin-top:0.1rem; }
+.rd-tl { list-style:none; margin:0; padding:1.2rem 1.4rem; }
+.rd-tl li { position:relative; padding:0 0 1.3rem 1.6rem; }
+.rd-tl li:last-child { padding-bottom:0; }
+.rd-tl li::before { content:''; position:absolute; left:4px; top:1rem; bottom:-.1rem; width:1px; background:var(--beige); }
+.rd-tl li:last-child::before { display:none; }
+.rd-tl-dot { position:absolute; left:0; top:.28rem; width:9px; height:9px; border-radius:50%; background:var(--caramel); box-shadow:0 0 0 3px #fff; }
+.rd-tl-dot.is-info { background:var(--info); } .rd-tl-dot.is-ok { background:var(--ok); } .rd-tl-dot.is-mute { background:var(--taupe); }
+.rd-tl-e { font-size:.82rem; font-weight:700; color:var(--ink); }
+.rd-tl-t { font-size:.72rem; color:var(--taupe); margin-top:.15rem; }
 
-/* STATUS BADGES */
-.status-pill { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.65rem; border-radius:20px; font-size:0.72rem; font-weight:700; }
-.pill-pending   { background:#FEF9E8; color:#9B6A10; border:1px solid #F0D090; }
-.pill-reviewed  { background:#EBF3FE; color:#1A5A8A; border:1px solid #B8D4F0; }
-.pill-resolved  { background:#EBF5EE; color:#166534; border:1px solid #B8DFC6; }
-.pill-dismissed { background:var(--cream); color:var(--text-muted); border:1px solid var(--border); }
-
-.success-flash {
-    background:#EBF5EE; border:1.5px solid #B8DFC6; border-radius:12px;
-    padding:0.85rem 1.1rem; font-size:0.82rem; color:#166534;
-    font-weight:600; margin-bottom:1.5rem; display:flex; align-items:center; gap:0.5rem;
+/* RESPONSIVE */
+@media (max-width:1040px) { .rd-layout { grid-template-columns:1fr; } .rd-aside { position:static; } }
+@media (max-width:640px) {
+    .rd { padding:1rem 1rem 3rem; }
+    .rd-head { padding:1.25rem; } .rd-head-meta { gap:1.25rem; }
+    .rd-parties { grid-template-columns:1fr; } .rd-party + .rd-party { border-left:none; border-top:1px solid var(--line); }
+    .rd-dr { grid-template-columns:1fr; gap:.25rem; }
+    .rd-fin { grid-template-columns:1fr; }
 }
+@media (prefers-reduced-motion:reduce) { .rd * { transition:none !important; } }
 </style>
 @endpush
 
 @section('content')
 
-<a href="{{ route('admin.reports.index') }}" class="back-link">← All Reports</a>
+@php
+    $s = $report->status;
+    $reportedRole = $report->reporter_role === 'baker' ? 'Customer' : 'Baker';
+    $ico = [
+        'pending'   => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.8V10l2.8 1.8" stroke-linecap="round"/></svg>',
+        'reviewed'  => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 4 4" stroke-linecap="round"/></svg>',
+        'resolved'  => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        'dismissed' => '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke-linecap="round"/></svg>',
+    ];
+@endphp
 
+<div class="rd">
 
+<a href="{{ route('admin.reports.index') }}" class="rd-back">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M16 10H5M9.5 5l-5 5 5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Reports
+</a>
 
-{{-- HERO --}}
-<div class="report-hero">
-    <div class="rh-left">
-        <div class="rh-icon">⚠️</div>
+{{-- HEADER --}}
+<header class="rd-head">
+    <div class="rd-head-l">
+        <div class="rd-head-ico">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M10 2 3.5 4.6v5c0 3.8 2.6 6.6 6.5 8.4 3.9-1.8 6.5-4.6 6.5-8.4v-5z"/><path d="M10 7v4M10 13.2v.1" stroke-linecap="round"/></svg>
+        </div>
         <div>
-            <div class="rh-id">Report #{{ $report->id }}</div>
-            <div class="rh-sub">
-                Submitted {{ $report->created_at->format('M d, Y · g:i A') }} ·
-                Order #{{ str_pad($report->baker_order_id,4,'0',STR_PAD_LEFT) }}
-            </div>
+            <div class="rd-kicker">Report</div>
+            <h1 class="rd-id">#{{ str_pad($report->id, 4, '0', STR_PAD_LEFT) }}</h1>
         </div>
     </div>
-    @php $s = $report->status; @endphp
-    <div class="rh-status">
-        @if($s==='pending') ⏳ @elseif($s==='reviewed') 🔍 @elseif($s==='resolved') ✅ @else ✕ @endif
-        {{ $report->status_label }}
+    <div class="rd-head-meta">
+        <div>
+            <div class="rd-meta-k">Submitted</div>
+            <div class="rd-meta-v">{{ $report->created_at->format('M d, Y · g:i A') }}</div>
+        </div>
+        <div>
+            <div class="rd-meta-k">Order</div>
+            <div class="rd-meta-v">#{{ str_pad($report->baker_order_id, 4, '0', STR_PAD_LEFT) }}</div>
+        </div>
+        <div>
+            <div class="rd-meta-k">Current status</div>
+            <span class="rd-pill rd-pill-{{ $s }}">{!! $ico[$s] ?? $ico['dismissed'] !!} {{ $report->status_label }}</span>
+        </div>
     </div>
-</div>
+</header>
 
-<div class="report-layout">
+<div class="rd-layout">
 
-    {{-- LEFT --}}
-    <div>
+    {{-- LEFT: INVESTIGATION --}}
+    <div class="rd-col">
+
         {{-- Parties --}}
-        <div class="card">
-            <div class="card-header"><span>👤</span><h3>Involved Parties</h3></div>
-            <div class="party-row">
-                <div class="party-box reporter-box">
-                    <div class="pb-label">⚠️ Reporter ({{ ucfirst($report->reporter_role) }})</div>
-                    <div class="pb-avatar">
-                        @if($report->reporter->profile_photo)
-                            <img src="{{ asset('storage/'.$report->reporter->profile_photo) }}" alt="">
-                        @else {{ strtoupper(substr($report->reporter->first_name,0,1)) }} @endif
+        <section class="rd-sec" aria-labelledby="rd-h-parties">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7.5" cy="7" r="3"/><path d="M2 16.5c.4-3 2.6-4.5 5.5-4.5s5.1 1.5 5.5 4.5M13 4.2a3 3 0 0 1 0 5.6M15 12.3c1.8.6 2.7 2 3 4.2" stroke-linecap="round"/></svg>
+                <h2 id="rd-h-parties">Involved Parties</h2>
+            </div>
+            <div class="rd-parties">
+                <div class="rd-party is-reporter">
+                    <div class="rd-party-lbl">Reporter</div>
+                    <div class="rd-party-row">
+                        <div class="rd-av">
+                            @if($report->reporter->profile_photo)
+                                <img src="{{ asset('storage/'.$report->reporter->profile_photo) }}" alt="">
+                            @else {{ strtoupper(substr($report->reporter->first_name,0,1)) }} @endif
+                        </div>
+                        <div>
+                            <div class="rd-p-name">{{ $report->reporter->first_name }} {{ $report->reporter->last_name }}</div>
+                            <div class="rd-p-email">{{ $report->reporter->email }}</div>
+                        </div>
                     </div>
-                    <div class="pb-name">{{ $report->reporter->first_name }} {{ $report->reporter->last_name }}</div>
-                    <div class="pb-email">{{ $report->reporter->email }}</div>
+                    <span class="rd-p-role">{{ ucfirst($report->reporter_role) }}</span>
                 </div>
-       <div class="party-box">
-    <div class="pb-label">🎯 Reported ({{ $report->reporter_role === 'baker' ? 'Customer' : 'Baker' }})</div>
-    @if($report->reported)
-        <div class="pb-avatar">
-            @if($report->reported->profile_photo)
-                <img src="{{ asset('storage/'.$report->reported->profile_photo) }}" alt="">
-            @else
-                {{ strtoupper(substr($report->reported->first_name, 0, 1)) }}
-            @endif
-        </div>
-        <div class="pb-name">{{ $report->reported->first_name }} {{ $report->reported->last_name }}</div>
-        <div class="pb-email">{{ $report->reported->email }}</div>
-    @else
-        <div class="pb-avatar">?</div>
-        <div class="pb-name">Unknown User</div>
-        <div class="pb-email">—</div>
-    @endif
-</div>
-            </div>
-        </div>
 
-        {{-- Report details --}}
-        <div class="card">
-            <div class="card-header"><span>📋</span><h3>Report Details</h3></div>
-            <div class="detail-row">
-                <span class="d-key">Category</span>
-                <span class="d-val">{{ $report->category_label }}</span>
+                <div class="rd-party is-reported">
+                    <div class="rd-party-lbl">Reported User</div>
+                    @if($report->reported)
+                        <div class="rd-party-row">
+                            <div class="rd-av">
+                                @if($report->reported->profile_photo)
+                                    <img src="{{ asset('storage/'.$report->reported->profile_photo) }}" alt="">
+                                @else
+                                    {{ strtoupper(substr($report->reported->first_name, 0, 1)) }}
+                                @endif
+                            </div>
+                            <div>
+                                <div class="rd-p-name">{{ $report->reported->first_name }} {{ $report->reported->last_name }}</div>
+                                <div class="rd-p-email">{{ $report->reported->email }}</div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="rd-party-row">
+                            <div class="rd-av">?</div>
+                            <div>
+                                <div class="rd-p-name">Unknown User</div>
+                                <div class="rd-p-email">—</div>
+                            </div>
+                        </div>
+                    @endif
+                    <span class="rd-p-role">{{ $reportedRole }}</span>
+                </div>
             </div>
-            <div class="detail-row">
-                <span class="d-key">Status</span>
-                <span class="d-val">
-                    <span class="status-pill pill-{{ $report->status }}">{{ $report->status_label }}</span>
-                </span>
+        </section>
+
+        {{-- Case record --}}
+        <section class="rd-sec" aria-labelledby="rd-h-details">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 2.5h7l3 3v12H5z"/><path d="M12 2.5v3h3M7.5 9h5M7.5 12h5M7.5 15h3" stroke-linecap="round"/></svg>
+                <h2 id="rd-h-details">Report Details</h2>
             </div>
-            @if($report->bakerOrder)
-            <div class="detail-row">
-                <span class="d-key">Order</span>
-                <span class="d-val" style="color:var(--caramel); font-weight:700;">
-                    #{{ str_pad($report->baker_order_id,4,'0',STR_PAD_LEFT) }}
-                    · ₱{{ number_format($report->bakerOrder->agreed_price,0) }}
-                </span>
-            </div>
-            <div class="detail-row">
-                <span class="d-key">Order Status</span>
-                <span class="d-val">{{ str_replace('_',' ',$report->bakerOrder->status) }}</span>
-            </div>
-            @endif
-            <div class="detail-row">
-                <span class="d-key">Submitted</span>
-                <span class="d-val">{{ $report->created_at->format('M d, Y · g:i A') }}</span>
-            </div>
-            @if($report->reviewed_at)
-            <div class="detail-row">
-                <span class="d-key">Reviewed At</span>
-                <span class="d-val">{{ $report->reviewed_at->format('M d, Y · g:i A') }}</span>
-            </div>
-            @endif
-        </div>
+            <dl class="rd-dl">
+                <div class="rd-dr"><dt>Category</dt><dd>{{ $report->category_label }}</dd></div>
+                <div class="rd-dr"><dt>Status</dt><dd><span class="rd-pill rd-pill-{{ $report->status }}">{!! $ico[$s] ?? $ico['dismissed'] !!} {{ $report->status_label }}</span></dd></div>
+                @if($report->bakerOrder)
+                <div class="rd-dr"><dt>Order</dt>
+                    <dd><span class="rd-order-ref">#{{ str_pad($report->baker_order_id,4,'0',STR_PAD_LEFT) }}</span>
+                        &nbsp;·&nbsp; ₱{{ number_format($report->bakerOrder->agreed_price,0) }}</dd></div>
+                <div class="rd-dr"><dt>Order Status</dt><dd style="text-transform:capitalize;">{{ str_replace('_',' ',$report->bakerOrder->status) }}</dd></div>
+                @endif
+                <div class="rd-dr"><dt>Submitted</dt><dd>{{ $report->created_at->format('M d, Y · g:i A') }}</dd></div>
+                @if($report->reviewed_at)
+                <div class="rd-dr"><dt>Reviewed At</dt><dd>{{ $report->reviewed_at->format('M d, Y · g:i A') }}</dd></div>
+                @endif
+            </dl>
+        </section>
 
         {{-- Description --}}
-        <div class="card">
-            <div class="card-header"><span>📝</span><h3>Description</h3></div>
-            <div class="description-box">{{ $report->description }}</div>
-        </div>
+        <section class="rd-sec" aria-labelledby="rd-h-desc">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3.5 4.5h13M3.5 8.5h13M3.5 12.5h8" stroke-linecap="round"/></svg>
+                <h2 id="rd-h-desc">Report Description</h2>
+            </div>
+            <div class="rd-text">{{ $report->description }}</div>
+        </section>
 
-        {{-- Screenshot --}}
+        {{-- Evidence --}}
         @if($report->screenshot_path)
-        <div class="card">
-            <div class="card-header"><span>🖼️</span><h3>Attached Screenshot</h3></div>
-            <div class="screenshot-box">
+        <section class="rd-sec" aria-labelledby="rd-h-ev">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="4" width="15" height="12" rx="1"/><circle cx="7" cy="8.5" r="1.4"/><path d="m3 15 4.5-4.5 3 3 2.5-2.5 4 4" stroke-linejoin="round"/></svg>
+                <h2 id="rd-h-ev">Attached Evidence</h2>
+            </div>
+            <div class="rd-frame">
                 <img src="{{ asset('storage/'.$report->screenshot_path) }}" alt="Report Screenshot">
             </div>
-        </div>
+        </section>
         @endif
-{{-- Admin note (read-only display if set) --}}
+
+        {{-- Internal admin note --}}
         @if($report->admin_note)
-        <div class="card">
-            <div class="card-header"><span>🔒</span><h3>Admin Note</h3></div>
-            <div class="description-box" style="background:#FEF9E8; font-style:italic; color:#7A4A10;">
-                "{{ $report->admin_note }}"
+        <section class="rd-sec" aria-labelledby="rd-h-note">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9"/></svg>
+                <h2 id="rd-h-note">Internal Admin Note</h2>
             </div>
-        </div>
+            <div class="rd-note">{{ $report->admin_note }}</div>
+        </section>
         @endif
 
         {{-- PAYMENT & REFUND CONTROL PANEL --}}
@@ -247,182 +334,230 @@
             $downpayment = \App\Models\Payment::where('cake_request_id', $bo->cake_request_id)
                 ->where('payment_type', 'downpayment')->where('status', 'paid')->first();
             $downpaymentAmount = $downpayment ? $downpayment->amount : round($bo->agreed_price * 0.5, 2);
+            $rfKey = in_array($report->refund_status, ['pending','on_hold','approved','rejected']) ? $report->refund_status : 'pending';
         @endphp
-        <div class="card" style="border:2px solid #F0D090;position:relative;overflow:hidden;">
-            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c8862a,#e8a94a,#c8862a);"></div>
-            <div class="card-header" style="background:linear-gradient(135deg,#3B1F0F,#7A4A28);">
-                <span style="font-size:1rem;">💰</span>
-                <h3 style="color:white;">Payment Control Center</h3>
+        <section class="rd-sec is-dark" aria-labelledby="rd-h-pay">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2.5" y="5" width="15" height="10.5" rx="1"/><path d="M2.5 8.5h15M5.5 12.5h3" stroke-linecap="round"/></svg>
+                <h2 id="rd-h-pay">Payment Control Center</h2>
             </div>
 
-            {{-- Payment snapshot --}}
-            <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);">
-                <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;margin-bottom:0.75rem;">Order Payment Snapshot</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
-                    <div style="background:var(--cream);border-radius:10px;padding:0.75rem;">
-                        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;margin-bottom:0.2rem;">Agreed Price</div>
-                        <div style="font-size:1.1rem;font-weight:800;color:var(--brown-deep);">₱{{ number_format($bo->agreed_price, 2) }}</div>
+            {{-- Snapshot --}}
+            <div class="rd-sub">
+                <div class="rd-sub-t">Order Payment Snapshot</div>
+                <div class="rd-fin">
+                    <div class="rd-fin-c">
+                        <div class="rd-fin-k">Agreed Price</div>
+                        <div class="rd-fin-v">₱{{ number_format($bo->agreed_price, 2) }}</div>
                     </div>
-                    <div style="background:{{ $downpayment ? '#EFF5EF' : '#FDF0EE' }};border-radius:10px;padding:0.75rem;">
-                        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;margin-bottom:0.2rem;">Downpayment</div>
-                        <div style="font-size:1.1rem;font-weight:800;color:{{ $downpayment ? '#166534' : '#8B2A1E' }};">
-                            {{ $downpayment ? '✓ ₱'.number_format($downpaymentAmount,2) : 'Not Paid' }}
+                    <div class="rd-fin-c {{ $downpayment ? 'is-ok' : 'is-bad' }}">
+                        <div class="rd-fin-k">Downpayment</div>
+                        <div class="rd-fin-v">
+                            @if($downpayment)
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                ₱{{ number_format($downpaymentAmount,2) }}
+                            @else
+                                Not Paid
+                            @endif
                         </div>
                     </div>
                 </div>
-                <div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between;padding:0.65rem 0.85rem;border-radius:10px;background:{{ $bo->payout_frozen ? '#FDF0EE' : '#F5EFE6' }};border:1.5px solid {{ $bo->payout_frozen ? '#F5C5BE' : '#EAE0D0' }};">
+            </div>
+
+            {{-- Payout control --}}
+            <div class="rd-sub">
+                <div class="rd-sub-t">Payout Control</div>
+                <div class="rd-payout {{ $bo->payout_frozen ? 'is-frozen' : '' }}">
                     <div>
-                        <div style="font-size:0.72rem;font-weight:700;color:{{ $bo->payout_frozen ? '#8B2A1E' : '#166534' }};">
-                            {{ $bo->payout_frozen ? '🔒 Baker Payout FROZEN' : '✓ Payout Normal' }}
+                        <div class="rd-payout-s">
+                            @if($bo->payout_frozen)
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9"/></svg>
+                                Baker Payout Frozen
+                            @else
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                Payout Normal
+                            @endif
                         </div>
-                        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:0.1rem;">
-                            Order #{{ str_pad($bo->id, 4, '0', STR_PAD_LEFT) }} · {{ str_replace('_', ' ', $bo->status) }}
-                        </div>
+                        <div class="rd-payout-m" style="text-transform:capitalize;">Order #{{ str_pad($bo->id, 4, '0', STR_PAD_LEFT) }} · {{ str_replace('_', ' ', $bo->status) }}</div>
                     </div>
                     <form method="POST" action="{{ route('admin.reports.hold-payment', $report->id) }}">
                         @csrf
                         <input type="hidden" name="hold" value="{{ $bo->payout_frozen ? '0' : '1' }}">
-                        <button type="submit" style="padding:0.45rem 0.85rem;border-radius:8px;border:none;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:inherit;background:{{ $bo->payout_frozen ? 'linear-gradient(135deg,#166534,#22a85a)' : 'linear-gradient(135deg,#8B2A1E,#C44030)' }};color:white;">
-                            {{ $bo->payout_frozen ? '🔓 Release Hold' : '🔒 Freeze Payout' }}
+                        <button type="submit" class="rd-btn {{ $bo->payout_frozen ? 'rd-btn-ok' : 'rd-btn-bad' }}">
+                            @if($bo->payout_frozen)
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1"/><path d="M7 9V6.5a3 3 0 0 1 5.6-1.5" stroke-linecap="round"/></svg>
+                                Release Hold
+                            @else
+                                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="9" width="12" height="8" rx="1"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9"/></svg>
+                                Freeze Payout
+                            @endif
                         </button>
                     </form>
                 </div>
             </div>
 
-            {{-- Refund request section --}}
+            {{-- Refund --}}
             @if($report->refund_requested)
-            <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
-                    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:700;">Refund Request</div>
+            <div class="rd-sub">
+                <div class="rd-sub-t">
+                    <span>Refund Request</span>
                     @if($report->refund_status)
-                    @php
-                        $rfColors = ['pending'=>['bg'=>'#FEF9E8','c'=>'#9B6A10','b'=>'#F0D090'],'on_hold'=>['bg'=>'#EBF3FE','c'=>'#1A5A8A','b'=>'#B8D4F0'],'approved'=>['bg'=>'#EFF5EF','c'=>'#166534','b'=>'#B8DFC6'],'rejected'=>['bg'=>'#FDF0EE','c'=>'#8B2A1E','b'=>'#F5C5BE']];
-                        $rc = $rfColors[$report->refund_status] ?? $rfColors['pending'];
-                    @endphp
-                    <span style="padding:0.2rem 0.65rem;border-radius:20px;font-size:0.7rem;font-weight:700;background:{{ $rc['bg'] }};color:{{ $rc['c'] }};border:1px solid {{ $rc['b'] }};">
-                        {{ $report->refund_status_label }}
-                    </span>
+                    <span class="rd-pill rd-pill-{{ $rfKey }}">{{ $report->refund_status_label }}</span>
                     @endif
                 </div>
 
                 @if(!in_array($report->refund_status, ['approved','rejected']))
-                {{-- Approve refund form --}}
-                <form method="POST" action="{{ route('admin.reports.refund.approve', $report->id) }}" style="margin-bottom:0.75rem;">
-                    @csrf
-                    <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;">
-                        <div style="flex:1;">
-                            <label style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:700;display:block;margin-bottom:0.3rem;">Refund Amount (₱)</label>
-                            <input type="number" name="refund_amount" step="0.01" min="1"
-                                   value="{{ $downpaymentAmount }}"
-                                   max="{{ $downpaymentAmount }}"
-                                   style="width:100%;padding:0.55rem 0.75rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.85rem;font-family:inherit;background:white;"
+                <div class="rd-forms">
+                    {{-- Approve --}}
+                    <form method="POST" action="{{ route('admin.reports.refund.approve', $report->id) }}" class="rd-form-box is-approve">
+                        @csrf
+                        <h3>Approve refund</h3>
+                        <div class="rd-field">
+                            <label class="rd-label" for="rd-refund-amount">Refund Amount (₱)</label>
+                            <input id="rd-refund-amount" class="rd-input" type="number" name="refund_amount" step="0.01" min="1"
+                                   value="{{ $downpaymentAmount }}" max="{{ $downpaymentAmount }}"
                                    placeholder="e.g. {{ $downpaymentAmount }}">
                         </div>
-                    </div>
-                    <textarea name="refund_note" placeholder="Note to customer (reason for approval)…"
-                              style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.82rem;font-family:inherit;resize:none;min-height:60px;margin-bottom:0.5rem;box-sizing:border-box;"></textarea>
-                    <button type="submit"
-                            onclick="return confirm('Approve this refund and credit ₱{{ $downpaymentAmount }} to the customer\'s wallet?')"
-                            style="width:100%;padding:0.65rem;border:none;border-radius:8px;background:linear-gradient(135deg,#166534,#22a85a);color:white;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;">
-                        ✓ Approve Refund
-                    </button>
-                </form>
+                        <div class="rd-field">
+                            <label class="rd-label" for="rd-approve-note">Refund Note</label>
+                            <textarea id="rd-approve-note" class="rd-textarea" name="refund_note" placeholder="Note to customer (reason for approval)…"></textarea>
+                        </div>
+                        <button type="submit" class="rd-btn rd-btn-ok is-block"
+                                onclick="return confirm('Approve this refund and credit ₱{{ $downpaymentAmount }} to the customer\'s wallet?')">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Approve Refund
+                        </button>
+                    </form>
 
-                {{-- Reject refund form --}}
-                <form method="POST" action="{{ route('admin.reports.refund.reject', $report->id) }}">
-                    @csrf
-                    <textarea name="refund_note" placeholder="Reason for rejection (required)…" required
-                              style="width:100%;padding:0.6rem 0.8rem;border:1.5px solid var(--border);border-radius:8px;font-size:0.82rem;font-family:inherit;resize:none;min-height:55px;margin-bottom:0.5rem;box-sizing:border-box;"></textarea>
-                    <button type="submit"
-                            onclick="return confirm('Reject this refund request?')"
-                            style="width:100%;padding:0.6rem;border:1.5px solid #F5C5BE;border-radius:8px;background:#FDF0EE;color:#8B2A1E;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;">
-                        ✕ Reject Refund
-                    </button>
-                </form>
-
+                    {{-- Reject --}}
+                    <form method="POST" action="{{ route('admin.reports.refund.reject', $report->id) }}" class="rd-form-box is-reject">
+                        @csrf
+                        <h3>Reject refund</h3>
+                        <div class="rd-field">
+                            <label class="rd-label" for="rd-reject-note">Reason for Rejection</label>
+                            <textarea id="rd-reject-note" class="rd-textarea" name="refund_note" placeholder="Reason for rejection (required)…" required></textarea>
+                        </div>
+                        <button type="submit" class="rd-btn rd-btn-ghost-bad is-block"
+                                onclick="return confirm('Reject this refund request?')">
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke-linecap="round"/></svg>
+                            Reject Refund
+                        </button>
+                    </form>
+                </div>
                 @else
-                {{-- Already processed --}}
-                <div style="background:{{ $report->refund_status==='approved' ? '#EFF5EF' : '#FDF0EE' }};border:1.5px solid {{ $report->refund_status==='approved' ? '#B8DFC6' : '#F5C5BE' }};border-radius:10px;padding:0.85rem 1rem;">
-                    <div style="font-size:0.82rem;font-weight:700;color:{{ $report->refund_status==='approved' ? '#166534' : '#8B2A1E' }};margin-bottom:0.3rem;">
-                        {{ $report->refund_status==='approved' ? '✓ Refund of ₱'.number_format($report->refund_amount,2).' credited to customer' : '✕ Refund rejected' }}
+                <div class="rd-processed is-{{ $report->refund_status }}">
+                    <div class="rd-processed-t">
+                        @if($report->refund_status==='approved')
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4.5 10.5 3.5 3.5 7.5-8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Refund of ₱{{ number_format($report->refund_amount,2) }} credited to customer
+                        @else
+                            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" stroke-linecap="round"/></svg>
+                            Refund rejected
+                        @endif
                     </div>
                     @if($report->refund_note)
-                    <div style="font-size:0.75rem;color:var(--text-muted);font-style:italic;">"{{ $report->refund_note }}"</div>
+                    <div class="rd-processed-n">{{ $report->refund_note }}</div>
                     @endif
                     @if($report->refund_processed_at)
-                    <div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.3rem;">Processed {{ $report->refund_processed_at->format('M d, Y · g:i A') }}</div>
+                    <div class="rd-processed-d">Processed {{ $report->refund_processed_at->format('M d, Y · g:i A') }}</div>
                     @endif
                 </div>
                 @endif
             </div>
             @else
-            <div style="padding:0.85rem 1.5rem;font-size:0.78rem;color:var(--text-muted);font-style:italic;">
+            <div class="rd-empty">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.5M10 6.6v.1" stroke-linecap="round"/></svg>
                 No refund request submitted by customer.
             </div>
             @endif
-        </div>
+        </section>
         @endif
     </div>
 
-    {{-- RIGHT SIDEBAR --}}
-    <div>
-        {{-- Admin action form --}}
-        <div class="admin-form-card" style="margin-bottom:1.5rem;">
-            <div class="admin-form-header"><h3>⚙️ Update Report</h3></div>
-            <div class="admin-form-body">
+    {{-- RIGHT: DECISION PANEL --}}
+    <aside class="rd-col rd-aside" aria-label="Moderation controls">
+
+        <section class="rd-sec is-dark" aria-labelledby="rd-h-act">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 5.5h8M15 5.5h2M3 10h2M9 10h8M3 14.5h10M17 14.5h0" stroke-linecap="round"/><circle cx="13" cy="5.5" r="1.8"/><circle cx="7" cy="10" r="1.8"/><circle cx="15" cy="14.5" r="1.8"/></svg>
+                <h2 id="rd-h-act">Moderation Action</h2>
+            </div>
+            <div style="padding:1.3rem 1.4rem;">
+                <div class="rd-cur">
+                    <span class="rd-label" style="margin:0;">Current Status</span>
+                    <span class="rd-pill rd-pill-{{ $s }}">{!! $ico[$s] ?? $ico['dismissed'] !!} {{ $report->status_label }}</span>
+                </div>
+
                 <form method="POST" action="{{ route('admin.reports.update', $report->id) }}">
                     @csrf @method('PATCH')
 
-                    <label class="form-label">Status</label>
-                    <select name="status" class="form-select">
-                        <option value="pending"   {{ $report->status==='pending'   ? 'selected':'' }}>⏳ Pending Review</option>
-                        <option value="reviewed"  {{ $report->status==='reviewed'  ? 'selected':'' }}>🔍 Under Review</option>
-                        <option value="resolved"  {{ $report->status==='resolved'  ? 'selected':'' }}>✅ Resolved</option>
-                        <option value="dismissed" {{ $report->status==='dismissed' ? 'selected':'' }}>✕ Dismissed</option>
-                    </select>
+                    <fieldset class="rd-fieldset">
+                        <legend class="rd-label">Status</legend>
+                        <div class="rd-opts">
+                            <label class="rd-opt">
+                                <input type="radio" name="status" value="pending" {{ $report->status==='pending' ? 'checked':'' }}>
+                                <span class="rd-opt-b">{!! $ico['pending'] !!} Pending Review</span>
+                            </label>
+                            <label class="rd-opt">
+                                <input type="radio" name="status" value="reviewed" {{ $report->status==='reviewed' ? 'checked':'' }}>
+                                <span class="rd-opt-b">{!! $ico['reviewed'] !!} Under Review</span>
+                            </label>
+                            <label class="rd-opt">
+                                <input type="radio" name="status" value="resolved" {{ $report->status==='resolved' ? 'checked':'' }}>
+                                <span class="rd-opt-b">{!! $ico['resolved'] !!} Resolved</span>
+                            </label>
+                            <label class="rd-opt">
+                                <input type="radio" name="status" value="dismissed" {{ $report->status==='dismissed' ? 'checked':'' }}>
+                                <span class="rd-opt-b">{!! $ico['dismissed'] !!} Dismissed</span>
+                            </label>
+                        </div>
+                    </fieldset>
 
-                    <label class="form-label">Admin Note <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
-                    <textarea name="admin_note" class="form-textarea"
-                        placeholder="Add an internal note about your decision…">{{ old('admin_note', $report->admin_note) }}</textarea>
+                    <div class="rd-field">
+                        <label class="rd-label" for="rd-admin-note">Admin Note <span class="rd-opt-hint">(optional)</span></label>
+                        <textarea id="rd-admin-note" name="admin_note" class="rd-textarea" style="min-height:110px;"
+                            placeholder="Add an internal note about your decision…">{{ old('admin_note', $report->admin_note) }}</textarea>
+                    </div>
 
-                    <button type="submit" class="save-btn">💾 Save Update</button>
+                    <button type="submit" class="rd-btn rd-btn-dark is-block">
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 3.5h9l3 3v10H4z" stroke-linejoin="round"/><path d="M7 3.5v4h5v-4M7 16.5v-5h6v5"/></svg>
+                        Save Update
+                    </button>
                 </form>
             </div>
-        </div>
+        </section>
 
         {{-- Timeline --}}
-        <div class="card">
-            <div class="card-header"><span>🕐</span><h3>Timeline</h3></div>
-            <ul class="timeline">
+        <section class="rd-sec" aria-labelledby="rd-h-tl">
+            <div class="rd-sec-h">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.8V10l2.8 1.8" stroke-linecap="round"/></svg>
+                <h2 id="rd-h-tl">Timeline</h2>
+            </div>
+            <ol class="rd-tl">
                 <li>
-                    <div class="tl-dot"></div>
-                    <div>
-                        <div class="tl-event">Report submitted</div>
-                        <div class="tl-time">{{ $report->created_at->format('M d, Y · g:i A') }}</div>
-                    </div>
+                    <span class="rd-tl-dot"></span>
+                    <div class="rd-tl-e">Report submitted</div>
+                    <div class="rd-tl-t">{{ $report->created_at->format('M d, Y · g:i A') }}</div>
                 </li>
                 @if($report->reviewed_at)
                 <li>
-                    <div class="tl-dot" style="background:#1A5A8A;"></div>
-                    <div>
-                        <div class="tl-event">Admin reviewed</div>
-                        <div class="tl-time">{{ $report->reviewed_at->format('M d, Y · g:i A') }}</div>
-                    </div>
+                    <span class="rd-tl-dot is-info"></span>
+                    <div class="rd-tl-e">Admin reviewed</div>
+                    <div class="rd-tl-t">{{ $report->reviewed_at->format('M d, Y · g:i A') }}</div>
                 </li>
                 @endif
                 @if(in_array($report->status, ['resolved','dismissed']))
                 <li>
-                    <div class="tl-dot" style="background:{{ $report->status==='resolved' ? '#166534' : 'var(--text-muted)' }};"></div>
-                    <div>
-                        <div class="tl-event">{{ ucfirst($report->status) }}</div>
-                        <div class="tl-time">{{ $report->updated_at->format('M d, Y · g:i A') }}</div>
-                    </div>
+                    <span class="rd-tl-dot {{ $report->status==='resolved' ? 'is-ok' : 'is-mute' }}"></span>
+                    <div class="rd-tl-e">{{ ucfirst($report->status) }}</div>
+                    <div class="rd-tl-t">{{ $report->updated_at->format('M d, Y · g:i A') }}</div>
                 </li>
                 @endif
-            </ul>
-        </div>
-    </div>
+            </ol>
+        </section>
+    </aside>
 
+</div>
 </div>
 
 @endsection

@@ -2,287 +2,277 @@
 @section('title', 'Request #' . str_pad($request->id, 4, '0', STR_PAD_LEFT))
 
 @push('styles')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     :root {
-        --brown-deep:   #3B1F0F;
-        --brown-mid:    #7A4A28;
-        --caramel:      #C8893A;
-        --caramel-light:#E8A94A;
-        --warm-white:   #FFFDF9;
-        --cream:        #F5EFE6;
-        --border:       #EAE0D0;
-        --text-dark:    #2C1A0E;
-        --text-mid:     #6B4A2A;
-        --text-muted:   #9A7A5A;
-        --shadow-lg:    0 8px 32px rgba(59,31,15,0.12);
+        --espresso:       #24150F;
+        --dark-chocolate: #3A241A;
+        --warm-ivory:     #F7F2E9;
+        --cream:          #EFE6D7;
+        --caramel:        #A96F42;
+        --champagne-gold: #B89452;
+        --deep-burgundy:  #54252C;
+        --taupe:          #9A897A;
+        --soft-beige:     #D8C8B7;
+        --olive:          #4F6B4A;
+
+        --text-dark:  #24150F;
+        --text-mid:   #6F5848;
+        --text-muted: #9A897A;
+
+        --ease: cubic-bezier(.22,.8,.32,1);
+        --shadow-card: 0 1px 2px rgba(36,21,15,.06), 0 10px 30px -14px rgba(36,21,15,.2);
+        --shadow-lift: 0 30px 70px -20px rgba(36,21,15,.45);
     }
 
-    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .rd-page, .rd-page * { font-family:'Plus Jakarta Sans', sans-serif; }
+    .rd-page .icon { display:inline-block; vertical-align:-3px; flex-shrink:0; }
 
-    .back-link {
-        display: inline-flex; align-items: center; gap: 0.4rem;
-        font-size: 0.8rem; color: var(--text-muted); text-decoration: none;
-        margin-bottom: 1.5rem; font-weight: 500; transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--caramel); }
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes rdFadeDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:none; } }
+    @keyframes rdFadeUp   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    @keyframes rdRule     { from { transform:scaleX(0); } to { transform:scaleX(1); } }
 
-    /* ── HERO BANNER ── */
-    .request-hero {
-        background: linear-gradient(135deg, #2C1A0E 0%, #5C3D2E 60%, #7A4A28 100%);
-        border-radius: 20px;
-        padding: 2rem 2.5rem;
-        margin-bottom: 1.75rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1.5rem;
-        position: relative;
-        overflow: hidden;
-        color: white;
-    }
-    .request-hero::before {
-        content: '';
-        position: absolute; right: -40px; top: -40px;
-        width: 200px; height: 200px; border-radius: 50%;
-        background: rgba(200,137,58,0.12);
-    }
-    .request-hero::after {
-        content: '';
-        position: absolute; right: 100px; bottom: -60px;
-        width: 140px; height: 140px; border-radius: 50%;
-        background: rgba(200,137,58,0.07);
-    }
-    .hero-left { position: relative; z-index: 1; }
-    .hero-req-id {
-        font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
-        color: rgba(255,255,255,0.45); margin-bottom: 0.35rem;
-    }
-    .hero-cake-name {
-        font-size: 1.6rem; font-weight: 800; color: white;
-        line-height: 1.15; margin-bottom: 0.5rem;
-        letter-spacing: -0.01em;
-    }
-    .hero-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-    .hero-tag {
-        display: inline-flex; align-items: center; gap: 0.3rem;
-        padding: 0.25rem 0.75rem; border-radius: 20px;
-        background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
-        font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.85);
-        line-height: 1;
-    }
-    .hero-right {
-        text-align: right; position: relative; z-index: 1; flex-shrink: 0;
-    }
-    .hero-budget-label {
-        font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
-        color: rgba(255,255,255,0.4); margin-bottom: 0.2rem;
-    }
-    .hero-budget {
-        font-size: 1.5rem; font-weight: 800; color: var(--caramel-light);
-        line-height: 1;
-    }
-    .hero-deadline {
-        font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-top: 0.4rem;
-    }
-    .urgency-badge {
-        display: inline-flex; align-items: center; gap: 0.3rem;
-        padding: 0.25rem 0.75rem; border-radius: 20px;
-        font-size: 0.72rem; font-weight: 700; margin-top: 0;
-    }
-    .urgency-badge.high   { background: rgba(180,60,60,0.25); color: #FFAAAA; border: 1px solid rgba(180,60,60,0.4); line-height:1; }
-    .urgency-badge.normal { background: rgba(200,137,58,0.2); color: #E8C07A; border: 1px solid rgba(200,137,58,0.3); line-height:1; }
-
-    /* ── LAYOUT ── */
-    .detail-grid { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; }
-
-    /* ── SECTION CARDS ── */
-    .section-card {
-        background: var(--warm-white);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        overflow: hidden;
-        margin-bottom: 1.25rem;
-    }
-    .section-card:last-child { margin-bottom: 0; }
-
-    .section-header {
-        padding: 0.9rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; justify-content: space-between;
-        background: var(--cream);
-    }
-    .section-title {
-        font-size: 0.78rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.1em;
-        color: var(--text-mid);
-        display: flex; align-items: center; gap: 0.4rem;
-    }
-    .section-badge {
-        font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.55rem;
-        background: var(--caramel); color: white; border-radius: 20px;
+    @media (prefers-reduced-motion: reduce) {
+        .rd-page *, .rd-page *::before, .rd-page *::after { animation:none !important; transition:none !important; }
     }
 
-    /* ── SPEC GRID ── */
-    .spec-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0;
-    }
-    .spec-item {
-        padding: 0.9rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-        border-right: 1px solid var(--border);
-    }
-    .spec-item.no-right  { border-right: none; }
-    .spec-item.no-bottom { border-bottom: none; }
-    .spec-item.full {
-        grid-column: 1 / -1;
-        border-right: none;
-        border-bottom: none;
-    }
-    .spec-label {
-        font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em;
-        color: var(--text-muted); font-weight: 700; margin-bottom: 0.3rem;
-    }
-    .spec-value {
-        font-size: 0.875rem; font-weight: 600; color: var(--text-dark);
-        line-height: 1.4;
-    }
-    .spec-value.accent { color: var(--caramel); }
+    .rd-anim-back    { animation:rdFadeDown .5s var(--ease) backwards; }
+    .rd-anim-hero    { animation:rdFadeUp .7s var(--ease) .05s backwards; }
+    .rd-anim-sidebar { animation:rdFadeUp .6s var(--ease) .15s backwards; }
 
-    .addon-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.25rem; }
-    .addon-tag {
-        padding: 0.2rem 0.6rem; background: var(--cream);
-        border: 1px solid var(--border); border-radius: 6px;
-        font-size: 0.7rem; color: var(--text-mid); font-weight: 600;
-    }
+    .back-link { display:inline-flex; align-items:center; gap:.5rem; margin-bottom:1.75rem; font-size:.66rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+        color:var(--text-muted); text-decoration:none; transition:color .3s var(--ease), transform .3s var(--ease); }
+    .back-link:hover { color:var(--espresso); transform:translateX(-3px); }
 
-    /* ── REFERENCE IMAGE ── */
-    .ref-image-full {
-        width: 100%;
-        display: block;
-        object-fit: contain;
-        max-height: 480px;
-        background: #F0EBE3;
-    }
-    .preview-image-full {
-        width: 100%;
-        display: block;
-        object-fit: cover;
-        max-height: 360px;
-        background: #F0EBE3;
-    }
+    /* ═══ HERO BANNER (container retained, luxury styling) ═══ */
+    .request-hero { position:relative; display:flex; align-items:center; justify-content:space-between; gap:2rem; flex-wrap:wrap; margin-bottom:2rem; padding:clamp(1.75rem,4vw,2.75rem) clamp(1.5rem,4vw,3rem); overflow:hidden; color:var(--warm-ivory);
+        background:radial-gradient(60% 130% at 92% 0%, rgba(184,148,82,.24), transparent 60%), radial-gradient(40% 90% at 0% 100%, rgba(84,37,44,.55), transparent 70%), linear-gradient(135deg,var(--espresso),var(--dark-chocolate));
+        border-radius:3px; box-shadow:var(--shadow-lift); }
+    .request-hero::before { content:''; position:absolute; inset:10px; border:1px solid rgba(184,148,82,.3); pointer-events:none; }
+    .request-hero::after { content:''; position:absolute; right:-80px; top:-80px; width:280px; height:280px; border-radius:50%; border:1px solid rgba(184,148,82,.22); box-shadow:0 0 0 34px rgba(184,148,82,.05), 0 0 0 68px rgba(184,148,82,.03); pointer-events:none; }
+    .hero-left { position:relative; z-index:1; min-width:0; flex:1 1 380px; }
+    .hero-req-id { margin-bottom:.8rem; font-size:.66rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--champagne-gold); }
+    .hero-cake-name { margin-bottom:1rem; font-size:clamp(1.9rem,4.6vw,3.1rem); font-weight:800; line-height:1.06; letter-spacing:-.035em; color:var(--warm-ivory); }
+    .hero-cake-name::after { content:''; display:block; width:64px; height:1px; margin-top:1rem; background:var(--champagne-gold); transform-origin:left; animation:rdRule 1s var(--ease) .35s backwards; }
+    .hero-meta { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+    .hero-tag { display:inline-flex; align-items:center; gap:.3rem; padding:.42rem .75rem; border:1px solid rgba(247,242,233,.22); border-radius:2px; background:rgba(247,242,233,.07);
+        font-size:.66rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(247,242,233,.88); line-height:1; }
+    .hero-right { position:relative; z-index:1; flex-shrink:0; text-align:right; padding-left:2rem; border-left:1px solid rgba(184,148,82,.35); }
+    .hero-budget-label { margin-bottom:.4rem; font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:rgba(247,242,233,.5); }
+    .hero-budget { font-size:clamp(1.6rem,3vw,2.2rem); font-weight:800; line-height:1; letter-spacing:-.03em; color:var(--champagne-gold); }
+    .hero-deadline { margin-top:.65rem; font-size:.8rem; font-weight:600; color:rgba(247,242,233,.75); }
+    .hero-bids { margin-top:.25rem; font-size:.72rem; color:rgba(247,242,233,.5); }
 
-    /* ── MAP ── */
-    .map-placeholder {
-        height: 200px; background: linear-gradient(135deg, #F5EFE6, #EDD0A8);
-        display: flex; align-items: center; justify-content: center;
-        flex-direction: column; gap: 0.5rem;
-        font-size: 0.82rem; color: var(--text-muted);
-    }
+    .urgency-badge { display:inline-flex; align-items:center; gap:.4rem; padding:.42rem .75rem; border-radius:2px; font-size:.66rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; line-height:1; }
+    .urgency-badge.high   { background:var(--deep-burgundy); color:var(--warm-ivory); border:1px solid rgba(184,148,82,.55); }
+    .urgency-badge.normal { background:transparent; color:var(--champagne-gold); border:1px solid rgba(184,148,82,.6); }
 
-    /* ── BIDS LIST ── */
-    .bid-row {
-        padding: 0.85rem 1.5rem;
-        border-bottom: 1px solid var(--border);
-        display: flex; justify-content: space-between; align-items: center;
-        transition: background 0.15s;
-    }
-    .bid-row:last-child { border-bottom: none; }
-    .bid-row:hover { background: #FBF5EE; }
-    .bid-row.mine { background: #FBF4EC; border-left: 3px solid var(--caramel); }
+    /* ═══ LAYOUT ═══ */
+    .detail-grid { display:grid; grid-template-columns:1fr 360px; gap:2rem; align-items:start; }
+    .sidebar-sticky { position:sticky; top:5rem; }
 
-    /* ── SIDEBAR ── */
-    .budget-display {
-        padding: 1.25rem 1.5rem;
-        background: linear-gradient(135deg, #FBF0E0, #F5E4C8);
-        border-bottom: 1px solid var(--border);
-        text-align: center;
-    }
-    .budget-display-label {
-        font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em;
-        color: var(--text-muted); font-weight: 700; margin-bottom: 0.3rem;
-    }
-    .budget-display-value {
-        font-size: 1.4rem; font-weight: 800; color: var(--brown-deep);
-    }
+    /* ═══ SECTION CARDS ═══ */
+    .section-card { margin-bottom:1.5rem; overflow:hidden; background:var(--warm-ivory); border:1px solid var(--soft-beige); border-radius:3px; box-shadow:var(--shadow-card); animation:rdFadeUp .7s var(--ease) backwards; }
+    .section-card:last-child { margin-bottom:0; }
+    .section-card:nth-of-type(1) { animation-delay:.08s; }
+    .section-card:nth-of-type(2) { animation-delay:.16s; }
+    .section-card:nth-of-type(3) { animation-delay:.24s; }
+    .section-card:nth-of-type(4) { animation-delay:.32s; }
+    .section-card:nth-of-type(n+5) { animation-delay:.4s; }
 
-    /* ── BID FORM ── */
-    .bid-form-wrap { padding: 1.25rem; }
-    .form-group { margin-bottom: 1.1rem; }
-    .form-label {
-        display: block; font-size: 0.72rem; font-weight: 700;
-        color: var(--text-mid); margin-bottom: 0.35rem;
-        text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .form-input {
-        width: 100%; padding: 0.65rem 1rem;
-        border: 1.5px solid var(--border); border-radius: 10px;
-        font-size: 0.875rem; font-family: inherit;
-        background: var(--cream); outline: none;
-        transition: border-color 0.2s, background 0.2s;
-        box-sizing: border-box; color: var(--text-dark);
-    }
-    .form-input:focus { border-color: var(--caramel); background: white; }
-    .form-textarea { resize: vertical; min-height: 90px; }
-    .form-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.3rem; }
+    .section-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.95rem 1.5rem; border-bottom:1px solid var(--soft-beige); background:var(--cream); }
+    .section-title { display:flex; align-items:center; gap:.55rem; font-size:.66rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--text-dark); }
+    .section-title .icon { color:var(--champagne-gold); }
+    .section-badge { padding:.2rem .6rem; border-radius:2px; background:var(--espresso); color:var(--warm-ivory); font-size:.62rem; font-weight:700; letter-spacing:.08em; box-shadow:inset 0 -2px 0 var(--champagne-gold); }
+    .section-foot { padding:.7rem 1rem; text-align:center; font-size:.68rem; letter-spacing:.04em; color:var(--text-muted); border-top:1px solid var(--soft-beige); }
 
-    .btn-submit {
-        width: 100%; padding: 0.85rem;
-        background: linear-gradient(135deg, var(--brown-mid), var(--caramel));
-        color: white; border: none; border-radius: 12px;
-        font-size: 0.875rem; font-weight: 700; cursor: pointer;
-        font-family: inherit; transition: all 0.2s;
-        box-shadow: 0 4px 14px rgba(200,137,58,0.35);
-        display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-    }
-    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,137,58,0.45); }
+    /* ═══ SPECS ═══ */
+    .spec-grid { display:grid; grid-template-columns:1fr 1fr; }
+    .spec-item { padding:1rem 1.5rem; border-bottom:1px solid var(--soft-beige); border-right:1px solid var(--soft-beige); }
+    .spec-item.no-right  { border-right:none; }
+    .spec-item.no-bottom { border-bottom:none; }
+    .spec-item.full { grid-column:1 / -1; border-right:none; border-bottom:none; }
+    .spec-label { margin-bottom:.3rem; font-size:.6rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted); }
+    .spec-value { font-size:.92rem; font-weight:600; line-height:1.4; color:var(--text-dark); }
+    .spec-value.accent { color:var(--caramel); }
+    .spec-time { display:flex; align-items:center; gap:.3rem; margin-top:.2rem; font-size:.72rem; color:var(--caramel); }
 
-    .btn-danger {
-        width: 100%; padding: 0.75rem;
-        background: #FDF0EE; color: #8B2A1E;
-        border: 1.5px solid #F5C5BE; border-radius: 10px;
-        font-size: 0.82rem; font-weight: 700; cursor: pointer;
-        font-family: inherit; transition: background 0.2s;
-        display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-    }
-    .btn-danger:hover { background: #F5C5BE; }
+    .addon-tags { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.3rem; }
+    .addon-tag { padding:.22rem .6rem; border:1px solid var(--soft-beige); border-radius:2px; background:var(--cream); font-size:.7rem; font-weight:600; color:var(--text-mid); }
 
-    /* ── MY BID DISPLAY ── */
-    .my-bid-amount {
-        font-size: 1.75rem; font-weight: 800; color: var(--brown-deep);
-        line-height: 1;
-    }
-    .bid-status-pill {
-        display: inline-flex; align-items: center;
-        padding: 0.25rem 0.75rem; border-radius: 20px;
-        font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 0.06em;
-    }
-    .bid-status-pill.pending  { background: #FEF6E4; color: #9B6A10; border: 1px solid #EDD090; }
-    .bid-status-pill.accepted { background: #FBF0E6; color: #7A3A10; border: 1px solid #E5C0A0; }
-    .bid-status-pill.rejected { background: #F8EDEA; color: #8B2A1E; border: 1px solid #DDB5A8; }
+    .spec-group { padding:1rem 1.5rem .5rem; border-bottom:1px solid var(--soft-beige); }
+    .spec-group:last-child { border-bottom:none; }
+    .spec-group-title { margin-bottom:.4rem; font-size:.6rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--champagne-gold); }
+    .spec-row { display:flex; justify-content:space-between; gap:1.25rem; padding:.6rem 0; border-top:1px solid rgba(216,200,183,.55); font-size:.86rem; }
+    .spec-row:first-of-type { border-top:none; }
+    .spec-row-label { flex-shrink:0; font-weight:500; color:var(--text-muted); }
+    .spec-row-value { font-weight:700; text-align:right; line-height:1.45; color:var(--text-dark); }
+    .spec-row-value.accent { color:var(--caramel); }
 
-    /* ── STICKY SIDEBAR ── */
-    .sidebar-sticky { position: sticky; top: 5rem; }
+    /* ═══ NOTES ═══ */
+    .notes-box { margin:0; padding:1.1rem 1.5rem 1.1rem 1.4rem; border-left:2px solid var(--champagne-gold); font-size:.86rem; font-style:italic; line-height:1.65; color:var(--text-mid); }
+    .notes-box + .notes-box { border-top:1px solid var(--soft-beige); }
+    .notes-box.plain { font-style:normal; }
+    .notes-label { margin-bottom:.35rem; font-size:.6rem; font-weight:700; font-style:normal; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted); }
 
-    /* ── NOTES BOX ── */
-    .notes-box {
-        margin: 0; padding: 1rem 1.5rem;
-        font-size: 0.82rem; color: var(--text-mid);
-        line-height: 1.65; font-style: italic;
-        border-left: 3px solid var(--caramel);
-        background: #FBF6F0;
+    /* ═══ IMAGES ═══ */
+    .img-stage { background:radial-gradient(70% 60% at 50% 45%, #FFFBF3 0%, rgba(255,251,243,0) 70%), linear-gradient(180deg,var(--warm-ivory),var(--cream)); overflow:hidden; }
+    .ref-image-full, .preview-image-full { display:block; width:100%; max-height:480px; object-fit:contain; transition:transform .8s var(--ease); }
+    .preview-image-full { padding:1.25rem; filter:drop-shadow(0 16px 16px rgba(36,21,15,.2)); max-height:420px; }
+    .section-card:hover .ref-image-full, .section-card:hover .preview-image-full { transform:scale(1.02); }
+
+    /* ═══ LOCATION ═══ */
+    .loc-wrap { padding:1.1rem 1.5rem; }
+    #delivery-map { height:240px; margin-bottom:.8rem; border:1px solid var(--soft-beige); border-radius:2px; overflow:hidden; }
+    .map-placeholder { height:180px; margin-bottom:.8rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.5rem; border:1px solid var(--soft-beige); border-radius:2px;
+        background:radial-gradient(60% 80% at 50% 30%, rgba(184,148,82,.14), transparent 70%), var(--cream); font-size:.8rem; color:var(--text-muted); }
+    .map-placeholder svg { color:var(--champagne-gold); }
+    .loc-address { font-size:.86rem; font-weight:500; line-height:1.55; color:var(--text-mid); }
+
+    /* ═══ BIDS LIST ═══ */
+    .bid-row { display:flex; justify-content:space-between; align-items:center; padding:.95rem 1.5rem; border-bottom:1px solid var(--soft-beige); transition:background .3s var(--ease); animation:rdFadeUp .5s var(--ease) backwards; }
+    .bid-row:nth-child(2) { animation-delay:.05s; }
+    .bid-row:nth-child(3) { animation-delay:.1s; }
+    .bid-row:nth-child(n+4) { animation-delay:.15s; }
+    .bid-row:last-child { border-bottom:none; }
+    .bid-row:hover { background:var(--cream); }
+    .bid-row.mine { background:rgba(184,148,82,.1); border-left:2px solid var(--champagne-gold); }
+    .bid-name { font-size:.84rem; font-weight:700; color:var(--text-dark); }
+    .bid-you { margin-left:.5rem; padding:.12rem .45rem; border:1px solid var(--champagne-gold); border-radius:2px; font-size:.56rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--caramel); }
+    .bid-time { margin-top:.15rem; font-size:.7rem; color:var(--text-muted); }
+    .bid-amount { font-size:1.05rem; font-weight:800; letter-spacing:-.02em; color:var(--espresso); }
+    .bids-empty { padding:2.25rem; text-align:center; font-size:.84rem; color:var(--text-muted); }
+    .bids-empty svg { display:block; margin:0 auto .6rem; color:var(--champagne-gold); opacity:.7; }
+
+    /* ═══ SIDEBAR: PRICE / BID ═══ */
+    .budget-display { padding:1.5rem; text-align:center; border-bottom:1px solid var(--soft-beige); background:radial-gradient(70% 90% at 50% 0%, rgba(184,148,82,.16), transparent 70%), var(--cream); }
+    .budget-display-label { margin-bottom:.45rem; font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--text-muted); }
+    .my-bid-amount { font-size:2rem; font-weight:800; line-height:1; letter-spacing:-.03em; color:var(--espresso); }
+    .bid-status-pill { display:inline-flex; align-items:center; margin-top:.85rem; padding:.3rem .75rem; border-radius:2px; font-size:.62rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; border:1px solid; }
+    .bid-status-pill.pending  { background:rgba(184,148,82,.14); color:var(--caramel); border-color:var(--champagne-gold); }
+    .bid-status-pill.accepted { background:rgba(79,107,74,.1); color:var(--olive); border-color:rgba(79,107,74,.5); }
+    .bid-status-pill.rejected { background:rgba(84,37,44,.08); color:var(--deep-burgundy); border-color:rgba(84,37,44,.45); }
+
+    .bid-form-wrap { padding:1.4rem; }
+    .form-group { margin-bottom:1.1rem; }
+    .form-label { display:flex; align-items:center; gap:.35rem; margin-bottom:.4rem; font-size:.62rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--text-mid); }
+    .form-input { width:100%; box-sizing:border-box; padding:.8rem 1rem; border:1px solid var(--soft-beige); border-radius:2px; background:#fff; color:var(--text-dark); font-size:.9rem; outline:none; transition:border-color .3s var(--ease), box-shadow .3s var(--ease); }
+    .form-input::placeholder { color:var(--taupe); }
+    .form-input:focus { border-color:var(--champagne-gold); box-shadow:0 0 0 3px rgba(184,148,82,.18); }
+    .form-textarea { resize:vertical; min-height:96px; }
+    .form-hint { margin-top:.35rem; font-size:.7rem; color:var(--text-muted); }
+
+    .btn-submit, .btn-danger { width:100%; display:flex; align-items:center; justify-content:center; gap:.5rem; border-radius:3px; font-size:.7rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:background .3s var(--ease), color .3s var(--ease), transform .3s var(--ease); }
+    .btn-submit { padding:.95rem; border:1px solid var(--espresso); background:var(--espresso); color:var(--warm-ivory); box-shadow:inset 0 -2px 0 var(--champagne-gold); }
+    .btn-submit:hover { background:var(--dark-chocolate); }
+    .btn-danger { padding:.85rem; border:1px solid rgba(84,37,44,.4); background:transparent; color:var(--deep-burgundy); }
+    .btn-danger:hover { background:var(--deep-burgundy); color:var(--warm-ivory); }
+    .btn-submit:active, .btn-danger:active { transform:scale(.98); }
+    .btn-submit:focus-visible, .btn-danger:focus-visible, .btn-rush-submit:focus-visible, .rd-modal-btn:focus-visible { outline:2px solid var(--champagne-gold); outline-offset:2px; }
+
+    /* ═══ ALREADY BID ═══ */
+    .mybid-wrap { padding:1.4rem; }
+    .bid-msg { margin-bottom:1rem; padding:.9rem 1rem; border-left:2px solid var(--champagne-gold); font-size:.84rem; font-style:italic; line-height:1.6; color:var(--text-mid); background:var(--cream); }
+    .info-line { display:flex; justify-content:space-between; align-items:center; padding:.6rem 0; font-size:.8rem; color:var(--text-muted); border-bottom:1px solid var(--soft-beige); }
+    .info-line strong { color:var(--text-dark); }
+    .info-line.last { border-bottom:none; margin-bottom:1rem; }
+    .rush-wait { display:flex; align-items:flex-start; gap:.5rem; margin-bottom:1rem; padding:.7rem .9rem; border:1px solid var(--soft-beige); border-left:2px solid var(--champagne-gold); background:var(--cream); font-size:.74rem; line-height:1.55; color:var(--text-mid); }
+    .rush-wait svg { flex-shrink:0; margin-top:2px; color:var(--champagne-gold); }
+
+    /* ═══ RUSH BLOCK (dark panel) ═══ */
+    .rush-block { padding:1.4rem; color:var(--warm-ivory); background:radial-gradient(70% 100% at 100% 0%, rgba(184,148,82,.2), transparent 65%), linear-gradient(135deg,var(--espresso),var(--dark-chocolate)); animation:rdFadeUp .6s var(--ease) .1s backwards; }
+    .rush-title { display:flex; align-items:center; gap:.5rem; margin-bottom:.3rem; font-size:1.1rem; font-weight:800; letter-spacing:-.01em; }
+    .rush-title svg { color:var(--champagne-gold); }
+    .rush-sub { margin-bottom:1.1rem; font-size:.76rem; line-height:1.5; color:rgba(247,242,233,.6); }
+    .rush-summary { margin-bottom:1.1rem; padding:.9rem 1rem; border:1px solid rgba(184,148,82,.3); background:rgba(247,242,233,.05); }
+    .rush-row { display:flex; justify-content:space-between; align-items:center; padding:.35rem 0; }
+    .rush-row span:first-child { font-size:.62rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(247,242,233,.55); }
+    .rush-row span:last-child { font-size:.86rem; font-weight:700; }
+    .rush-row .gold { color:var(--champagne-gold); }
+    .rush-row.total { margin-top:.35rem; padding-top:.7rem; border-top:1px solid rgba(184,148,82,.3); }
+    .rush-row.total span:first-child { color:var(--warm-ivory); }
+    .rush-row.total span:last-child { font-size:1.3rem; font-weight:800; color:var(--champagne-gold); }
+    .rush-notice { display:flex; align-items:flex-start; gap:.55rem; padding:.85rem 1rem; border:1px solid rgba(184,148,82,.35); font-size:.76rem; line-height:1.55; color:rgba(247,242,233,.8); }
+    .rush-notice svg { flex-shrink:0; margin-top:2px; color:var(--champagne-gold); }
+    .btn-rush-submit { width:100%; display:flex; align-items:center; justify-content:center; gap:.5rem; padding:.95rem; border:1px solid var(--champagne-gold); border-radius:3px; background:var(--champagne-gold); color:var(--espresso);
+        font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; transition:background .3s var(--ease), color .3s var(--ease), transform .3s var(--ease); }
+    .btn-rush-submit:hover { background:var(--warm-ivory); border-color:var(--warm-ivory); }
+    .btn-rush-submit:active { transform:scale(.98); }
+    .rush-expiry { display:flex; align-items:center; justify-content:center; gap:.35rem; margin-top:.9rem; font-size:.72rem; color:rgba(247,242,233,.55); }
+
+    .rush-breakdown { margin-bottom:1rem; padding:.9rem 1rem; color:var(--warm-ivory); background:linear-gradient(135deg,var(--espresso),var(--dark-chocolate)); border-left:2px solid var(--champagne-gold); }
+    .rush-breakdown-title { display:flex; align-items:center; gap:.35rem; margin-bottom:.5rem; font-size:.6rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:rgba(247,242,233,.5); }
+    .rush-breakdown .rush-row { border-bottom:1px solid rgba(247,242,233,.1); }
+    .rush-breakdown .rush-row.total { border-bottom:none; border-top:none; margin-top:0; padding-top:.5rem; }
+    .rush-breakdown .rush-row.total span:last-child { font-size:1rem; }
+
+    /* ═══ ORDER INFO / REPORT ═══ */
+    .info-row { display:flex; justify-content:space-between; align-items:center; padding:.85rem 1.4rem; border-bottom:1px solid var(--soft-beige); font-size:.82rem; }
+    .info-row:last-child { border-bottom:none; }
+    .info-row span:first-child { font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--text-muted); }
+    .info-row span:last-child { font-weight:700; color:var(--text-dark); }
+    .info-row .accent { color:var(--caramel); }
+
+    .report-notice { margin-top:1.5rem; padding:1.1rem 1.4rem; border:1px solid var(--soft-beige); border-left:3px solid var(--deep-burgundy); background:var(--warm-ivory); box-shadow:var(--shadow-card); animation:rdFadeUp .6s var(--ease) backwards; }
+    .report-notice-title { display:flex; align-items:center; gap:.5rem; margin-bottom:.35rem; font-size:.66rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--deep-burgundy); }
+    .report-notice-text { font-size:.78rem; line-height:1.6; color:var(--text-mid); }
+    .report-notice-text strong { color:var(--text-dark); }
+
+    /* ═══ MODALS ═══ */
+    .rd-modal-backdrop { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; pointer-events:none; background:rgba(36,21,15,.72); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); transition:opacity .3s var(--ease); }
+    .rd-modal-backdrop.withdraw { z-index:99999; }
+    .rd-modal { width:100%; max-width:400px; overflow:hidden; background:var(--warm-ivory); border:1px solid var(--champagne-gold); border-radius:3px; box-shadow:var(--shadow-lift); transform:translateY(20px) scale(.97); transition:transform .4s var(--ease); }
+    .rd-modal-head { padding:2rem 1.5rem; text-align:center; color:var(--warm-ivory); background:radial-gradient(70% 100% at 50% 0%, rgba(184,148,82,.25), transparent 70%), linear-gradient(135deg,var(--espresso),var(--dark-chocolate)); }
+    .rd-modal-head.danger { background:radial-gradient(70% 100% at 50% 0%, rgba(184,148,82,.18), transparent 70%), linear-gradient(135deg,var(--deep-burgundy),#3A1A1F); }
+    .rd-modal-icon { width:52px; height:52px; margin:0 auto 1rem; display:grid; place-items:center; border:1px solid var(--champagne-gold); border-radius:50%; color:var(--champagne-gold); }
+    .rd-modal-title { margin-bottom:.3rem; font-size:1.2rem; font-weight:800; letter-spacing:-.02em; }
+    .rd-modal-sub { font-size:.76rem; color:rgba(247,242,233,.6); }
+    .rd-modal-body { padding:1.5rem; }
+    .rd-modal-summary { margin-bottom:1.15rem; padding:.9rem 1.1rem; border:1px solid var(--soft-beige); background:var(--cream); }
+    .rd-modal-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 0; font-size:.84rem; border-top:1px solid var(--soft-beige); }
+    .rd-modal-row:first-child { border-top:none; }
+    .rd-modal-row span:first-child { font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--text-muted); }
+    .rd-modal-row span:last-child { font-weight:700; color:var(--text-dark); }
+    .rd-modal-row .accent { color:var(--caramel); }
+    .rd-modal-row .big { font-size:1.1rem; font-weight:800; }
+    .rd-modal-note { margin:0 0 1.15rem; text-align:center; font-size:.78rem; line-height:1.6; color:var(--text-muted); }
+    .rd-modal-actions { display:flex; gap:.7rem; }
+    .rd-modal-btn { display:flex; align-items:center; justify-content:center; gap:.4rem; padding:.85rem; border:1px solid transparent; border-radius:3px; font-size:.68rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; cursor:pointer; transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); }
+    .rd-modal-btn.cancel { flex:1; background:transparent; border-color:var(--soft-beige); color:var(--text-mid); }
+    .rd-modal-btn.cancel:hover { border-color:var(--espresso); background:var(--warm-ivory); }
+    .rd-modal-btn.confirm { flex:2; background:var(--espresso); border-color:var(--espresso); color:var(--warm-ivory); box-shadow:inset 0 -2px 0 var(--champagne-gold); }
+    .rd-modal-btn.confirm:hover { background:var(--dark-chocolate); }
+    .rd-modal-btn.confirm.danger { background:var(--deep-burgundy); border-color:var(--deep-burgundy); }
+    .rd-modal-btn:disabled { opacity:.6; cursor:default; }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width:980px) {
+        .detail-grid { grid-template-columns:1fr; }
+        .sidebar-sticky { position:static; }
+        .hero-right { text-align:left; padding-left:0; padding-top:1.25rem; border-left:none; border-top:1px solid rgba(184,148,82,.35); width:100%; }
     }
-
-    /* SVG icon helper */
-    .icon { display: inline-block; vertical-align: -3px; flex-shrink: 0; }
+    @media (max-width:560px) {
+        .spec-grid { grid-template-columns:1fr; }
+        .spec-item, .spec-item.no-right { border-right:none; }
+        .spec-item.no-bottom { border-bottom:1px solid var(--soft-beige); }
+        .spec-item:last-child { border-bottom:none; }
+        .section-header, .spec-group, .notes-box, .loc-wrap, .bid-row { padding-left:1.15rem; padding-right:1.15rem; }
+        .rd-modal-actions { flex-direction:column-reverse; }
+        .rd-modal-btn.cancel, .rd-modal-btn.confirm { flex:none; width:100%; }
+    }
 </style>
 @endpush
 
 @section('content')
+<div class="rd-page">
 
-<a href="{{ route('baker.requests.index') }}" class="back-link">← Back to Browse Requests</a>
+<a href="{{ route('baker.requests.index') }}" class="back-link rd-anim-back">
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+    Back to Browse Requests
+</a>
 
 @php
     $config   = is_array($request->cake_configuration) ? $request->cake_configuration : (json_decode($request->cake_configuration, true) ?? []);
@@ -295,8 +285,11 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
         }
     })
     ->first();
-    $daysLeft = (int) now()->diffInDays($request->delivery_date, false);
-
+ $daysLeft = (int) now()->diffInDays($request->delivery_date, false);
+    $summary       = $config['baker_summary'] ?? [];
+    $heroName      = $config['cake_label'] ?? trim(($config['flavor'] ?? 'Custom') . ' ' . ($config['shape'] ?? 'Cake'));
+    $heroTags      = $config['hero_tags'] ?? array_values(array_filter([$config['size'] ?? null, $config['frosting'] ?? null]));
+    $customerTotal = $config['total'] ?? null;
     // Build spec rows so we can compute borders correctly
     $specRows = [];
     if (!empty($config['flavor']))   $specRows[] = ['label' => 'Flavor',   'value' => $config['flavor'],   'accent' => false];
@@ -312,14 +305,12 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
 @endphp
 
 {{-- HERO --}}
-<div class="request-hero">
+<div class="request-hero rd-anim-hero">
     <div class="hero-left">
         <div class="hero-req-id">Request · #{{ str_pad($request->id, 4, '0', STR_PAD_LEFT) }}</div>
-        <div class="hero-cake-name">{{ $config['flavor'] ?? 'Custom' }} {{ $config['shape'] ?? 'Cake' }}</div>
+        <div class="hero-cake-name">{{ $heroName }}</div>
         <div class="hero-meta">
-            @if(!empty($config['size']))<span class="hero-tag">{{ $config['size'] }}</span>@endif
-            @if(!empty($config['frosting']))<span class="hero-tag">{{ $config['frosting'] }}</span>@endif
-            @if(!empty($config['layers']))<span class="hero-tag">{{ $config['layers'] }} layers</span>@endif
+            @foreach($heroTags as $t)<span class="hero-tag">{{ $t }}</span>@endforeach
             @if($request->status === 'RUSH_MATCHING')
                 <span class="urgency-badge high">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -327,7 +318,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                 </span>
             @elseif($daysLeft <= 3)
                 <span class="urgency-badge high">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Urgent — {{ $daysLeft }}d left
                 </span>
             @else
@@ -342,7 +333,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
         <div class="hero-budget-label">Budget Range</div>
         <div class="hero-budget">₱{{ number_format($request->budget_min, 0) }}–₱{{ number_format($request->budget_max, 0) }}</div>
         <div class="hero-deadline">Due {{ $request->delivery_date->format('M d, Y') }}</div>
-        <div style="font-size:0.68rem;color:rgba(255,255,255,0.35);margin-top:0.3rem;">{{ $request->bids()->count() }} bid{{ $request->bids()->count() !== 1 ? 's' : '' }} so far</div>
+        <div class="hero-bids">{{ $request->bids()->count() }} bid{{ $request->bids()->count() !== 1 ? 's' : '' }} so far</div>
     </div>
 </div>
 
@@ -351,7 +342,37 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
     {{-- LEFT COLUMN --}}
     <div>
 
-        {{-- Cake Specs --}}
+       @if(!empty($summary))
+        <div class="section-card">
+            <div class="section-header">
+                <span class="section-title">Cake Specifications</span>
+                @if($customerTotal)<span class="section-badge">Customer estimate ₱{{ number_format($customerTotal) }}</span>@endif
+            </div>
+            @foreach($summary as $group)
+                @if(!empty($group['rows']))
+                <div class="spec-group">
+                    <div class="spec-group-title">{{ $group['title'] }}</div>
+                    @foreach($group['rows'] as $row)
+                    <div class="spec-row">
+                        <span class="spec-row-label">{{ $row[0] }}</span>
+                        <span class="spec-row-value">{{ $row[1] }}</span>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            @endforeach
+            <div class="spec-group">
+                <div class="spec-group-title">Delivery</div>
+                <div class="spec-row">
+                    <span class="spec-row-label">Date</span>
+                    <span class="spec-row-value accent">{{ $request->delivery_date->format('F d, Y') }}@if($request->needed_time) · {{ \Carbon\Carbon::parse($request->needed_time)->format('g:i A') }}@endif</span>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        {{-- Cake Specs (legacy requests without baker_summary) --}}
+        @if(empty($summary))
         <div class="section-card">
             <div class="section-header">
                 <span class="section-title">
@@ -376,7 +397,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                             <div class="spec-value accent">
                                 {{ $request->delivery_date->format('F d, Y') }}
                                 @if($request->needed_time)
-                                    <div style="font-size:0.72rem;color:var(--caramel);margin-top:0.15rem;display:flex;align-items:center;gap:0.25rem;">
+                                    <div class="spec-time">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                         {{ \Carbon\Carbon::parse($request->needed_time)->format('g:i A') }}
                                     </div>
@@ -400,7 +421,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                 @endif
             </div>
         </div>
-
+@endif
         {{-- Notes --}}
         @if($request->custom_message || $request->special_instructions)
         <div class="section-card">
@@ -411,35 +432,17 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                 </span>
             </div>
             @if($request->custom_message)
-            <div class="notes-box" style="{{ $request->special_instructions ? 'border-bottom:1px solid var(--border);' : '' }}">
-                <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.3rem;font-style:normal;">Message on Cake</div>
+            <div class="notes-box">
+                <div class="notes-label">Message on Cake</div>
                 "{{ $request->custom_message }}"
             </div>
             @endif
             @if($request->special_instructions)
-            <div class="notes-box" style="font-style:normal;">
-                <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.3rem;">Special Instructions</div>
+            <div class="notes-box plain">
+                <div class="notes-label">Special Instructions</div>
                 {{ $request->special_instructions }}
             </div>
             @endif
-        </div>
-        @endif
-
-        {{-- 3D Preview --}}
-        @if($request->cake_preview_image)
-        <div class="section-card">
-            <div class="section-header">
-                <span class="section-title">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>
-                    3D Cake Preview
-                </span>
-            </div>
-            <img src="{{ asset('storage/'.$request->cake_preview_image) }}"
-                 class="preview-image-full"
-                 alt="3D Cake Preview">
-            <div style="padding:0.6rem 1rem;font-size:0.7rem;color:var(--text-muted);text-align:center;border-top:1px solid var(--border);">
-                Customer's 3D cake design preview
-            </div>
         </div>
         @endif
 
@@ -451,17 +454,17 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                     Location
                 </span>
             </div>
-            <div style="padding:1rem 1.5rem;">
+            <div class="loc-wrap">
                 @if($request->hasMapLocation())
-                <div id="delivery-map" style="height:240px;border-radius:10px;overflow:hidden;margin-bottom:0.75rem;"></div>
+                <div id="delivery-map"></div>
                 @else
-                <div class="map-placeholder" style="border-radius:10px;margin-bottom:0.75rem;">
+                <div class="map-placeholder">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     <span>No precise location set</span>
                 </div>
                 @endif
                 @if($request->delivery_address)
-                <div style="font-size:0.82rem;color:var(--text-mid);font-weight:500;line-height:1.5;">
+                <div class="loc-address">
                     {{ $request->delivery_address }}
                 </div>
                 @endif
@@ -480,19 +483,19 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
             @forelse($request->bids as $bid)
             <div class="bid-row {{ $myBid && $myBid->id === $bid->id ? 'mine' : '' }}">
                 <div>
-                    <div style="font-size:0.8rem;font-weight:600;color:var(--text-dark);">
+                    <div class="bid-name">
                         Baker #{{ $bid->baker_id }}
                         @if($myBid && $myBid->id === $bid->id)
-                        <span style="font-size:0.65rem;color:var(--caramel);margin-left:0.3rem;">← you</span>
+                        <span class="bid-you">You</span>
                         @endif
                     </div>
-                    <div style="font-size:0.68rem;color:var(--text-muted);margin-top:0.1rem;">{{ $bid->created_at->diffForHumans() }}</div>
+                    <div class="bid-time">{{ $bid->created_at->diffForHumans() }}</div>
                 </div>
-                <div style="font-size:0.95rem;font-weight:700;color:var(--brown-mid);">₱{{ number_format($bid->amount, 0) }}</div>
+                <div class="bid-amount">₱{{ number_format($bid->amount, 0) }}</div>
             </div>
             @empty
-            <div style="padding:2rem;text-align:center;font-size:0.82rem;color:var(--text-muted);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 0.5rem;opacity:0.4;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            <div class="bids-empty">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                 Be the first to bid!
             </div>
             @endforelse
@@ -501,7 +504,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
     </div>
 
     {{-- RIGHT SIDEBAR --}}
-    <div class="sidebar-sticky">
+    <div class="sidebar-sticky rd-anim-sidebar">
 
         <div class="section-card">
             <div class="budget-display">
@@ -514,7 +517,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                     @endif
                 </div>
                 @if($myBid)
-                <div style="margin-top:0.75rem;">
+                <div>
                     <span class="bid-status-pill {{ strtolower($myBid->status) }}">{{ $myBid->status }}</span>
                 </div>
                 @endif
@@ -530,67 +533,67 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                 $autoPrice   = $basePrice + $rushFee;
                 if ($autoPrice > $request->budget_max) { $autoPrice = (float)$request->budget_max; }
             @endphp
-            <div style="background:linear-gradient(135deg,#1A0A00,#3B1F0F);padding:1.25rem;color:white;">
-                <div style="font-size:1.1rem;font-weight:800;margin-bottom:0.25rem;display:flex;align-items:center;gap:0.4rem;">
+            <div class="rush-block">
+                <div class="rush-title">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                     Rush Order
                 </div>
-                <div style="font-size:0.75rem;opacity:0.6;margin-bottom:1rem;">Submit your price — the customer picks within 60 seconds.</div>
-                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:0.85rem;margin-bottom:1rem;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
-                        <span style="font-size:0.7rem;opacity:0.6;text-transform:uppercase;letter-spacing:0.07em;">Base price</span>
-                        <span style="font-weight:700;font-size:0.85rem;">₱{{ number_format($basePrice, 2) }}</span>
+                <div class="rush-sub">Submit your price — the customer picks within 60 seconds.</div>
+                <div class="rush-summary">
+                    <div class="rush-row">
+                        <span>Base price</span>
+                        <span>₱{{ number_format($basePrice, 2) }}</span>
                     </div>
-                    <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
-                        <span style="font-size:0.7rem;opacity:0.6;text-transform:uppercase;letter-spacing:0.07em;">Your rush fee</span>
-                        <span style="font-weight:700;font-size:0.85rem;color:#E8A94A;">+ ₱{{ number_format($rushFee, 2) }}</span>
+                    <div class="rush-row">
+                        <span>Your rush fee</span>
+                        <span class="gold">+ ₱{{ number_format($rushFee, 2) }}</span>
                     </div>
-                    <div style="border-top:1px solid rgba(255,255,255,0.15);padding-top:0.4rem;display:flex;justify-content:space-between;">
-                        <span style="font-size:0.75rem;font-weight:700;opacity:0.9;">You earn</span>
-                        <span style="font-size:1.2rem;font-weight:800;color:#E8A94A;">₱{{ number_format($autoPrice, 2) }}</span>
+                    <div class="rush-row total">
+                        <span>You earn</span>
+                        <span>₱{{ number_format($autoPrice, 2) }}</span>
                     </div>
                 </div>
                 @if(!$bakerRecord?->accepts_rush_orders || !$bakerRecord?->is_available)
-                <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:0.75rem;font-size:0.75rem;opacity:0.75;text-align:center;">
-                    ⚠ Enable Rush Mode and set yourself as Available in your profile to accept rush orders.
+                <div class="rush-notice">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                    Enable Rush Mode and set yourself as Available in your profile to accept rush orders.
                 </div>
                 @else
                 <form method="POST" action="{{ route('baker.rush-orders.accept', $request->id) }}" id="rush-accept-form">
                     @csrf
-                    <button type="button" onclick="openRushConfirm()"
-                        style="width:100%;padding:0.85rem;background:linear-gradient(135deg,#C8893A,#E8A94A);color:white;border:none;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(200,137,58,0.4);display:flex;align-items:center;justify-content:center;gap:0.4rem;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <button type="button" onclick="openRushConfirm()" class="btn-rush-submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                         Submit Rush Bid
                     </button>
                 </form>
-                <div id="rush-confirm-backdrop" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(20,10,4,0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;">
-                    <div style="background:#FFFDF9;border-radius:24px;max-width:380px;width:100%;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.3);">
-                        <div style="background:linear-gradient(135deg,#1A0A00,#5C3010);padding:2rem;text-align:center;color:white;">
-                            <div style="font-size:2rem;margin-bottom:0.5rem;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <div id="rush-confirm-backdrop" class="rd-modal-backdrop">
+                    <div id="rush-confirm-inner" class="rd-modal">
+                        <div class="rd-modal-head">
+                            <div class="rd-modal-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                             </div>
-                            <div style="font-family:inherit;font-size:1.2rem;font-weight:800;margin-bottom:0.25rem;">Submit Rush Bid?</div>
-                            <div style="font-size:0.75rem;opacity:0.6;">Your price appears to the customer immediately</div>
+                            <div class="rd-modal-title">Submit Rush Bid?</div>
+                            <div class="rd-modal-sub">Your price appears to the customer immediately</div>
                         </div>
-                        <div style="padding:1.5rem;">
-                            <div style="background:#F5EFE6;border-radius:12px;padding:1rem;margin-bottom:1rem;">
-                                <div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;">
-                                    <span style="color:#9A7A5A;">Customer</span>
-                                    <span style="font-weight:700;color:#2C1A0E;">{{ $request->user->first_name }}</span>
+                        <div class="rd-modal-body">
+                            <div class="rd-modal-summary">
+                                <div class="rd-modal-row">
+                                    <span>Customer</span>
+                                    <span>{{ $request->user->first_name }}</span>
                                 </div>
-                                <div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-top:1px solid #EAE0D0;margin-top:0.3rem;padding-top:0.6rem;">
-                                    <span style="color:#9A7A5A;">Delivery date</span>
-                                    <span style="font-weight:700;color:#C8893A;">{{ $request->delivery_date->format('M d, Y') }}</span>
+                                <div class="rd-modal-row">
+                                    <span>Delivery date</span>
+                                    <span class="accent">{{ $request->delivery_date->format('M d, Y') }}</span>
                                 </div>
-                                <div style="display:flex;justify-content:space-between;padding:0.3rem 0;font-size:0.82rem;border-top:1px solid #EAE0D0;margin-top:0.3rem;padding-top:0.6rem;">
-                                    <span style="color:#9A7A5A;">You earn</span>
-                                    <span style="font-size:1.1rem;font-weight:800;color:#2C1A0E;">₱{{ number_format($autoPrice, 2) }}</span>
+                                <div class="rd-modal-row">
+                                    <span>You earn</span>
+                                    <span class="big">₱{{ number_format($autoPrice, 2) }}</span>
                                 </div>
                             </div>
-                            <div style="display:flex;gap:0.75rem;">
-                                <button onclick="closeRushConfirm()" style="flex:1;padding:0.75rem;border-radius:12px;border:1.5px solid #EAE0D0;background:white;color:#6B4A2A;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">Cancel</button>
-                                <button onclick="submitRushAccept(this)" style="flex:2;padding:0.75rem;border-radius:12px;border:none;background:linear-gradient(135deg,#C8893A,#E8A94A);color:white;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;margin-right:0.2rem;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <div class="rd-modal-actions">
+                                <button onclick="closeRushConfirm()" class="rd-modal-btn cancel">Cancel</button>
+                                <button onclick="submitRushAccept(this)" class="rd-modal-btn confirm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                                     Submit My Bid
                                 </button>
                             </div>
@@ -598,21 +601,40 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                     </div>
                 </div>
                 <script>
-                function openRushConfirm(){document.getElementById('rush-confirm-backdrop').style.display='flex';document.body.style.overflow='hidden';}
-                function closeRushConfirm(){document.getElementById('rush-confirm-backdrop').style.display='none';document.body.style.overflow='';}
+                function openRushConfirm(){
+                    const modal=document.getElementById('rush-confirm-backdrop');
+                    const inner=document.getElementById('rush-confirm-inner');
+                    modal.style.pointerEvents='all';
+                    modal.style.opacity='1';
+                    inner.style.transform='translateY(0) scale(1)';
+                    document.body.style.overflow='hidden';
+                }
+                function closeRushConfirm(){
+                    const modal=document.getElementById('rush-confirm-backdrop');
+                    const inner=document.getElementById('rush-confirm-inner');
+                    modal.style.opacity='0';
+                    inner.style.transform='translateY(24px) scale(0.96)';
+                    modal.style.pointerEvents='none';
+                    document.body.style.overflow='';
+                }
                 function submitRushAccept(btn){btn.textContent='Submitting…';btn.disabled=true;document.getElementById('rush-accept-form').submit();}
                 document.getElementById('rush-confirm-backdrop').addEventListener('click',function(e){if(e.target===this)closeRushConfirm();});
                 </script>
                 @if($request->rush_expires_at)
-                <div style="margin-top:0.85rem;text-align:center;font-size:0.7rem;opacity:0.5;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <div class="rush-expiry">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     Expires in: <span id="rush-exp-timer">--</span>
                 </div>
                 <script>
                 (function(){
                     const exp=new Date('{{ $request->rush_expires_at->toISOString() }}');
                     const el=document.getElementById('rush-exp-timer');
-                    function tick(){const d=Math.max(0,Math.floor((exp-new Date())/1000));el.textContent=Math.floor(d/60)+':'+String(d%60).padStart(2,'0');if(d>0)setTimeout(tick,1000);else el.textContent='Expired';}
+                    function tick(){
+                        const d=Math.max(0,Math.floor((exp-new Date())/1000));
+                        el.textContent=Math.floor(d/60)+':'+String(d%60).padStart(2,'0');
+                        el.style.color = d <= 10 ? '#E7A7A0' : '';
+                        if(d>0)setTimeout(tick,1000);else el.textContent='Expired';
+                    }
                     tick();
                 })();
                 </script>
@@ -623,48 +645,48 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
 
           @if($myBid)
             {{-- ── ALREADY BID ── --}}
-            <div style="padding:1.25rem;">
+            <div class="mybid-wrap">
                 @if($request->status === 'RUSH_MATCHING')
                 @php
                     $bakerRecordRush = \App\Models\Baker::where('user_id', auth()->id())->first();
                     $rushFeeDisplay  = (float)($bakerRecordRush?->rush_fee ?? 0);
                     $baseDisplay     = $myBid->amount - $rushFeeDisplay;
                 @endphp
-                <div style="background:linear-gradient(135deg,#1A0A00,#2E1508);border-radius:10px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid rgba(200,137,58,0.3);">
-                    <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);font-weight:700;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.3rem;">
+                <div class="rush-breakdown">
+                    <div class="rush-breakdown-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                         Your Rush Bid Breakdown
                     </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.08);">
-                        <span style="color:rgba(255,255,255,0.55);">Base price</span>
-                        <span style="font-weight:600;color:rgba(255,255,255,0.85);">₱{{ number_format($baseDisplay, 2) }}</span>
+                    <div class="rush-row">
+                        <span>Base price</span>
+                        <span>₱{{ number_format($baseDisplay, 2) }}</span>
                     </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.08);">
-                        <span style="color:rgba(255,255,255,0.55);">Your rush fee</span>
-                        <span style="font-weight:600;color:#E8A94A;">+ ₱{{ number_format($rushFeeDisplay, 2) }}</span>
+                    <div class="rush-row">
+                        <span>Your rush fee</span>
+                        <span class="gold">+ ₱{{ number_format($rushFeeDisplay, 2) }}</span>
                     </div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.9rem;padding:0.4rem 0 0;">
-                        <span style="color:rgba(255,255,255,0.8);font-weight:700;">You earn</span>
-                        <span style="font-weight:800;color:#E8A94A;">₱{{ number_format($myBid->amount, 2) }}</span>
+                    <div class="rush-row total">
+                        <span>You earn</span>
+                        <span class="gold">₱{{ number_format($myBid->amount, 2) }}</span>
                     </div>
                 </div>
-                <div style="background:#FEF9E8;border:1px solid #F0D090;border-radius:8px;padding:0.6rem 0.85rem;font-size:0.72rem;color:#8A5010;line-height:1.5;margin-bottom:1rem;display:flex;align-items:flex-start;gap:0.4rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Customer has <strong>60 seconds</strong> to accept your bid. If no one is chosen in time, the system auto-assigns the nearest baker with the best price.
+                <div class="rush-wait">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Customer has <strong>60 seconds</strong> to accept your bid. If no one is chosen in time, the system auto-assigns the nearest baker with the best price.</span>
                 </div>
                 @endif
                 @if($myBid->message)
-                <div style="background:var(--cream);border-radius:10px;padding:0.85rem 1rem;font-size:0.82rem;color:var(--text-mid);margin-bottom:1rem;border-left:3px solid var(--caramel);line-height:1.55;">
+                <div class="bid-msg">
                     "{{ $myBid->message }}"
                 </div>
                 @endif
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--text-muted);padding:0.5rem 0;border-bottom:1px solid var(--border);">
+                <div class="info-line">
                     <span>Estimate</span>
-                    <strong style="color:var(--text-dark);">{{ $myBid->estimated_days ? $myBid->estimated_days.' days' : '—' }}</strong>
+                    <strong>{{ $myBid->estimated_days ? $myBid->estimated_days.' days' : '—' }}</strong>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--text-muted);padding:0.5rem 0;margin-bottom:1rem;">
+                <div class="info-line last">
                     <span>Submitted</span>
-                    <strong style="color:var(--text-dark);">{{ $myBid->created_at->diffForHumans() }}</strong>
+                    <strong>{{ $myBid->created_at->diffForHumans() }}</strong>
                 </div>
                 @if(strtoupper($myBid->status) === 'PENDING')
                 <form method="POST" action="{{ route('baker.bids.destroy', $myBid->id) }}" id="withdraw-bid-form">
@@ -696,7 +718,7 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                     @if($request->is_rush)
                     <div class="form-group">
                         <label class="form-label">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px;margin-right:0.2rem;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                             Rush Fee (₱)
                         </label>
                         <input type="number" name="rush_fee" class="form-input"
@@ -731,25 +753,25 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
         </div>
 
         {{-- Quick info card --}}
-        <div class="section-card" style="margin-top:1rem;">
+        <div class="section-card" style="margin-top:1.5rem;">
             <div class="section-header">
                 <span class="section-title">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                     Order Info
                 </span>
             </div>
-            <div style="padding:0;">
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:0.8rem;">
-                    <span style="color:var(--text-muted);font-weight:500;">Submitted</span>
-                    <span style="font-weight:600;color:var(--text-dark);">{{ $request->created_at->format('M d, Y') }}</span>
+            <div>
+                <div class="info-row">
+                    <span>Submitted</span>
+                    <span>{{ $request->created_at->format('M d, Y') }}</span>
                 </div>
-                               <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:0.8rem;">
-                    <span style="color:var(--text-muted);font-weight:500;">Fulfillment</span>
-                    <span style="font-weight:600;color:var(--caramel);">{!! $request->fulfillment_label ?? 'Delivery' !!}</span>
+                <div class="info-row">
+                    <span>Fulfillment</span>
+                    <span class="accent">{!! $request->fulfillment_label ?? 'Delivery' !!}</span>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.25rem;font-size:0.8rem;">
-                    <span style="color:var(--text-muted);font-weight:500;">Total Bids</span>
-                    <span style="font-weight:700;color:var(--brown-deep);">{{ $request->bids()->count() }}</span>
+                <div class="info-row">
+                    <span>Total Bids</span>
+                    <span>{{ $request->bids()->count() }}</span>
                 </div>
             </div>
         </div>
@@ -766,9 +788,12 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
                 : null;
         @endphp
         @if($reportOnThisRequest)
-        <div style="background:#FDF0EE;border:1.5px solid #F5C5BE;border-radius:14px;padding:1rem 1.25rem;margin-top:1rem;">
-            <div style="font-weight:700;font-size:.82rem;color:#8B2A1E;margin-bottom:.2rem;">⚠️ A report was filed for this order</div>
-            <div style="font-size:.74rem;color:#7A2A20;line-height:1.5;">
+        <div class="report-notice">
+            <div class="report-notice-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                A report was filed for this order
+            </div>
+            <div class="report-notice-text">
                 Category: <strong>{{ strip_tags(\App\Models\Report::CATEGORIES[$reportOnThisRequest->category] ?? $reportOnThisRequest->category) }}</strong><br>
                 Status: <strong>{{ ucfirst($reportOnThisRequest->status) }}</strong> — Our admin team is reviewing this.
             </div>
@@ -777,19 +802,37 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
 
         {{-- Reference Image --}}
         @if($request->reference_image)
-        <div class="section-card" style="margin-top:1rem;">
+        <div class="section-card" style="margin-top:1.5rem;">
             <div class="section-header">
                 <span class="section-title">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     Reference Image
                 </span>
             </div>
-            <img src="{{ asset('storage/'.$request->reference_image) }}"
-                 class="ref-image-full"
-                 alt="Reference Image">
-            <div style="padding:0.6rem 1rem;font-size:0.7rem;color:var(--text-muted);text-align:center;border-top:1px solid var(--border);">
-                Match this style as closely as possible
+            <div class="img-stage">
+                <img src="{{ asset('storage/'.$request->reference_image) }}"
+                     class="ref-image-full"
+                     alt="Reference Image">
             </div>
+            <div class="section-foot">Match this style as closely as possible</div>
+        </div>
+        @endif
+
+        {{-- 3D Preview --}}
+        @if($request->cake_preview_image)
+        <div class="section-card" style="margin-top:1.5rem;">
+            <div class="section-header">
+                <span class="section-title">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg>
+                    3D Cake Preview
+                </span>
+            </div>
+            <div class="img-stage">
+                <img src="{{ asset('storage/'.$request->cake_preview_image) }}"
+                     class="preview-image-full"
+                     alt="3D Cake Preview">
+            </div>
+            <div class="section-foot">Customer's 3D cake design preview</div>
         </div>
         @endif
 
@@ -799,31 +842,30 @@ $myBid = \App\Models\Bid::where('cake_request_id', $request->id)
 
 {{-- ── WITHDRAW MODAL (only rendered when $myBid exists) ── --}}
 @if($myBid)
-<div id="withdraw-modal" style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.25s ease;">
-    <div style="position:absolute;inset:0;background:rgba(20,10,4,0.7);backdrop-filter:blur(5px);"></div>
-    <div id="withdraw-modal-inner" style="position:relative;background:#FFFDF9;border-radius:24px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.3);transform:translateY(24px) scale(0.96);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);">
-        <div style="background:linear-gradient(135deg,#5A1A1A,#8B2E2E);padding:2rem;text-align:center;">
-            <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+<div id="withdraw-modal" class="rd-modal-backdrop withdraw">
+    <div id="withdraw-modal-inner" class="rd-modal">
+        <div class="rd-modal-head danger">
+            <div class="rd-modal-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </div>
-            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2rem;font-weight:800;color:white;margin-bottom:0.3rem;">Withdraw Your Bid?</div>
-            <div style="font-size:0.78rem;color:rgba(255,255,255,0.55);">This cannot be undone</div>
+            <div class="rd-modal-title">Withdraw Your Bid?</div>
+            <div class="rd-modal-sub">This cannot be undone</div>
         </div>
-        <div style="padding:1.5rem 2rem;">
-            <div style="background:#F5EFE6;border:1px solid #EAE0D0;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;">
-                <div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:0.3rem 0;">
-                    <span style="color:#9A7A5A;font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;">Request</span>
-                    <span style="font-weight:700;color:#3B1F0F;">#{{ str_pad($request->id, 4, '0', STR_PAD_LEFT) }}</span>
+        <div class="rd-modal-body">
+            <div class="rd-modal-summary">
+                <div class="rd-modal-row">
+                    <span>Request</span>
+                    <span>#{{ str_pad($request->id, 4, '0', STR_PAD_LEFT) }}</span>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:0.3rem 0;border-top:1px solid #EAE0D0;margin-top:0.35rem;padding-top:0.5rem;">
-                    <span style="color:#9A7A5A;font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;">Your Bid</span>
-                    <span style="font-weight:700;color:#3B1F0F;">₱{{ number_format($myBid->amount, 0) }}</span>
+                <div class="rd-modal-row">
+                    <span>Your Bid</span>
+                    <span>₱{{ number_format($myBid->amount, 0) }}</span>
                 </div>
             </div>
-            <p style="font-size:0.76rem;color:#9A7A5A;line-height:1.6;text-align:center;margin:0 0 1.25rem;">Withdrawing removes your bid from this request. You can place a new bid if it's still open.</p>
-            <div style="display:flex;gap:0.75rem;">
-                <button onclick="closeWithdrawModal()" style="flex:1;padding:0.75rem;border-radius:12px;border:1.5px solid #EAE0D0;background:white;color:#6B4A2A;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background 0.15s;">Keep Bid</button>
-                <button onclick="confirmWithdraw(this)" style="flex:2;padding:0.75rem;border-radius:12px;border:none;background:linear-gradient(135deg,#8B2A1E,#C44030);color:white;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 14px rgba(139,42,30,0.35);transition:opacity 0.15s;display:flex;align-items:center;justify-content:center;gap:0.35rem;">
+            <p class="rd-modal-note">Withdrawing removes your bid from this request. You can place a new bid if it's still open.</p>
+            <div class="rd-modal-actions">
+                <button onclick="closeWithdrawModal()" class="rd-modal-btn cancel">Keep Bid</button>
+                <button onclick="confirmWithdraw(this)" class="rd-modal-btn confirm danger">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     Yes, Withdraw
                 </button>
@@ -860,6 +902,7 @@ document.getElementById('withdraw-modal').addEventListener('click', function(e) 
 </script>
 @endif {{-- end @if($myBid) for withdraw modal --}}
 
+</div>
 @endsection
 
 @push('scripts')
@@ -885,14 +928,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const icon = L.divIcon({
         className: '',
-        html: `<div style="width:20px;height:20px;background:#C8894A;border:3px solid white;border-radius:50%;box-shadow:0 2px 12px rgba(200,137,74,0.7);"></div>`,
+        html: `<div style="width:20px;height:20px;background:#B89452;border:3px solid #F7F2E9;border-radius:50%;box-shadow:0 2px 12px rgba(36,21,15,0.5);"></div>`,
         iconSize: [20, 20],
         iconAnchor: [10, 10]
     });
 
     L.marker([lat, lng], { icon })
         .addTo(map)
-        .bindPopup('📍 Customer delivery location')
+        .bindPopup('Customer delivery location')
         .openPopup();
 });
 </script>
